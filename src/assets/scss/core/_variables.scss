@@ -1,0 +1,58 @@
+/*!
+ *  EvoPPI Frontend
+ *
+ * Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+ * Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+ * Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+ * .
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+@import "variables/colors";
+@import "variables/shadow";
+
+@import "variables/bootstrap-material-design-base";
+
+// Customized BS variables
+@import "variables/custom-forms";
+@import "variables/spacing";
+@import "variables/body";
+@import "variables/brand";
+@import "variables/buttons";
+@import "variables/card";
+@import "variables/code";
+@import "variables/dropdown";
+@import "variables/forms";
+@import "variables/list-group";
+@import "variables/nav";
+@import "variables/pagination";
+@import "variables/state";
+@import "variables/tables";
+@import "variables/tooltip";
+@import "variables/type";
+@import "variables/modals";
+
+// import their vars after customization for use below
+$enable-flex: true; // fully adopt flexbox layouts
+$enable-shadows: true; // enable shadows, set to false to turn off shadows
+
+
+@import "variables/layout";
+@import "variables/menu";
+@import "variables/drawer";
+@import "variables/snackbar";
+
+@import "variables/bootstrap-material-design";

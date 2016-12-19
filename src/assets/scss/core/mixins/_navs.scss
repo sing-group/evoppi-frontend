@@ -1,0 +1,84 @@
+/*!
+ *  EvoPPI Frontend
+ *
+ * Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+ * Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+ * Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+ * .
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+@mixin bmd-tabs-color($color, $active-color, $active-border, $disabled-link-color, $disabled-link-hover-color) {
+  .nav-link {
+    color: $color;
+
+    &.active {
+      color: $active-color;
+      border-color: $active-border;
+      @include hover-focus {
+        border-color: $active-border;
+      }
+    }
+
+    // Disabled state lightens text and removes hover/tab effects
+    &.disabled {
+      color: $disabled-link-color;
+
+      @include plain-hover-focus {
+        color: $disabled-link-hover-color;
+      }
+    }
+  }
+}
+
+@mixin set-wizard-color($color) {
+
+    .moving-tab{
+        background-color: $color;
+        @include shadow-big-color($color);
+    }
+
+    .picture{
+        &:hover{
+            border-color: $color;
+        }
+    }
+
+    .choice{
+        &:hover,
+        &.active{
+            .icon{
+                border-color: $color;
+                color: $color;
+            }
+        }
+    }
+
+
+    .checkbox input[type=checkbox]:checked + .checkbox-material{
+        .check{
+            background-color: $color;
+        }
+    }
+
+    .radio input[type=radio]:checked ~ .check {
+        background-color: $color;
+    }
+
+    .radio input[type=radio]:checked ~ .circle {
+        border-color: $color;
+    }
+}
