@@ -1,7 +1,7 @@
 {
-  "name": "evoppi-frontend",
+  "name": "@sing-group/evoppi-frontend",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
