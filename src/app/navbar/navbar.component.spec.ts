@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavbarComponent } from './navbar.component';
+import {MaterialModule} from '../app.module';
+import {AppComponent} from '../app.component';
+import {FormSameSpeciesComponent} from '../form-same-species/form-same-species.component';
+import {FormDistinctSpeciesComponent} from '../form-distinct-species/form-distinct-species.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -8,7 +12,8 @@ describe('NavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavbarComponent ]
+      declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent ],
+      imports: [MaterialModule]
     })
     .compileComponents();
   }));
