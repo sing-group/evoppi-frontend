@@ -1,0 +1,21 @@
+.form-same-species {
+  min-width: 200px;
+  max-width: 700px;
+  width: 100%;
+  margin: auto;
+}
+
+.table-same-species {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  min-width: 300px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+

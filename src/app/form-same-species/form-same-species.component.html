@@ -1,3 +1,38 @@
-<p>
-  form-same-species works!
-</p>
+<form class="form-same-species">
+  <md-select placeholder="Species1" class="full-width">
+    <md-option>
+
+    </md-option>
+  </md-select>
+  <md-form-field class="full-width">
+    <input type="text" mdInput placeholder="Interactome1"/>
+  </md-form-field>
+  <md-form-field class="full-width">
+    <input type="text" mdInput placeholder="Interactome2"/>
+  </md-form-field>
+  <md-form-field class="full-width">
+    <input type="text" mdInput placeholder="Genes">
+  </md-form-field>
+  <button md-raised-button button color="primary">Compare</button>
+  <div class="table-container mat-elevation-z8">
+    <md-table #table [dataSource]="dataSource" class="table-same-species">
+      <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
+      <md-row *mdRowDef="let row; columns: displayedColumns;"></md-row>
+      <ng-container mdColumnDef="Gene">
+        <md-header-cell *mdHeaderCellDef>Gene</md-header-cell>
+        <md-cell *mdCellDef="let row">{{row.gene}}</md-cell>
+      </ng-container>
+      <ng-container mdColumnDef="Interacts">
+        <md-header-cell *mdHeaderCellDef>Interacts</md-header-cell>
+        <md-cell *mdCellDef="let row">{{row.interacts}}</md-cell>
+      </ng-container>
+      <ng-container mdColumnDef="Code">
+        <md-header-cell *mdHeaderCellDef>Code</md-header-cell>
+        <md-cell *mdCellDef="let row">{{row.code}}</md-cell>
+      </ng-container>
+    </md-table>
+  </div>
+  <button md-raised-button button color="primary">Next Level</button>
+  <button md-raised-button button color="primary">Export</button>
+  <button md-raised-button button color="primary">Export Fasta</button>
+</form>

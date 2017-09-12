@@ -2,3 +2,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 @import "~material-design-icons/iconfont/material-icons.css";
+
+.full-width {
+  width: 100%;
+}
