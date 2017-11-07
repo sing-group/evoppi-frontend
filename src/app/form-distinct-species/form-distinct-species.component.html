@@ -1,63 +1,63 @@
 <form class="form-distinct-species">
-  <md-select placeholder="Species1" class="full-width">
-    <md-option>
+  <mat-select placeholder="Species1" class="full-width">
+    <mat-option>
 
-    </md-option>
-  </md-select>
-  <md-select placeholder="Species2" class="full-width">
-    <md-option>
+    </mat-option>
+  </mat-select>
+  <mat-select placeholder="Species2" class="full-width">
+    <mat-option>
 
-    </md-option>
-  </md-select>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Interactome1"/>
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Interactome2"/>
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Genes">
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Expect value">
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Length of alignment block">
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Number of descriptions">
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Minimum identity (%)">
-  </md-form-field>
-  <button md-raised-button button color="primary">Compare</button>
+    </mat-option>
+  </mat-select>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Interactome1"/>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Interactome2"/>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Genes">
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Expect value">
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Length of alignment block">
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Number of descriptions">
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Minimum identity (%)">
+  </mat-form-field>
+  <button mat-raised-button button color="primary">Compare</button>
   <div class="table-container mat-elevation-z8">
-    <md-table #table [dataSource]="dataSource" class="table-distinct-species">
-      <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
-      <md-row *mdRowDef="let row; columns: displayedColumns;"></md-row>
-      <ng-container mdColumnDef="GeneSpecies1">
-        <md-header-cell *mdHeaderCellDef>GeneSpecies1</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.geneSpecies1}}</md-cell>
+    <mat-table #table [dataSource]="dataSource" class="table-distinct-species">
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <ng-container matColumnDef="GeneSpecies1">
+        <mat-header-cell *matHeaderCellDef>GeneSpecies1</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.geneSpecies1}}</mat-cell>
       </ng-container>
-      <ng-container mdColumnDef="GeneSpecies2">
-        <md-header-cell *mdHeaderCellDef>GeneSpecies2</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.geneSpecies2}}</md-cell>
+      <ng-container matColumnDef="GeneSpecies2">
+        <mat-header-cell *matHeaderCellDef>GeneSpecies2</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.geneSpecies2}}</mat-cell>
       </ng-container>
-      <ng-container mdColumnDef="InteractsSpecies1">
-        <md-header-cell *mdHeaderCellDef>InteractsSpecies1</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.interactsSpecies1}}</md-cell>
+      <ng-container matColumnDef="InteractsSpecies1">
+        <mat-header-cell *matHeaderCellDef>InteractsSpecies1</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.interactsSpecies1}}</mat-cell>
       </ng-container>
-      <ng-container mdColumnDef="InteractsSpecies2">
-        <md-header-cell *mdHeaderCellDef>InteractsSpecies2</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.interactsSpecies2}}</md-cell>
+      <ng-container matColumnDef="InteractsSpecies2">
+        <mat-header-cell *matHeaderCellDef>InteractsSpecies2</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.interactsSpecies2}}</mat-cell>
       </ng-container>
-      <ng-container mdColumnDef="Code">
-        <md-header-cell *mdHeaderCellDef>Code</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.code}}</md-cell>
+      <ng-container matColumnDef="Code">
+        <mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.code}}</mat-cell>
       </ng-container>
-    </md-table>
+    </mat-table>
   </div>
-  <button md-raised-button button color="primary">Next Level</button>
-  <button md-raised-button button color="primary">Export</button>
-  <button md-raised-button button color="primary">Export Fasta</button>
+  <button mat-raised-button button color="primary">Next Level</button>
+  <button mat-raised-button button color="primary">Export</button>
+  <button mat-raised-button button color="primary">Export Fasta</button>
 </form>

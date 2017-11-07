@@ -4,36 +4,33 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MdButtonModule, MdCheckboxModule, MdIconModule, MdInputModule, MdSelectModule, MdTableModule, MdTabsModule,
-  MdToolbarModule
+  MatButtonModule, MatCheckboxModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, MatTabsModule,
+  MatToolbarModule
 } from '@angular/material';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FormSameSpeciesComponent } from './form-same-species/form-same-species.component';
 import { FormDistinctSpeciesComponent } from './form-distinct-species/form-distinct-species.component';
-import {CdkTableModule} from "@angular/cdk/table";
 
 @NgModule({
   imports: [
-    MdButtonModule,
-    MdCheckboxModule,
-    MdToolbarModule,
-    MdIconModule,
-    MdTabsModule,
-    MdInputModule,
-    MdSelectModule,
-    MdTableModule,
-    CdkTableModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatTabsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTableModule,
   ],
   exports: [
-    MdButtonModule,
-    MdCheckboxModule,
-    MdToolbarModule,
-    MdIconModule,
-    MdTabsModule,
-    MdInputModule,
-    MdSelectModule,
-    MdTableModule,
-    CdkTableModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatTabsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTableModule,
   ],
 })
 export class MaterialModule { }

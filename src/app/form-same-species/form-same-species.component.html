@@ -1,38 +1,38 @@
 <form class="form-same-species">
-  <md-select placeholder="Species1" class="full-width">
-    <md-option>
+  <mat-select placeholder="Species1" class="full-width">
+    <mat-option>
 
-    </md-option>
-  </md-select>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Interactome1"/>
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Interactome2"/>
-  </md-form-field>
-  <md-form-field class="full-width">
-    <input type="text" mdInput placeholder="Genes">
-  </md-form-field>
-  <button md-raised-button button color="primary">Compare</button>
+    </mat-option>
+  </mat-select>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Interactome1"/>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Interactome2"/>
+  </mat-form-field>
+  <mat-form-field class="full-width">
+    <input type="text" matInput placeholder="Genes">
+  </mat-form-field>
+  <button mat-raised-button button color="primary">Compare</button>
   <div class="table-container mat-elevation-z8">
-    <md-table #table [dataSource]="dataSource" class="table-same-species">
-      <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
-      <md-row *mdRowDef="let row; columns: displayedColumns;"></md-row>
-      <ng-container mdColumnDef="Gene">
-        <md-header-cell *mdHeaderCellDef>Gene</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.gene}}</md-cell>
+    <mat-table #table [dataSource]="dataSource" class="table-same-species">
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <ng-container matColumnDef="Gene">
+        <mat-header-cell *matHeaderCellDef>Gene</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.gene}}</mat-cell>
       </ng-container>
-      <ng-container mdColumnDef="Interacts">
-        <md-header-cell *mdHeaderCellDef>Interacts</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.interacts}}</md-cell>
+      <ng-container matColumnDef="Interacts">
+        <mat-header-cell *matHeaderCellDef>Interacts</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.interacts}}</mat-cell>
       </ng-container>
-      <ng-container mdColumnDef="Code">
-        <md-header-cell *mdHeaderCellDef>Code</md-header-cell>
-        <md-cell *mdCellDef="let row">{{row.code}}</md-cell>
+      <ng-container matColumnDef="Code">
+        <mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.code}}</mat-cell>
       </ng-container>
-    </md-table>
+    </mat-table>
   </div>
-  <button md-raised-button button color="primary">Next Level</button>
-  <button md-raised-button button color="primary">Export</button>
-  <button md-raised-button button color="primary">Export Fasta</button>
+  <button mat-raised-button button color="primary">Next Level</button>
+  <button mat-raised-button button color="primary">Export</button>
+  <button mat-raised-button button color="primary">Export Fasta</button>
 </form>
