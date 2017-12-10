@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {DataSource} from "@angular/cdk/collections";
-import {Observable} from "rxjs/Observable";
+import {DataSource} from '@angular/cdk/collections';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
 @Component({
@@ -26,8 +26,8 @@ export interface ElementSameSpecies {
 }
 
 const data: ElementSameSpecies[] = [
-  {gene: "gene1", interacts:"interacts1", code:"code1"},
-  {gene: "gene2", interacts:"interacts2", code:"code2"}
+  {gene: 'gene1', interacts: 'interacts1', code: 'code1'},
+  {gene: 'gene2', interacts: 'interacts2', code: 'code2'}
 ];
 
 
