@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavbarComponent } from './navbar.component';
-import {MaterialModule} from '../app.module';
-import {AppComponent} from '../app.component';
+import {MaterialModule} from '../../app.module';
+import {AppComponent} from '../../app.component';
 import {FormSameSpeciesComponent} from '../form-same-species/form-same-species.component';
 import {FormDistinctSpeciesComponent} from '../form-distinct-species/form-distinct-species.component';
 

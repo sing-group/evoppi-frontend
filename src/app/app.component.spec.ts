@@ -2,9 +2,9 @@ import { TestBed, async } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
 import {MaterialModule} from './app.module';
-import {FormSameSpeciesComponent} from './form-same-species/form-same-species.component';
-import {FormDistinctSpeciesComponent} from './form-distinct-species/form-distinct-species.component';
-import {NavbarComponent} from './navbar/navbar.component';
+import {FormSameSpeciesComponent} from './components/form-same-species/form-same-species.component';
+import {FormDistinctSpeciesComponent} from './components/form-distinct-species/form-distinct-species.component';
+import {NavbarComponent} from './components/navbar/navbar.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {

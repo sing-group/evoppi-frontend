@@ -7,9 +7,9 @@ import {
   MatButtonModule, MatCheckboxModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
-import { NavbarComponent } from './navbar/navbar.component';
-import { FormSameSpeciesComponent } from './form-same-species/form-same-species.component';
-import { FormDistinctSpeciesComponent } from './form-distinct-species/form-distinct-species.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FormSameSpeciesComponent } from './components/form-same-species/form-same-species.component';
+import { FormDistinctSpeciesComponent } from './components/form-distinct-species/form-distinct-species.component';
 
 @NgModule({
   imports: [
