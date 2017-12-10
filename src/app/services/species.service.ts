@@ -7,13 +7,13 @@ import {environment} from '../../environments/environment';
 @Injectable()
 export class SpeciesService {
 
-  private speciesUrl = environment.evoppiUrl + 'api/species';
+  private endpoint = environment.evoppiUrl + 'api/species';
 
   constructor(private http: HttpClient) { }
 
 
   getSpecies(): Observable<Species[]> {
-    return this.http.get<Species[]>(this.speciesUrl);
+    return this.http.get<Species[]>(this.endpoint);
   }
 
 }
