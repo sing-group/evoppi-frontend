@@ -12,6 +12,7 @@ import { FormSameSpeciesComponent } from './components/form-same-species/form-sa
 import { FormDistinctSpeciesComponent } from './components/form-distinct-species/form-distinct-species.component';
 import {HttpClientModule} from '@angular/common/http';
 import {SpeciesService} from './services/species.service';
+import { InteractomeService } from './services/interactome.service';
 
 @NgModule({
   imports: [
@@ -50,7 +51,10 @@ export class MaterialModule { }
     HttpClientModule,
     MaterialModule
   ],
-  providers: [SpeciesService],
+  providers: [
+    SpeciesService,
+    InteractomeService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

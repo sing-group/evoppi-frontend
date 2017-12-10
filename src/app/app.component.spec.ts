@@ -7,13 +7,14 @@ import {FormDistinctSpeciesComponent} from './components/form-distinct-species/f
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {SpeciesService} from './services/species.service';
 import {HttpClientModule} from '@angular/common/http';
+import {InteractomeService} from './services/interactome.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent ],
       imports: [MaterialModule, HttpClientModule],
-      providers: [SpeciesService],
+      providers: [SpeciesService, InteractomeService],
     }).compileComponents();
   }));
 

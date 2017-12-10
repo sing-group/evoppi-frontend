@@ -4,6 +4,8 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {Species} from '../../interfaces/species';
 import {SpeciesService} from '../../services/species.service';
+import {InteractomeService} from '../../services/interactome.service';
+import {Interactome} from '../../interfaces/interactome';
 
 @Component({
   selector: 'app-form-same-species',
@@ -15,8 +17,11 @@ export class FormSameSpeciesComponent implements OnInit {
   displayedColumns = ['Gene', 'Interacts', 'Code'];
 
   species: Species[];
+  interactomes: Interactome[];
+  selectedInteractome1: string;
+  selectedInteractome2: string;
 
-  constructor(private speciesService: SpeciesService) { }
+  constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService) { }
 
   ngOnInit() {
 
@@ -26,6 +31,15 @@ export class FormSameSpeciesComponent implements OnInit {
   getSpecies(): void {
     this.speciesService.getSpecies()
       .subscribe(species => this.species = species);
+  }
+
+  onChangeSpecies(event): void {
+    this.interactomes = [];
+
+    for (const interactome of event.value.interactomes) {
+      this.interactomeService.getInteractome(interactome.id)
+        .subscribe(res => this.interactomes.push(res));
+    }
   }
 
 }
