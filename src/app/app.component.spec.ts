@@ -5,12 +5,15 @@ import {MaterialModule} from './app.module';
 import {FormSameSpeciesComponent} from './components/form-same-species/form-same-species.component';
 import {FormDistinctSpeciesComponent} from './components/form-distinct-species/form-distinct-species.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
+import {SpeciesService} from './services/species.service';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent ],
-      imports: [MaterialModule]
+      imports: [MaterialModule, HttpClientModule],
+      providers: [SpeciesService],
     }).compileComponents();
   }));
 

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormDistinctSpeciesComponent } from './form-distinct-species.component';
+import {MaterialModule} from '../../app.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
@@ -8,7 +10,8 @@ describe('FormDistinctSpeciesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormDistinctSpeciesComponent ]
+      declarations: [ FormDistinctSpeciesComponent ],
+      imports: [ BrowserAnimationsModule, MaterialModule ]
     })
     .compileComponents();
   }));
