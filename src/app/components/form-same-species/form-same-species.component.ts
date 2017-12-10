@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import {Species} from '../../interfaces/species';
+import {SpeciesService} from '../../services/species.service';
 
 @Component({
   selector: 'app-form-same-species',
@@ -12,9 +14,18 @@ export class FormSameSpeciesComponent implements OnInit {
   dataSource = new SameSpeciesDataSource();
   displayedColumns = ['Gene', 'Interacts', 'Code'];
 
-  constructor() { }
+  species: Species[];
+
+  constructor(private speciesService: SpeciesService) { }
 
   ngOnInit() {
+
+    this.getSpecies();
+  }
+
+  getSpecies(): void {
+    this.speciesService.getSpecies()
+      .subscribe(species => this.species = species);
   }
 
 }

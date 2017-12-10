@@ -10,6 +10,8 @@ import {
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FormSameSpeciesComponent } from './components/form-same-species/form-same-species.component';
 import { FormDistinctSpeciesComponent } from './components/form-distinct-species/form-distinct-species.component';
+import {HttpClientModule} from '@angular/common/http';
+import {SpeciesService} from './services/species.service';
 
 @NgModule({
   imports: [
@@ -45,9 +47,10 @@ export class MaterialModule { }
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [SpeciesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

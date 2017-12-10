@@ -1,7 +1,7 @@
 <form class="form-same-species">
   <mat-select placeholder="Species1" class="full-width">
-    <mat-option>
-
+    <mat-option *ngFor="let specie of species" [value]="specie.id">
+      {{ specie.name }}
     </mat-option>
   </mat-select>
   <mat-form-field class="full-width">
