@@ -6,6 +6,7 @@ import {Species} from '../../interfaces/species';
 import {SpeciesService} from '../../services/species.service';
 import {InteractomeService} from '../../services/interactome.service';
 import {Interactome} from '../../interfaces/interactome';
+import {GeneService} from '../../services/gene.service';
 
 @Component({
   selector: 'app-form-same-species',
@@ -17,11 +18,13 @@ export class FormSameSpeciesComponent implements OnInit {
   displayedColumns = ['Gene', 'Interacts', 'Code'];
 
   species: Species[];
-  interactomes: Interactome[];
+  interactomes: Interactome[] = [];
   selectedInteractome1: string;
   selectedInteractome2: string;
+  genes: number[];
 
-  constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService) { }
+  constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
+              private geneService: GeneService ) { }
 
   ngOnInit() {
 
@@ -33,15 +36,27 @@ export class FormSameSpeciesComponent implements OnInit {
       .subscribe(species => this.species = species);
   }
 
-  onChangeSpecies(event): void {
+  onChangeSpecies(value: Species): void {
     this.interactomes = [];
 
-    for (const interactome of event.value.interactomes) {
+    for (const interactome of value.interactomes) {
       this.interactomeService.getInteractome(interactome.id)
         .subscribe(res => this.interactomes.push(res));
     }
   }
 
+  onSearchGenes(value: string): void {
+    let interactomes = [];
+    if (this.interactomes.length > 0) {
+      interactomes = this.interactomes.map((interactome) => interactome.id);
+    }
+    this.geneService.getGene(value, interactomes)
+      .subscribe(res => {
+        this.genes = res;
+        console.log(this.genes);
+      });
+
+  }
 }
 
 export interface ElementSameSpecies {

@@ -1,6 +1,6 @@
 <form class="form-same-species">
   <mat-form-field class="full-width">
-    <mat-select placeholder="Species1"  (change)="onChangeSpecies($event)">
+    <mat-select placeholder="Species1" (change)="onChangeSpecies($event.value)">
       <mat-option *ngFor="let specie of species" [value]="specie">
         {{ specie.name }}
       </mat-option>
@@ -21,8 +21,16 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Genes">
+    <mat-label>Genes</mat-label>
+    <input type="search" matInput placeholder="Start typing something to search genes"
+           (input)="onSearchGenes($event.target.value)"
+           [matAutocomplete]="auto">
   </mat-form-field>
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let gene of genes" [value]="gene">
+      {{ gene }}
+    </mat-option>
+  </mat-autocomplete>
   <button mat-raised-button button color="primary">Compare</button>
   <div class="table-container mat-elevation-z8">
     <mat-table #table [dataSource]="dataSource" class="table-same-species">

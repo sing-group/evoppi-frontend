@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
+  MatAutocompleteModule,
   MatButtonModule, MatCheckboxModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
@@ -13,6 +14,7 @@ import { FormDistinctSpeciesComponent } from './components/form-distinct-species
 import {HttpClientModule} from '@angular/common/http';
 import {SpeciesService} from './services/species.service';
 import { InteractomeService } from './services/interactome.service';
+import { GeneService } from './services/gene.service';
 
 @NgModule({
   imports: [
@@ -24,6 +26,7 @@ import { InteractomeService } from './services/interactome.service';
     MatInputModule,
     MatSelectModule,
     MatTableModule,
+    MatAutocompleteModule,
   ],
   exports: [
     MatButtonModule,
@@ -34,6 +37,7 @@ import { InteractomeService } from './services/interactome.service';
     MatInputModule,
     MatSelectModule,
     MatTableModule,
+    MatAutocompleteModule,
   ],
 })
 export class MaterialModule { }
@@ -54,6 +58,7 @@ export class MaterialModule { }
   providers: [
     SpeciesService,
     InteractomeService,
+    GeneService,
   ],
   bootstrap: [AppComponent]
 })

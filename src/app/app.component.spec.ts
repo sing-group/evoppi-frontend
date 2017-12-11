@@ -8,13 +8,14 @@ import {NavbarComponent} from './components/navbar/navbar.component';
 import {SpeciesService} from './services/species.service';
 import {HttpClientModule} from '@angular/common/http';
 import {InteractomeService} from './services/interactome.service';
+import {GeneService} from './services/gene.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent ],
       imports: [MaterialModule, HttpClientModule],
-      providers: [SpeciesService, InteractomeService],
+      providers: [SpeciesService, InteractomeService, GeneService],
     }).compileComponents();
   }));
 
