@@ -1,34 +1,58 @@
 <form class="form-distinct-species">
-  <mat-select placeholder="Species1" class="full-width">
-    <mat-option>
-
+  <div class="full-width">
+  <mat-form-field>
+    <mat-select placeholder="Species1" (change)="onChangeSpecies($event.value, 1)">
+      <mat-option *ngFor="let specie of species" [value]="specie">
+        {{ specie.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Interactome1" [(value)]="selectedInteractome1">
+        <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome.id">
+          {{ interactome.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="full-width">
+  <mat-form-field>
+    <mat-select placeholder="Species2" (change)="onChangeSpecies($event.value, 2)">
+      <mat-option *ngFor="let specie of species" [value]="specie">
+        {{ specie.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Interactome2" [(value)]="selectedInteractome2">
+      <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome.id">
+        {{ interactome.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  </div>
+  <mat-form-field class="full-width">
+    <mat-label>Genes</mat-label>
+    <input type="search" matInput placeholder="Start typing something to search genes"
+           (input)="onSearchGenes($event.target.value)"
+           [matAutocomplete]="auto">
+  </mat-form-field>
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let gene of genes" [value]="gene">
+      {{ gene }}
     </mat-option>
-  </mat-select>
-  <mat-select placeholder="Species2" class="full-width">
-    <mat-option>
-
-    </mat-option>
-  </mat-select>
+  </mat-autocomplete>
   <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Interactome1"/>
+    <input type="number" matInput placeholder="Expect value">
   </mat-form-field>
   <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Interactome2"/>
+    <input type="number" matInput placeholder="Length of alignment block">
   </mat-form-field>
   <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Genes">
+    <input type="number" matInput placeholder="Number of descriptions">
   </mat-form-field>
   <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Expect value">
-  </mat-form-field>
-  <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Length of alignment block">
-  </mat-form-field>
-  <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Number of descriptions">
-  </mat-form-field>
-  <mat-form-field class="full-width">
-    <input type="text" matInput placeholder="Minimum identity (%)">
+    <input type="number" matInput placeholder="Minimum identity (%)">
   </mat-form-field>
   <button mat-raised-button button color="primary">Compare</button>
   <div class="table-container mat-elevation-z8">

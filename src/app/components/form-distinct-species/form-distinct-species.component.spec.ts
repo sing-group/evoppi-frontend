@@ -3,6 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormDistinctSpeciesComponent } from './form-distinct-species.component';
 import {MaterialModule} from '../../app.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {GeneService} from '../../services/gene.service';
+import {InteractomeService} from '../../services/interactome.service';
+import {SpeciesService} from '../../services/species.service';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
@@ -11,7 +15,8 @@ describe('FormDistinctSpeciesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FormDistinctSpeciesComponent ],
-      imports: [ BrowserAnimationsModule, MaterialModule ]
+      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule ],
+      providers: [ SpeciesService, InteractomeService, GeneService ]
     })
     .compileComponents();
   }));
