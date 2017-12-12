@@ -7,10 +7,13 @@ import {GeneService} from '../../services/gene.service';
 import {InteractomeService} from '../../services/interactome.service';
 import {SpeciesService} from '../../services/species.service';
 import {HttpClientModule} from '@angular/common/http';
+import {By} from '@angular/platform-browser';
+import {DebugElement} from '@angular/core';
 
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
   let fixture: ComponentFixture<FormDistinctSpeciesComponent>;
+  let de: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -29,5 +32,10 @@ describe('FormDistinctSpeciesComponent', () => {
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display a form with class form-distinct-species', () => {
+    de = fixture.debugElement.query(By.css('.form-distinct-species'));
+    expect(de.nativeElement).toBeTruthy();
   });
 });

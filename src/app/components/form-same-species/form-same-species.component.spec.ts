@@ -7,10 +7,13 @@ import {SpeciesService} from '../../services/species.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
+import {By} from '@angular/platform-browser';
+import {DebugElement} from '@angular/core';
 
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
   let fixture: ComponentFixture<FormSameSpeciesComponent>;
+  let de: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -29,5 +32,10 @@ describe('FormSameSpeciesComponent', () => {
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display a form with class form-same-species', () => {
+    de = fixture.debugElement.query(By.css('.form-same-species'));
+    expect(de.nativeElement).toBeTruthy();
   });
 });
