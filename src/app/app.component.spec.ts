@@ -9,13 +9,15 @@ import {SpeciesService} from './services/species.service';
 import {HttpClientModule} from '@angular/common/http';
 import {InteractomeService} from './services/interactome.service';
 import {GeneService} from './services/gene.service';
+import {InteractionService} from './services/interaction.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent ],
-      imports: [MaterialModule, HttpClientModule],
-      providers: [SpeciesService, InteractomeService, GeneService],
+      imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
+      providers: [SpeciesService, InteractomeService, GeneService, InteractionService],
     }).compileComponents();
   }));
 

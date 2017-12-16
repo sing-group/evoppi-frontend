@@ -9,6 +9,8 @@ import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
 import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {InteractionService} from '../../services/interaction.service';
 
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
@@ -18,8 +20,8 @@ describe('FormSameSpeciesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FormSameSpeciesComponent ],
-      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule ],
-      providers: [ SpeciesService, InteractomeService, GeneService ]
+      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
+      providers: [ SpeciesService, InteractomeService, GeneService, InteractionService ]
     })
     .compileComponents();
   }));

@@ -1,21 +1,21 @@
-<form class="form-same-species">
+<form class="form-same-species" [formGroup]="formSameSpecies">
   <mat-form-field class="full-width">
-    <mat-select placeholder="Species1" (change)="onChangeSpecies($event.value)">
+    <mat-select placeholder="Species" (change)="onChangeSpecies($event.value)" formControlName="species">
       <mat-option *ngFor="let specie of species" [value]="specie">
         {{ specie.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field>
-    <mat-select placeholder="Interactome1" [(value)]="selectedInteractome1">
-      <mat-option *ngFor="let interactome of interactomes" [value]="interactome.id">
+    <mat-select placeholder="Interactome1" formControlName="interactome1">
+      <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field>
-    <mat-select placeholder="Interactome2" [(value)]="selectedInteractome2">
-      <mat-option *ngFor="let interactome of interactomes" [value]="interactome.id">
+    <mat-select placeholder="Interactome2" formControlName="interactome2">
+      <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
@@ -23,34 +23,33 @@
   <mat-form-field class="full-width">
     <mat-label>Genes</mat-label>
     <input type="search" matInput placeholder="Start typing something to search genes"
+           formControlName="gene"
            (input)="onSearchGenes($event.target.value)"
-           [matAutocomplete]="auto">
+           [matAutocomplete]="auto" />
   </mat-form-field>
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let gene of genes" [value]="gene">
       {{ gene }}
     </mat-option>
   </mat-autocomplete>
-  <button mat-raised-button button color="primary">Compare</button>
-  <div class="table-container mat-elevation-z8">
-    <mat-table #table [dataSource]="dataSource" class="table-same-species">
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      <ng-container matColumnDef="Gene">
-        <mat-header-cell *matHeaderCellDef>Gene</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.gene}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="Interacts">
-        <mat-header-cell *matHeaderCellDef>Interacts</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.interacts}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="Code">
-        <mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.code}}</mat-cell>
-      </ng-container>
-    </mat-table>
+  <button mat-raised-button color="primary" (click)="onCompare()">Compare</button>
+  <div [ngClass]="{'hidden': hideTable}">
+    <div class="table-container mat-elevation-z8">
+      <mat-table #table [dataSource]="dataSource" class="table-same-species">
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <ng-container matColumnDef="Gene">
+          <mat-header-cell *matHeaderCellDef>Gene</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.geneFrom.id}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Interactomes">
+          <mat-header-cell *matHeaderCellDef>Interacts</mat-header-cell>
+          <mat-cell *matCellDef="let row"><span *ngFor="let interactome of row.interactomes">{{interactome.id}} </span></mat-cell>
+        </ng-container>
+      </mat-table>
+    </div>
+    <button mat-raised-button color="primary" >Next Level</button>
+    <button mat-raised-button color="primary">Export</button>
+    <button mat-raised-button color="primary">Export Fasta</button>
   </div>
-  <button mat-raised-button button color="primary">Next Level</button>
-  <button mat-raised-button button color="primary">Export</button>
-  <button mat-raised-button button color="primary">Export Fasta</button>
 </form>

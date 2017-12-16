@@ -5,6 +5,7 @@ import {MaterialModule} from '../../app.module';
 import {AppComponent} from '../../app.component';
 import {FormSameSpeciesComponent} from '../form-same-species/form-same-species.component';
 import {FormDistinctSpeciesComponent} from '../form-distinct-species/form-distinct-species.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -13,7 +14,7 @@ describe('NavbarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent ],
-      imports: [MaterialModule]
+      imports: [MaterialModule, FormsModule, ReactiveFormsModule ]
     })
     .compileComponents();
   }));

@@ -15,6 +15,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {SpeciesService} from './services/species.service';
 import { InteractomeService } from './services/interactome.service';
 import { GeneService } from './services/gene.service';
+import { InteractionService } from './services/interaction.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -53,12 +55,15 @@ export class MaterialModule { }
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     SpeciesService,
     InteractomeService,
     GeneService,
+    InteractionService,
   ],
   bootstrap: [AppComponent]
 })
