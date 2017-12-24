@@ -15,6 +15,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {TabgroupComponent} from './components/tabgroup/tabgroup.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ActivatedRouteStub, RouterStub} from './testing/router-stubs';
+import {LoginComponent} from './components/login/login.component';
 
 
 describe('AppComponent', () => {
@@ -23,7 +24,8 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent ],
+      declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
+        LoginComponent ],
       imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
       providers: [SpeciesService, InteractomeService, GeneService, InteractionService,
         { provide: ActivatedRoute, useValue: activatedRoute },

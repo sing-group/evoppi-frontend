@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
-  MatButtonModule, MatCheckboxModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, MatTabsModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -19,6 +19,8 @@ import { InteractionService } from './services/interaction.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { TabgroupComponent } from './components/tabgroup/tabgroup.component';
+import { LoginComponent } from './components/login/login.component';
+import { UserService } from './services/user.service';
 
 @NgModule({
   imports: [
@@ -31,6 +33,7 @@ import { TabgroupComponent } from './components/tabgroup/tabgroup.component';
     MatSelectModule,
     MatTableModule,
     MatAutocompleteModule,
+    MatCardModule,
   ],
   exports: [
     MatButtonModule,
@@ -42,6 +45,7 @@ import { TabgroupComponent } from './components/tabgroup/tabgroup.component';
     MatSelectModule,
     MatTableModule,
     MatAutocompleteModule,
+    MatCardModule,
   ],
 })
 export class MaterialModule { }
@@ -53,6 +57,7 @@ export class MaterialModule { }
     FormSameSpeciesComponent,
     FormDistinctSpeciesComponent,
     TabgroupComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,6 +73,7 @@ export class MaterialModule { }
     InteractomeService,
     GeneService,
     InteractionService,
+    UserService,
   ],
   bootstrap: [AppComponent]
 })

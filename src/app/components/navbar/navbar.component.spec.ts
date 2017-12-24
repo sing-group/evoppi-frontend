@@ -10,6 +10,7 @@ import {TabgroupComponent} from '../tabgroup/tabgroup.component';
 import {AppRoutingModule} from '../../app-routing.module';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ActivatedRouteStub, RouterStub} from '../../testing/router-stubs';
+import {LoginComponent} from '../login/login.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -18,7 +19,8 @@ describe('NavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent ],
+      declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
+        LoginComponent ],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRoute },
