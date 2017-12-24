@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
+import {ErrorHelper} from '../helpers/error.helper';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class GeneService {
@@ -13,7 +15,10 @@ export class GeneService {
 
     const params: any = {prefix: prefix, interactomes: interactomes, limit: limit};
 
-    return this.http.get<number[]>(this.endpoint, {params : params});
+    return this.http.get<number[]>(this.endpoint, {params : params})
+      .pipe(
+        catchError(ErrorHelper.handleError('getGene', []))
+      );;
   }
 
 }
