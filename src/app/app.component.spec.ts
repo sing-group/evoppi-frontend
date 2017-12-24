@@ -11,13 +11,24 @@ import {InteractomeService} from './services/interactome.service';
 import {GeneService} from './services/gene.service';
 import {InteractionService} from './services/interaction.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AppRoutingModule} from './app-routing.module';
+import {TabgroupComponent} from './components/tabgroup/tabgroup.component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRouteStub, RouterStub} from './testing/router-stubs';
+
 
 describe('AppComponent', () => {
+
+  const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent ],
-      imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
-      providers: [SpeciesService, InteractomeService, GeneService, InteractionService],
+      declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent ],
+      imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
+      providers: [SpeciesService, InteractomeService, GeneService, InteractionService,
+        { provide: ActivatedRoute, useValue: activatedRoute },
+        { provide: Router,         useClass: RouterStub},
+      ],
     }).compileComponents();
   }));
 
@@ -42,3 +53,4 @@ describe('AppComponent', () => {
   }));
 
 });
+

@@ -17,6 +17,8 @@ import { InteractomeService } from './services/interactome.service';
 import { GeneService } from './services/gene.service';
 import { InteractionService } from './services/interaction.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
+import { TabgroupComponent } from './components/tabgroup/tabgroup.component';
 
 @NgModule({
   imports: [
@@ -49,7 +51,8 @@ export class MaterialModule { }
     AppComponent,
     NavbarComponent,
     FormSameSpeciesComponent,
-    FormDistinctSpeciesComponent
+    FormDistinctSpeciesComponent,
+    TabgroupComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +61,7 @@ export class MaterialModule { }
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    AppRoutingModule,
   ],
   providers: [
     SpeciesService,
