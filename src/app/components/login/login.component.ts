@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit {
         if (role === 'INVALID') {
           this.openDialog('Login error', 'Username or password incorrect. Please try again.');
         } else {
+          this.userService.setUser(formModel.username, role);
           this.router.navigate(['/compare']);
         }
       });

@@ -11,6 +11,8 @@ import {AppRoutingModule} from '../../app-routing.module';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ActivatedRouteStub, RouterStub} from '../../testing/router-stubs';
 import {LoginComponent} from '../login/login.component';
+import {UserService} from '../../services/user.service';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -21,8 +23,9 @@ describe('NavbarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent ],
-      imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
+      imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
+        UserService,
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: Router,         useClass: RouterStub},
       ]

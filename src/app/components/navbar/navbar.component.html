@@ -5,7 +5,15 @@
   </button>
   <span class="toolbar-spacer"></span>
   <nav>
-    <button mat-button routerLink="/login">Login</button>
+    <button mat-button *ngIf="userService.getUser().authenticated" [matMenuTriggerFor]="loginMenu">
+      {{userService.getUser().username}} ({{userService.getUser().role}})
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #loginMenu="matMenu">
+      <button mat-menu-item routerLink="/profile"> Profile </button>
+      <button mat-menu-item routerLink="/logout"> Logout </button>
+    </mat-menu>
+    <button mat-button *ngIf="!userService.getUser().authenticated" routerLink="/login">Login</button>
     <button mat-button>About</button>
   </nav>
 </mat-toolbar>
