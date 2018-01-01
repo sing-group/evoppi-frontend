@@ -28,6 +28,7 @@ export class UserService {
     this.user.username = username;
     this.user.role = role;
     this.user.authenticated = true;
+    this.user.save();
   }
 
   getUser(): User {

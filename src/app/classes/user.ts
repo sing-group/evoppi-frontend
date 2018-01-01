@@ -4,7 +4,14 @@ export class User {
   private _username: string;
 
   constructor() {
-    this._authenticated = false;
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    if (user != null) {
+      this._role = user._role;
+      this._username = user._username;
+      this._authenticated = user._authenticated;
+    } else {
+      this._authenticated = false;
+    }
   }
 
   get authenticated(): boolean {
@@ -29,5 +36,9 @@ export class User {
 
   set username(value: string) {
     this._username = value;
+  }
+
+  public save() {
+    localStorage.setItem('user', JSON.stringify(this));
   }
 }
