@@ -5,7 +5,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule, MatSelectModule,
+  MatTableModule,
   MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
@@ -37,6 +38,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     MatAutocompleteModule,
     MatCardModule,
     MatDialogModule,
+    MatMenuModule,
   ],
   exports: [
     MatButtonModule,
@@ -50,6 +52,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     MatAutocompleteModule,
     MatCardModule,
     MatDialogModule,
+    MatMenuModule,
   ],
 })
 export class MaterialModule { }

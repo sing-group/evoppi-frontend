@@ -16,6 +16,7 @@ import {TabgroupComponent} from './components/tabgroup/tabgroup.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ActivatedRouteStub, RouterStub} from './testing/router-stubs';
 import {LoginComponent} from './components/login/login.component';
+import {UserService} from './services/user.service';
 
 
 describe('AppComponent', () => {
@@ -27,7 +28,7 @@ describe('AppComponent', () => {
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent ],
       imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
-      providers: [SpeciesService, InteractomeService, GeneService, InteractionService,
+      providers: [SpeciesService, InteractomeService, GeneService, InteractionService, UserService,
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: Router,         useClass: RouterStub},
       ],
