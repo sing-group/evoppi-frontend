@@ -13,6 +13,7 @@ import {ActivatedRouteStub, RouterStub} from '../../testing/router-stubs';
 import {UserService} from '../../services/user.service';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {APP_BASE_HREF} from '@angular/common';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -25,6 +26,7 @@ describe('LoginComponent', () => {
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         UserService,
+        { provide: APP_BASE_HREF, useValue: '/' },
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: Router,         useClass: RouterStub},
       ]

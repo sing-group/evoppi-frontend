@@ -4,20 +4,28 @@
     <mat-card-subtitle>Log in to access advanced options</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="formLogin">
+    <form [formGroup]="formLogin" (ngSubmit)="onLogin()">
       <mat-form-field class="full-width">
         <mat-label>Username</mat-label>
         <input type="text" matInput placeholder="Your username"
-               formControlName="username"/>
+               formControlName="username" required/>
+        <mat-error>
+          {{ formErrors.username }}
+        </mat-error>
       </mat-form-field>
       <mat-form-field class="full-width">
         <mat-label>Password</mat-label>
         <input type="password" matInput placeholder="Your password"
-               formControlName="password"/>
+               formControlName="password" required/>
+        <mat-error>
+          {{ formErrors.password }}
+        </mat-error>
       </mat-form-field>
+      <div class="form-buttons">
+        <button type="button" mat-raised-button routerLink="" (click)="goBack()">Back</button>
+        <button type="submit" [disabled]="!formLogin.valid" mat-raised-button color="primary">Login</button>
+      </div>
     </form>
   </mat-card-content>
-  <button mat-raised-button routerLink="">Back</button>
-  <button mat-raised-button color="primary" (click)="onLogin()">Login</button>
 </mat-card>
 

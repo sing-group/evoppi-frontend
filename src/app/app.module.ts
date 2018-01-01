@@ -5,7 +5,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, MatTabsModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule,
+  MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -21,6 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { TabgroupComponent } from './components/tabgroup/tabgroup.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserService } from './services/user.service';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   imports: [
@@ -34,6 +36,7 @@ import { UserService } from './services/user.service';
     MatTableModule,
     MatAutocompleteModule,
     MatCardModule,
+    MatDialogModule,
   ],
   exports: [
     MatButtonModule,
@@ -46,6 +49,7 @@ import { UserService } from './services/user.service';
     MatTableModule,
     MatAutocompleteModule,
     MatCardModule,
+    MatDialogModule,
   ],
 })
 export class MaterialModule { }
@@ -58,6 +62,7 @@ export class MaterialModule { }
     FormDistinctSpeciesComponent,
     TabgroupComponent,
     LoginComponent,
+    DialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,6 +79,9 @@ export class MaterialModule { }
     GeneService,
     InteractionService,
     UserService,
+  ],
+  entryComponents: [
+    DialogComponent,
   ],
   bootstrap: [AppComponent]
 })
