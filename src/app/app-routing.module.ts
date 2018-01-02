@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/compare', pathMatch: 'full' },
   { path: 'compare', component: TabgroupComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LoginComponent },
 ];
 
 @NgModule({

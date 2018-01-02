@@ -32,6 +32,9 @@ export class LoginComponent implements OnInit {
               private router: Router, private matDialog: MatDialog) { }
 
   ngOnInit() {
+    if (this.location.isCurrentPathEqualTo('/logout')) {
+      this.userService.logOut();
+    }
 
     this.formLogin = this.formBuilder.group({
       'username': ['', Validators.required],
@@ -67,7 +70,7 @@ export class LoginComponent implements OnInit {
         if (role === 'INVALID') {
           this.openDialog('Login error', 'Username or password incorrect. Please try again.');
         } else {
-          this.userService.setUser(formModel.username, role);
+          this.userService.logIn(formModel.username, role);
           this.router.navigate(['/compare']);
         }
       });

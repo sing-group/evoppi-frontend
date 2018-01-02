@@ -24,11 +24,16 @@ export class UserService {
       );
   }
 
-  setUser(username: string, role: string) {
+  logIn(username: string, role: string) {
     this.user.username = username;
     this.user.role = role;
     this.user.authenticated = true;
     this.user.save();
+  }
+
+  logOut() {
+    this.user.clear();
+    this.user = new User();
   }
 
   getUser(): User {

@@ -41,4 +41,8 @@ export class User {
   public save() {
     localStorage.setItem('user', JSON.stringify(this));
   }
+
+  public clear() {
+    localStorage.removeItem('user');
+  }
 }
