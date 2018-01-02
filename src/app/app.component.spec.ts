@@ -17,6 +17,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ActivatedRouteStub, RouterStub} from './testing/router-stubs';
 import {LoginComponent} from './components/login/login.component';
 import {UserService} from './services/user.service';
+import {UserManagerComponent} from './components/user-manager/user-manager.component';
+import {AuthService} from './services/auth.service';
 
 
 describe('AppComponent', () => {
@@ -26,9 +28,9 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
-        LoginComponent ],
+        LoginComponent, UserManagerComponent ],
       imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
-      providers: [SpeciesService, InteractomeService, GeneService, InteractionService, UserService,
+      providers: [SpeciesService, InteractomeService, GeneService, InteractionService, UserService, AuthService,
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: Router,         useClass: RouterStub},
       ],
@@ -52,7 +54,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     // fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('EvoPPI');
+    expect(compiled.querySelector('app-navbar').textContent).toContain('EvoPPI');
   }));
 
 });

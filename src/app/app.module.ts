@@ -13,7 +13,7 @@ import {
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FormSameSpeciesComponent } from './components/form-same-species/form-same-species.component';
 import { FormDistinctSpeciesComponent } from './components/form-distinct-species/form-distinct-species.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {SpeciesService} from './services/species.service';
 import { InteractomeService } from './services/interactome.service';
 import { GeneService } from './services/gene.service';
@@ -24,6 +24,10 @@ import { TabgroupComponent } from './components/tabgroup/tabgroup.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserService } from './services/user.service';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { UserManagerComponent } from './components/user-manager/user-manager.component';
+import {AdminService} from './services/admin.service';
+import {AuthInterceptor} from './classes/auth.interceptor';
+import {AuthService} from './services/auth.service';
 
 @NgModule({
   imports: [
@@ -66,6 +70,7 @@ export class MaterialModule { }
     TabgroupComponent,
     LoginComponent,
     DialogComponent,
+    UserManagerComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,11 +82,18 @@ export class MaterialModule { }
     AppRoutingModule,
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
     SpeciesService,
     InteractomeService,
     GeneService,
     InteractionService,
     UserService,
+    AdminService,
+    AuthService,
   ],
   entryComponents: [
     DialogComponent,

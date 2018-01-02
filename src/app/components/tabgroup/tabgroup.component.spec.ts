@@ -15,6 +15,7 @@ import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LoginComponent} from '../login/login.component';
+import {UserManagerComponent} from '../user-manager/user-manager.component';
 
 describe('TabgroupComponent', () => {
   let component: TabgroupComponent;
@@ -23,7 +24,7 @@ describe('TabgroupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabgroupComponent, FormSameSpeciesComponent, FormDistinctSpeciesComponent, LoginComponent ],
+      declarations: [ TabgroupComponent, FormSameSpeciesComponent, FormDistinctSpeciesComponent, LoginComponent, UserManagerComponent ],
       imports: [MaterialModule, FormsModule, BrowserAnimationsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         SpeciesService, InteractomeService, GeneService, InteractionService,

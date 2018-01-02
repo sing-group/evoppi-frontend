@@ -1,0 +1,27 @@
+<h1>Manage users</h1>
+<div class="table-container mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource" class="table-same-species">
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <ng-container matColumnDef="Login">
+      <mat-header-cell *matHeaderCellDef>Login</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.login}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="Email">
+      <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.email}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="Role">
+      <mat-header-cell *matHeaderCellDef>Role</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.role}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="Edit">
+      <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+      <mat-cell *matCellDef="let row"><button mat-button><mat-icon>edit</mat-icon></button></mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="Delete">
+      <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+      <mat-cell *matCellDef="let row"><button mat-button><mat-icon>delete</mat-icon></button></mat-cell>
+    </ng-container>
+  </mat-table>
+</div>

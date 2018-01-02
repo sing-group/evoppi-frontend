@@ -14,6 +14,8 @@ import {UserService} from '../../services/user.service';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {APP_BASE_HREF} from '@angular/common';
+import {UserManagerComponent} from '../user-manager/user-manager.component';
+import {AuthService} from '../../services/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -22,10 +24,11 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent, LoginComponent ],
+      declarations: [ FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent, LoginComponent,
+        UserManagerComponent],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, AppRoutingModule, HttpClientModule ],
       providers: [
-        UserService,
+        UserService, AuthService,
         { provide: APP_BASE_HREF, useValue: '/' },
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: Router,         useClass: RouterStub},
