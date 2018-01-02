@@ -10,11 +10,8 @@ import {User} from '../classes/user';
 export class UserService {
 
   private endpoint = environment.evoppiUrl + 'api/user';
-  private user: User;
 
-  constructor(private http: HttpClient) {
-    this.user = new User();
-  }
+  constructor(private http: HttpClient) { }
 
   getRole(login: string, password: string): Observable<string> {
     return this.http.get<string>(this.endpoint + '/role',
@@ -22,21 +19,5 @@ export class UserService {
       .pipe(
         catchError(ErrorHelper.handleError('getRole', 'INVALID'))
       );
-  }
-
-  logIn(username: string, role: string) {
-    this.user.username = username;
-    this.user.role = role;
-    this.user.authenticated = true;
-    this.user.save();
-  }
-
-  logOut() {
-    this.user.clear();
-    this.user = new User();
-  }
-
-  getUser(): User {
-    return this.user;
   }
 }

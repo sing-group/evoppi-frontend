@@ -5,6 +5,7 @@ import {UserService} from '../../services/user.service';
 import {Location} from '@angular/common';
 import {DialogComponent} from '../dialog/dialog.component';
 import {Router} from '@angular/router';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -28,12 +29,12 @@ export class LoginComponent implements OnInit {
     }
   };
 
-  constructor(private userService: UserService, private formBuilder: FormBuilder, private location: Location,
-              private router: Router, private matDialog: MatDialog) { }
+  constructor(private userService: UserService, private authService: AuthService, private formBuilder: FormBuilder,
+              private location: Location, private router: Router, private matDialog: MatDialog) { }
 
   ngOnInit() {
     if (this.location.isCurrentPathEqualTo('/logout')) {
-      this.userService.logOut();
+      this.authService.logOut();
     }
 
     this.formLogin = this.formBuilder.group({
@@ -65,12 +66,12 @@ export class LoginComponent implements OnInit {
       return;
     }
     const formModel = this.formLogin.value;
-    this.userService.getRole(formModel.username, formModel.password)
+    this.userService.getRole(formModel.login, formModel.password)
       .subscribe((role) => {
         if (role === 'INVALID') {
           this.openDialog('Login error', 'Username or password incorrect. Please try again.');
         } else {
-          this.userService.logIn(formModel.username, role);
+          this.authService.logIn(formModel.login, formModel.password, role);
           this.router.navigate(['/compare']);
         }
       });

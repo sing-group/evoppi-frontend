@@ -1,17 +1,29 @@
 export class User {
   private _authenticated: boolean;
   private _role: string;
-  private _username: string;
+  private _login: string;
+  private _email: string;
+  private _authHeader: string;
 
   constructor() {
     const user: User = JSON.parse(localStorage.getItem('user'));
     if (user != null) {
       this._role = user._role;
-      this._username = user._username;
+      this._login = user._login;
+      this._email = user._email;
       this._authenticated = user._authenticated;
+      this._authHeader = user._authHeader;
     } else {
       this._authenticated = false;
     }
+  }
+
+  get authHeader(): string {
+    return this._authHeader;
+  }
+
+  set authHeader(value: string) {
+    this._authHeader = value;
   }
 
   get authenticated(): boolean {
@@ -30,12 +42,20 @@ export class User {
     this._role = value;
   }
 
-  get username(): string {
-    return this._username;
+  get login(): string {
+    return this._login;
   }
 
-  set username(value: string) {
-    this._username = value;
+  set login(value: string) {
+    this._login = value;
+  }
+
+  get email(): string {
+    return this._email;
+  }
+
+  set email(value: string) {
+    this._email = value;
   }
 
   public save() {
