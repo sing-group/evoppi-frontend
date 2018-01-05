@@ -66,12 +66,12 @@ export class LoginComponent implements OnInit {
       return;
     }
     const formModel = this.formLogin.value;
-    this.userService.getRole(formModel.login, formModel.password)
+    this.userService.getRole(formModel.username, formModel.password)
       .subscribe((role) => {
         if (role === 'INVALID') {
           this.openDialog('Login error', 'Username or password incorrect. Please try again.');
         } else {
-          this.authService.logIn(formModel.login, formModel.password, role);
+          this.authService.logIn(formModel.username, formModel.password, role);
           this.router.navigate(['/compare']);
         }
       });
