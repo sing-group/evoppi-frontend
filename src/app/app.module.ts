@@ -28,6 +28,10 @@ import { UserManagerComponent } from './components/user-manager/user-manager.com
 import {AdminService} from './services/admin.service';
 import {AuthInterceptor} from './classes/auth.interceptor';
 import {AuthService} from './services/auth.service';
+import { GraphComponent } from './components/graph/graph.component';
+import {DraggableDirective} from './directives/draggable.directive';
+import {ZoomableDirective} from './directives/zoomable.directive';
+import {D3Service} from './services/d3.service';
 
 @NgModule({
   imports: [
@@ -71,6 +75,9 @@ export class MaterialModule { }
     LoginComponent,
     DialogComponent,
     UserManagerComponent,
+    GraphComponent,
+    DraggableDirective,
+    ZoomableDirective,
   ],
   imports: [
     BrowserModule,
@@ -94,6 +101,7 @@ export class MaterialModule { }
     UserService,
     AdminService,
     AuthService,
+    D3Service,
   ],
   entryComponents: [
     DialogComponent,
