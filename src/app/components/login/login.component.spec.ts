@@ -16,6 +16,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {APP_BASE_HREF} from '@angular/common';
 import {UserManagerComponent} from '../user-manager/user-manager.component';
 import {AuthService} from '../../services/auth.service';
+import {GraphComponent} from '../graph/graph.component';
+import {ZoomableDirective} from '../../directives/zoomable.directive';
+import {DraggableDirective} from '../../directives/draggable.directive';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -25,7 +28,7 @@ describe('LoginComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent, LoginComponent,
-        UserManagerComponent],
+        UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         UserService, AuthService,

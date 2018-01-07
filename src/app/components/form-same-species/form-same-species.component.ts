@@ -10,6 +10,8 @@ import {Interaction} from '../../interfaces/interaction';
 import {Gene} from '../../interfaces/gene';
 import {MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Link} from '../../classes/link';
+import {Node} from '../../classes/node';
 
 @Component({
   selector: 'app-form-same-species',
@@ -28,8 +30,14 @@ export class FormSameSpeciesComponent implements OnInit {
 
   hideTable = true;
 
+
+  nodes: Node[] = [];
+  links: Link[] = [];
+
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
-              private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder ) {  }
+              private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder ) {
+
+  }
 
   ngOnInit() {
     this.formSameSpecies = this.formBuilder.group({
@@ -78,6 +86,39 @@ export class FormSameSpeciesComponent implements OnInit {
         this.hideTable = false;
         this.interaction = interaction;
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+
+        const nodes = [];
+        const links = [];
+        console.log(this.interaction);
+        for (const item of this.interaction) {
+
+          const from = new Node(nodes.length, item.geneFrom.id);
+          let fromIndex = nodes.findIndex(x => x.label === from.label);
+          if (fromIndex === -1) {
+            fromIndex = nodes.length;
+            nodes.push(from);
+          } else {
+            nodes[fromIndex].linkCount++;
+          }
+
+          const to = new Node(nodes.length, item.geneTo.id);
+          let toIndex = nodes.findIndex(x => x.label === to.label);
+          if (toIndex === -1) {
+            toIndex = nodes.length;
+            nodes.push(to);
+          } else {
+            nodes[toIndex].linkCount++;
+          }
+
+          const link = new Link(fromIndex, toIndex);
+          links.push(link);
+        }
+
+        console.log(nodes);
+        console.log(links);
+        this.nodes = nodes;
+        this.links = links;
+
       });
   }
 }

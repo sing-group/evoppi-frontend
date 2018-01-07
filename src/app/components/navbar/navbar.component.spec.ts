@@ -14,6 +14,9 @@ import {LoginComponent} from '../login/login.component';
 import {HttpClientModule} from '@angular/common/http';
 import {UserManagerComponent} from '../user-manager/user-manager.component';
 import {AuthService} from '../../services/auth.service';
+import {GraphComponent} from '../graph/graph.component';
+import {ZoomableDirective} from '../../directives/zoomable.directive';
+import {DraggableDirective} from '../../directives/draggable.directive';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -23,7 +26,7 @@ describe('NavbarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
-        LoginComponent, UserManagerComponent ],
+        LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective ],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         AuthService,

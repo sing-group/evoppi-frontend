@@ -16,6 +16,10 @@ import {InteractionService} from '../../services/interaction.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LoginComponent} from '../login/login.component';
 import {UserManagerComponent} from '../user-manager/user-manager.component';
+import {GraphComponent} from '../graph/graph.component';
+import {ZoomableDirective} from '../../directives/zoomable.directive';
+import {DraggableDirective} from '../../directives/draggable.directive';
+import {D3Service} from '../../services/d3.service';
 
 describe('TabgroupComponent', () => {
   let component: TabgroupComponent;
@@ -24,10 +28,11 @@ describe('TabgroupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabgroupComponent, FormSameSpeciesComponent, FormDistinctSpeciesComponent, LoginComponent, UserManagerComponent ],
+      declarations: [ TabgroupComponent, FormSameSpeciesComponent, FormDistinctSpeciesComponent, LoginComponent, UserManagerComponent,
+        GraphComponent, ZoomableDirective, DraggableDirective],
       imports: [MaterialModule, FormsModule, BrowserAnimationsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
-        SpeciesService, InteractomeService, GeneService, InteractionService,
+        SpeciesService, InteractomeService, GeneService, InteractionService, D3Service,
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: Router,         useClass: RouterStub},
       ]

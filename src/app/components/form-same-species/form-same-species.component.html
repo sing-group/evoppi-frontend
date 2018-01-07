@@ -33,23 +33,30 @@
     </mat-option>
   </mat-autocomplete>
   <button mat-raised-button color="primary" (click)="onCompare()">Compare</button>
+  <button mat-raised-button color="primary" >Next Level</button>
+  <button mat-raised-button color="primary">Export</button>
+  <button mat-raised-button color="primary">Export Fasta</button>
   <div [ngClass]="{'hidden': hideTable}">
-    <div class="table-container mat-elevation-z8">
-      <mat-table #table [dataSource]="dataSource" class="table-same-species">
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        <ng-container matColumnDef="Gene">
-          <mat-header-cell *matHeaderCellDef>Gene</mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.geneFrom.id}}</mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="Interactomes">
-          <mat-header-cell *matHeaderCellDef>Interacts</mat-header-cell>
-          <mat-cell *matCellDef="let row"><span *ngFor="let interactome of row.interactomes">{{interactome.id}} </span></mat-cell>
-        </ng-container>
-      </mat-table>
-    </div>
-    <button mat-raised-button color="primary" >Next Level</button>
-    <button mat-raised-button color="primary">Export</button>
-    <button mat-raised-button color="primary">Export Fasta</button>
+    <mat-tab-group #tabGroup>
+      <mat-tab label="Graph view">
+        <app-graph [nodes]="nodes" [links]="links" [graphWidth]="650" [graphHeight]="300"></app-graph>
+      </mat-tab>
+      <mat-tab label="Table view">
+        <div class="table-container mat-elevation-z8">
+          <mat-table #table [dataSource]="dataSource" class="table-same-species">
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <ng-container matColumnDef="Gene">
+              <mat-header-cell *matHeaderCellDef>Gene</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.geneFrom.id}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Interactomes">
+              <mat-header-cell *matHeaderCellDef>Interacts</mat-header-cell>
+              <mat-cell *matCellDef="let row"><span *ngFor="let interactome of row.interactomes">{{interactome.id}} </span></mat-cell>
+            </ng-container>
+          </mat-table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </form>

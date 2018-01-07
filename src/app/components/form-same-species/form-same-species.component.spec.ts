@@ -11,6 +11,10 @@ import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InteractionService} from '../../services/interaction.service';
+import {GraphComponent} from '../graph/graph.component';
+import {ZoomableDirective} from '../../directives/zoomable.directive';
+import {DraggableDirective} from '../../directives/draggable.directive';
+import {D3Service} from '../../services/d3.service';
 
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
@@ -19,9 +23,9 @@ describe('FormSameSpeciesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormSameSpeciesComponent ],
+      declarations: [ FormSameSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective ],
       imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
-      providers: [ SpeciesService, InteractomeService, GeneService, InteractionService ]
+      providers: [ SpeciesService, InteractomeService, GeneService, InteractionService, D3Service ]
     })
     .compileComponents();
   }));
