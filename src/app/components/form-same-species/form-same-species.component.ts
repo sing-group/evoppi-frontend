@@ -110,8 +110,10 @@ export class FormSameSpeciesComponent implements OnInit {
             nodes[toIndex].linkCount++;
           }
 
-          const link = new Link(fromIndex, toIndex);
-          links.push(link);
+          for (const interactome of item.interactomes) {
+            const link = new Link(fromIndex, toIndex, (interactome.id % 4) + 1);
+            links.push(link);
+          }
         }
 
         console.log(nodes);
