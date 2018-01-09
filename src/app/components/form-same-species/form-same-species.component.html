@@ -32,6 +32,11 @@
       {{ gene }}
     </mat-option>
   </mat-autocomplete>
+  <div>
+    <mat-label>Interaction level:</mat-label>
+    <mat-slider thumbLabel [min]="1" [max]="3" [value]="level" formControlName="level"></mat-slider>
+  </div>
+
   <button mat-raised-button color="primary" (click)="onCompare()">Compare</button>
   <button mat-raised-button color="primary" >Next Level</button>
   <button mat-raised-button color="primary">Export</button>

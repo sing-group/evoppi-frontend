@@ -27,6 +27,7 @@ export class FormSameSpeciesComponent implements OnInit {
   interactomes: Interactome[] = [];
   interaction: Interaction[] = [];
   genes: number[];
+  level: number;
 
   hideTable = true;
 
@@ -43,12 +44,13 @@ export class FormSameSpeciesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.level = 1;
     this.formSameSpecies = this.formBuilder.group({
       'species': ['', Validators.required],
       'interactome1': ['', Validators.required],
       'interactome2': ['', Validators.required],
       'gene': ['', Validators.required],
-
+      'level': ['', [Validators.required, Validators.min(1), Validators.max(3)]],
     });
     this.getSpecies();
 
@@ -101,7 +103,7 @@ export class FormSameSpeciesComponent implements OnInit {
       return;
     }
     const formModel = this.formSameSpecies.value;
-    this.interactionService.getInteraction(formModel.gene, [formModel.interactome1.id, formModel.interactome2.id])
+    this.interactionService.getInteraction(formModel.gene, [formModel.interactome1.id, formModel.interactome2.id], formModel.level)
       .subscribe((interaction) => {
         this.hideTable = false;
         this.interaction = interaction;
