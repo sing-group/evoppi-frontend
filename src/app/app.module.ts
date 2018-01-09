@@ -1,3 +1,4 @@
+import 'hammerjs';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -6,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule, MatSelectModule,
+  MatSliderModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule
@@ -47,6 +49,7 @@ import {D3Service} from './services/d3.service';
     MatCardModule,
     MatDialogModule,
     MatMenuModule,
+    MatSliderModule,
   ],
   exports: [
     MatButtonModule,
@@ -61,6 +64,7 @@ import {D3Service} from './services/d3.service';
     MatCardModule,
     MatDialogModule,
     MatMenuModule,
+    MatSliderModule,
   ],
 })
 export class MaterialModule { }
