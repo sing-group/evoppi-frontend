@@ -1,4 +1,4 @@
-<form class="form-same-species" [formGroup]="formSameSpecies">
+<form [formGroup]="formSameSpecies">
   <mat-form-field class="full-width">
     <mat-select placeholder="Species" (change)="onChangeSpecies($event.value)" formControlName="species">
       <mat-option *ngFor="let specie of species" [value]="specie">
@@ -37,9 +37,9 @@
   <button mat-raised-button color="primary">Export</button>
   <button mat-raised-button color="primary">Export Fasta</button>
   <div [ngClass]="{'hidden': hideTable}">
-    <mat-tab-group #tabGroup>
+    <mat-tab-group>
       <mat-tab label="Graph view">
-        <app-graph [nodes]="nodes" [links]="links" [graphWidth]="650" [graphHeight]="300"></app-graph>
+        <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
       </mat-tab>
       <mat-tab label="Table view">
         <div class="table-container mat-elevation-z8">

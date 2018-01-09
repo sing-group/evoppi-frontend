@@ -1,0 +1,7 @@
+.tab-group {
+  min-width: 200px;
+  max-width: 1024px;
+  width: 100%;
+  margin: auto;
+  padding-top: 14px;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import 'rxjs/add/observable/of';
 import {Species} from '../../interfaces/species';
 import {SpeciesService} from '../../services/species.service';
@@ -34,6 +34,9 @@ export class FormSameSpeciesComponent implements OnInit {
   nodes: Node[] = [];
   links: Link[] = [];
 
+  graphWidth = 1000;
+  graphHeight = 333;
+
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder ) {
 
@@ -48,6 +51,23 @@ export class FormSameSpeciesComponent implements OnInit {
 
     });
     this.getSpecies();
+
+    this.resizeGraph();
+
+  }
+
+  private resizeGraph() {
+    if (window.innerWidth > 1024) {
+      this.graphWidth = 1000;
+    } else {
+      this.graphWidth = window.innerWidth - 24;
+    }
+    this.graphHeight = this.graphWidth / 3;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.resizeGraph();
   }
 
   getSpecies(): void {

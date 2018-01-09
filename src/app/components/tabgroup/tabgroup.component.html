@@ -1,11 +1,14 @@
-<h1>EvoPPI Species</h1>
-<mat-tab-group>
+<mat-tab-group class="tab-group">
   <mat-tab label="Compare Species">
-    <h1>Compare Species</h1>
+    <ng-template mat-tab-label>
+      <h1>Compare Species</h1>
+    </ng-template>
     <app-form-distinct-species></app-form-distinct-species>
   </mat-tab>
   <mat-tab label="Compare Same Species">
-    <h1>Compare Same Species</h1>
+    <ng-template mat-tab-label>
+      <h1>Compare Same Species</h1>
+    </ng-template>
     <app-form-same-species></app-form-same-species>
   </mat-tab>
 </mat-tab-group>
