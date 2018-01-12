@@ -16,7 +16,7 @@ export class InteractionService {
 
   getInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Interaction[]> {
 
-    const params: any = {gene: gene, interactome: interactomes, interactionLevel: interactionLevel};
+    const params: any = {gene: gene, interactome: interactomes, maxDegree: interactionLevel};
 
     return this.http.get<Interaction[]>(this.endpoint, {params : params})
       .pipe(

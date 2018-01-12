@@ -3,6 +3,6 @@ import {Gene} from './gene';
 
 export interface Interaction {
   interactomes: Interactome[];
-  geneFrom: Gene;
-  geneTo: Gene;
+  geneA: Gene;
+  geneB: Gene;
 }

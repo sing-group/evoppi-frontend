@@ -114,7 +114,7 @@ export class FormSameSpeciesComponent implements OnInit {
         console.log(this.interaction);
         for (const item of this.interaction) {
 
-          const from = new Node(nodes.length, item.geneFrom.id);
+          const from = new Node(nodes.length, item.geneA.id);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
             fromIndex = nodes.length;
@@ -123,7 +123,7 @@ export class FormSameSpeciesComponent implements OnInit {
             nodes[fromIndex].linkCount++;
           }
 
-          const to = new Node(nodes.length, item.geneTo.id);
+          const to = new Node(nodes.length, item.geneB.id);
           let toIndex = nodes.findIndex(x => x.label === to.label);
           if (toIndex === -1) {
             toIndex = nodes.length;
