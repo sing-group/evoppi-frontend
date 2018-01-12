@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule, MatSelectModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule,
+  MatSelectModule,
   MatSliderModule,
   MatTableModule,
   MatTabsModule,
@@ -50,6 +51,7 @@ import {D3Service} from './services/d3.service';
     MatDialogModule,
     MatMenuModule,
     MatSliderModule,
+    MatChipsModule,
   ],
   exports: [
     MatButtonModule,
@@ -65,6 +67,7 @@ import {D3Service} from './services/d3.service';
     MatDialogModule,
     MatMenuModule,
     MatSliderModule,
+    MatChipsModule,
   ],
 })
 export class MaterialModule { }

@@ -1,3 +1,4 @@
+<mat-card>
 <form [formGroup]="formSameSpecies">
   <mat-form-field class="full-width">
     <mat-select placeholder="Species" (change)="onChangeSpecies($event.value)" formControlName="species">
@@ -6,14 +7,14 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field class="half-width">
     <mat-select placeholder="Interactome1" formControlName="interactome1">
       <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field class="half-width right">
     <mat-select placeholder="Interactome2" formControlName="interactome2">
       <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
         {{ interactome.name }}
@@ -34,14 +35,13 @@
   </mat-autocomplete>
   <div>
     <mat-label>Interaction level:</mat-label>
-    <mat-slider thumbLabel [min]="1" [max]="3" [value]="level" formControlName="level"></mat-slider>
+    <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [value]="level" formControlName="level"></mat-slider>
   </div>
 
   <button mat-raised-button color="primary" (click)="onCompare()">Compare</button>
-  <button mat-raised-button color="primary" >Next Level</button>
   <button mat-raised-button color="primary">Export</button>
   <button mat-raised-button color="primary">Export Fasta</button>
-  <div [ngClass]="{'hidden': hideTable}">
+  <mat-card *ngIf="!hideTable">
     <mat-tab-group>
       <mat-tab label="Graph view">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
@@ -57,11 +57,16 @@
             </ng-container>
             <ng-container matColumnDef="Interactomes">
               <mat-header-cell *matHeaderCellDef>Interacts</mat-header-cell>
-              <mat-cell *matCellDef="let row"><span *ngFor="let interactome of row.interactomes">{{interactome.id}} </span></mat-cell>
+              <mat-cell *matCellDef="let row">
+                <mat-chip-list>
+                  <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome.id % 4) + 1)}}">{{interactome.id}} </mat-chip>
+                </mat-chip-list>
+              </mat-cell>
             </ng-container>
           </mat-table>
         </div>
       </mat-tab>
     </mat-tab-group>
-  </div>
+  </mat-card>
 </form>
+</mat-card>

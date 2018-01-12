@@ -13,3 +13,10 @@
   margin:auto;
 }
 
+mat-slider {
+  min-width: 200px;
+}
+
+mat-card{
+  margin: 2px;
+}

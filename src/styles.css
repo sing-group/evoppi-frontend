@@ -7,7 +7,39 @@
   width: 100%;
 }
 
-.hidden{
-  display: none;
+.half-width {
+  width: 49%;
+}
+
+.right {
+  float: right;
+}
+
+.link1 {
+  stroke-width: 4;
+  stroke: rgb(48, 63, 118);
+  background-color: rgb(48, 63, 118) !important;
+  color: white !important;
+}
+
+.link2 {
+  stroke-width: 4;
+  stroke: rgb(53, 141, 38);
+  background-color: rgb(53, 141, 38) !important;
+  color: white !important;
+}
+
+.link3 {
+  stroke-width: 4;
+  stroke: rgb(141, 124, 51);
+  background-color: rgb(141, 124, 51) !important;
+  color: white !important;
+}
+
+.link4 {
+  stroke-width: 4;
+  stroke: rgb(141, 69, 137);
+  background-color: rgb(141, 69, 137) !important;
+  color: white !important;
 }
 

@@ -50,7 +50,7 @@ export class FormSameSpeciesComponent implements OnInit {
       'interactome1': ['', Validators.required],
       'interactome2': ['', Validators.required],
       'gene': ['', Validators.required],
-      'level': ['', [Validators.required, Validators.min(1), Validators.max(3)]],
+      'level': ['1', [Validators.required, Validators.min(1), Validators.max(3)]],
     });
     this.getSpecies();
 
@@ -60,9 +60,9 @@ export class FormSameSpeciesComponent implements OnInit {
 
   private resizeGraph() {
     if (window.innerWidth > 1024) {
-      this.graphWidth = 1000;
+      this.graphWidth = 900;
     } else {
-      this.graphWidth = window.innerWidth - 24;
+      this.graphWidth = window.innerWidth - 120;
     }
     this.graphHeight = this.graphWidth / 3;
   }
