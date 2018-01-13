@@ -5,4 +5,5 @@ export interface Interaction {
   interactomes: Interactome[];
   geneA: Gene;
   geneB: Gene;
+  degree: number;
 }
