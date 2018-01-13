@@ -14,6 +14,7 @@
       <button mat-menu-item routerLink="/profile"> Profile </button>
       <button mat-menu-item routerLink="/logout"> Log out </button>
     </mat-menu>
+    <button mat-button routerLink="/interactomes">Interactomes</button>
     <button mat-button *ngIf="!authService.getUser().authenticated" routerLink="/login">Log in</button>
     <button mat-button>About</button>
   </nav>

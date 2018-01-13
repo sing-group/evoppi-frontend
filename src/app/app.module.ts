@@ -8,7 +8,7 @@ import {
   MatAutocompleteModule,
   MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule,
   MatSelectModule,
-  MatSliderModule,
+  MatSliderModule, MatSortModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule
@@ -35,6 +35,7 @@ import { GraphComponent } from './components/graph/graph.component';
 import {DraggableDirective} from './directives/draggable.directive';
 import {ZoomableDirective} from './directives/zoomable.directive';
 import {D3Service} from './services/d3.service';
+import { InteractomesComponent } from './components/interactomes/interactomes.component';
 
 @NgModule({
   imports: [
@@ -52,6 +53,7 @@ import {D3Service} from './services/d3.service';
     MatMenuModule,
     MatSliderModule,
     MatChipsModule,
+    MatSortModule,
   ],
   exports: [
     MatButtonModule,
@@ -68,6 +70,7 @@ import {D3Service} from './services/d3.service';
     MatMenuModule,
     MatSliderModule,
     MatChipsModule,
+    MatSortModule,
   ],
 })
 export class MaterialModule { }
@@ -83,6 +86,7 @@ export class MaterialModule { }
     DialogComponent,
     UserManagerComponent,
     GraphComponent,
+    InteractomesComponent,
     DraggableDirective,
     ZoomableDirective,
   ],
