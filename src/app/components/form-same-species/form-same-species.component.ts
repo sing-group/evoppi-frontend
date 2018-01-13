@@ -35,8 +35,8 @@ export class FormSameSpeciesComponent implements OnInit {
   nodes: Node[] = [];
   links: Link[] = [];
 
-  graphWidth = 1000;
-  graphHeight = 333;
+  graphWidth = 900;
+  graphHeight = 300;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder ) {
@@ -47,8 +47,8 @@ export class FormSameSpeciesComponent implements OnInit {
     this.level = 1;
     this.formSameSpecies = this.formBuilder.group({
       'species': ['', Validators.required],
-      'interactome1': ['', Validators.required],
-      'interactome2': ['', Validators.required],
+      'interactomeA': ['', Validators.required],
+      'interactomeB': ['', Validators.required],
       'gene': ['', Validators.required],
       'level': ['1', [Validators.required, Validators.min(1), Validators.max(3)]],
     });
@@ -103,7 +103,7 @@ export class FormSameSpeciesComponent implements OnInit {
       return;
     }
     const formModel = this.formSameSpecies.value;
-    this.interactionService.getInteraction(formModel.gene, [formModel.interactome1.id, formModel.interactome2.id], formModel.level)
+    this.interactionService.getInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id], formModel.level)
       .subscribe((interaction) => {
         this.hideTable = false;
         this.interaction = interaction;

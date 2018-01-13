@@ -1,39 +1,37 @@
-<form>
-  <div class="full-width">
-  <mat-form-field>
-    <mat-select placeholder="Species1" (change)="onChangeSpecies($event.value, 1)">
+<mat-card>
+<form [formGroup]="formDistinctSpecies">
+  <mat-form-field class="width-50">
+    <mat-select placeholder="Species A" (change)="onChangeSpecies($event.value, 1)" formControlName="speciesA">
       <mat-option *ngFor="let specie of species" [value]="specie">
         {{ specie.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-    <mat-form-field>
-      <mat-select placeholder="Interactome1" [(value)]="selectedInteractome1">
-        <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome.id">
-          {{ interactome.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div class="full-width">
-  <mat-form-field>
-    <mat-select placeholder="Species2" (change)="onChangeSpecies($event.value, 2)">
-      <mat-option *ngFor="let specie of species" [value]="specie">
-        {{ specie.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-select placeholder="Interactome2" [(value)]="selectedInteractome2">
-      <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome.id">
+  <mat-form-field class="width-50 right">
+    <mat-select placeholder="Interactome A" formControlName="interactomeA">
+      <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  </div>
-  <mat-form-field class="full-width">
+  <mat-form-field class="width-50">
+    <mat-select placeholder="Species B" (change)="onChangeSpecies($event.value, 2)" formControlName="speciesB">
+      <mat-option *ngFor="let specie of species" [value]="specie">
+        {{ specie.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="width-50 right">
+    <mat-select placeholder="Interactome B" formControlName="interactomeB">
+      <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome">
+        {{ interactome.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="width-100">
     <mat-label>Genes</mat-label>
     <input type="search" matInput placeholder="Start typing something to search genes"
+           formControlName="gene"
            (input)="onSearchGenes($event.target.value)"
            [matAutocomplete]="auto">
   </mat-form-field>
@@ -42,46 +40,71 @@
       {{ gene }}
     </mat-option>
   </mat-autocomplete>
-  <mat-form-field class="full-width">
-    <input type="number" matInput placeholder="Expect value">
+
+  <mat-form-field class="width-25">
+    <input type="number" matInput placeholder="Expect value" formControlName="eValue" [(ngModel)]="eValue">
   </mat-form-field>
-  <mat-form-field class="full-width">
-    <input type="number" matInput placeholder="Length of alignment block">
+  <mat-slider thumbLabel [min]="0" [max]="10" [step]="0.01" [(ngModel)]="eValue" formControlName="eValue" class="width-75 right"></mat-slider>
+  <mat-form-field class="width-25">
+    <input type="number" matInput placeholder="Minimum length of alignment block" formControlName="minAlignLength" [(ngModel)]="minAlignLength">
   </mat-form-field>
-  <mat-form-field class="full-width">
-    <input type="number" matInput placeholder="Number of descriptions">
+  <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="100" [(ngModel)]="minAlignLength" formControlName="minAlignLength" class="width-75 right"></mat-slider>
+  <mat-form-field class="width-25">
+    <input type="number" matInput placeholder="Number of descriptions" formControlName="numDescriptions" [(ngModel)]="numDescriptions">
   </mat-form-field>
-  <mat-form-field class="full-width">
-    <input type="number" matInput placeholder="Minimum identity (%)">
+  <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="20" [(ngModel)]="numDescriptions" formControlName="numDescriptions" class="width-75 right"></mat-slider>
+  <mat-form-field class="width-25">
+    <input type="number" matInput placeholder="Minimum identity (%)" formControlName="minIdentity" [(ngModel)]="minIdentity">
   </mat-form-field>
-  <button mat-raised-button button color="primary">Compare</button>
-  <div class="table-container mat-elevation-z8">
-    <mat-table #table [dataSource]="dataSource" class="table-distinct-species">
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      <ng-container matColumnDef="GeneSpecies1">
-        <mat-header-cell *matHeaderCellDef>GeneSpecies1</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.geneSpecies1}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="GeneSpecies2">
-        <mat-header-cell *matHeaderCellDef>GeneSpecies2</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.geneSpecies2}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="InteractsSpecies1">
-        <mat-header-cell *matHeaderCellDef>InteractsSpecies1</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.interactsSpecies1}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="InteractsSpecies2">
-        <mat-header-cell *matHeaderCellDef>InteractsSpecies2</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.interactsSpecies2}}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="Code">
-        <mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.code}}</mat-cell>
-      </ng-container>
-    </mat-table>
-  </div>
-  <button mat-raised-button button color="primary">Next Level</button>
+  <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="100" [step]="1" [(ngModel)]="minIdentity" formControlName="minIdentity" class="width-75 right"></mat-slider>
+  <mat-form-field class="width-25">
+    <input type="number" matInput placeholder="Interaction level" formControlName="level" [(ngModel)]="level">
+  </mat-form-field>
+  <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [(ngModel)]="level" formControlName="level" class="width-75 right"></mat-slider>
+
+  <button mat-raised-button button color="primary" (click)="onCompare()">Compare</button>
   <button mat-raised-button button color="primary">Export</button>
   <button mat-raised-button button color="primary">Export Fasta</button>
+  <mat-card *ngIf="!hideTable">
+    <mat-tab-group>
+      <mat-tab label="Graph view">
+        <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
+      </mat-tab>
+      <mat-tab label="Table view">
+        <mat-table #table [dataSource]="dataSource" class="table-distinct-species">
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          <ng-container matColumnDef="GeneSpeciesA">
+            <mat-header-cell *matHeaderCellDef>Gene Species A</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.geneA.id}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="GeneSpeciesB">
+            <mat-header-cell *matHeaderCellDef>Gene Species B</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.geneB.id}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="InteractsSpeciesA">
+            <mat-header-cell *matHeaderCellDef>Interacts Species A</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <mat-chip-list>
+                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome.id % 4) + 1)}}">{{interactome.id}} </mat-chip>
+              </mat-chip-list>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="InteractsSpeciesB">
+            <mat-header-cell *matHeaderCellDef>Interacts Species B</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <mat-chip-list>
+                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome.id % 4) + 1)}}">{{interactome.id}} </mat-chip>
+              </mat-chip-list>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Code">
+            <mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.code}}</mat-cell>
+          </ng-container>
+        </mat-table>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
 </form>
+</mat-card>

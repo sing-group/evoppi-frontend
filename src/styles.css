@@ -3,12 +3,20 @@
 
 @import "~material-design-icons/iconfont/material-icons.css";
 
-.full-width {
+.width-100 {
   width: 100%;
 }
 
-.half-width {
+.width-50 {
   width: 49%;
+}
+
+.width-25 {
+  width: 24%;
+}
+
+.width-75 {
+  width: 74%;
 }
 
 .right {

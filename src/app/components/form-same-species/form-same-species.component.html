@@ -1,27 +1,27 @@
 <mat-card>
 <form [formGroup]="formSameSpecies">
-  <mat-form-field class="full-width">
+  <mat-form-field class="width-100">
     <mat-select placeholder="Species" (change)="onChangeSpecies($event.value)" formControlName="species">
       <mat-option *ngFor="let specie of species" [value]="specie">
         {{ specie.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="half-width">
-    <mat-select placeholder="Interactome1" formControlName="interactome1">
+  <mat-form-field class="width-50">
+    <mat-select placeholder="Interactome A" formControlName="interactomeA">
       <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="half-width right">
-    <mat-select placeholder="Interactome2" formControlName="interactome2">
+  <mat-form-field class="width-50 right">
+    <mat-select placeholder="Interactome B" formControlName="interactomeB">
       <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="full-width">
+  <mat-form-field class="width-100">
     <mat-label>Genes</mat-label>
     <input type="search" matInput placeholder="Start typing something to search genes"
            formControlName="gene"
@@ -33,10 +33,10 @@
       {{ gene }}
     </mat-option>
   </mat-autocomplete>
-  <div>
-    <mat-label>Interaction level:</mat-label>
-    <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [value]="level" formControlName="level"></mat-slider>
-  </div>
+  <mat-form-field class="width-25">
+    <input type="number" matInput placeholder="Interaction level" formControlName="level" [(ngModel)]="level">
+  </mat-form-field>
+  <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [(ngModel)]="level" formControlName="level" class="width-75 right"></mat-slider>
 
   <button mat-raised-button color="primary" (click)="onCompare()">Compare</button>
   <button mat-raised-button color="primary">Export</button>

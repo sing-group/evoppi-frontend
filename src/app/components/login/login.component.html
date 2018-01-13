@@ -5,7 +5,7 @@
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="formLogin" (ngSubmit)="onLogin()">
-      <mat-form-field class="full-width">
+      <mat-form-field class="width-100">
         <mat-label>Username</mat-label>
         <input type="text" matInput placeholder="Your username"
                formControlName="username" required/>
@@ -13,7 +13,7 @@
           {{ formErrors.username }}
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="full-width">
+      <mat-form-field class="width-100">
         <mat-label>Password</mat-label>
         <input type="password" matInput placeholder="Your password"
                formControlName="password" required/>
