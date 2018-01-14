@@ -12,6 +12,9 @@ import {MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
+import {CsvHelper} from '../../helpers/csv.helper';
+import {DomSanitizer} from '@angular/platform-browser';
+import {SafeResourceUrl} from '@angular/platform-browser/src/security/dom_sanitization_service';
 
 @Component({
   selector: 'app-form-same-species',
@@ -38,7 +41,10 @@ export class FormSameSpeciesComponent implements OnInit {
   graphWidth = 900;
   graphHeight = 300;
 
-  constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
+  csvContent: SafeResourceUrl = '';
+  csvName = 'data.csv';
+
+  constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder ) {
 
   }
@@ -111,9 +117,9 @@ export class FormSameSpeciesComponent implements OnInit {
 
         const nodes = [];
         const links = [];
-        console.log(this.interaction);
-        for (const item of this.interaction) {
+        const csvData = [];
 
+        for (const item of this.interaction) {
           const from = new Node(nodes.length, item.geneA.id);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
@@ -132,17 +138,24 @@ export class FormSameSpeciesComponent implements OnInit {
             nodes[toIndex].linkCount++;
           }
 
+          const csvInteractomes = [];
           for (const interactome of item.interactomes) {
             const link = new Link(fromIndex, toIndex, (interactome.id % 4) + 1);
             links.push(link);
+            csvInteractomes.push(interactome.id);
           }
+          csvData.push([item.geneA.id, csvInteractomes.join('|')]);
         }
 
-        console.log(nodes);
-        console.log(links);
         this.nodes = nodes;
         this.links = links;
 
+        this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+          CsvHelper.getCSV(this.displayedColumns, csvData)
+        );
+        this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
+
       });
   }
+
 }
