@@ -30,7 +30,7 @@
   </mat-form-field>
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let gene of genes" [value]="gene">
-      {{ gene }}
+      {{ gene.geneId }}
     </mat-option>
   </mat-autocomplete>
   <mat-form-field class="width-25">

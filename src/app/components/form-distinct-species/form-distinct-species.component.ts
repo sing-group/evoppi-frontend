@@ -10,6 +10,7 @@ import {MatTableDataSource} from '@angular/material';
 import {Node} from '../../classes/node';
 import {Link} from '../../classes/link';
 import {InteractionService} from '../../services/interaction.service';
+import {GeneInfo} from '../../interfaces/gene-info';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -24,7 +25,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   species: Species[];
   interactomes: Interactome[][] = [];
   interaction: Interaction[] = [];
-  genes: number[];
+  genes: GeneInfo[];
   level: number;
   eValue: number;
   minAlignLength: number;

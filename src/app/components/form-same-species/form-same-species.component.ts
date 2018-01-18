@@ -15,6 +15,7 @@ import {Node} from '../../classes/node';
 import {CsvHelper} from '../../helpers/csv.helper';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SafeResourceUrl} from '@angular/platform-browser/src/security/dom_sanitization_service';
+import {GeneInfo} from '../../interfaces/gene-info';
 
 @Component({
   selector: 'app-form-same-species',
@@ -29,7 +30,7 @@ export class FormSameSpeciesComponent implements OnInit {
   species: Species[];
   interactomes: Interactome[] = [];
   interaction: Interaction[] = [];
-  genes: number[];
+  genes: GeneInfo[];
   level: number;
 
   hideTable = true;
