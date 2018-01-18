@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import 'rxjs/add/observable/of';
 import {Species} from '../../interfaces/species';
 import {SpeciesService} from '../../services/species.service';
@@ -7,8 +7,7 @@ import {Interactome} from '../../interfaces/interactome';
 import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {Interaction} from '../../interfaces/interaction';
-import {Gene} from '../../interfaces/gene';
-import {MatTableDataSource} from '@angular/material';
+import {MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
@@ -16,6 +15,7 @@ import {CsvHelper} from '../../helpers/csv.helper';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SafeResourceUrl} from '@angular/platform-browser/src/security/dom_sanitization_service';
 import {GeneInfo} from '../../interfaces/gene-info';
+import {SortHelper} from '../../helpers/sort.helper';
 
 @Component({
   selector: 'app-form-same-species',
@@ -23,6 +23,9 @@ import {GeneInfo} from '../../interfaces/gene-info';
   styleUrls: ['./form-same-species.component.css']
 })
 export class FormSameSpeciesComponent implements OnInit {
+
+  @ViewChild(MatSort) sort: MatSort;
+
   formSameSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
   displayedColumns = ['GeneA', 'GeneB', 'Interactomes', 'Degree'];
@@ -115,6 +118,8 @@ export class FormSameSpeciesComponent implements OnInit {
         this.hideTable = false;
         this.interaction = interaction;
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+        this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
+        this.dataSource.sort = this.sort;
 
         const nodes = [];
         const links = [];
