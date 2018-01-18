@@ -25,7 +25,7 @@ import {GeneInfo} from '../../interfaces/gene-info';
 export class FormSameSpeciesComponent implements OnInit {
   formSameSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
-  displayedColumns = ['Gene', 'Interactomes'];
+  displayedColumns = ['GeneA', 'GeneB', 'Interactomes', 'Degree'];
 
   species: Species[];
   interactomes: Interactome[] = [];
@@ -145,7 +145,7 @@ export class FormSameSpeciesComponent implements OnInit {
             links.push(link);
             csvInteractomes.push(interactome.id);
           }
-          csvData.push([item.geneA.id, csvInteractomes.join('|')]);
+          csvData.push([item.geneA.id, item.geneB.id, csvInteractomes.join('|'), item.degree]);
         }
 
         this.nodes = nodes;

@@ -29,7 +29,7 @@
            [matAutocomplete]="auto" />
   </mat-form-field>
   <mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let gene of genes" [value]="gene">
+    <mat-option *ngFor="let gene of genes" [value]="gene.geneId">
       {{ gene.geneId }}
     </mat-option>
   </mat-autocomplete>
@@ -51,17 +51,25 @@
           <mat-table #table [dataSource]="dataSource" class="table-same-species">
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            <ng-container matColumnDef="Gene">
-              <mat-header-cell *matHeaderCellDef>Gene</mat-header-cell>
+            <ng-container matColumnDef="GeneA">
+              <mat-header-cell *matHeaderCellDef>Gene A</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.geneA.id}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="GeneB">
+              <mat-header-cell *matHeaderCellDef>Gene B</mat-header-cell>
               <mat-cell *matCellDef="let row">{{row.geneB.id}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Interactomes">
-              <mat-header-cell *matHeaderCellDef>Interacts</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>Interactomes</mat-header-cell>
               <mat-cell *matCellDef="let row">
                 <mat-chip-list>
                   <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome.id % 4) + 1)}}">{{interactome.id}} </mat-chip>
                 </mat-chip-list>
               </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Degree">
+              <mat-header-cell *matHeaderCellDef>Degree</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.degree}}</mat-cell>
             </ng-container>
           </mat-table>
         </div>
