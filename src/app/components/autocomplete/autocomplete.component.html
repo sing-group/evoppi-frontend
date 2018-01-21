@@ -1,0 +1,12 @@
+<mat-list-option value="{{title}}">
+  <h4 *ngIf="title" matLine>{{title}}</h4>
+  <h6 *ngIf="subtitle" matLine>{{subtitle}}</h6>
+  <mat-list matLine role="list">
+    <mat-list-item role="listitem" *ngFor="let name of names">
+      <span>{{name.source}}</span>:
+      <mat-chip-list>
+        <mat-chip *ngFor="let geneName of name.names">{{geneName}}</mat-chip>
+      </mat-chip-list>
+    </mat-list-item>
+  </mat-list>
+</mat-list-option>

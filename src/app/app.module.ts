@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatMenuModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatListModule,
+  MatMenuModule,
   MatSelectModule,
   MatSliderModule, MatSortModule,
   MatTableModule,
@@ -36,6 +37,7 @@ import {DraggableDirective} from './directives/draggable.directive';
 import {ZoomableDirective} from './directives/zoomable.directive';
 import {D3Service} from './services/d3.service';
 import { InteractomesComponent } from './components/interactomes/interactomes.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 @NgModule({
   imports: [
@@ -54,6 +56,7 @@ import { InteractomesComponent } from './components/interactomes/interactomes.co
     MatSliderModule,
     MatChipsModule,
     MatSortModule,
+    MatListModule,
   ],
   exports: [
     MatButtonModule,
@@ -71,6 +74,7 @@ import { InteractomesComponent } from './components/interactomes/interactomes.co
     MatSliderModule,
     MatChipsModule,
     MatSortModule,
+    MatListModule,
   ],
 })
 export class MaterialModule { }
@@ -89,6 +93,7 @@ export class MaterialModule { }
     InteractomesComponent,
     DraggableDirective,
     ZoomableDirective,
+    AutocompleteComponent,
   ],
   imports: [
     BrowserModule,
