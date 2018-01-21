@@ -33,13 +33,13 @@
     <input type="search" matInput placeholder="Start typing something to search genes"
            formControlName="gene"
            (input)="onSearchGenes($event.target.value)"
-           [matAutocomplete]="auto">
+           [value]="genesInput" />
   </mat-form-field>
-  <mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let gene of genes" [value]="gene">
-      {{ gene.geneId }}
-    </mat-option>
-  </mat-autocomplete>
+  <mat-selection-list #genesList (selectionChange)="onGeneSelected()">
+    <app-autocomplete *ngFor="let gene of genes" [title]="gene.geneId" [names]="gene.names">
+    </app-autocomplete>
+  </mat-selection-list>
+
 
   <mat-form-field class="width-25">
     <input type="number" matInput placeholder="Expect value" formControlName="eValue" [(ngModel)]="eValue">

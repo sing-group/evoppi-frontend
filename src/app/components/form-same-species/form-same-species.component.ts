@@ -7,7 +7,7 @@ import {Interactome} from '../../interfaces/interactome';
 import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {Interaction} from '../../interfaces/interaction';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
@@ -25,6 +25,7 @@ import {SortHelper} from '../../helpers/sort.helper';
 export class FormSameSpeciesComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSelectionList) geneList: MatSelectionList;
 
   formSameSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
@@ -35,6 +36,7 @@ export class FormSameSpeciesComponent implements OnInit {
   interaction: Interaction[] = [];
   genes: GeneInfo[];
   level: number;
+  genesInput: string;
 
   hideTable = true;
 
@@ -55,6 +57,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
   ngOnInit() {
     this.level = 1;
+    this.genesInput = '';
     this.formSameSpecies = this.formBuilder.group({
       'species': ['', Validators.required],
       'interactomeA': ['', Validators.required],
@@ -162,6 +165,15 @@ export class FormSameSpeciesComponent implements OnInit {
         this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
 
       });
+  }
+
+  public onGeneSelected() {
+    for (const item of this.geneList.selectedOptions.selected) {
+      const formModel = this.formSameSpecies.value;
+      this.genesInput = item.value;
+      this.genes = [];
+      break;
+    }
   }
 
 }

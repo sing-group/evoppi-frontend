@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {SpeciesService} from '../../services/species.service';
 import {Interactome} from '../../interfaces/interactome';
 import {Species} from '../../interfaces/species';
@@ -6,7 +6,7 @@ import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Interaction} from '../../interfaces/interaction';
-import {MatTableDataSource} from '@angular/material';
+import {MatSelectionList, MatTableDataSource} from '@angular/material';
 import {Node} from '../../classes/node';
 import {Link} from '../../classes/link';
 import {InteractionService} from '../../services/interaction.service';
@@ -18,6 +18,8 @@ import {GeneInfo} from '../../interfaces/gene-info';
   styleUrls: ['./form-distinct-species.component.css']
 })
 export class FormDistinctSpeciesComponent implements OnInit {
+  @ViewChild(MatSelectionList) geneList: MatSelectionList;
+
   formDistinctSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
   displayedColumns = ['GeneSpeciesA', 'GeneSpeciesB', 'InteractsSpeciesA', 'InteractsSpeciesB', 'Code'];
@@ -31,6 +33,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   minAlignLength: number;
   numDescriptions: number;
   minIdentity: number;
+  genesInput: string;
 
   hideTable = true;
 
@@ -49,6 +52,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.minAlignLength = 10;
     this.numDescriptions =  1;
     this.minIdentity = 1;
+    this.genesInput = '';
     this.formDistinctSpecies = this.formBuilder.group({
       'speciesA': ['', Validators.required],
       'speciesB': ['', Validators.required],
@@ -141,5 +145,15 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.links = links;
 
       });
+  }
+
+  public onGeneSelected() {
+    for (const item of this.geneList.selectedOptions.selected) {
+      const formModel = this.formDistinctSpecies.value;
+      // formModel.gene = item.value;
+      this.genesInput = item.value;
+      this.genes = [];
+      break;
+    }
   }
 }
