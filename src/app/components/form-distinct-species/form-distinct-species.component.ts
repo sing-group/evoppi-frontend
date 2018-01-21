@@ -150,8 +150,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
   public onGeneSelected() {
     for (const item of this.geneList.selectedOptions.selected) {
       const formModel = this.formDistinctSpecies.value;
-      // formModel.gene = item.value;
       this.genesInput = item.value;
+      formModel.gene = item.value;
       this.genes = [];
       break;
     }

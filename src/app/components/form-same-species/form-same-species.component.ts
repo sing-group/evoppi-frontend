@@ -171,6 +171,7 @@ export class FormSameSpeciesComponent implements OnInit {
     for (const item of this.geneList.selectedOptions.selected) {
       const formModel = this.formSameSpecies.value;
       this.genesInput = item.value;
+      formModel.gene = item.value;
       this.genes = [];
       break;
     }
