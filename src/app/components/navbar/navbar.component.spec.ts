@@ -17,6 +17,8 @@ import {AuthService} from '../../services/auth.service';
 import {GraphComponent} from '../graph/graph.component';
 import {ZoomableDirective} from '../../directives/zoomable.directive';
 import {DraggableDirective} from '../../directives/draggable.directive';
+import {InteractomesComponent} from '../interactomes/interactomes.component';
+import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -26,7 +28,8 @@ describe('NavbarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
-        LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective ],
+        LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
+        AutocompleteComponent ],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         AuthService,

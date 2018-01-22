@@ -1,4 +1,4 @@
-<svg #svg [attr.width]="_options.width" [attr.height]="_options.height">
+<svg #svg [attr.width]="options.width" [attr.height]="options.height">
   <svg:g [appZoomableOf]="svg">
     <svg:line *ngFor="let link of links"
       ngClass="{{'link' + link.type}}"

@@ -1,11 +1,13 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { WorkService } from './work.service';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('WorkService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [WorkService]
+      providers: [WorkService],
+      imports: [ HttpClientModule ],
     });
   });
 

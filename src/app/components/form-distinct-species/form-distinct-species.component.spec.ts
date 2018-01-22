@@ -9,6 +9,13 @@ import {SpeciesService} from '../../services/species.service';
 import {HttpClientModule} from '@angular/common/http';
 import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
+import {GraphComponent} from '../graph/graph.component';
+import {DraggableDirective} from '../../directives/draggable.directive';
+import {InteractionService} from '../../services/interaction.service';
+import {D3Service} from '../../services/d3.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ZoomableDirective} from '../../directives/zoomable.directive';
+import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
@@ -17,9 +24,9 @@ describe('FormDistinctSpeciesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormDistinctSpeciesComponent ],
-      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule ],
-      providers: [ SpeciesService, InteractomeService, GeneService ]
+      declarations: [ FormDistinctSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent ],
+      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
+      providers: [ SpeciesService, InteractomeService, GeneService, InteractionService, D3Service ]
     })
     .compileComponents();
   }));
@@ -34,8 +41,4 @@ describe('FormDistinctSpeciesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display a form with class form-distinct-species', () => {
-    de = fixture.debugElement.query(By.css('.form-distinct-species'));
-    expect(de.nativeElement).toBeTruthy();
-  });
 });

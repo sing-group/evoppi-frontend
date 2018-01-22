@@ -22,6 +22,8 @@ import {AuthService} from './services/auth.service';
 import {GraphComponent} from './components/graph/graph.component';
 import {ZoomableDirective} from './directives/zoomable.directive';
 import {DraggableDirective} from './directives/draggable.directive';
+import {InteractomesComponent} from './components/interactomes/interactomes.component';
+import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
 
 
 describe('AppComponent', () => {
@@ -31,7 +33,8 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
-        LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective ],
+        LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
+        AutocompleteComponent ],
       imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
       providers: [SpeciesService, InteractomeService, GeneService, InteractionService, UserService, AuthService,
         { provide: ActivatedRoute, useValue: activatedRoute },

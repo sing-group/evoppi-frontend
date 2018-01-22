@@ -15,6 +15,7 @@ import {GraphComponent} from '../graph/graph.component';
 import {ZoomableDirective} from '../../directives/zoomable.directive';
 import {DraggableDirective} from '../../directives/draggable.directive';
 import {D3Service} from '../../services/d3.service';
+import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
@@ -23,7 +24,7 @@ describe('FormSameSpeciesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormSameSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective ],
+      declarations: [ FormSameSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent ],
       imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
       providers: [ SpeciesService, InteractomeService, GeneService, InteractionService, D3Service ]
     })
@@ -40,8 +41,4 @@ describe('FormSameSpeciesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display a form with class form-same-species', () => {
-    de = fixture.debugElement.query(By.css('.form-same-species'));
-    expect(de.nativeElement).toBeTruthy();
-  });
 });
