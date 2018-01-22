@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
   MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatListModule,
-  MatMenuModule,
+  MatMenuModule, MatProgressBarModule,
   MatSelectModule,
   MatSliderModule, MatSortModule,
   MatTableModule,
@@ -38,6 +38,8 @@ import {ZoomableDirective} from './directives/zoomable.directive';
 import {D3Service} from './services/d3.service';
 import { InteractomesComponent } from './components/interactomes/interactomes.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { WorkStatusComponent } from './components/work-status/work-status.component';
+import {WorkService} from './services/work.service';
 
 @NgModule({
   imports: [
@@ -57,6 +59,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     MatChipsModule,
     MatSortModule,
     MatListModule,
+    MatProgressBarModule,
   ],
   exports: [
     MatButtonModule,
@@ -75,6 +78,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     MatChipsModule,
     MatSortModule,
     MatListModule,
+    MatProgressBarModule,
   ],
 })
 export class MaterialModule { }
@@ -94,6 +98,7 @@ export class MaterialModule { }
     DraggableDirective,
     ZoomableDirective,
     AutocompleteComponent,
+    WorkStatusComponent,
   ],
   imports: [
     BrowserModule,
@@ -118,9 +123,11 @@ export class MaterialModule { }
     AdminService,
     AuthService,
     D3Service,
+    WorkService,
   ],
   entryComponents: [
     DialogComponent,
+    WorkStatusComponent,
   ],
   bootstrap: [AppComponent]
 })

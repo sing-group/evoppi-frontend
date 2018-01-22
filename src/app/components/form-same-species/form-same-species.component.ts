@@ -7,7 +7,7 @@ import {Interactome} from '../../interfaces/interactome';
 import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {Interaction} from '../../interfaces/interaction';
-import {MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
@@ -16,6 +16,8 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {SafeResourceUrl} from '@angular/platform-browser/src/security/dom_sanitization_service';
 import {GeneInfo} from '../../interfaces/gene-info';
 import {SortHelper} from '../../helpers/sort.helper';
+import {WorkStatusComponent} from '../work-status/work-status.component';
+import {Work} from '../../interfaces/work';
 
 @Component({
   selector: 'app-form-same-species',
@@ -51,7 +53,8 @@ export class FormSameSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
-              private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder ) {
+              private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
+              private dialog: MatDialog) {
 
   }
 
@@ -117,9 +120,33 @@ export class FormSameSpeciesComponent implements OnInit {
     }
     const formModel = this.formSameSpecies.value;
     this.interactionService.getInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id], formModel.level)
-      .subscribe((interaction) => {
+      .subscribe((work) => {
+        this.openDialog(work);
+      });
+  }
+
+  private openDialog(data: Work) {
+    const dialogRef = this.dialog.open(WorkStatusComponent, {
+      disableClose: true,
+      data: {data}
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      console.log(res.resultReference);
+      if ( res.finished ) {
+        this.getResult(res.resultReference);
+      } else {
+        alert('Work unfinished');
+      }
+    });
+  }
+
+  private getResult(uri: string) {
+    const formModel = this.formSameSpecies.value;
+    this.interactionService.getInteractionResult(uri)
+      .subscribe((res) => {
         this.hideTable = false;
-        this.interaction = interaction;
+        this.interaction = res.interactions;
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
         this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
         this.dataSource.sort = this.sort;

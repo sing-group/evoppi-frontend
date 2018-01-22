@@ -6,11 +6,13 @@ import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Interaction} from '../../interfaces/interaction';
-import {MatSelectionList, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatSelectionList, MatTableDataSource} from '@angular/material';
 import {Node} from '../../classes/node';
 import {Link} from '../../classes/link';
 import {InteractionService} from '../../services/interaction.service';
 import {GeneInfo} from '../../interfaces/gene-info';
+import {WorkStatusComponent} from '../work-status/work-status.component';
+import {Work} from '../../interfaces/work';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -44,7 +46,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
   graphHeight = 300;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
-              private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder) { }
+              private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.level = 1;
@@ -105,9 +108,33 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
     const formModel = this.formDistinctSpecies.value;
     this.interactionService.getInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id], formModel.level)
-      .subscribe((interaction) => {
+      .subscribe((work) => {
+        this.openDialog(work);
+      });
+  }
+
+  private openDialog(data: Work) {
+    const dialogRef = this.dialog.open(WorkStatusComponent, {
+      disableClose: true,
+      data: {data}
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      console.log(res.resultReference);
+      if ( res.finished ) {
+        this.getResult(res.resultReference);
+      } else {
+        alert('Work unfinished');
+      }
+    });
+  }
+
+  private getResult(uri: string) {
+    const formModel = this.formDistinctSpecies.value;
+    this.interactionService.getInteractionResult(uri)
+      .subscribe((res) => {
         this.hideTable = false;
-        this.interaction = interaction;
+        this.interaction = res.interactions;
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
 
         const nodes = [];
