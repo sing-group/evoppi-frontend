@@ -40,7 +40,7 @@
   <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
   <button mat-raised-button color="primary" *ngIf="csvContent !== ''">Export Fasta</button>
   <mat-card *ngIf="!hideTable">
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="initTable()">
       <mat-tab label="Graph view">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
       </mat-tab>
@@ -51,17 +51,17 @@
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             <ng-container matColumnDef="GeneA">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.geneA.id}}</mat-cell>
+              <mat-cell *matCellDef="let row">{{row.geneA}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="GeneB">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.geneB.id}}</mat-cell>
+              <mat-cell *matCellDef="let row">{{row.geneB}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="Interactomes">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Interactomes</mat-header-cell>
               <mat-cell *matCellDef="let row">
                 <mat-chip-list>
-                  <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome.id % 4) + 1)}}">{{interactome.id}} </mat-chip>
+                  <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
                 </mat-chip-list>
               </mat-cell>
             </ng-container>

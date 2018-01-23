@@ -4,12 +4,12 @@ export class SortHelper {
   public static sortInteraction(data: Interaction, sortHeaderId: string): number {
     switch (sortHeaderId) {
       case 'GeneA':
-        return data.geneA.id;
+        return data.geneA;
       case 'GeneB':
-        return data.geneB.id;
+        return data.geneB;
       case 'Interactomes':
         if (data.interactomes.length > 0) {
-          return data.interactomes[0].id;
+          return data.interactomes[0];
         }
         return 0;
       case 'Degree':

@@ -153,8 +153,6 @@ export class FormSameSpeciesComponent implements OnInit {
         this.hideTable = false;
         this.interaction = res.interactions;
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
-        this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
-        this.dataSource.sort = this.sort;
 
         const nodes = [];
         const links = [];
@@ -197,6 +195,14 @@ export class FormSameSpeciesComponent implements OnInit {
         this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
 
       });
+  }
+
+  public initTable() {
+    if (this.dataSource.sort) {
+      return;
+    }
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
   }
 
   public onGeneSelected() {
