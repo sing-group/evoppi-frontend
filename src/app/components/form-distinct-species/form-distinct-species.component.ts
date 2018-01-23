@@ -91,11 +91,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
   }
 
   onSearchGenes(value: string): void {
-    const interactomes = [];
+    let interactomes = [];
 
     for (const intArray of this.interactomes) {
       if (intArray && intArray.length > 0) {
-        interactomes.push(intArray.map((interactome) => interactome.id));
+        interactomes = interactomes.concat(intArray.map((interactome) => interactome.id));
       }
     }
     this.geneService.getGene(value, interactomes)
