@@ -40,6 +40,7 @@ import { InteractomesComponent } from './components/interactomes/interactomes.co
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { WorkStatusComponent } from './components/work-status/work-status.component';
 import {WorkService} from './services/work.service';
+import { GeneInfoComponent } from './components/gene-info/gene-info.component';
 
 @NgModule({
   imports: [
@@ -99,6 +100,7 @@ export class MaterialModule { }
     ZoomableDirective,
     AutocompleteComponent,
     WorkStatusComponent,
+    GeneInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -128,6 +130,7 @@ export class MaterialModule { }
   entryComponents: [
     DialogComponent,
     WorkStatusComponent,
+    GeneInfoComponent,
   ],
   bootstrap: [AppComponent]
 })

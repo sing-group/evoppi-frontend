@@ -7,7 +7,7 @@
       [attr.x2]="link.target.x"
       [attr.y2]="link.target.y"
     ></svg:line>
-    <svg:g *ngFor="let node of nodes" appDraggable="node"
+    <svg:g *ngFor="let node of nodes" appDraggable="node" (click)="onNodeClick(node)"
        [draggableNode]="node" [draggableInGraph]="graph" [attr.transform]="'translate(' + node.x + ',' + node.y + ')'">
       <svg:circle
         class="node"

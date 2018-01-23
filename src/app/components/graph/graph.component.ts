@@ -3,6 +3,10 @@ import {
 } from '@angular/core';
 import {D3Service} from '../../services/d3.service';
 import {ForceDirectedGraph} from '../../classes/force-directed-graph';
+import {Node} from '../../classes/node';
+import {GeneService} from '../../services/gene.service';
+import {MatDialog} from '@angular/material';
+import {GeneInfoComponent} from '../gene-info/gene-info.component';
 
 @Component({
   selector: 'app-graph',
@@ -25,7 +29,7 @@ export class GraphComponent implements OnChanges {
     this.graph.initSimulation(this.options);
   }
 
-  constructor(private d3Service: D3Service, private ref: ChangeDetectorRef) {}
+  constructor(private d3Service: D3Service, private ref: ChangeDetectorRef, private geneService: GeneService, public dialog: MatDialog) {}
 
   ngOnChanges(changes: SimpleChanges) {
     this.options = { width: this.graphWidth, height: this.graphHeight };
@@ -45,5 +49,21 @@ export class GraphComponent implements OnChanges {
 
   set options(value) {
     this._options = value;
+  }
+
+  onNodeClick(node: Node) {
+    console.log(node);
+    this.geneService.getGene(+node.label).subscribe((res) => {
+
+      const dialogRef = this.dialog.open(GeneInfoComponent, {
+        // width: '250px',
+        data: { gene: res }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+
+    });
   }
 }
