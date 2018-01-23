@@ -1,5 +1,6 @@
 import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/debounceTime';
 import {Species} from '../../interfaces/species';
 import {SpeciesService} from '../../services/species.service';
 import {InteractomeService} from '../../services/interactome.service';
@@ -72,6 +73,10 @@ export class FormSameSpeciesComponent implements OnInit {
 
     this.resizeGraph();
 
+    this.formSameSpecies.controls.gene.valueChanges.debounceTime(500).subscribe((res) => {
+      this.onSearchGenes(res);
+    });
+
   }
 
   private resizeGraph() {
@@ -102,12 +107,12 @@ export class FormSameSpeciesComponent implements OnInit {
     }
   }
 
-  onSearchGenes(value: number): void {
+  onSearchGenes(value: string): void {
     let interactomes = [];
     if (this.interactomes.length > 0) {
       interactomes = this.interactomes.map((interactome) => interactome.id);
     }
-    this.geneService.getGene(value.toString(), interactomes)
+    this.geneService.getGene(value, interactomes)
       .subscribe(res => {
         this.genes = res;
       });
@@ -156,7 +161,7 @@ export class FormSameSpeciesComponent implements OnInit {
         const csvData = [];
 
         for (const item of this.interaction) {
-          const from = new Node(nodes.length, item.geneA.id);
+          const from = new Node(nodes.length, item.geneA);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
             fromIndex = nodes.length;
@@ -165,7 +170,7 @@ export class FormSameSpeciesComponent implements OnInit {
             nodes[fromIndex].linkCount++;
           }
 
-          const to = new Node(nodes.length, item.geneB.id);
+          const to = new Node(nodes.length, item.geneB);
           let toIndex = nodes.findIndex(x => x.label === to.label);
           if (toIndex === -1) {
             toIndex = nodes.length;
@@ -176,11 +181,11 @@ export class FormSameSpeciesComponent implements OnInit {
 
           const csvInteractomes = [];
           for (const interactome of item.interactomes) {
-            const link = new Link(fromIndex, toIndex, (interactome.id % 4) + 1);
+            const link = new Link(fromIndex, toIndex, (interactome % 4) + 1);
             links.push(link);
-            csvInteractomes.push(interactome.id);
+            csvInteractomes.push(interactome);
           }
-          csvData.push([item.geneA.id, item.geneB.id, csvInteractomes.join('|'), item.degree]);
+          csvData.push([item.geneA, item.geneB, csvInteractomes.join('|'), item.degree]);
         }
 
         this.nodes = nodes;

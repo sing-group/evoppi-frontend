@@ -23,9 +23,8 @@
   </mat-form-field>
   <mat-form-field class="width-100">
     <mat-label>Genes</mat-label>
-    <input type="search" matInput placeholder="Start typing something to search genes"
+    <input #searchInput type="search" matInput placeholder="Start typing something to search genes"
            formControlName="gene"
-           (input)="onSearchGenes($event.target.value)"
            [value]="genesInput" />
   </mat-form-field>
   <mat-selection-list #genesList (selectionChange)="onGeneSelected()">

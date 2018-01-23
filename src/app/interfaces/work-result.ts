@@ -6,8 +6,9 @@ export interface WorkResult {
   id: {id: number, uri: string};
   interactions: Interaction[];
   interactomes: Interactome[];
-  queryGene: Gene;
-  queryInteractomes: Interactome[];
+  genes: Gene[];
+  queryGene: number;
+  queryInteractomes: number[];
   queryMaxDegree: number;
   status: string;
 }
