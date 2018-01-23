@@ -98,7 +98,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
         interactomes = interactomes.concat(intArray.map((interactome) => interactome.id));
       }
     }
-    this.geneService.getGene(value, interactomes)
+    this.geneService.getGeneName(value, interactomes)
       .subscribe(res => {
         this.genes = res;
       });

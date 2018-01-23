@@ -112,7 +112,7 @@ export class FormSameSpeciesComponent implements OnInit {
     if (this.interactomes.length > 0) {
       interactomes = this.interactomes.map((interactome) => interactome.id);
     }
-    this.geneService.getGene(value, interactomes)
+    this.geneService.getGeneName(value, interactomes)
       .subscribe(res => {
         this.genes = res;
       });
