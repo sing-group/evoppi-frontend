@@ -70,6 +70,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
     });
 
     this.getSpecies();
+
+    this.formDistinctSpecies.controls.gene.valueChanges.debounceTime(500).subscribe((res) => {
+      this.onSearchGenes(res);
+    });
   }
 
   getSpecies(): void {
@@ -142,7 +146,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
         console.log(this.interaction);
         for (const item of this.interaction) {
 
-          const from = new Node(nodes.length, item.geneA.id);
+          const from = new Node(nodes.length, item.geneA);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
             fromIndex = nodes.length;
@@ -151,7 +155,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
             nodes[fromIndex].linkCount++;
           }
 
-          const to = new Node(nodes.length, item.geneB.id);
+          const to = new Node(nodes.length, item.geneB);
           let toIndex = nodes.findIndex(x => x.label === to.label);
           if (toIndex === -1) {
             toIndex = nodes.length;
@@ -161,7 +165,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
           }
 
           for (const interactome of item.interactomes) {
-            const link = new Link(fromIndex, toIndex, (interactome.id % 4) + 1);
+            const link = new Link(fromIndex, toIndex, (interactome % 4) + 1);
             links.push(link);
           }
         }
