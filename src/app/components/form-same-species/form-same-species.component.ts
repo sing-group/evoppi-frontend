@@ -123,6 +123,7 @@ export class FormSameSpeciesComponent implements OnInit {
       console.log('INVALID');
       return;
     }
+    this.hideTable = true;
     const formModel = this.formSameSpecies.value;
     this.interactionService.getInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id], formModel.level)
       .subscribe((work) => {
@@ -153,6 +154,7 @@ export class FormSameSpeciesComponent implements OnInit {
         this.hideTable = false;
         this.interaction = res.interactions;
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+        this.dataSource.sort = undefined;
 
         const nodes = [];
         const links = [];
