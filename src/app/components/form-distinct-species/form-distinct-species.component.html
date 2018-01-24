@@ -65,20 +65,20 @@
   <button mat-raised-button button color="primary">Export</button>
   <button mat-raised-button button color="primary">Export Fasta</button>
   <mat-card *ngIf="!hideTable">
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="initTable()">
       <mat-tab label="Graph view">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
       </mat-tab>
       <mat-tab label="Table view">
-        <mat-table #table [dataSource]="dataSource" class="table-distinct-species">
+        <mat-table matSort [dataSource]="dataSource" class="table-distinct-species">
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           <ng-container matColumnDef="GeneSpeciesA">
-            <mat-header-cell *matHeaderCellDef>Gene Species A</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene Species A</mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.geneA}}</mat-cell>
           </ng-container>
           <ng-container matColumnDef="GeneSpeciesB">
-            <mat-header-cell *matHeaderCellDef>Gene Species B</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene Species B</mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.geneB}}</mat-cell>
           </ng-container>
           <ng-container matColumnDef="InteractsSpeciesA">

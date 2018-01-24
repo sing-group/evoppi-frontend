@@ -6,13 +6,14 @@ import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Interaction} from '../../interfaces/interaction';
-import {MatDialog, MatSelectionList, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
 import {Node} from '../../classes/node';
 import {Link} from '../../classes/link';
 import {InteractionService} from '../../services/interaction.service';
 import {GeneInfo} from '../../interfaces/gene-info';
 import {WorkStatusComponent} from '../work-status/work-status.component';
 import {Work} from '../../interfaces/work';
+import {SortHelper} from '../../helpers/sort.helper';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -20,6 +21,7 @@ import {Work} from '../../interfaces/work';
   styleUrls: ['./form-distinct-species.component.css']
 })
 export class FormDistinctSpeciesComponent implements OnInit {
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatSelectionList) geneList: MatSelectionList;
 
   formDistinctSpecies: FormGroup;
@@ -110,6 +112,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
       console.log('INVALID');
       return;
     }
+    this.hideTable = true;
     const formModel = this.formDistinctSpecies.value;
     this.interactionService.getInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id], formModel.level)
       .subscribe((work) => {
@@ -134,16 +137,15 @@ export class FormDistinctSpeciesComponent implements OnInit {
   }
 
   private getResult(uri: string) {
-    const formModel = this.formDistinctSpecies.value;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.hideTable = false;
         this.interaction = res.interactions;
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+        this.dataSource.sort = undefined;
 
         const nodes = [];
         const links = [];
-        console.log(this.interaction);
         for (const item of this.interaction) {
 
           const from = new Node(nodes.length, item.geneA);
@@ -170,12 +172,18 @@ export class FormDistinctSpeciesComponent implements OnInit {
           }
         }
 
-        console.log(nodes);
-        console.log(links);
         this.nodes = nodes;
         this.links = links;
 
       });
+  }
+
+  public initTable() {
+    if (this.dataSource.sort) {
+      return;
+    }
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
   }
 
   public onGeneSelected(value) {
