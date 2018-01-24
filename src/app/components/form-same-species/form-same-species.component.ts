@@ -48,7 +48,7 @@ export class FormSameSpeciesComponent implements OnInit {
   links: Link[] = [];
 
   graphWidth = 900;
-  graphHeight = 300;
+  graphHeight = 450;
 
   csvContent: SafeResourceUrl = '';
   csvName = 'data.csv';
@@ -85,7 +85,7 @@ export class FormSameSpeciesComponent implements OnInit {
     } else {
       this.graphWidth = window.innerWidth - 120;
     }
-    this.graphHeight = this.graphWidth / 3;
+    this.graphHeight = this.graphWidth / 2;
   }
 
   @HostListener('window:resize', ['$event'])

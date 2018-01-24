@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {SpeciesService} from '../../services/species.service';
 import {Interactome} from '../../interfaces/interactome';
 import {Species} from '../../interfaces/species';
@@ -45,7 +45,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   links: Link[] = [];
 
   graphWidth = 900;
-  graphHeight = 300;
+  graphHeight = 450;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
@@ -73,9 +73,25 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     this.getSpecies();
 
+    this.resizeGraph();
+
     this.formDistinctSpecies.controls.gene.valueChanges.debounceTime(500).subscribe((res) => {
       this.onSearchGenes(res);
     });
+  }
+
+  private resizeGraph() {
+    if (window.innerWidth > 1024) {
+      this.graphWidth = 900;
+    } else {
+      this.graphWidth = window.innerWidth - 120;
+    }
+    this.graphHeight = this.graphWidth / 2;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.resizeGraph();
   }
 
   getSpecies(): void {
