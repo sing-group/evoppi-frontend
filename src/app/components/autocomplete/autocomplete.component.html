@@ -1,12 +1,14 @@
-<mat-list-option value="{{title}}">
-  <h4 *ngIf="title" matLine>{{title}}</h4>
-  <h6 *ngIf="subtitle" matLine>{{subtitle}}</h6>
-  <mat-list matLine role="list">
-    <mat-list-item role="listitem" *ngFor="let name of names">
-      <span>{{name.source}}</span>:
-      <mat-chip-list>
-        <mat-chip *ngFor="let geneName of name.names">{{geneName}}</mat-chip>
-      </mat-chip-list>
-    </mat-list-item>
-  </mat-list>
-</mat-list-option>
+<mat-expansion-panel *ngFor="let name of names" [hideToggle]="true">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{title}}
+    </mat-panel-title>
+    <mat-panel-description>
+      {{name.source}}
+      <mat-radio-button value="{{title}}" (change)="onChange($event.value)"></mat-radio-button>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <mat-chip-list [selectable]="false">
+    <mat-chip class="mat-chip-margin" color="primary" *ngFor="let geneName of name.names">{{geneName}}</mat-chip>
+  </mat-chip-list>
+</mat-expansion-panel>

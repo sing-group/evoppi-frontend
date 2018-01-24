@@ -27,10 +27,10 @@
            formControlName="gene"
            [value]="genesInput" />
   </mat-form-field>
-  <mat-selection-list #genesList (selectionChange)="onGeneSelected()">
-    <app-autocomplete *ngFor="let gene of genes" [title]="gene.geneId" [names]="gene.names">
+  <mat-accordion>
+    <app-autocomplete *ngFor="let gene of genes" [title]="gene.geneId" [names]="gene.names" (radioSelected)="onGeneSelected($event)">
     </app-autocomplete>
-  </mat-selection-list>
+  </mat-accordion>
   <mat-form-field class="width-25">
     <input type="number" matInput placeholder="Interaction level" formControlName="level" [(ngModel)]="level">
   </mat-form-field>

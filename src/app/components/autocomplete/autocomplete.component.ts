@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-autocomplete',
@@ -15,13 +15,15 @@ export class AutocompleteComponent implements OnInit {
   public names: Array<{source: string, names: Array<string>}>;
 
   @Output()
-  public selected: string;
+  public radioSelected: EventEmitter<number> = new EventEmitter<number>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-
+  onChange(value) {
+    this.radioSelected.emit(value);
+  }
 
 }

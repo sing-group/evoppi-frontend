@@ -34,10 +34,10 @@
            formControlName="gene"
            [value]="genesInput" />
   </mat-form-field>
-  <mat-selection-list #genesList (selectionChange)="onGeneSelected()">
-    <app-autocomplete *ngFor="let gene of genes" [title]="gene.geneId" [names]="gene.names">
+  <mat-accordion>
+    <app-autocomplete *ngFor="let gene of genes" [title]="gene.geneId" [names]="gene.names" (radioSelected)="onGeneSelected($event)">
     </app-autocomplete>
-  </mat-selection-list>
+  </mat-accordion>
 
 
   <mat-form-field class="width-25">
@@ -75,17 +75,17 @@
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           <ng-container matColumnDef="GeneSpeciesA">
             <mat-header-cell *matHeaderCellDef>Gene Species A</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.geneA.id}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.geneA}}</mat-cell>
           </ng-container>
           <ng-container matColumnDef="GeneSpeciesB">
             <mat-header-cell *matHeaderCellDef>Gene Species B</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.geneB.id}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.geneB}}</mat-cell>
           </ng-container>
           <ng-container matColumnDef="InteractsSpeciesA">
             <mat-header-cell *matHeaderCellDef>Interacts Species A</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <mat-chip-list>
-                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome.id % 4) + 1)}}">{{interactome.id}} </mat-chip>
+                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
               </mat-chip-list>
             </mat-cell>
           </ng-container>
@@ -93,7 +93,7 @@
             <mat-header-cell *matHeaderCellDef>Interacts Species B</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <mat-chip-list>
-                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome.id % 4) + 1)}}">{{interactome.id}} </mat-chip>
+                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
               </mat-chip-list>
             </mat-cell>
           </ng-container>

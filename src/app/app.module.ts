@@ -6,8 +6,9 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatIconModule, MatInputModule, MatListModule,
-  MatMenuModule, MatProgressBarModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatExpansionModule, MatIconModule, MatInputModule,
+  MatListModule,
+  MatMenuModule, MatProgressBarModule, MatRadioModule,
   MatSelectModule,
   MatSliderModule, MatSortModule,
   MatTableModule,
@@ -61,6 +62,8 @@ import { GeneInfoComponent } from './components/gene-info/gene-info.component';
     MatSortModule,
     MatListModule,
     MatProgressBarModule,
+    MatExpansionModule,
+    MatRadioModule,
   ],
   exports: [
     MatButtonModule,
@@ -80,6 +83,8 @@ import { GeneInfoComponent } from './components/gene-info/gene-info.component';
     MatSortModule,
     MatListModule,
     MatProgressBarModule,
+    MatExpansionModule,
+    MatRadioModule,
   ],
 })
 export class MaterialModule { }

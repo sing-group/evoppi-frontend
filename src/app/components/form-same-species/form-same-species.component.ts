@@ -205,14 +205,10 @@ export class FormSameSpeciesComponent implements OnInit {
     this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
   }
 
-  public onGeneSelected() {
-    for (const item of this.geneList.selectedOptions.selected) {
-      const formModel = this.formSameSpecies.value;
-      this.genesInput = item.value;
-      formModel.gene = item.value;
-      this.genes = [];
-      break;
-    }
+  public onGeneSelected(value) {
+    this.genesInput = value;
+    this.formSameSpecies.patchValue({gene: value}, {emitEvent: false});
+    this.genes = [];
   }
 
 }

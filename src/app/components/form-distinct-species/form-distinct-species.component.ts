@@ -178,13 +178,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
       });
   }
 
-  public onGeneSelected() {
-    for (const item of this.geneList.selectedOptions.selected) {
-      const formModel = this.formDistinctSpecies.value;
-      this.genesInput = item.value;
-      formModel.gene = item.value;
-      this.genes = [];
-      break;
-    }
+  public onGeneSelected(value) {
+    this.genesInput = value;
+    this.formDistinctSpecies.patchValue({gene: value}, {emitEvent: false});
+    this.genes = [];
   }
 }
