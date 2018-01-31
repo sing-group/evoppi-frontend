@@ -8,7 +8,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-50 right">
-    <mat-select placeholder="Interactome A" formControlName="interactomeA">
+    <mat-select placeholder="Reference Interactome" formControlName="interactomeA">
       <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
@@ -22,7 +22,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-50 right">
-    <mat-select placeholder="Interactome B" formControlName="interactomeB">
+    <mat-select placeholder="Target Interactome" formControlName="interactomeB">
       <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome">
         {{ interactome.name }}
       </mat-option>

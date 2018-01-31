@@ -109,14 +109,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
   }
 
   onSearchGenes(value: string): void {
-    let interactomes = [];
-
-    for (const intArray of this.interactomes) {
-      if (intArray && intArray.length > 0) {
-        interactomes = interactomes.concat(intArray.map((interactome) => interactome.id));
-      }
+    if (!this.formDistinctSpecies.get('interactomeA').valid) {
+      alert('First, select Reference Interactome');
+      return;
     }
-    this.geneService.getGeneName(value, interactomes)
+    this.geneService.getGeneName(value, [this.formDistinctSpecies.value.interactomeA.id])
       .subscribe(res => {
         this.genes = res;
       });
@@ -130,7 +127,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
     this.hideTable = true;
     const formModel = this.formDistinctSpecies.value;
-    this.interactionService.getInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id], formModel.level)
+    this.interactionService.getDistinctSpeciesInteraction(formModel.gene, formModel.interactomeA.id, formModel.interactomeB.id,
+      formModel.level)
       .subscribe((work) => {
         this.openDialog(work);
       });

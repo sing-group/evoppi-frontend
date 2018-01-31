@@ -125,7 +125,8 @@ export class FormSameSpeciesComponent implements OnInit {
     }
     this.hideTable = true;
     const formModel = this.formSameSpecies.value;
-    this.interactionService.getInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id], formModel.level)
+    this.interactionService.getSameSpeciesInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id],
+      formModel.level)
       .subscribe((work) => {
         this.openDialog(work);
       });

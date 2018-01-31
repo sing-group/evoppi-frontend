@@ -15,14 +15,23 @@ export class InteractionService {
   constructor(private http: HttpClient) { }
 
 
-  getInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
+  getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
 
     const params: any = {gene: gene, interactome: interactomes, maxDegree: interactionLevel};
 
-    return this.http.get<Work>(this.endpoint, {params : params})
-      .pipe(
-        catchError(ErrorHelper.handleError('getInteraction', null))
-      );
+    return this.http.get<Work>(this.endpoint, {params : params});
+  }
+
+  getDistinctSpeciesInteraction(gene: number, referenceInteractome: number, targetInteractome: number,
+                                 interactionLevel: number): Observable<Work> {
+
+    const params: any = {
+      gene: gene,
+      referenceInteractome: referenceInteractome,
+      targetInteractome: targetInteractome,
+      maxDegree: interactionLevel};
+
+    return this.http.get<Work>(this.endpoint, {params : params});
   }
 
   getInteractionResult(uri: string): Observable<WorkResult> {
