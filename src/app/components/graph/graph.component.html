@@ -10,8 +10,7 @@
     <svg:g *ngFor="let node of nodes" appDraggable="node" (click)="onNodeClick(node)"
        [draggableNode]="node" [draggableInGraph]="graph" [attr.transform]="'translate(' + node.x + ',' + node.y + ')'">
       <svg:circle
-        class="node"
-        [attr.fill]="node.color"
+        ngClass="{{'node' + node.type}}"
         cx="0"
         cy="0"
         [attr.r]="node.r">

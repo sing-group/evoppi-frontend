@@ -32,8 +32,8 @@
 
 .link2 {
   stroke-width: 4;
-  stroke: rgb(53, 141, 38);
-  background-color: rgb(53, 141, 38) !important;
+  stroke: rgb(59, 80, 61);
+  background-color: rgb(59, 80, 61)!important;
   color: white !important;
 }
 
@@ -51,3 +51,10 @@
   color: white !important;
 }
 
+.node1 {
+  fill: grey;
+}
+
+.node2 {
+  fill: green;
+}

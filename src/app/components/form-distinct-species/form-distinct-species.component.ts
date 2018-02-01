@@ -154,7 +154,14 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.hideTable = false;
-        this.interaction = res.interactions;
+        this.interaction = [];
+
+        for (const item of res.interactions) {
+          if (item.interactomes.find(x => x === res.referenceInteractome.id)) {
+            this.interaction.push(item);
+          }
+        }
+
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
         this.dataSource.sort = undefined;
 
@@ -162,7 +169,17 @@ export class FormDistinctSpeciesComponent implements OnInit {
         const links = [];
         for (const item of this.interaction) {
 
-          const from = new Node(nodes.length, item.geneA);
+          let typeA = 1, typeB = 1;
+          for (const br of res.blastResults) {
+            if (br.qseqid === item.geneA) {
+              typeA = 2;
+            }
+            if (br.qseqid === item.geneB) {
+              typeB = 2;
+            }
+          }
+
+          const from = new Node(nodes.length, item.geneA, typeA);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
             fromIndex = nodes.length;
@@ -171,7 +188,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
             nodes[fromIndex].linkCount++;
           }
 
-          const to = new Node(nodes.length, item.geneB);
+          const to = new Node(nodes.length, item.geneB, typeB);
           let toIndex = nodes.findIndex(x => x.label === to.label);
           if (toIndex === -1) {
             toIndex = nodes.length;
