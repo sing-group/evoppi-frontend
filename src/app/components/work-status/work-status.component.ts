@@ -4,6 +4,7 @@ import {Work} from '../../interfaces/work';
 import {WorkService} from '../../services/work.service';
 import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
 import {Subscription} from 'rxjs/Subscription';
+import {Status} from '../../interfaces/status';
 
 @Component({
   selector: 'app-work-status',
@@ -29,11 +30,16 @@ export class WorkStatusComponent implements OnInit {
 
   private update() {
     this.workService.update(this.work).subscribe((res) => {
-      if (res.finished) {
-        this.intervalSubscription.unsubscribe();
-        this.dialogRef.close(res);
-      } else {
-        this.work = res;
+      switch (res.status) {
+        case Status.FAILED:
+          alert('Work FAILED');
+          /* falls through */
+        case Status.COMPLETED:
+          this.intervalSubscription.unsubscribe();
+          this.dialogRef.close(res);
+          break;
+        default:
+          this.work = res;
       }
     });
 

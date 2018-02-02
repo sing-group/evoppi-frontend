@@ -19,6 +19,7 @@ import {GeneInfo} from '../../interfaces/gene-info';
 import {SortHelper} from '../../helpers/sort.helper';
 import {WorkStatusComponent} from '../work-status/work-status.component';
 import {Work} from '../../interfaces/work';
+import {Status} from '../../interfaces/status';
 
 @Component({
   selector: 'app-form-same-species',
@@ -140,7 +141,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       console.log(res.resultReference);
-      if ( res.finished ) {
+      if ( res.status === Status.COMPLETED ) {
         this.getResult(res.resultReference);
       } else {
         alert('Work unfinished');
@@ -181,6 +182,7 @@ export class FormSameSpeciesComponent implements OnInit {
           }
 
           const csvInteractomes = [];
+          // TODO: multiple interactomes get link overwritten
           for (const interactome of item.interactomes) {
             const link = new Link(fromIndex, toIndex, (interactome % 4) + 1);
             links.push(link);

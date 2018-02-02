@@ -14,6 +14,7 @@ import {GeneInfo} from '../../interfaces/gene-info';
 import {WorkStatusComponent} from '../work-status/work-status.component';
 import {Work} from '../../interfaces/work';
 import {SortHelper} from '../../helpers/sort.helper';
+import {Status} from '../../interfaces/status';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -142,7 +143,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       console.log(res.resultReference);
-      if ( res.finished ) {
+      if ( res.status === Status.COMPLETED ) {
         this.getResult(res.resultReference);
       } else {
         alert('Work unfinished');

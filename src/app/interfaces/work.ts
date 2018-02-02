@@ -1,4 +1,5 @@
 import {Step} from './step';
+import {Status} from './status';
 
 export interface Work {
   id: {id: number, uri: string};
@@ -8,6 +9,6 @@ export interface Work {
   startDateTime: Date;
   endDateTime: Date;
   resultReference: string;
-  finished: boolean;
+  status: Status;
   steps: Array<Step>;
 }
