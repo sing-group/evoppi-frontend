@@ -57,7 +57,7 @@ export class GraphComponent implements OnChanges {
 
       const dialogRef = this.dialog.open(GeneInfoComponent, {
         // width: '250px',
-        data: { gene: res }
+        data: { gene: res, blastResults: node.blastResults }
       });
 
       dialogRef.afterClosed().subscribe(result => {

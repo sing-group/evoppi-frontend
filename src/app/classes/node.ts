@@ -1,3 +1,4 @@
+import {BlastResult} from '../interfaces/blast-result';
 
 export class Node implements d3.SimulationNodeDatum {
   // optional - defining optional implementation properties - required for relevant typing assistance
@@ -13,11 +14,13 @@ export class Node implements d3.SimulationNodeDatum {
   label: string;
   linkCount: number = 0;
   type?: number;
+  blastResults?: BlastResult[];
 
-  constructor(id, label, type = 1) {
+  constructor(id, label, type = 1, blastResults = []) {
     this.id = id;
     this.label = label;
     this.type = type;
+    this.blastResults = blastResults;
   }
 
   normal = () => {

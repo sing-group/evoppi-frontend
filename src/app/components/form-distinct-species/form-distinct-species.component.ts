@@ -174,12 +174,15 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
           // Set type of each node
           let typeA = 1, typeB = 1;
+          const blastResultsA = [], blastResultsB = [];
           for (const br of res.blastResults) {
             if (br.qseqid === item.geneA) {
               typeA = 2;
+              blastResultsA.push(br);
             }
             if (br.qseqid === item.geneB) {
               typeB = 2;
+              blastResultsB.push(br);
             }
           }
 
@@ -198,7 +201,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
           }
 
           // Insert nodes or increment linkCount
-          const from = new Node(nodes.length, item.geneA, typeA);
+          const from = new Node(nodes.length, item.geneA, typeA, blastResultsA);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
             fromIndex = nodes.length;
@@ -207,7 +210,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
             nodes[fromIndex].linkCount++;
           }
 
-          const to = new Node(nodes.length, item.geneB, typeB);
+          const to = new Node(nodes.length, item.geneB, typeB, blastResultsB);
           let toIndex = nodes.findIndex(x => x.label === to.label);
           if (toIndex === -1) {
             toIndex = nodes.length;
