@@ -156,19 +156,23 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.hideTable = false;
         this.interaction = [];
 
-        for (const item of res.interactions) {
-          if (item.interactomes.find(x => x === res.referenceInteractome.id)) {
-            this.interaction.push(item);
+        // Filter out interactions which don't include the referenceInteractome
+        for (const interaction of res.interactions) {
+          if (interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
+            this.interaction.push(interaction);
           }
         }
 
+        // Set table source
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
         this.dataSource.sort = undefined;
 
+        // Construct nodes and links
         const nodes = [];
         const links = [];
         for (const item of this.interaction) {
 
+          // Set type of each node
           let typeA = 1, typeB = 1;
           for (const br of res.blastResults) {
             if (br.qseqid === item.geneA) {
@@ -179,6 +183,21 @@ export class FormDistinctSpeciesComponent implements OnInit {
             }
           }
 
+          // Set type of each link
+          let linkType = 1;
+          // Interaction in both genes
+          if (typeA === 2 && typeB === 2) {
+            linkType = 3;
+          } else if (typeA === 2) { // Interaction only in reference gene
+            linkType = 1;
+          } else if (typeB === 2) { // Interaction only in target gene
+            linkType = 2;
+          } else { // typeA === 1 && typeB === 1 // Should not happen
+            console.error('Condition not met: no interactions', item);
+            linkType = 4;
+          }
+
+          // Insert nodes or increment linkCount
           const from = new Node(nodes.length, item.geneA, typeA);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
@@ -197,10 +216,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
             nodes[toIndex].linkCount++;
           }
 
-          for (const interactome of item.interactomes) {
-            const link = new Link(fromIndex, toIndex, (interactome % 4) + 1);
-            links.push(link);
-          }
+          // Insert link
+          const link = new Link(fromIndex, toIndex, linkType);
+          links.push(link);
+
         }
 
         this.nodes = nodes;
