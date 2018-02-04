@@ -189,16 +189,15 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
           // Set type of each link
           let linkType = 1;
-          // Interaction in both genes
+          // Interaction in both interactomes
           if (typeA === 2 && typeB === 2) {
             linkType = 3;
-          } else if (typeA === 2) { // Interaction only in reference gene
+          } else if (typeA === 2) { // Interaction only in reference interactome
             linkType = 1;
-          } else if (typeB === 2) { // Interaction only in target gene
+          } else if (typeB === 2) { // Interaction only in target interactome
             linkType = 2;
-          } else { // typeA === 1 && typeB === 1 // Should not happen
-            console.error('Condition not met: no interactions', item);
-            linkType = 4;
+          } else { // typeA === 1 && typeB === 1 // No alignment, interaction only in reference interactome
+            linkType = 1;
           }
 
           // Insert nodes or increment linkCount
