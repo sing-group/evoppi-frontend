@@ -3,13 +3,7 @@
     <input matInput placeholder="Query sequence id (qseqid)" [value]="blastResult.qseqid" readonly/>
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Query sequence version (qseqversion)" [value]="blastResult.qseqversion" readonly/>
-  </mat-form-field>
-  <mat-form-field>
     <input matInput placeholder="Subject sequence id (sseqid)" [value]="blastResult.sseqid" readonly/>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Subject sequence version (sseqversion)" [value]="blastResult.sseqversion" readonly/>
   </mat-form-field>
   <mat-form-field>
     <input matInput placeholder="Alignment length (length)" [value]="blastResult.length" readonly/>
@@ -38,4 +32,20 @@
   <mat-form-field>
     <input matInput placeholder="Bit score (bitscore)" [value]="blastResult.bitscore" readonly/>
   </mat-form-field>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Alignment
+        </mat-panel-title>
+        <mat-panel-description>
+          {{blastResult.qseqid}} - {{blastResult.sseqid}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div style="overflow: auto;">
+        {{qAlignment}}
+        {{sAlignment}}
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 </mat-card>

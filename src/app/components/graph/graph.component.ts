@@ -29,7 +29,7 @@ export class GraphComponent implements OnChanges {
     this.graph.initSimulation(this.options);
   }
 
-  constructor(private d3Service: D3Service, private ref: ChangeDetectorRef, private geneService: GeneService, public dialog: MatDialog) {}
+  constructor(private d3Service: D3Service, private ref: ChangeDetectorRef, public dialog: MatDialog) {}
 
   ngOnChanges(changes: SimpleChanges) {
     this.options = { width: this.graphWidth, height: this.graphHeight };
@@ -53,17 +53,15 @@ export class GraphComponent implements OnChanges {
 
   onNodeClick(node: Node) {
     console.log(node);
-    this.geneService.getGene(+node.label).subscribe((res) => {
 
-      const dialogRef = this.dialog.open(GeneInfoComponent, {
-        // width: '250px',
-        data: { gene: res, blastResults: node.blastResults }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
-      });
-
+    const dialogRef = this.dialog.open(GeneInfoComponent, {
+      // width: '250px',
+      data: { geneId: node.label, blastResults: node.blastResults }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
   }
 }

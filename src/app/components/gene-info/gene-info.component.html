@@ -1,4 +1,4 @@
-<mat-card class="example-card">
+<mat-card *ngIf="gene">
   <mat-card-header>
     <mat-chip mat-card-avatar style="color:white">Gene {{gene.id}}</mat-chip>
     <mat-card-title>{{gene.names[0].names}}</mat-card-title>
