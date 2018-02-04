@@ -1,0 +1,41 @@
+<mat-card>
+  <mat-form-field>
+    <input matInput placeholder="Query sequence id (qseqid)" [value]="blastResult.qseqid" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Query sequence version (qseqversion)" [value]="blastResult.qseqversion" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Subject sequence id (sseqid)" [value]="blastResult.sseqid" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Subject sequence version (sseqversion)" [value]="blastResult.sseqversion" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Alignment length (length)" [value]="blastResult.length" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Number of mismatches (mismatch)" [value]="blastResult.mismatch" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Number of gap openings (gapopen)" [value]="blastResult.gapopen" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Start of alignment in query (qstart)" [value]="blastResult.qstart" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="End of alignment in query (qend)" [value]="blastResult.qend" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Start of alignment in subject (sstart)" [value]="blastResult.sstart" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="End of alignment in subject (send)" [value]="blastResult.send" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Expect value (evalue)" [value]="blastResult.evalue" readonly/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Bit score (bitscore)" [value]="blastResult.bitscore" readonly/>
+  </mat-form-field>
+</mat-card>
