@@ -56,6 +56,7 @@ export class GraphComponent implements OnChanges {
 
     const dialogRef = this.dialog.open(GeneInfoComponent, {
       // width: '250px',
+      maxHeight: window.innerHeight,
       data: { geneId: node.label, blastResults: node.blastResults }
     });
 
