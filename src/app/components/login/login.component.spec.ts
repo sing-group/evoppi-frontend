@@ -21,6 +21,8 @@ import {ZoomableDirective} from '../../directives/zoomable.directive';
 import {DraggableDirective} from '../../directives/draggable.directive';
 import {InteractomesComponent} from '../interactomes/interactomes.component';
 import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
+import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
+import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-species.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -30,7 +32,8 @@ describe('LoginComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent, LoginComponent,
-        UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent, AutocompleteComponent],
+        UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent, AutocompleteComponent,
+        LegendDistinctSpeciesComponent, LegendSameSpeciesComponent],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         UserService, AuthService,

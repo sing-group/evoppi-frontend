@@ -16,6 +16,7 @@ import {ZoomableDirective} from '../../directives/zoomable.directive';
 import {DraggableDirective} from '../../directives/draggable.directive';
 import {D3Service} from '../../services/d3.service';
 import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
+import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-species.component';
 
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
@@ -24,7 +25,8 @@ describe('FormSameSpeciesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormSameSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent ],
+      declarations: [ FormSameSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent,
+        LegendSameSpeciesComponent],
       imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
       providers: [ SpeciesService, InteractomeService, GeneService, InteractionService, D3Service ]
     })

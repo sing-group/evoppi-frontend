@@ -16,6 +16,7 @@ import {D3Service} from '../../services/d3.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ZoomableDirective} from '../../directives/zoomable.directive';
 import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
+import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
 
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
@@ -24,7 +25,8 @@ describe('FormDistinctSpeciesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormDistinctSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent ],
+      declarations: [ FormDistinctSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent,
+        LegendDistinctSpeciesComponent],
       imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
       providers: [ SpeciesService, InteractomeService, GeneService, InteractionService, D3Service ]
     })

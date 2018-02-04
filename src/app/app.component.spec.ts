@@ -24,6 +24,8 @@ import {ZoomableDirective} from './directives/zoomable.directive';
 import {DraggableDirective} from './directives/draggable.directive';
 import {InteractomesComponent} from './components/interactomes/interactomes.component';
 import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
+import {LegendDistinctSpeciesComponent} from './components/legend-distinct-species/legend-distinct-species.component';
+import {LegendSameSpeciesComponent} from './components/legend-same-species/legend-same-species.component';
 
 
 describe('AppComponent', () => {
@@ -34,7 +36,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
-        AutocompleteComponent ],
+        AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent ],
       imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
       providers: [SpeciesService, InteractomeService, GeneService, InteractionService, UserService, AuthService,
         { provide: ActivatedRoute, useValue: activatedRoute },
