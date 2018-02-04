@@ -15,6 +15,9 @@ import {WorkStatusComponent} from '../work-status/work-status.component';
 import {Work} from '../../interfaces/work';
 import {SortHelper} from '../../helpers/sort.helper';
 import {Status} from '../../interfaces/status';
+import {SafeResourceUrl} from '@angular/platform-browser/src/security/dom_sanitization_service';
+import {CsvHelper} from '../../helpers/csv.helper';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -48,7 +51,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
   graphWidth = 900;
   graphHeight = 450;
 
-  constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService,
+  csvContent: SafeResourceUrl = '';
+  csvName = 'data.csv';
+
+  constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
               private dialog: MatDialog) { }
 
@@ -152,36 +158,32 @@ export class FormDistinctSpeciesComponent implements OnInit {
   }
 
   private getResult(uri: string) {
+    const formModel = this.formDistinctSpecies.value;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.hideTable = false;
         this.interaction = [];
 
-        // Filter out interactions which don't include the referenceInteractome
-        for (const interaction of res.interactions) {
-          if (interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
-            this.interaction.push(interaction);
-          }
-        }
-
-        // Set table source
-        this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
-        this.dataSource.sort = undefined;
-
         // Construct nodes and links
         const nodes = [];
         const links = [];
-        for (const item of this.interaction) {
+        const csvData = [];
+
+        // Filter out interactions which don't include the referenceInteractome
+        for (const interaction of res.interactions) {
+          if (!interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
+            continue;
+          }
 
           // Set type of each node
           let typeA = 1, typeB = 1;
           const blastResultsA = [], blastResultsB = [];
           for (const br of res.blastResults) {
-            if (br.qseqid === item.geneA) {
+            if (br.qseqid === interaction.geneA) {
               typeA = 2;
               blastResultsA.push(br);
             }
-            if (br.qseqid === item.geneB) {
+            if (br.qseqid === interaction.geneB) {
               typeB = 2;
               blastResultsB.push(br);
             }
@@ -192,16 +194,22 @@ export class FormDistinctSpeciesComponent implements OnInit {
           // Interaction in both interactomes
           if (typeA === 2 && typeB === 2) {
             linkType = 3;
+            interaction.code = 'Both interactomes';
           } else if (typeA === 2) { // Interaction only in reference interactome
             linkType = 1;
+            interaction.code = 'Reference interactome';
           } else if (typeB === 2) { // Interaction only in target interactome
             linkType = 2;
+            interaction.code = 'Target interactome';
           } else { // typeA === 1 && typeB === 1 // No alignment, interaction only in reference interactome
             linkType = 1;
+            interaction.code = 'Reference interactome';
           }
 
+          this.interaction.push(interaction);
+
           // Insert nodes or increment linkCount
-          const from = new Node(nodes.length, item.geneA, typeA, blastResultsA);
+          const from = new Node(nodes.length, interaction.geneA, typeA, blastResultsA);
           let fromIndex = nodes.findIndex(x => x.label === from.label);
           if (fromIndex === -1) {
             fromIndex = nodes.length;
@@ -210,7 +218,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
             nodes[fromIndex].linkCount++;
           }
 
-          const to = new Node(nodes.length, item.geneB, typeB, blastResultsB);
+          const to = new Node(nodes.length, interaction.geneB, typeB, blastResultsB);
           let toIndex = nodes.findIndex(x => x.label === to.label);
           if (toIndex === -1) {
             toIndex = nodes.length;
@@ -223,10 +231,22 @@ export class FormDistinctSpeciesComponent implements OnInit {
           const link = new Link(fromIndex, toIndex, linkType);
           links.push(link);
 
+          csvData.push([interaction.geneA, interaction.geneB, res.referenceInteractome.id, res.targetInteractome.id, interaction.code]);
+
         }
+
+        // Set table source
+        this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+        this.dataSource.sort = undefined;
 
         this.nodes = nodes;
         this.links = links;
+
+        this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+          CsvHelper.getCSV(this.displayedColumns, csvData)
+        );
+        this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
+
 
       });
   }
