@@ -43,6 +43,7 @@
     <mat-tab-group (selectedTabChange)="initTable()">
       <mat-tab label="Graph view">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
+        <app-legend-same-species [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-same-species>
       </mat-tab>
       <mat-tab label="Table view">
         <div class="table-container mat-elevation-z8">

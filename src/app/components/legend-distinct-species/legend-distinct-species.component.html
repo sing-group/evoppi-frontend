@@ -1,0 +1,76 @@
+<mat-card>
+  <mat-card-header>
+    <div matCardAvatar><mat-icon>photo</mat-icon></div>
+    <mat-card-title>Legend</mat-card-title>
+    <mat-card-subtitle>Click in each node to obtain additional information</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <svg #legend [attr.width]="options.width-10" [attr.height]="200">
+      <svg:g [attr.transform]="'translate(25,25)'">
+        <svg:circle
+          class="node1"
+          cx="0"
+          cy="0"
+          [attr.r]="24">
+        </svg:circle>
+        <svg:text
+          class="node-name"
+          [attr.font-size]="15">
+          Gene
+        </svg:text>
+        <svg:text x="40" y="5">
+          Gene without ortholog
+        </svg:text>
+      </svg:g>
+      <svg:g [attr.transform]="'translate(25,80)'">
+        <svg:circle
+          class="node2"
+          cx="0"
+          cy="0"
+          [attr.r]="24">
+        </svg:circle>
+        <svg:text
+          class="node-name"
+          [attr.font-size]="15">
+          Gene
+        </svg:text>
+        <svg:text x="40" y="5">
+          Gene with ortholog
+        </svg:text>
+      </svg:g>
+      <svg:g [attr.transform]="'translate(1,125)'">
+        <svg:line class="link1"
+                  [attr.x1]="0"
+                  [attr.y1]="0"
+                  [attr.x2]="48"
+                  [attr.y2]="0"
+        ></svg:line>
+        <svg:text x="64" y="3">
+          Interaction only in reference interactome
+        </svg:text>
+      </svg:g>
+      <svg:g [attr.transform]="'translate(1,150)'">
+        <svg:line class="link2"
+                  [attr.x1]="0"
+                  [attr.y1]="0"
+                  [attr.x2]="48"
+                  [attr.y2]="0"
+        ></svg:line>
+        <svg:text x="64" y="3">
+          Interaction only in target interactome
+        </svg:text>
+      </svg:g>
+      <svg:g [attr.transform]="'translate(1,175)'">
+        <svg:line class="link3"
+                  [attr.x1]="0"
+                  [attr.y1]="0"
+                  [attr.x2]="48"
+                  [attr.y2]="0"
+        ></svg:line>
+        <svg:text x="64" y="3">
+          Interaction in both interactomes
+        </svg:text>
+      </svg:g>
+    </svg>
+  </mat-card-content>
+</mat-card>

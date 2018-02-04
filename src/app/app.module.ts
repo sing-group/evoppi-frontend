@@ -42,6 +42,8 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
 import { WorkStatusComponent } from './components/work-status/work-status.component';
 import {WorkService} from './services/work.service';
 import { GeneInfoComponent } from './components/gene-info/gene-info.component';
+import { LegendSameSpeciesComponent } from './components/legend-same-species/legend-same-species.component';
+import { LegendDistinctSpeciesComponent } from './components/legend-distinct-species/legend-distinct-species.component';
 
 @NgModule({
   imports: [
@@ -106,6 +108,8 @@ export class MaterialModule { }
     AutocompleteComponent,
     WorkStatusComponent,
     GeneInfoComponent,
+    LegendSameSpeciesComponent,
+    LegendDistinctSpeciesComponent,
   ],
   imports: [
     BrowserModule,

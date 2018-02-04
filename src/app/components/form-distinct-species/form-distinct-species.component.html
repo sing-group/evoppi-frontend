@@ -68,6 +68,7 @@
     <mat-tab-group (selectedTabChange)="initTable()">
       <mat-tab label="Graph view">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
+        <app-legend-distinct-species [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-distinct-species>
       </mat-tab>
       <mat-tab label="Table view">
         <mat-table matSort [dataSource]="dataSource" class="table-distinct-species">
