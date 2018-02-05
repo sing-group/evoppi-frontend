@@ -5,12 +5,12 @@ import {IdUri} from './id-uri';
 import {BlastResult} from './blast-result';
 
 export interface WorkResult {
-  id: {id: number, uri: string};
-  interactions: Interaction[];
-  interactomes: Interactome[];
-  genes: Gene[];
+  id: number;
+  interactions?: Interaction[];
+  interactomes?: Interactome[];
+  genes?: Gene[];
   queryGene: number;
-  queryInteractomes: number[];
+  queryInteractomes?: number[];
   queryMaxDegree: number;
   status: string;
   referenceInteractome: IdUri;

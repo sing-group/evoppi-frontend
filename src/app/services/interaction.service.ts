@@ -12,7 +12,7 @@ export class InteractionService {
 
   private endpoint = environment.evoppiUrl + 'api/interaction';
 
-  constructor(private http: HttpClient) { }
+  constructor(protected http: HttpClient) { }
 
 
   getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {

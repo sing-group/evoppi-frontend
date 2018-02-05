@@ -3,5 +3,5 @@ export interface Interaction {
   geneA: number;
   geneB: number;
   degree: number;
-  code: string;
+  code?: string;
 }

@@ -34,7 +34,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
   species: Species[];
   interactomes: Interactome[][] = [];
-  interaction: Interaction[] = [];
+  referenceInteraction: Interaction[] = [];
+  targetInteraction: Interaction[] = [];
   genes: GeneInfo[];
   level: number;
   eValue: number;
@@ -157,12 +158,14 @@ export class FormDistinctSpeciesComponent implements OnInit {
     });
   }
 
-  private getResult(uri: string) {
+  public getResult(uri: string) {
     const formModel = this.formDistinctSpecies.value;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.hideTable = false;
-        this.interaction = [];
+        this.referenceInteraction = [];
+        this.targetInteraction = [];
+        const referenceTargetIncluded = [];
 
         // Construct nodes and links
         const nodes = [];
@@ -171,19 +174,33 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
         // Filter out interactions which don't include the referenceInteractome
         for (const interaction of res.interactions) {
-          if (!interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
-            continue;
+          if (interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
+            this.referenceInteraction.push(interaction);
+          } else {
+            this.targetInteraction.push(interaction);
           }
 
+        }
+
+        let isReferenceInteraction = false;
+        for (const interaction of res.interactions) {
+          if (interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
+            isReferenceInteraction = true;
+          } else {
+            isReferenceInteraction = false;
+          }
           // Set type of each node
           let typeA = 1, typeB = 1;
           const blastResultsA = [], blastResultsB = [];
+          let orthologA = false, orthologB = false;
           for (const br of res.blastResults) {
             if (br.qseqid === interaction.geneA) {
+              orthologA = true;
               typeA = 2;
               blastResultsA.push(br);
             }
             if (br.qseqid === interaction.geneB) {
+              orthologB = true;
               typeB = 2;
               blastResultsB.push(br);
             }
@@ -191,22 +208,52 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
           // Set type of each link
           let linkType = 1;
-          // Interaction in both interactomes
-          if (typeA === 2 && typeB === 2) {
-            linkType = 3;
-            interaction.code = 'Both interactomes';
-          } else if (typeA === 2) { // Interaction only in reference interactome
-            linkType = 1;
-            interaction.code = 'Reference interactome';
-          } else if (typeB === 2) { // Interaction only in target interactome
-            linkType = 2;
-            interaction.code = 'Target interactome';
-          } else { // typeA === 1 && typeB === 1 // No alignment, interaction only in reference interactome
-            linkType = 1;
-            interaction.code = 'Reference interactome';
+          let interactionReference = false;
+          let interactionTarget = false;
+
+          if (isReferenceInteraction && (!orthologA || !orthologB) ) {
+            // One of the genes has no orthologs, no chance to have interaction in targetInteractome
+            interactionReference = true;
+            interactionTarget = false;
+          } else if (isReferenceInteraction) { // Both have orthologs
+            interactionReference = true;
+          } else { // is not a referenceInteraction
+            interactionReference = false;
           }
 
-          this.interaction.push(interaction);
+          // Search for interactionTarget
+          for (const brA of blastResultsA) {
+            for (const brB of blastResultsB) {
+              // Search for interactions in targetInteractome
+              for (const targetInteraction of this.targetInteraction) {
+                if ( (brA.sseqid === targetInteraction.geneA && brB.sseqid === targetInteraction.geneB)
+                  || (brA.sseqid === targetInteraction.geneB && brB.sseqid === targetInteraction.geneA) ) {
+                  // Interaction exists in target interactome
+                  interactionTarget = true;
+                  this.referenceInteraction.push(targetInteraction);
+                  referenceTargetIncluded.push(targetInteraction);
+                }
+              }
+            }
+          }
+
+          // Include in results only if is a referenceInteraction
+          if (!isReferenceInteraction) {
+            continue;
+          }
+
+          if (interactionReference && interactionTarget) {
+            // Interaction in both interactomes
+            linkType = 3;
+          } else if (interactionReference) {
+            // Interaction only in reference interactome
+            linkType = 1;
+          } else if (interactionTarget) {
+            // Interaction only in target interactome
+            linkType = 2;
+          } else {
+            console.error('There should be at least one interaction');
+          }
 
           // Insert nodes or increment linkCount
           const from = new Node(nodes.length, interaction.geneA, typeA, blastResultsA);
@@ -236,7 +283,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
         }
 
         // Set table source
-        this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+        this.dataSource = new MatTableDataSource<Interaction>(this.referenceInteraction);
         this.dataSource.sort = undefined;
 
         this.nodes = nodes;
