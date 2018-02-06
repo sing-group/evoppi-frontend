@@ -2,7 +2,7 @@
 <form [formGroup]="formDistinctSpecies">
   <mat-form-field class="width-50">
     <mat-select placeholder="Reference Species" (change)="onChangeSpecies($event.value, 1)" formControlName="speciesA">
-      <mat-option *ngFor="let specie of species" [value]="specie">
+      <mat-option *ngFor="let specie of speciesA" [value]="specie">
         {{ specie.name }}
       </mat-option>
     </mat-select>
@@ -16,7 +16,7 @@
   </mat-form-field>
   <mat-form-field class="width-50">
     <mat-select placeholder="Target Species" (change)="onChangeSpecies($event.value, 2)" formControlName="speciesB">
-      <mat-option *ngFor="let specie of species" [value]="specie">
+      <mat-option *ngFor="let specie of speciesB" [value]="specie">
         {{ specie.name }}
       </mat-option>
     </mat-select>

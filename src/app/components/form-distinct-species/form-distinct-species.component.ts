@@ -33,6 +33,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
   displayedColumns = ['GeneA', 'GeneB', 'ReferenceInteractome', 'TargetInteractome'];
 
   species: Species[];
+  speciesA: Species[];
+  speciesB: Species[];
   interactomes: Interactome[][] = [];
   referenceInteraction: Interaction[] = [];
   targetInteraction: Interaction[] = [];
@@ -104,11 +106,22 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
   getSpecies(): void {
     this.speciesService.getSpecies()
-      .subscribe(species => this.species = species);
+      .subscribe(species => {
+        this.species = this.speciesA = this.speciesB = species;
+      });
   }
 
   onChangeSpecies(value: Species, index: number): void {
     this.interactomes[index] = [];
+    if (index === 1) {
+      this.speciesB = this.species.slice();
+      const i: number = this.speciesB.indexOf(value);
+      this.speciesB.splice(i, 1);
+    } else {
+      this.speciesA = this.species.slice();
+      const i: number = this.speciesA.indexOf(value);
+      this.speciesA.splice(i, 1);
+    }
 
     for (const interactome of value.interactomes) {
       this.interactomeService.getInteractome(interactome.id)
