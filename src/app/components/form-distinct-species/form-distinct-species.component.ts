@@ -57,6 +57,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
   csvContent: SafeResourceUrl = '';
   csvName = 'data.csv';
 
+  resultUrl = '';
+
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
               private dialog: MatDialog) { }
@@ -111,6 +113,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
       });
   }
 
+  onChangeForm(): void {
+    this.csvContent = '';
+  }
+
   onChangeSpecies(value: Species, index: number): void {
     this.interactomes[index] = [];
     if (index === 1) {
@@ -156,6 +162,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   }
 
   private openDialog(data: Work) {
+    this.resultUrl = data.resultReference;
     const dialogRef = this.dialog.open(WorkStatusComponent, {
       disableClose: true,
       data: {data}

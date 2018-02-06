@@ -1,5 +1,5 @@
 <mat-card>
-<form [formGroup]="formSameSpecies">
+<form [formGroup]="formSameSpecies" (change)="onChangeForm()">
   <mat-form-field class="width-100">
     <mat-select placeholder="Species" (change)="onChangeSpecies($event.value)" formControlName="species">
       <mat-option *ngFor="let specie of species" [value]="specie">
@@ -38,7 +38,18 @@
 
   <button mat-raised-button color="primary" (click)="onCompare()" [disabled]="formSameSpecies.status === 'INVALID'">Compare</button>
   <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
-  <button mat-raised-button color="primary" *ngIf="csvContent !== ''">Export Fasta</button>
+  <!--a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeA.id + '/fasta'"
+     [download]="formSameSpecies.value.interactomeA.name" *ngIf="csvContent !== ''">
+    Export Fasta of {{formSameSpecies.value.interactomeA.name}}
+  </a-->
+  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeA.id + '/fasta'"
+     target="_blank" *ngIf="csvContent !== ''">
+    Export Fasta {{formSameSpecies.value.species.name}}-{{formSameSpecies.value.interactomeA.name}}
+  </a>
+  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeB.id + '/fasta'"
+     target="_blank" *ngIf="csvContent !== ''">
+    Export Fasta {{formSameSpecies.value.species.name}}-{{formSameSpecies.value.interactomeB.name}}
+  </a>
   <mat-card *ngIf="!hideTable">
     <mat-tab-group>
       <mat-tab label="Table view">

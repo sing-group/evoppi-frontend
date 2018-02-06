@@ -57,6 +57,8 @@ export class FormSameSpeciesComponent implements OnInit {
   csvContent: SafeResourceUrl = '';
   csvName = 'data.csv';
 
+  resultUrl = '';
+
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
               private dialog: MatDialog) {
@@ -105,6 +107,10 @@ export class FormSameSpeciesComponent implements OnInit {
         })
       )
       .subscribe(species => this.species = species);
+  }
+
+  onChangeForm(): void {
+    this.csvContent = '';
   }
 
   onChangeSpecies(value: Species): void {
@@ -160,6 +166,7 @@ export class FormSameSpeciesComponent implements OnInit {
   }
 
   private openDialog(data: Work) {
+    this.resultUrl = data.resultReference;
     const dialogRef = this.dialog.open(WorkStatusComponent, {
       disableClose: true,
       data: {data}
@@ -242,4 +249,7 @@ export class FormSameSpeciesComponent implements OnInit {
     this.genes = [];
   }
 
+  public exportFasta(id: number){
+
+  }
 }

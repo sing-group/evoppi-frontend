@@ -1,5 +1,5 @@
 <mat-card>
-<form [formGroup]="formDistinctSpecies">
+<form [formGroup]="formDistinctSpecies" (change)="onChangeForm()">
   <mat-form-field class="width-50">
     <mat-select placeholder="Reference Species" (change)="onChangeSpecies($event.value, 1)" formControlName="speciesA">
       <mat-option *ngFor="let specie of speciesA" [value]="specie">
@@ -63,7 +63,14 @@
 
   <button mat-raised-button button color="primary" (click)="onCompare()" [disabled]="formDistinctSpecies.status === 'INVALID'">Compare</button>
   <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
-  <button mat-raised-button color="primary" *ngIf="csvContent !== ''">Export Fasta</button>
+  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formDistinctSpecies.value.interactomeA.id + '/fasta'"
+     target="_blank" *ngIf="csvContent !== ''">
+    Export Fasta {{formDistinctSpecies.value.speciesA.name}}-{{formDistinctSpecies.value.interactomeA.name}}
+  </a>
+  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formDistinctSpecies.value.interactomeB.id + '/fasta'"
+     target="_blank" *ngIf="csvContent !== ''">
+    Export Fasta {{formDistinctSpecies.value.speciesB.name}}-{{formDistinctSpecies.value.interactomeB.name}}
+  </a>
   <mat-card *ngIf="!hideTable">
     <mat-tab-group>
       <mat-tab label="Table view">
