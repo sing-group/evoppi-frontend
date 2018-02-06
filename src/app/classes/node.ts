@@ -16,10 +16,10 @@ export class Node implements d3.SimulationNodeDatum {
   type?: number;
   blastResults?: BlastResult[];
 
-  constructor(id, label, type = 1, blastResults = []) {
+  constructor(id, label, blastResults = []) {
     this.id = id;
     this.label = label;
-    this.type = type;
+    this.type = blastResults.length > 0 ? 2 : 1;
     this.blastResults = blastResults;
   }
 

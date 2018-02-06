@@ -30,7 +30,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
   formDistinctSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
-  displayedColumns = ['GeneSpeciesA', 'GeneSpeciesB', 'InteractsSpeciesA', 'InteractsSpeciesB', 'Code'];
+  displayedColumns = ['GeneA', 'GeneB', 'ReferenceInteractome', 'TargetInteractome'];
 
   species: Species[];
   interactomes: Interactome[][] = [];
@@ -165,12 +165,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.hideTable = false;
         this.referenceInteraction = [];
         this.targetInteraction = [];
-        const referenceTargetIncluded = [];
 
-        // Construct nodes and links
-        const nodes = [];
-        const links = [];
-        const csvData = [];
+        const consolidatedInteractions = [];
 
         // Filter out interactions which don't include the referenceInteractome
         for (const interaction of res.interactions) {
@@ -179,111 +175,105 @@ export class FormDistinctSpeciesComponent implements OnInit {
           } else {
             this.targetInteraction.push(interaction);
           }
-
         }
 
-        let isReferenceInteraction = false;
-        for (const interaction of res.interactions) {
-          if (interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
-            isReferenceInteraction = true;
-          } else {
-            isReferenceInteraction = false;
-          }
-          // Set type of each node
-          let typeA = 1, typeB = 1;
-          const blastResultsA = [], blastResultsB = [];
-          let orthologA = false, orthologB = false;
-          for (const br of res.blastResults) {
-            if (br.qseqid === interaction.geneA) {
-              orthologA = true;
-              typeA = 2;
-              blastResultsA.push(br);
+        // Construct nodes and links
+        let nodeIndex = 0;
+        const nodes = res.referenceGenes.map(gene =>
+          new Node(nodeIndex++, gene.id, res.blastResults.filter(blast => blast.qseqid === gene.id))
+        );
+        const links = [];
+        const csvData = [];
+
+        const getOrthologs = referenceGene => res.blastResults.filter(blast => blast.qseqid === referenceGene)
+          .map(blast => blast.sseqid)
+          .filter((item, position, self) => self.indexOf(item) === position); // Removes duplicates
+
+        const getInteractionsOf = (geneA, geneB, interactions) =>
+          interactions.filter(interaction =>
+            (interaction.geneA === geneA && interaction.geneB === geneB)
+            || (interaction.geneA === geneB && interaction.geneB === geneA)
+          );
+
+        const getReferenceInteractionOf = (geneA, geneB) => {
+          const interactions = getInteractionsOf(geneA, geneB, this.referenceInteraction);
+
+          return interactions.length === 1 ? interactions[0] : null;
+        };
+        const getTargetInteractionsOf = (geneA, geneB) => getInteractionsOf(geneA, geneB, this.targetInteraction);
+
+        const getTargetInteractionsOfReferenceGenes = (geneA, geneB) => {
+          const orthologsA = getOrthologs(geneA);
+          const orthologsB = getOrthologs(geneB);
+
+          let interactions = [];
+          for (const orthologA of orthologsA) {
+            for (const orthologB of orthologsB) {
+              interactions = interactions.concat(getTargetInteractionsOf(orthologA, orthologB));
             }
-            if (br.qseqid === interaction.geneB) {
-              orthologB = true;
-              typeB = 2;
-              blastResultsB.push(br);
-            }
           }
 
-          // Set type of each link
-          let linkType = 1;
-          let interactionReference = false;
-          let interactionTarget = false;
+          return interactions;
+        };
 
-          if (isReferenceInteraction && (!orthologA || !orthologB) ) {
-            // One of the genes has no orthologs, no chance to have interaction in targetInteractome
-            interactionReference = true;
-            interactionTarget = false;
-          } else if (isReferenceInteraction) { // Both have orthologs
-            interactionReference = true;
-          } else { // is not a referenceInteraction
-            interactionReference = false;
-          }
+        const geneIds = res.referenceGenes.map(gene => gene.id)
+          .sort((idA, idB) => idA - idB);
 
-          // Search for interactionTarget
-          for (const brA of blastResultsA) {
-            for (const brB of blastResultsB) {
-              // Search for interactions in targetInteractome
-              for (const targetInteraction of this.targetInteraction) {
-                if ( (brA.sseqid === targetInteraction.geneA && brB.sseqid === targetInteraction.geneB)
-                  || (brA.sseqid === targetInteraction.geneB && brB.sseqid === targetInteraction.geneA) ) {
-                  // Interaction exists in target interactome
-                  interactionTarget = true;
-                  this.referenceInteraction.push(targetInteraction);
-                  referenceTargetIncluded.push(targetInteraction);
-                }
+        for (let i = 0; i < geneIds.length - 1; i++) {
+          for (let j = i + 1; j < geneIds.length; j++) {
+            const geneAId = geneIds[i];
+            const geneBId = geneIds[j];
+
+            const referenceInteraction = getReferenceInteractionOf(geneAId, geneBId);
+            const targetInteractions = getTargetInteractionsOfReferenceGenes(geneAId, geneBId);
+            const inReference = referenceInteraction !== null;
+            const inTarget = targetInteractions.length > 0;
+
+            if (inReference || inTarget) {
+              let type;
+              const interactomes = [];
+              let referenceDegree = '';
+              let targetDegrees = [];
+
+              if (inReference) {
+                type = 1;
+                interactomes.push(res.referenceInteractome.id);
+                referenceDegree = referenceInteraction.degree;
               }
+
+              if (inTarget) {
+                type = 2;
+                interactomes.push(res.targetInteractome.id);
+                targetDegrees = targetInteractions.map(interaction => interaction.degree)
+                  .filter((item, position, self) => self.indexOf(item) === position) // Removes duplicates
+                  .sort((d1, d2) => d1 - d2);
+              }
+
+              if (inReference && inTarget) {
+                type = 3;
+              }
+
+              const indexGeneA = nodes.findIndex(node => node.label === geneAId);
+              const indexGeneB = nodes.findIndex(node => node.label === geneBId);
+
+              links.push(new Link(indexGeneA, indexGeneB, type));
+              nodes[indexGeneA].linkCount++;
+              nodes[indexGeneB].linkCount++;
+
+              csvData.push([geneAId, geneBId, referenceDegree, targetDegrees.join(', ')]);
+
+              consolidatedInteractions.push({
+                geneA: geneAId,
+                geneB: geneBId,
+                referenceDegree: referenceDegree,
+                targetDegrees: targetDegrees
+              });
             }
           }
-
-          // Include in results only if is a referenceInteraction
-          if (!isReferenceInteraction) {
-            continue;
-          }
-
-          if (interactionReference && interactionTarget) {
-            // Interaction in both interactomes
-            linkType = 3;
-          } else if (interactionReference) {
-            // Interaction only in reference interactome
-            linkType = 1;
-          } else if (interactionTarget) {
-            // Interaction only in target interactome
-            linkType = 2;
-          } else {
-            console.error('There should be at least one interaction');
-          }
-
-          // Insert nodes or increment linkCount
-          const from = new Node(nodes.length, interaction.geneA, typeA, blastResultsA);
-          let fromIndex = nodes.findIndex(x => x.label === from.label);
-          if (fromIndex === -1) {
-            fromIndex = nodes.length;
-            nodes.push(from);
-          } else {
-            nodes[fromIndex].linkCount++;
-          }
-
-          const to = new Node(nodes.length, interaction.geneB, typeB, blastResultsB);
-          let toIndex = nodes.findIndex(x => x.label === to.label);
-          if (toIndex === -1) {
-            toIndex = nodes.length;
-            nodes.push(to);
-          } else {
-            nodes[toIndex].linkCount++;
-          }
-
-          // Insert link
-          const link = new Link(fromIndex, toIndex, linkType);
-          links.push(link);
-
-          csvData.push([interaction.geneA, interaction.geneB, res.referenceInteractome.id, res.targetInteractome.id, interaction.code]);
-
         }
 
         // Set table source
-        this.dataSource = new MatTableDataSource<Interaction>(this.referenceInteraction);
+        this.dataSource = new MatTableDataSource<Interaction>(consolidatedInteractions);
         this.dataSource.sort = undefined;
 
         this.nodes = nodes;
@@ -293,8 +283,6 @@ export class FormDistinctSpeciesComponent implements OnInit {
           CsvHelper.getCSV(this.displayedColumns, csvData)
         );
         this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
-
-
       });
   }
 

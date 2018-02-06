@@ -1,7 +1,7 @@
 <mat-card>
 <form [formGroup]="formDistinctSpecies">
   <mat-form-field class="width-50">
-    <mat-select placeholder="Species A" (change)="onChangeSpecies($event.value, 1)" formControlName="speciesA">
+    <mat-select placeholder="Reference Species" (change)="onChangeSpecies($event.value, 1)" formControlName="speciesA">
       <mat-option *ngFor="let specie of species" [value]="specie">
         {{ specie.name }}
       </mat-option>
@@ -15,7 +15,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-50">
-    <mat-select placeholder="Species B" (change)="onChangeSpecies($event.value, 2)" formControlName="speciesB">
+    <mat-select placeholder="Target Species" (change)="onChangeSpecies($event.value, 2)" formControlName="speciesB">
       <mat-option *ngFor="let specie of species" [value]="specie">
         {{ specie.name }}
       </mat-option>
@@ -29,7 +29,7 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-100">
-    <mat-label>Genes</mat-label>
+    <mat-label>Gene</mat-label>
     <input type="search" matInput placeholder="Start typing something to search genes"
            formControlName="gene"
            [value]="genesInput" />
@@ -74,33 +74,29 @@
         <mat-table matSort [dataSource]="dataSource" class="table-distinct-species">
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <ng-container matColumnDef="GeneSpeciesA">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene Species A</mat-header-cell>
+          <ng-container matColumnDef="GeneA">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.geneA}}</mat-cell>
           </ng-container>
-          <ng-container matColumnDef="GeneSpeciesB">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene Species B</mat-header-cell>
+          <ng-container matColumnDef="GeneB">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.geneB}}</mat-cell>
           </ng-container>
-          <ng-container matColumnDef="InteractsSpeciesA">
-            <mat-header-cell *matHeaderCellDef>Interacts Species A</mat-header-cell>
+          <ng-container matColumnDef="ReferenceInteractome">
+            <mat-header-cell *matHeaderCellDef>Reference Interactome</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <mat-chip-list>
-                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
+              <mat-chip-list *ngIf="row.referenceDegree !== ''">
+                <mat-chip>Degree {{row.referenceDegree}}</mat-chip>
               </mat-chip-list>
             </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="InteractsSpeciesB">
-            <mat-header-cell *matHeaderCellDef>Interacts Species B</mat-header-cell>
+          <ng-container matColumnDef="TargetInteractome">
+            <mat-header-cell *matHeaderCellDef>Target Interactome</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <mat-chip-list>
-                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
+                <mat-chip *ngFor="let degree of row.targetDegrees">Degree {{degree}}</mat-chip>
               </mat-chip-list>
             </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="Code">
-            <mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.code}}</mat-cell>
           </ng-container>
         </mat-table>
       </mat-tab>
