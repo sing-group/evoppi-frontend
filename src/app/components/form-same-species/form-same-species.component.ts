@@ -38,6 +38,8 @@ export class FormSameSpeciesComponent implements OnInit {
 
   species: Species[];
   interactomes: Interactome[] = [];
+  interactomesA: Interactome[] = [];
+  interactomesB: Interactome[] = [];
   interaction: Interaction[] = [];
   genes: GeneInfo[];
   level: number;
@@ -107,11 +109,29 @@ export class FormSameSpeciesComponent implements OnInit {
 
   onChangeSpecies(value: Species): void {
     this.interactomes = [];
+    this.interactomesA = [];
+    this.interactomesB = [];
 
     for (const interactome of value.interactomes) {
       this.interactomeService.getInteractome(interactome.id)
-        .subscribe(res => this.interactomes.push(res));
+        .subscribe(res => {
+          this.interactomes.push(res);
+          this.interactomesA.push(res);
+          this.interactomesB.push(res);
+        });
     }
+  }
+
+  onSelectInteractomeA(value: Interactome): void {
+    this.interactomesB = this.interactomes.slice();
+    const index: number = this.interactomesB.indexOf(value);
+    this.interactomesB.splice(index, 1);
+  }
+
+  onSelectInteractomeB(value: Interactome): void {
+    this.interactomesA = this.interactomes.slice();
+    const index: number = this.interactomesA.indexOf(value);
+    this.interactomesA.splice(index, 1);
   }
 
   onSearchGenes(value: string): void {

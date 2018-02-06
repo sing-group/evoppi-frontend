@@ -8,15 +8,15 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-50">
-    <mat-select placeholder="Interactome A" formControlName="interactomeA">
-      <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
+    <mat-select placeholder="Interactome A" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)">
+      <mat-option *ngFor="let interactome of interactomesA" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-50 right">
-    <mat-select placeholder="Interactome B" formControlName="interactomeB">
-      <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
+    <mat-select placeholder="Interactome B" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)">
+      <mat-option *ngFor="let interactome of interactomesB" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
