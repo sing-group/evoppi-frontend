@@ -75,3 +75,10 @@
   font-weight: 300;
   fill: white;
 }
+
+.sequence {
+  padding: 2ch;
+  word-wrap: break-word;
+  font-family: monospace;
+  width: 80ch;
+}

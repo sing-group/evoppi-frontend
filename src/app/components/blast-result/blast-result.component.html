@@ -42,8 +42,12 @@
           {{blastResult.qseqid}} - {{blastResult.sseqid}}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <div style="overflow: auto;">
+      <div class="sequence">
+        {{query.id}}
         {{qAlignment}}
+      </div>
+      <div class="sequence">
+        {{subject.id}}
         {{sAlignment}}
       </div>
     </mat-expansion-panel>

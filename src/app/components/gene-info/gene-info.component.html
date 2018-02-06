@@ -15,11 +15,9 @@
             {{gene.id}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <mat-list role="list">
-          <mat-list-item role="listitem" *ngFor="let sequence of gene.sequences">
-            <div matLine>{{sequence}}</div>
-          </mat-list-item>
-        </mat-list>
+        <div class="sequence" *ngFor="let sequence of gene.sequences">
+          {{sequence}}
+        </div>
       </mat-expansion-panel>
       <mat-expansion-panel *ngIf="blastResults.length > 0">
         <mat-expansion-panel-header>
