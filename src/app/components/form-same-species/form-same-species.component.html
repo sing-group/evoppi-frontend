@@ -40,38 +40,36 @@
   <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
   <button mat-raised-button color="primary" *ngIf="csvContent !== ''">Export Fasta</button>
   <mat-card *ngIf="!hideTable">
-    <mat-tab-group (selectedTabChange)="initTable()">
+    <mat-tab-group>
+      <mat-tab label="Table view">
+        <mat-table matSort #table [dataSource]="dataSource" class="table-same-species" appAfterViewInit (afterViewInit)="initTable()">
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          <ng-container matColumnDef="GeneA">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.geneA}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="GeneB">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.geneB}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Interactomes">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Interactomes</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <mat-chip-list>
+                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
+              </mat-chip-list>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Degree">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Degree</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.degree}}</mat-cell>
+          </ng-container>
+        </mat-table>
+      </mat-tab>
       <mat-tab label="Graph view">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
         <app-legend-same-species [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-same-species>
-      </mat-tab>
-      <mat-tab label="Table view">
-        <div class="table-container mat-elevation-z8">
-          <mat-table matSort #table [dataSource]="dataSource" class="table-same-species">
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            <ng-container matColumnDef="GeneA">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.geneA}}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="GeneB">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.geneB}}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="Interactomes">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Interactomes</mat-header-cell>
-              <mat-cell *matCellDef="let row">
-                <mat-chip-list>
-                  <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
-                </mat-chip-list>
-              </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="Degree">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Degree</mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.degree}}</mat-cell>
-            </ng-container>
-          </mat-table>
-        </div>
       </mat-tab>
     </mat-tab-group>
   </mat-card>

@@ -45,6 +45,8 @@ import { GeneInfoComponent } from './components/gene-info/gene-info.component';
 import { LegendSameSpeciesComponent } from './components/legend-same-species/legend-same-species.component';
 import { LegendDistinctSpeciesComponent } from './components/legend-distinct-species/legend-distinct-species.component';
 import { BlastResultComponent } from './components/blast-result/blast-result.component';
+import { OnInitDirective } from './directives/on-init.directive';
+import {AfterViewInitDirective} from './directives/after-view-init.directive';
 
 @NgModule({
   imports: [
@@ -112,6 +114,8 @@ export class MaterialModule { }
     LegendSameSpeciesComponent,
     LegendDistinctSpeciesComponent,
     BlastResultComponent,
+    OnInitDirective,
+    AfterViewInitDirective,
   ],
   imports: [
     BrowserModule,
