@@ -20,6 +20,7 @@ import {SortHelper} from '../../helpers/sort.helper';
 import {WorkStatusComponent} from '../work-status/work-status.component';
 import {Work} from '../../interfaces/work';
 import {Status} from '../../interfaces/status';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-same-species',
@@ -96,6 +97,11 @@ export class FormSameSpeciesComponent implements OnInit {
 
   getSpecies(): void {
     this.speciesService.getSpecies()
+      .pipe(
+        map( species => {
+          return species.filter( (specie: Species) => specie.interactomes.length > 1);
+        })
+      )
       .subscribe(species => this.species = species);
   }
 
