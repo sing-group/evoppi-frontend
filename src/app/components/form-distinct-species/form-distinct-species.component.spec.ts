@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import { FormDistinctSpeciesComponent } from './form-distinct-species.component';
 import {MaterialModule} from '../../app.module';
@@ -46,71 +46,81 @@ describe('FormDistinctSpeciesComponent', () => {
 
     interactionService = fixture.debugElement.injector.get(InteractionService);
     spy = spyOn(interactionService, 'getInteractionResult').and.callThrough();
+
+    component.getResult('differentSpecies');
+
   });
 
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create correct nodes, links and table for different species',  async(() => {
-
-    component.getResult('differentSpecies');
+  it('should create correct node count',  async(() => {
     const res = spy.calls.mostRecent().returnValue.value;
-
     expect(res).toBe(FakeInteractionService.RESULT_DIFF);
     expect(component.nodes.length).toBe(6);
-    expect(component.links.length).toBe(4);
-    expect(component.referenceInteraction.length).toBe(5);
+  }));
 
+  it('should create correct node labels',  async(() => {
     expect(component.nodes[0].label).toBe(100);
     expect(component.nodes[1].label).toBe(101);
     expect(component.nodes[2].label).toBe(110);
     expect(component.nodes[3].label).toBe(111);
     expect(component.nodes[4].label).toBe(120);
     expect(component.nodes[5].label).toBe(121);
+  }));
 
+  it('should create correct node types',  async(() => {
     expect(component.nodes[0].type).toBe(2);
     expect(component.nodes[1].type).toBe(2);
     expect(component.nodes[2].type).toBe(1);
     expect(component.nodes[3].type).toBe(1);
     expect(component.nodes[4].type).toBe(2);
     expect(component.nodes[5].type).toBe(2);
+  }));
 
-    expect(component.nodes[0].linkCount).toBe(1);
-    expect(component.nodes[1].linkCount).toBe(0);
-    expect(component.nodes[2].linkCount).toBe(0);
-    expect(component.nodes[3].linkCount).toBe(1);
-    expect(component.nodes[4].linkCount).toBe(0);
-    expect(component.nodes[5].linkCount).toBe(0);
+  it('should create correct node link count',  async(() => {
+    expect(component.nodes[0].linkCount).toBe(2);
+    expect(component.nodes[1].linkCount).toBe(2);
+    expect(component.nodes[2].linkCount).toBe(1);
+    expect(component.nodes[3].linkCount).toBe(2);
+    expect(component.nodes[4].linkCount).toBe(1);
+    expect(component.nodes[5].linkCount).toBe(2);
+  }));
 
+  it('should create correct link count',  async(() => {
+    expect(component.links.length).toBe(5);
+  }));
+
+  it('should create correct link types',  async(() => {
     expect(component.links[0].type).toBe(3);
     expect(component.links[1].type).toBe(1);
-    expect(component.links[2].type).toBe(1);
+    expect(component.links[2].type).toBe(2);
     expect(component.links[3].type).toBe(1);
 
-    expect(component.referenceInteraction[0].geneA).toBe(100);
-    expect(component.referenceInteraction[1].geneA).toBe(110);
-    expect(component.referenceInteraction[2].geneA).toBe(100);
-    expect(component.referenceInteraction[3].geneA).toBe(120);
-    expect(component.referenceInteraction[4].geneA).toBe(200);
+  }));
 
-    expect(component.referenceInteraction[0].geneB).toBe(101);
-    expect(component.referenceInteraction[1].geneB).toBe(111);
-    expect(component.referenceInteraction[2].geneB).toBe(111);
-    expect(component.referenceInteraction[3].geneB).toBe(121);
-    expect(component.referenceInteraction[4].geneB).toBe(201);
+  it('should create correct table row count',  async(() => {
+    const consolidatedInteractions = component.dataSource.data;
+    expect(consolidatedInteractions.length).toBe(5);
+  }));
 
-    console.log('res', res);
+  it('should create correct table geneA',  async(() => {
+    const consolidatedInteractions = component.dataSource.data;
+    expect(consolidatedInteractions[0].geneA).toBe(100);
+    expect(consolidatedInteractions[1].geneA).toBe(100);
+    expect(consolidatedInteractions[2].geneA).toBe(101);
+    expect(consolidatedInteractions[3].geneA).toBe(110);
+    expect(consolidatedInteractions[4].geneA).toBe(120);
+  }));
 
-    console.log(component.nodes);
-    console.log(component.links);
-
-    console.log(component.referenceInteraction);
-
-
-
-    console.log('end');
-
+  it('should create correct table geneB',  async(() => {
+    const consolidatedInteractions = component.dataSource.data;
+    expect(consolidatedInteractions[0].geneB).toBe(101);
+    expect(consolidatedInteractions[1].geneB).toBe(111);
+    expect(consolidatedInteractions[2].geneB).toBe(121);
+    expect(consolidatedInteractions[3].geneB).toBe(111);
+    expect(consolidatedInteractions[4].geneB).toBe(121);
   }));
 
 });
