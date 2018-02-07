@@ -53,10 +53,12 @@
 
 .node1 {
   fill: grey;
+  background-color: grey !important;
 }
 
 .node2 {
   fill: green;
+  background-color: green !important;
 }
 
 .node {

@@ -21,6 +21,7 @@ import {WorkStatusComponent} from '../work-status/work-status.component';
 import {Work} from '../../interfaces/work';
 import {Status} from '../../interfaces/status';
 import {map} from 'rxjs/operators';
+import {GeneInfoComponent} from '../gene-info/gene-info.component';
 
 @Component({
   selector: 'app-form-same-species',
@@ -249,7 +250,22 @@ export class FormSameSpeciesComponent implements OnInit {
     this.genes = [];
   }
 
-  public exportFasta(id: number){
+  public exportFasta(id: number) {
+
+  }
+
+  onClickGene(id: number) {
+    console.log(id);
+
+    const dialogRef = this.dialog.open(GeneInfoComponent, {
+      // width: '250px',
+      maxHeight: window.innerHeight,
+      data: { geneId: id, blastResults: [] }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
 
   }
 }
