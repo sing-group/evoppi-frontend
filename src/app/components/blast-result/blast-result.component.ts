@@ -30,8 +30,6 @@ export class BlastResultComponent implements OnInit {
         this.qAlignment = query.sequences[this.blastResult.qseqversion - 1];
         // this.qAlignment = seq.substring(this.blastResult.qstart, this.blastResult.qend);
       }
-
-      console.log('qalignment', this.qAlignment);
     });
     this.geneService.getGene(this.blastResult.sseqid).subscribe( (subject) => {
       this.subject = subject;
@@ -41,8 +39,6 @@ export class BlastResultComponent implements OnInit {
         this.sAlignment = subject.sequences[this.blastResult.sseqversion - 1];
         // this.sAlignment = seq.substring(this.blastResult.sstart, this.blastResult.send);
       }
-
-      console.log('salignment', this.sAlignment);
     });
 
 

@@ -21,10 +21,6 @@ export class GeneInfoComponent implements OnInit {
     this.geneService.getGene(this.data.geneId).subscribe((res) => {
       this.gene = res;
       this.blastResults = this.data.blastResults;
-
-
-      console.log(this.gene);
-      console.log(this.blastResults);
     });
   }
 
