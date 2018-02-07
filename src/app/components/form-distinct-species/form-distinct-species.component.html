@@ -66,11 +66,11 @@
   <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
   <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formDistinctSpecies.value.interactomeA.id + '/fasta'"
      target="_blank" *ngIf="csvContent !== ''">
-    Export Fasta {{formDistinctSpecies.value.speciesA.name}}-{{formDistinctSpecies.value.interactomeA.name}}
+    Export {{formDistinctSpecies.value.speciesA.name}}-{{formDistinctSpecies.value.interactomeA.name}} FASTA
   </a>
   <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formDistinctSpecies.value.interactomeB.id + '/fasta'"
      target="_blank" *ngIf="csvContent !== ''">
-    Export Fasta {{formDistinctSpecies.value.speciesB.name}}-{{formDistinctSpecies.value.interactomeB.name}}
+    Export {{formDistinctSpecies.value.speciesB.name}}-{{formDistinctSpecies.value.interactomeB.name}} FASTA
   </a>
   <mat-card *ngIf="!hideTable">
     <mat-tab-group>

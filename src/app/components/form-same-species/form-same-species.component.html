@@ -45,11 +45,15 @@
   </a-->
   <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeA.id + '/fasta'"
      target="_blank" *ngIf="csvContent !== ''">
-    Export Fasta {{formSameSpecies.value.species.name}}-{{formSameSpecies.value.interactomeA.name}}
+    Export {{formSameSpecies.value.interactomeA.name}} FASTA
   </a>
   <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeB.id + '/fasta'"
      target="_blank" *ngIf="csvContent !== ''">
-    Export Fasta {{formSameSpecies.value.species.name}}-{{formSameSpecies.value.interactomeB.name}}
+    Export {{formSameSpecies.value.interactomeB.name}} FASTA
+  </a>
+  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/fasta'"
+     target="_blank" *ngIf="csvContent !== ''">
+    Export Single FASTA
   </a>
   <mat-card *ngIf="!hideTable">
     <mat-tab-group>
