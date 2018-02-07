@@ -18,6 +18,8 @@ import {Status} from '../../interfaces/status';
 import {SafeResourceUrl} from '@angular/platform-browser/src/security/dom_sanitization_service';
 import {CsvHelper} from '../../helpers/csv.helper';
 import {DomSanitizer} from '@angular/platform-browser';
+import {GeneInfoComponent} from '../gene-info/gene-info.component';
+import {BlastResult} from '../../interfaces/blast-result';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -284,7 +286,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
               consolidatedInteractions.push({
                 geneA: geneAId,
+                typeA: nodes[indexGeneA].type,
+                blastResultsA: nodes[indexGeneA].blastResults,
                 geneB: geneBId,
+                typeB: nodes[indexGeneB].type,
+                blastResultsB: nodes[indexGeneB].blastResults,
                 referenceDegree: referenceDegree,
                 targetDegrees: targetDegrees
               });
@@ -318,5 +324,17 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.genesInput = value;
     this.formDistinctSpecies.patchValue({gene: value}, {emitEvent: false});
     this.genes = [];
+  }
+
+  onClickGene(id: number, blastResults: BlastResult[]) {
+    const dialogRef = this.dialog.open(GeneInfoComponent, {
+      maxHeight: window.innerHeight,
+      data: { geneId: id, blastResults: blastResults }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
   }
 }

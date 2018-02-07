@@ -80,11 +80,15 @@
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           <ng-container matColumnDef="GeneA">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.geneA}}</mat-cell>
+            <mat-cell *matCellDef="let row">
+              <button mat-mini-fab (click)="onClickGene(row.geneA, row.blastResultsA)" ngClass="{{'node' + row.typeA}}">{{row.geneA}}</button>
+            </mat-cell>
           </ng-container>
           <ng-container matColumnDef="GeneB">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.geneB}}</mat-cell>
+            <mat-cell *matCellDef="let row">
+              <button mat-mini-fab (click)="onClickGene(row.geneB, row.blastResultsB)" ngClass="{{'node' + row.typeB}}">{{row.geneB}}</button>
+            </mat-cell>
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
             <mat-header-cell *matHeaderCellDef>Reference Interactome</mat-header-cell>
