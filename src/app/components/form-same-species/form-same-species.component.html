@@ -25,6 +25,7 @@
     <mat-label>Genes</mat-label>
     <input #searchInput type="search" matInput placeholder="Start typing something to search genes"
            formControlName="gene"
+           autocomplete="off"
            [value]="genesInput" />
   </mat-form-field>
   <mat-accordion>
