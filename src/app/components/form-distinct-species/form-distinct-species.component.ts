@@ -60,6 +60,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
+  referenceSpecies: Species;
+  targetSpecies: Species;
+  referenceInteractome: Interactome;
+  targetInteractome: Interactome;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
@@ -156,6 +160,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
     this.hideTable = true;
     const formModel = this.formDistinctSpecies.value;
+    this.referenceSpecies = formModel.speciesA;
+    this.targetSpecies = formModel.speciesB;
+    this.referenceInteractome = formModel.interactomeA;
+    this.targetInteractome = formModel.interactomeB;
     this.interactionService.getDistinctSpeciesInteraction(formModel.gene, formModel.interactomeA.id, formModel.interactomeB.id,
       formModel.level)
       .subscribe((work) => {
@@ -192,7 +200,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
         // Filter out interactions which don't include the referenceInteractome
         for (const interaction of res.interactions) {
-          if (interaction.interactomes.find(x => x === res.referenceInteractome.id)) {
+          if (interaction.interactomeDegrees.find(x => x.id === res.referenceInteractome.id)) {
             this.referenceInteraction.push(interaction);
           } else {
             this.targetInteraction.push(interaction);
@@ -260,13 +268,13 @@ export class FormDistinctSpeciesComponent implements OnInit {
               if (inReference) {
                 type = 1;
                 interactomes.push(res.referenceInteractome.id);
-                referenceDegree = referenceInteraction.degree;
+                referenceDegree = referenceInteraction.interactomeDegrees[0].degree;
               }
 
               if (inTarget) {
                 type = 2;
                 interactomes.push(res.targetInteractome.id);
-                targetDegrees = targetInteractions.map(interaction => interaction.degree)
+                targetDegrees = targetInteractions.map(interaction => interaction.interactomeDegrees[0].degree)
                   .filter((item, position, self) => self.indexOf(item) === position) // Removes duplicates
                   .sort((d1, d2) => d1 - d2);
               }
@@ -305,8 +313,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.nodes = nodes;
         this.links = links;
 
+        const referenceTitle = this.referenceSpecies.name + '#' + this.referenceInteractome.name;
+        const targetTitle = this.targetSpecies.name + '#' + this.targetInteractome.name;
         this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
-          CsvHelper.getCSV(this.displayedColumns, csvData)
+          CsvHelper.getCSV(['Gene A', 'Gene B', referenceTitle, targetTitle], csvData)
         );
         this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
       });

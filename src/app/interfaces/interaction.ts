@@ -1,7 +1,8 @@
+import {InteractomeDegree} from './interactome-degree';
+
 export interface Interaction {
-  interactomes: number[];
   geneA: number;
   geneB: number;
-  degree: number;
+  interactomeDegrees: InteractomeDegree[];
   code?: string;
 }

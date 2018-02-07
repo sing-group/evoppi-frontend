@@ -16,49 +16,61 @@ export class FakeInteractionService extends InteractionService {
       {
         'geneA': 100,
         'geneB': 101,
-        'degree': 1,
-        'interactomes': [
-          1
+        'interactomeDegrees': [
+          {
+            'id': 1,
+            'degree': 1
+          }
         ]
       },
       {
         'geneA': 110,
         'geneB': 111,
-        'degree': 1,
-        'interactomes': [
-          1
+        'interactomeDegrees': [
+          {
+            'id': 1,
+            'degree': 1
+          }
         ]
       },
       {
         'geneA': 100,
         'geneB': 111,
-        'degree': 1,
-        'interactomes': [
-          1
+        'interactomeDegrees': [
+          {
+            'id': 1,
+            'degree': 1
+          }
         ]
       },
       {
         'geneA': 120,
         'geneB': 121,
-        'degree': 1,
-        'interactomes': [
-          1
+        'interactomeDegrees': [
+          {
+            'id': 1,
+            'degree': 1
+          }
         ]
       },
       {
         'geneA': 200,
         'geneB': 201,
-        'degree': 1,
-        'interactomes': [
-          2
+        'interactomeDegrees': [
+          {
+            'id': 1,
+            'degree': 2
+          }
         ]
       },
       {
         'geneA': 201,
         'geneB': 221,
-        'degree': 1,
-        'interactomes': [
-          2
+        'interactomeDegrees': [
+          {
+            'id': 1,
+            'degree': 2
+          }
         ]
       }
     ],

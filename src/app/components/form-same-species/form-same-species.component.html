@@ -64,29 +64,36 @@
           <ng-container matColumnDef="GeneA">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <button mat-mini-fab (click)="onClickGene(row.geneA)" class="node1">{{row.geneA}}</button>
+              <a (click)="onClickGene(row.geneA)" class="gene1">{{row.geneA}}</a>
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="GeneB">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <button mat-mini-fab (click)="onClickGene(row.geneB)" class="node1">{{row.geneB}}</button>
+              <a (click)="onClickGene(row.geneB)" class="gene1">{{row.geneB}}</a>
             </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="Interactomes">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Interactomes</mat-header-cell>
+          <ng-container matColumnDef="ReferenceInteractome">
+            <mat-header-cell *matHeaderCellDef>{{referenceInteractome.name}}</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <mat-chip-list>
-                <mat-chip *ngFor="let interactome of row.interactomes"
-                          ngClass="{{interactome === referenceInteractome.id ? 'link1' : 'link2'}}">
-                  {{interactome === referenceInteractome.id ? referenceInteractome.name: targetInteractome.name}}
-                </mat-chip>
-              </mat-chip-list>
+              <div *ngIf="row.interactomeDegrees[0].id === referenceInteractome.id">
+                Degree {{row.interactomeDegrees[0].degree}}
+              </div>
+              <div *ngIf="row.interactomeDegrees.length === 2 && row.interactomeDegrees[1].id === referenceInteractome.id">
+                Degree {{row.interactomeDegrees[1].degree}}
+              </div>
             </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="Degree">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Degree</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.degree}}</mat-cell>
+          <ng-container matColumnDef="TargetInteractome">
+            <mat-header-cell *matHeaderCellDef>{{targetInteractome.name}}</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <div *ngIf="row.interactomeDegrees[0].id === targetInteractome.id">
+                Degree {{row.interactomeDegrees[0].degree}}
+              </div>
+              <div *ngIf="row.interactomeDegrees.length === 2 && row.interactomeDegrees[1].id === targetInteractome.id">
+                Degree {{row.interactomeDegrees[1].degree}}
+              </div>
+            </mat-cell>
           </ng-container>
         </mat-table>
       </mat-tab>

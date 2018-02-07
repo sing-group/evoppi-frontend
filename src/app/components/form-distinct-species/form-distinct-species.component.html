@@ -81,29 +81,31 @@
           <ng-container matColumnDef="GeneA">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <button mat-mini-fab (click)="onClickGene(row.geneA, row.blastResultsA)" ngClass="{{'node' + row.typeA}}">{{row.geneA}}</button>
+              <a (click)="onClickGene(row.geneA, row.blastResultsA)" ngClass="{{'gene' + row.typeA}}">{{row.geneA}}</a>
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="GeneB">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <button mat-mini-fab (click)="onClickGene(row.geneB, row.blastResultsB)" ngClass="{{'node' + row.typeB}}">{{row.geneB}}</button>
+              <a (click)="onClickGene(row.geneB, row.blastResultsB)" ngClass="{{'gene' + row.typeB}}">{{row.geneB}}</a>
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
-            <mat-header-cell *matHeaderCellDef>Reference Interactome</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>
+              {{referenceSpecies.name}}<br/>
+              {{referenceInteractome.name}}
+            </mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <mat-chip-list *ngIf="row.referenceDegree !== ''">
-                <mat-chip>Degree {{row.referenceDegree}}</mat-chip>
-              </mat-chip-list>
+              <div *ngIf="row.referenceDegree !== ''">Degree {{row.referenceDegree}}</div>
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="TargetInteractome">
-            <mat-header-cell *matHeaderCellDef>Target Interactome</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>
+              {{targetSpecies.name}}<br/>
+              {{targetInteractome.name}}
+            </mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <mat-chip-list>
-                <mat-chip *ngFor="let degree of row.targetDegrees">Degree {{degree}}</mat-chip>
-              </mat-chip-list>
+              <div *ngFor="let degree of row.targetDegrees">Degree {{degree}}</div>
             </mat-cell>
           </ng-container>
         </mat-table>

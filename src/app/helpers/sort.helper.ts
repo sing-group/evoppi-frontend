@@ -9,13 +9,8 @@ export class SortHelper {
       case 'GeneSpeciesB':
       case 'GeneB':
         return data.geneB;
-      case 'Interactomes':
-        if (data.interactomes.length > 0) {
-          return data.interactomes[0];
-        }
-        return 0;
-      case 'Degree':
-        return data.degree;
+      case 'ReferenceInteractome':
+      case 'TargetInteractome':
       case 'InteractsSpeciesA':
       case 'InteractsSpeciesB':
       case 'Code':
