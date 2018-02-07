@@ -8,14 +8,14 @@
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-50">
-    <mat-select placeholder="Interactome A" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)">
+    <mat-select placeholder="Reference Interactome" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)">
       <mat-option *ngFor="let interactome of interactomesA" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field class="width-50 right">
-    <mat-select placeholder="Interactome B" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)">
+    <mat-select placeholder="Target Interactome" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)">
       <mat-option *ngFor="let interactome of interactomesB" [value]="interactome">
         {{ interactome.name }}
       </mat-option>
@@ -73,7 +73,10 @@
             <mat-header-cell *matHeaderCellDef mat-sort-header>Interactomes</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <mat-chip-list>
-                <mat-chip *ngFor="let interactome of row.interactomes" ngClass="{{'link' + ((interactome % 4) + 1)}}">{{interactome}} </mat-chip>
+                <mat-chip *ngFor="let interactome of row.interactomes"
+                          ngClass="{{interactome === referenceInteractome.id ? 'link1' : 'link2'}}">
+                  {{interactome === referenceInteractome.id ? referenceInteractome.name: targetInteractome.name}}
+                </mat-chip>
               </mat-chip-list>
             </mat-cell>
           </ng-container>

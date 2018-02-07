@@ -59,6 +59,8 @@ export class FormSameSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
+  referenceInteractome: Interactome;
+  targetInteractome: Interactome;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
@@ -159,6 +161,8 @@ export class FormSameSpeciesComponent implements OnInit {
     }
     this.hideTable = true;
     const formModel = this.formSameSpecies.value;
+    this.referenceInteractome = formModel.interactomeA;
+    this.targetInteractome = formModel.interactomeB;
     this.interactionService.getSameSpeciesInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id],
       formModel.level)
       .subscribe((work) => {
@@ -189,8 +193,6 @@ export class FormSameSpeciesComponent implements OnInit {
       .subscribe((res) => {
         this.hideTable = false;
         this.interaction = res.interactions;
-        this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
-        this.dataSource.sort = undefined;
 
         const nodes = [];
         const links = [];
@@ -216,11 +218,26 @@ export class FormSameSpeciesComponent implements OnInit {
           }
 
           const csvInteractomes = [];
-          // TODO: multiple interactomes get link overwritten
-          for (const interactome of item.interactomes) {
-            const link = new Link(fromIndex, toIndex, (interactome % 4) + 1);
+          let link;
+          if (item.interactomes.length === 2) {
+            link = new Link(fromIndex, toIndex, 3);
+            csvInteractomes.push(this.referenceInteractome.name);
             links.push(link);
-            csvInteractomes.push(interactome);
+            csvInteractomes.push(this.targetInteractome.name);
+            links.push(link);
+          } else if (item.interactomes.length === 1) {
+            if (item.interactomes[0] === this.referenceInteractome.id) {
+              link = new Link(fromIndex, toIndex, 1);
+              csvInteractomes.push(this.referenceInteractome.name);
+            } else if (item.interactomes[0] === this.targetInteractome.id) {
+              link = new Link(fromIndex, toIndex, 2);
+              csvInteractomes.push(this.targetInteractome.name);
+            } else {
+              console.error('Shouldnt happen');
+            }
+            links.push(link);
+          } else {
+            console.error('Shouldnt happen either');
           }
           csvData.push([item.geneA, item.geneB, csvInteractomes.join('|'), item.degree]);
         }
@@ -233,6 +250,8 @@ export class FormSameSpeciesComponent implements OnInit {
         );
         this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
 
+        this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+        this.dataSource.sort = undefined;
       });
   }
 
