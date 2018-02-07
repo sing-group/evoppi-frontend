@@ -35,6 +35,6 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button [mat-dialog-close]="true">Close</button>
-    <button mat-button color="primary">Download</button>
+    <a mat-raised-button color="primary" [href]="sequences" [download]="gene.id + '.fasta'" *ngIf="gene.sequences.length > 0">Download sequences</a>
   </mat-dialog-actions>
 </mat-card>
