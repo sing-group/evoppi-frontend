@@ -86,9 +86,12 @@
           </ng-container>
         </mat-table>
       </mat-tab>
-      <mat-tab label="Graph view">
+      <mat-tab label="Graph view" *ngIf="nodes.length <= 100">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
         <app-legend-same-species [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-same-species>
+      </mat-tab>
+      <mat-tab label="Graph view" *ngIf="nodes.length > 100">
+        <mat-card><h2>Too much genes. Interactions graph is only shown for up to 100 genes.</h2></mat-card>
       </mat-tab>
     </mat-tab-group>
   </mat-card>
