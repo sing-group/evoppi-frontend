@@ -39,6 +39,7 @@ import {
   MatMenuModule,
   MatPaginatorModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatRadioModule,
   MatSelectModule,
   MatSliderModule,
@@ -102,6 +103,7 @@ import {AfterViewInitDirective} from './directives/after-view-init.directive';
     MatProgressBarModule,
     MatExpansionModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     MatButtonModule,
@@ -124,6 +126,7 @@ import {AfterViewInitDirective} from './directives/after-view-init.directive';
     MatProgressBarModule,
     MatExpansionModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class MaterialModule {
