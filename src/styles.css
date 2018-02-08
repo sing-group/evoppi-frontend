@@ -117,3 +117,8 @@
   font-family: monospace;
   width: 80ch;
 }
+
+.div-autocomplete {
+  min-height: 5px;
+  padding-bottom: 10px;
+}

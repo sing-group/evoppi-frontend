@@ -68,7 +68,7 @@ export class FormSameSpeciesComponent implements OnInit {
   genesInput: string;
 
   hideTable = true;
-
+  searchingGenes = false;
 
   nodes: Node[] = [];
   links: Link[] = [];
@@ -166,12 +166,18 @@ export class FormSameSpeciesComponent implements OnInit {
 
   onSearchGenes(value: string): void {
     let interactomes = [];
+    if (value === '') {
+      this.genes = [];
+      return;
+    }
+    this.searchingGenes = true;
     if (this.interactomes.length > 0) {
       interactomes = this.interactomes.map((interactome) => interactome.id);
     }
     this.geneService.getGeneName(value, interactomes)
       .subscribe(res => {
         this.genes = res;
+        this.searchingGenes = false;
       });
 
   }

@@ -71,6 +71,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   genesInput: string;
 
   hideTable = true;
+  searchingGenes = false;
 
   nodes: Node[] = [];
   links: Link[] = [];
@@ -167,10 +168,15 @@ export class FormDistinctSpeciesComponent implements OnInit {
     if (!this.formDistinctSpecies.get('interactomeA').valid) {
       alert('First, select Reference Interactome');
       return;
+    } else if (value === '') {
+      this.genes = [];
+      return;
     }
+    this.searchingGenes = true;
     this.geneService.getGeneName(value, [this.formDistinctSpecies.value.interactomeA.id])
       .subscribe(res => {
         this.genes = res;
+        this.searchingGenes = false;
       });
 
   }
