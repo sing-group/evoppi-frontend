@@ -1,16 +1,31 @@
 {
-  "name": "@sing-group/evoppi-frontend",
-  "version": "0.0.0",
+  "name": "@evoppi/frontend",
+  "version": "0.1.0-alpha.1",
+  "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
+  "author": {
+    "name": "Noé Vázquez González",
+    "email": "nvazquezg@gmail.com"
+  },
+  "contributors": [
+    "Miguel Reboiro-Jato",
+    "Jorge Vieira",
+    "Hugo López-Fernández",
+    "Cristina Vieira"
+  ],
+  "repository": "https://github.com/sing-group/evoppi-frontend.git",
+  "publishConfig": {
+    "registry": "https://maven.sing-group.org/repository/npm-snapshots/"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-production": "ng build -prod --base-href \"/evoppi/\"",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^5.2.1",
     "@angular/cdk": "^5.1.0",
