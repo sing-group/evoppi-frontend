@@ -8,7 +8,7 @@ import {Interactome} from '../../interfaces/interactome';
 import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {Interaction} from '../../interfaces/interaction';
-import {MatDialog, MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatSelectionList, MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
@@ -29,8 +29,8 @@ import {GeneInfoComponent} from '../gene-info/gene-info.component';
   styleUrls: ['./form-same-species.component.css']
 })
 export class FormSameSpeciesComponent implements OnInit {
-
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSelectionList) geneList: MatSelectionList;
 
   formSameSpecies: FormGroup;
@@ -258,6 +258,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
         this.dataSource.sort = undefined;
+        this.dataSource.paginator = undefined;
       });
   }
 
@@ -267,6 +268,7 @@ export class FormSameSpeciesComponent implements OnInit {
     }
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
+    this.dataSource.paginator = this.paginator;
   }
 
   public onGeneSelected(value) {

@@ -1,51 +1,62 @@
 import 'hammerjs';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatExpansionModule, MatIconModule, MatInputModule,
+  MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDialogModule,
+  MatExpansionModule,
+  MatIconModule,
+  MatInputModule,
   MatListModule,
-  MatMenuModule, MatProgressBarModule, MatRadioModule,
+  MatMenuModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatRadioModule,
   MatSelectModule,
-  MatSliderModule, MatSortModule,
+  MatSliderModule,
+  MatSortModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { FormSameSpeciesComponent } from './components/form-same-species/form-same-species.component';
-import { FormDistinctSpeciesComponent } from './components/form-distinct-species/form-distinct-species.component';
+import {NavbarComponent} from './components/navbar/navbar.component';
+import {FormSameSpeciesComponent} from './components/form-same-species/form-same-species.component';
+import {FormDistinctSpeciesComponent} from './components/form-distinct-species/form-distinct-species.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {SpeciesService} from './services/species.service';
-import { InteractomeService } from './services/interactome.service';
-import { GeneService } from './services/gene.service';
-import { InteractionService } from './services/interaction.service';
+import {InteractomeService} from './services/interactome.service';
+import {GeneService} from './services/gene.service';
+import {InteractionService} from './services/interaction.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
-import { TabgroupComponent } from './components/tabgroup/tabgroup.component';
-import { LoginComponent } from './components/login/login.component';
-import { UserService } from './services/user.service';
-import { DialogComponent } from './components/dialog/dialog.component';
-import { UserManagerComponent } from './components/user-manager/user-manager.component';
+import {AppRoutingModule} from './app-routing.module';
+import {TabgroupComponent} from './components/tabgroup/tabgroup.component';
+import {LoginComponent} from './components/login/login.component';
+import {UserService} from './services/user.service';
+import {DialogComponent} from './components/dialog/dialog.component';
+import {UserManagerComponent} from './components/user-manager/user-manager.component';
 import {AdminService} from './services/admin.service';
 import {AuthInterceptor} from './classes/auth.interceptor';
 import {AuthService} from './services/auth.service';
-import { GraphComponent } from './components/graph/graph.component';
+import {GraphComponent} from './components/graph/graph.component';
 import {DraggableDirective} from './directives/draggable.directive';
 import {ZoomableDirective} from './directives/zoomable.directive';
 import {D3Service} from './services/d3.service';
-import { InteractomesComponent } from './components/interactomes/interactomes.component';
-import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
-import { WorkStatusComponent } from './components/work-status/work-status.component';
+import {InteractomesComponent} from './components/interactomes/interactomes.component';
+import {AutocompleteComponent} from './components/autocomplete/autocomplete.component';
+import {WorkStatusComponent} from './components/work-status/work-status.component';
 import {WorkService} from './services/work.service';
-import { GeneInfoComponent } from './components/gene-info/gene-info.component';
-import { LegendSameSpeciesComponent } from './components/legend-same-species/legend-same-species.component';
-import { LegendDistinctSpeciesComponent } from './components/legend-distinct-species/legend-distinct-species.component';
-import { BlastResultComponent } from './components/blast-result/blast-result.component';
-import { OnInitDirective } from './directives/on-init.directive';
+import {GeneInfoComponent} from './components/gene-info/gene-info.component';
+import {LegendSameSpeciesComponent} from './components/legend-same-species/legend-same-species.component';
+import {LegendDistinctSpeciesComponent} from './components/legend-distinct-species/legend-distinct-species.component';
+import {BlastResultComponent} from './components/blast-result/blast-result.component';
+import {OnInitDirective} from './directives/on-init.directive';
 import {AfterViewInitDirective} from './directives/after-view-init.directive';
 
 @NgModule({
@@ -58,6 +69,7 @@ import {AfterViewInitDirective} from './directives/after-view-init.directive';
     MatInputModule,
     MatSelectModule,
     MatTableModule,
+    MatPaginatorModule,
     MatAutocompleteModule,
     MatCardModule,
     MatDialogModule,
@@ -79,6 +91,7 @@ import {AfterViewInitDirective} from './directives/after-view-init.directive';
     MatInputModule,
     MatSelectModule,
     MatTableModule,
+    MatPaginatorModule,
     MatAutocompleteModule,
     MatCardModule,
     MatDialogModule,
@@ -92,7 +105,8 @@ import {AfterViewInitDirective} from './directives/after-view-init.directive';
     MatRadioModule,
   ],
 })
-export class MaterialModule { }
+export class MaterialModule {
+}
 
 @NgModule({
   declarations: [
@@ -149,4 +163,5 @@ export class MaterialModule { }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

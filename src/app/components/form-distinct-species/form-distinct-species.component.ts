@@ -6,7 +6,7 @@ import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Interaction} from '../../interfaces/interaction';
-import {MatDialog, MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatSelectionList, MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
 import {Node} from '../../classes/node';
 import {Link} from '../../classes/link';
 import {InteractionService} from '../../services/interaction.service';
@@ -28,6 +28,7 @@ import {BlastResult} from '../../interfaces/blast-result';
 })
 export class FormDistinctSpeciesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSelectionList) geneList: MatSelectionList;
 
   formDistinctSpecies: FormGroup;
@@ -306,10 +307,6 @@ export class FormDistinctSpeciesComponent implements OnInit {
           }
         }
 
-        // Set table source
-        this.dataSource = new MatTableDataSource<Interaction>(consolidatedInteractions);
-        this.dataSource.sort = undefined;
-
         this.nodes = nodes;
         this.links = links;
 
@@ -319,6 +316,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
           CsvHelper.getCSV(['Gene A', 'Gene B', referenceTitle, targetTitle], csvData)
         );
         this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
+
+        // Set table source
+        this.dataSource = new MatTableDataSource<Interaction>(consolidatedInteractions);
+        this.dataSource.sort = undefined;
+        this.dataSource.paginator = undefined;
       });
   }
 
@@ -328,6 +330,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = SortHelper.sortInteraction;
+    this.dataSource.paginator = this.paginator;
   }
 
   public onGeneSelected(value) {
