@@ -277,8 +277,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
         const geneIds = res.referenceGenes.map(gene => gene.id)
           .sort((idA, idB) => idA - idB);
 
-        for (let i = 0; i < geneIds.length - 1; i++) {
-          for (let j = i + 1; j < geneIds.length; j++) {
+        for (let i = 0; i < geneIds.length; i++) {
+          for (let j = i; j < geneIds.length; j++) {
             const geneAId = geneIds[i];
             const geneBId = geneIds[j];
 
