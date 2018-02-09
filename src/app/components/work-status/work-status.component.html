@@ -31,5 +31,7 @@
   </mat-card-content>
 </mat-card>
 <div mat-dialog-actions>
-  <mat-spinner [diameter]="50"></mat-spinner>
+  <mat-progress-bar mode="buffer"
+                    value={{work.steps[work.steps.length-1].progress*100}}
+                    bufferValue={{work.steps[work.steps.length-1].progress*100}}></mat-progress-bar>
 </div>
