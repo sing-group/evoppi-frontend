@@ -73,8 +73,6 @@ export class GraphComponent implements OnChanges {
   }
 
   onNodeClick(node: Node) {
-    console.log(node);
-
     const dialogRef = this.dialog.open(GeneInfoComponent, {
       // width: '250px',
       maxHeight: window.innerHeight,
@@ -85,5 +83,24 @@ export class GraphComponent implements OnChanges {
       console.log('The dialog was closed');
     });
 
+  }
+
+  selfLink(d) {
+    // TODO: check max node diameter to size links acordingly
+    const x1 = d.source.x,
+      y1 = d.source.y,
+      x2 = d.target.x + 1, // Avoid link to collapse
+      y2 = d.target.y + 1,
+      dx = x2 - x1,
+      dy = y2 - y1,
+      dr = Math.sqrt(dx * dx + dy * dy),
+      sweep = 1, // 1 or 0
+      xRotation = -45, // degrees
+      largeArc = 1, // 1 or 0
+      drx = 70,
+      dry = 30;
+
+
+    return 'M' + x1 + ',' + y1 + 'A' + drx + ',' + dry + ' ' + xRotation + ',' + largeArc + ',' + sweep + ' ' + x2 + ',' + y2;
   }
 }

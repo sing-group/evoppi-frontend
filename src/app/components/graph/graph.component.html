@@ -21,13 +21,18 @@
 
 <svg #svg [attr.width]="options.width" [attr.height]="options.height">
   <svg:g [appZoomableOf]="svg">
-    <svg:line *ngFor="let link of links"
-      ngClass="{{'link' + link.type}}"
-      [attr.x1]="link.source.x"
-      [attr.y1]="link.source.y"
-      [attr.x2]="link.target.x"
-      [attr.y2]="link.target.y"
-    ></svg:line>
+    <svg:g *ngFor="let link of links">
+      <svg:line *ngIf="link.source !== link.target"
+        ngClass="{{'link' + link.type}}"
+        [attr.x1]="link.source.x"
+        [attr.y1]="link.source.y"
+        [attr.x2]="link.target.x"
+        [attr.y2]="link.target.y"></svg:line>
+      <svg:path *ngIf="link.source === link.target"
+                [attr.d]="selfLink(link)"
+                ngClass="{{'link' + link.type}}">
+      </svg:path>
+    </svg:g>
     <svg:g *ngFor="let node of nodes" appDraggable="node" (click)="onNodeClick(node)"
        [draggableNode]="node" [draggableInGraph]="graph" [attr.transform]="'translate(' + node.x + ',' + node.y + ')'">
       <svg:circle
