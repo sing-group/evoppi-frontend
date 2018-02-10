@@ -95,9 +95,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
   ngOnInit() {
     this.level = 1;
     this.eValue = 0.05;
-    this.minAlignLength = 10;
+    this.minAlignLength = 18;
     this.numDescriptions =  1;
-    this.minIdentity = 1;
+    this.minIdentity = 95;
     this.genesInput = '';
     this.formDistinctSpecies = this.formBuilder.group({
       'speciesA': ['', Validators.required],
@@ -105,10 +105,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
       'interactomeA': ['', Validators.required],
       'interactomeB': ['', Validators.required],
       'gene': ['', Validators.required],
-      'eValue': ['1', [Validators.required, Validators.min(0), Validators.max(100)]],
-      'minAlignLength': ['1', [Validators.required, Validators.min(1), Validators.max(100)]],
+      'eValue': ['0.05', [Validators.required, Validators.min(0), Validators.max(1)]],
+      'minAlignLength': ['18', [Validators.required, Validators.min(0)]],
       'numDescriptions': ['1', [Validators.required, Validators.min(1), Validators.max(100)]],
-      'minIdentity': ['0', [Validators.required, Validators.min(0), Validators.max(100)]],
+      'minIdentity': ['95', [Validators.required, Validators.min(0), Validators.max(100)]],
       'level': ['1', [Validators.required, Validators.min(1), Validators.max(3)]],
     });
 
@@ -193,7 +193,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.referenceInteractome = formModel.interactomeA;
     this.targetInteractome = formModel.interactomeB;
     this.interactionService.getDistinctSpeciesInteraction(formModel.gene, formModel.interactomeA.id, formModel.interactomeB.id,
-      formModel.level)
+      formModel.level, formModel.eValue, formModel.numDescriptions, formModel.minIdentity / 100, formModel.minAlignLength)
       .subscribe((work) => {
         this.openDialog(work);
       });

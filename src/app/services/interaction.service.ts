@@ -44,13 +44,19 @@ export class InteractionService {
   }
 
   getDistinctSpeciesInteraction(gene: number, referenceInteractome: number, targetInteractome: number,
-                                 interactionLevel: number): Observable<Work> {
+                                 interactionLevel: number, evalue: number, maxTargetSeqs: number,
+                                minIdentity: number, minAlignmentLenght: number): Observable<Work> {
 
     const params: any = {
       gene: gene,
       referenceInteractome: referenceInteractome,
       targetInteractome: targetInteractome,
-      maxDegree: interactionLevel};
+      maxDegree: interactionLevel,
+      evalue: evalue,
+      maxTargetSeqs: maxTargetSeqs,
+      minIdentity: minIdentity,
+      minAlignmentLength: minAlignmentLenght
+    };
 
     return this.http.get<Work>(this.endpoint, {params : params});
   }
