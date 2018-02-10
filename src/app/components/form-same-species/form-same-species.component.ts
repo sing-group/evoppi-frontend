@@ -56,7 +56,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
   formSameSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
-  displayedColumns = ['GeneA', 'GeneB', 'ReferenceInteractome', 'TargetInteractome'];
+  displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'ReferenceInteractome', 'TargetInteractome'];
 
   species: Species[];
   interactomes: Interactome[] = [];
@@ -218,74 +218,85 @@ export class FormSameSpeciesComponent implements OnInit {
     const formModel = this.formSameSpecies.value;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
-        this.hideTable = false;
-        this.interaction = res.interactions;
 
-        const nodes = [];
-        const links = [];
-        const csvData = [];
+        this.geneService.getGeneNames(res.genes)
+          .subscribe((geneNames) => {
 
-        for (const item of this.interaction) {
-          const from = new Node(nodes.length, item.geneA);
-          let fromIndex = nodes.findIndex(x => x.label === from.label);
-          if (fromIndex === -1) {
-            fromIndex = nodes.length;
-            nodes.push(from);
-          } else {
-            nodes[fromIndex].linkCount++;
-          }
+            this.interaction = res.interactions;
 
-          const to = new Node(nodes.length, item.geneB);
-          let toIndex = nodes.findIndex(x => x.label === to.label);
-          if (toIndex === -1) {
-            toIndex = nodes.length;
-            nodes.push(to);
-          } else {
-            nodes[toIndex].linkCount++;
-          }
+            const nodes = [];
+            const links = [];
+            const csvData = [];
 
-          let referenceDegree: number | string = '';
-          let targetDegree: number | string = '';
-          let link;
-          if (item.interactomeDegrees.length === 2) {
-            link = new Link(fromIndex, toIndex, 3);
-            links.push(link);
-            if (item.interactomeDegrees[0].id === this.referenceInteractome.id) {
-              referenceDegree = item.interactomeDegrees[0].degree;
-              targetDegree = item.interactomeDegrees[1].degree;
-            } else {
-              referenceDegree = item.interactomeDegrees[1].degree;
-              targetDegree = item.interactomeDegrees[0].degree;
+            for (const item of this.interaction) {
+              const geneInfoA = geneNames.find(x => x.geneId === item.geneA);
+              item.firstNameA = GeneService.getFirstName(geneInfoA);
+              const geneInfoB = geneNames.find(x => x.geneId === item.geneB);
+              item.firstNameB = GeneService.getFirstName(geneInfoB);
+
+              const from = new Node(nodes.length, item.geneA, item.firstNameB);
+              let fromIndex = nodes.findIndex(x => x.label === from.label);
+              if (fromIndex === -1) {
+                fromIndex = nodes.length;
+                nodes.push(from);
+              } else {
+                nodes[fromIndex].linkCount++;
+              }
+
+              const to = new Node(nodes.length, item.geneB, item.firstNameB);
+              let toIndex = nodes.findIndex(x => x.label === to.label);
+              if (toIndex === -1) {
+                toIndex = nodes.length;
+                nodes.push(to);
+              } else {
+                nodes[toIndex].linkCount++;
+              }
+
+              let referenceDegree: number | string = '';
+              let targetDegree: number | string = '';
+              let link;
+              if (item.interactomeDegrees.length === 2) {
+                link = new Link(fromIndex, toIndex, 3);
+                links.push(link);
+                if (item.interactomeDegrees[0].id === this.referenceInteractome.id) {
+                  referenceDegree = item.interactomeDegrees[0].degree;
+                  targetDegree = item.interactomeDegrees[1].degree;
+                } else {
+                  referenceDegree = item.interactomeDegrees[1].degree;
+                  targetDegree = item.interactomeDegrees[0].degree;
+                }
+              } else if (item.interactomeDegrees.length === 1) {
+                if (item.interactomeDegrees[0].id === this.referenceInteractome.id) {
+                  link = new Link(fromIndex, toIndex, 1);
+                  referenceDegree = item.interactomeDegrees[0].degree;
+                } else if (item.interactomeDegrees[0].id === this.targetInteractome.id) {
+                  link = new Link(fromIndex, toIndex, 2);
+                  targetDegree = item.interactomeDegrees[0].degree;
+                } else {
+                  console.error('Shouldn\'t happen');
+                }
+                links.push(link);
+              } else {
+                console.error('Shouldn\'t happen either');
+              }
+
+              csvData.push([item.geneA, item.firstNameA, item.geneB, item.firstNameB, referenceDegree, targetDegree]);
             }
-          } else if (item.interactomeDegrees.length === 1) {
-            if (item.interactomeDegrees[0].id === this.referenceInteractome.id) {
-              link = new Link(fromIndex, toIndex, 1);
-              referenceDegree = item.interactomeDegrees[0].degree;
-            } else if (item.interactomeDegrees[0].id === this.targetInteractome.id) {
-              link = new Link(fromIndex, toIndex, 2);
-              targetDegree = item.interactomeDegrees[0].degree;
-            } else {
-              console.error('Shouldn\'t happen');
-            }
-            links.push(link);
-          } else {
-            console.error('Shouldn\'t happen either');
-          }
 
-          csvData.push([item.geneA, item.geneB, referenceDegree, targetDegree]);
-        }
+            this.nodes = nodes;
+            this.links = links;
 
-        this.nodes = nodes;
-        this.links = links;
+            this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+              CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B',
+                this.referenceInteractome.name, this.targetInteractome.name], csvData)
+            );
+            this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id + '_' + formModel.interactomeB.id + '.csv';
 
-        this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
-          CsvHelper.getCSV(['Gene A', 'Gene B', this.referenceInteractome.name, this.targetInteractome.name], csvData)
-        );
-        this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id  + '_' + formModel.interactomeB.id  + '.csv';
-
-        this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
-        this.dataSource.sort = undefined;
-        this.dataSource.paginator = undefined;
+            this.hideTable = false;
+            this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+            this.dataSource.sort = undefined;
+            this.dataSource.paginator = undefined;
+          });
       });
   }
 

@@ -27,12 +27,21 @@ import {ErrorHelper} from '../helpers/error.helper';
 import {catchError} from 'rxjs/operators';
 import {GeneInfo} from '../interfaces/gene-info';
 import {Gene} from '../interfaces/gene';
+import {forkJoin} from 'rxjs/observable/forkJoin';
 
 @Injectable()
 export class GeneService {
 
   private endpoint = environment.evoppiUrl + 'api/gene';
   constructor(private http: HttpClient) { }
+
+  public static getFirstName(geneInfo: GeneInfo): string {
+    if (geneInfo && geneInfo.names && geneInfo.names.length > 0 && geneInfo.names[0].names.length > 0) {
+      return geneInfo.names[0].names[0];
+    } else {
+      return '';
+    }
+  }
 
   getGeneName(prefix: string, interactomes: number[] = [], limit: number = 10): Observable<GeneInfo[]> {
 
@@ -44,11 +53,19 @@ export class GeneService {
       );
   }
 
+  getGeneNames(genes: Gene[]): Observable<GeneInfo[]> {
+    const observables: Observable<GeneInfo>[] = [];
+    for (const gene of genes){
+      observables.push(<Observable<GeneInfo>> this.http.get(this.endpoint + '/' + gene.id + '/name'));
+    }
+    return forkJoin(observables);
+  }
+
   getGene(id: number): Observable<Gene> {
 
     return this.http.get<Gene>(this.endpoint + '/' + id)
       .pipe(
-        catchError(ErrorHelper.handleError('getGeneName', null))
+        catchError(ErrorHelper.handleError('getGene', null))
       );
   }
 

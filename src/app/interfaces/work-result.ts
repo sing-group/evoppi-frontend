@@ -36,7 +36,7 @@ export interface WorkResult {
   status: string;
   referenceInteractome: IdUri;
   targetInteractome: IdUri;
-  referenceGenes: IdUri[];
-  targetGenes: IdUri[];
+  referenceGenes: Gene[];
+  targetGenes: Gene[];
   blastResults: BlastResult[];
 }

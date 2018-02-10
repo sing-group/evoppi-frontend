@@ -39,7 +39,8 @@
       <svg:text
         class="node-name"
         [attr.font-size]="node.fontSize">
-        {{node.label}}
+        <tspan x="0" dy="-0.2em">{{node.label}}</tspan>
+        <tspan x="0" dy="1em">{{node.description}}</tspan>
       </svg:text>
     </svg:g>
 

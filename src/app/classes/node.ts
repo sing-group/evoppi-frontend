@@ -33,13 +33,15 @@ export class Node implements d3.SimulationNodeDatum {
 
   id: string;
   label: string | number;
+  description: string;
   linkCount: number = 0;
   type?: number;
   blastResults?: BlastResult[];
 
-  constructor(id, label, blastResults = []) {
+  constructor(id, label, description, blastResults = []) {
     this.id = id;
     this.label = label;
+    this.description = description;
     this.type = blastResults.length > 0 ? 2 : 1;
     this.blastResults = blastResults;
   }
@@ -49,10 +51,10 @@ export class Node implements d3.SimulationNodeDatum {
   }
 
   get r() {
-    return 100 * this.normal() + 20;
+    return 100 * this.normal() + 30;
   }
 
   get fontSize() {
-    return (30 * this.normal() + 10) + 'px';
+    return (20 * this.normal() + 10) + 'px';
   }
 }

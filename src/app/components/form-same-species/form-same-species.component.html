@@ -91,10 +91,22 @@
               <a (click)="onClickGene(row.geneA)" class="gene1">{{row.geneA}}</a>
             </mat-cell>
           </ng-container>
+          <ng-container matColumnDef="NameA">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Name A</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <a (click)="onClickGene(row.geneA)" class="gene1">{{row.firstNameA}}</a>
+            </mat-cell>
+          </ng-container>
           <ng-container matColumnDef="GeneB">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <a (click)="onClickGene(row.geneB)" class="gene1">{{row.geneB}}</a>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="NameB">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Name B</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <a (click)="onClickGene(row.geneB)" class="gene1">{{row.firstNameB}}</a>
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">

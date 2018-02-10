@@ -20,10 +20,15 @@
  */
 
 import {InteractomeDegree} from './interactome-degree';
+import {GeneInfo} from './gene-info';
 
 export interface Interaction {
   geneA: number;
   geneB: number;
   interactomeDegrees: InteractomeDegree[];
   code?: string;
+  geneInfoA?: GeneInfo;
+  geneInfoB?: GeneInfo;
+  firstNameA?: string;
+  firstNameB?: string;
 }
