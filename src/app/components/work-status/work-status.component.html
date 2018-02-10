@@ -24,14 +24,15 @@
   <mat-card-content>
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let step of work.steps">
-        <mat-icon matListIcon color="green">check_circle</mat-icon>
+        <mat-icon matListIcon color="accent" *ngIf="step === work.steps[work.steps.length-1]">chevron_right</mat-icon>
+        <mat-icon matListIcon color="primary" *ngIf="step !== work.steps[work.steps.length-1]">check_circle</mat-icon>
         {{step.description}}
       </mat-list-item>
     </mat-list>
   </mat-card-content>
 </mat-card>
 <div mat-dialog-actions>
-  <mat-progress-bar mode="buffer"
-                    value={{work.steps[work.steps.length-1].progress*100}}
-                    bufferValue={{work.steps[work.steps.length-1].progress*100}}></mat-progress-bar>
+  <mat-progress-bar mode="buffer" *ngIf="work.steps[work.steps.length-1]"
+                    [value]="work.steps[work.steps.length-1].progress*100"
+                    [bufferValue]="work.steps[work.steps.length-1].progress*100"></mat-progress-bar>
 </div>
