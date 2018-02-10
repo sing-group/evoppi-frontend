@@ -1,6 +1,6 @@
 {
   "name": "@evoppi/frontend",
-  "version": "0.1.0-alpha.10",
+  "version": "0.1.0-alpha.11",
   "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
   "author": {
@@ -21,7 +21,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build-production": "ng build -prod --base-href \"/evoppi/\"",
+    "dist": "ng build -prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

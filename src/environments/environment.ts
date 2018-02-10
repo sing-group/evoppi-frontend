@@ -26,5 +26,5 @@
 
 export const environment = {
   production: false,
-  evoppiUrl: 'http://localhost:8080/evoppi/rest/'
+  evoppiUrl: 'http://localhost:8080/evoppi-backend/rest/'
 };
