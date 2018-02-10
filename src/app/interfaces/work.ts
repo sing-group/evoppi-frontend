@@ -23,7 +23,7 @@ import {Step} from './step';
 import {Status} from './status';
 
 export interface Work {
-  id: {id: number, uri: string};
+  id: {id: string, uri: string};
   name: string;
   description: string;
   creationDateTime: Date;

@@ -30,7 +30,7 @@ import {of} from 'rxjs/observable/of';
 export class FakeInteractionService extends InteractionService {
 
   static RESULT_DIFF: WorkResult = {
-    'id': 31,
+    'id': 'cdf4d0c6-4b88-4db5-bf0c-72a03a654711',
     'queryGene': 36454,
     'queryMaxDegree': 1,
     'interactions': [

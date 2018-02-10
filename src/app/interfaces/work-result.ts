@@ -26,7 +26,7 @@ import {IdUri} from './id-uri';
 import {BlastResult} from './blast-result';
 
 export interface WorkResult {
-  id: number;
+  id: string;
   interactions?: Interaction[];
   interactomes?: Interactome[];
   genes?: Gene[];
