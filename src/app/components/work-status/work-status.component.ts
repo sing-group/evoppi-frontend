@@ -26,6 +26,7 @@ import {WorkService} from '../../services/work.service';
 import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
 import {Subscription} from 'rxjs/Subscription';
 import {Status} from '../../interfaces/status';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-work-status',
@@ -38,7 +39,7 @@ export class WorkStatusComponent implements OnInit {
   intervalSubscription: Subscription;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<WorkStatusComponent>,
-              private workService: WorkService) { }
+              private workService: WorkService, public location: Location) { }
 
   ngOnInit() {
     this.work = this.data.data;
@@ -57,7 +58,7 @@ export class WorkStatusComponent implements OnInit {
           /* falls through */
         case Status.COMPLETED:
           this.intervalSubscription.unsubscribe();
-          this.dialogRef.close(res);
+          setTimeout(() => this.dialogRef.close(res), 1000);
           break;
         default:
           this.work = res;

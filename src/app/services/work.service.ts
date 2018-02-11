@@ -23,12 +23,18 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Work} from '../interfaces/work';
 import {Observable} from 'rxjs/Observable';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class WorkService {
 
+  private endpoint = environment.evoppiUrl + 'api/work';
+
   constructor(private httpClient: HttpClient) { }
 
+  public get(id: string): Observable<Work> {
+    return this.httpClient.get<Work>(this.endpoint + '/' + id);
+  }
   public update(work: Work): Observable<Work> {
     return this.httpClient.get<Work>(work.id.uri);
   }

@@ -19,7 +19,11 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {WorkService} from '../../services/work.service';
+import {Work} from '../../interfaces/work';
+import {MatTabGroup} from '@angular/material';
 
 @Component({
   selector: 'app-tabgroup',
@@ -28,9 +32,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TabgroupComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+
+  public work: Work;
+
+  constructor(private activatedRoute: ActivatedRoute, private workService: WorkService) { }
 
   ngOnInit() {
+    if (this.activatedRoute.snapshot.queryParamMap.has('result')) {
+      this.workService.get(this.activatedRoute.snapshot.queryParamMap.get('result'))
+        .subscribe((res) => {
+          this.work = res;
+          if (this.work.name.startsWith('Same species')) {
+            this.tabGroup.selectedIndex = 1;
+          } else {
+            this.tabGroup.selectedIndex = 0;
+          }
+        });
+    }
   }
 
 }

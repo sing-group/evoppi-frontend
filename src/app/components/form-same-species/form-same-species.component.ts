@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/debounceTime';
 import {Species} from '../../interfaces/species';
@@ -43,6 +43,7 @@ import {Work} from '../../interfaces/work';
 import {Status} from '../../interfaces/status';
 import {map} from 'rxjs/operators';
 import {GeneInfoComponent} from '../gene-info/gene-info.component';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-form-same-species',
@@ -53,6 +54,8 @@ export class FormSameSpeciesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSelectionList) geneList: MatSelectionList;
+
+  private _work: Work;
 
   formSameSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
@@ -68,6 +71,7 @@ export class FormSameSpeciesComponent implements OnInit {
   genesInput: string;
 
   hideTable = true;
+  hideForm = false;
   searchingGenes = false;
 
   nodes: Node[] = [];
@@ -83,9 +87,11 @@ export class FormSameSpeciesComponent implements OnInit {
   referenceInteractome: Interactome;
   targetInteractome: Interactome;
 
+  permalink: string;
+
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
-              private dialog: MatDialog) {
+              private dialog: MatDialog, private location: Location) {
 
   }
 
@@ -107,6 +113,20 @@ export class FormSameSpeciesComponent implements OnInit {
       this.onSearchGenes(res);
     });
 
+  }
+
+  @Input()
+  set work(value: Work) {
+    if (value && value.name.startsWith('Same species')) {
+      this.hideForm = true;
+      this.openDialog(value);
+      console.log('set work', value);
+      this._work = value;
+    }
+  }
+  get work(): Work {
+    console.log('get work', this._work);
+    return this._work;
   }
 
   private resizeGraph() {
@@ -188,11 +208,10 @@ export class FormSameSpeciesComponent implements OnInit {
     }
     this.hideTable = true;
     const formModel = this.formSameSpecies.value;
-    this.referenceInteractome = formModel.interactomeA;
-    this.targetInteractome = formModel.interactomeB;
     this.interactionService.getSameSpeciesInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id],
       formModel.level)
       .subscribe((work) => {
+        this.permalink = this.location.normalize('/compare?result=' + work.id.id);
         this.openDialog(work);
       });
   }
@@ -223,6 +242,8 @@ export class FormSameSpeciesComponent implements OnInit {
           .subscribe((geneNames) => {
 
             this.interaction = res.interactions;
+            this.referenceInteractome = res.interactomes[0];
+            this.targetInteractome = res.interactomes[1];
 
             const nodes = [];
             const links = [];

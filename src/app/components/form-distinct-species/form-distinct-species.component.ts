@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {SpeciesService} from '../../services/species.service';
 import {Interactome} from '../../interfaces/interactome';
 import {Species} from '../../interfaces/species';
@@ -41,6 +41,7 @@ import {CsvHelper} from '../../helpers/csv.helper';
 import {DomSanitizer} from '@angular/platform-browser';
 import {GeneInfoComponent} from '../gene-info/gene-info.component';
 import {BlastResult} from '../../interfaces/blast-result';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -51,6 +52,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSelectionList) geneList: MatSelectionList;
+
+  private _work: Work;
 
   formDistinctSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
@@ -71,6 +74,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   genesInput: string;
 
   hideTable = true;
+  hideForm = false;
   searchingGenes = false;
 
   nodes: Node[] = [];
@@ -83,14 +87,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
-  referenceSpecies: Species;
-  targetSpecies: Species;
-  referenceInteractome: Interactome;
-  targetInteractome: Interactome;
+  permalink: string;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog, private location: Location) { }
 
   ngOnInit() {
     this.level = 1;
@@ -119,6 +120,19 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.formDistinctSpecies.controls.gene.valueChanges.debounceTime(500).subscribe((res) => {
       this.onSearchGenes(res);
     });
+  }
+
+  @Input()
+  set work(value: Work) {
+    if (value && value.name.startsWith('Different species')) {
+      this.hideForm = true;
+      this.openDialog(value);
+      this._work = value;
+    }
+  }
+  get work(): Work {
+    console.log('get work', this._work);
+    return this._work;
   }
 
   private resizeGraph() {
@@ -188,13 +202,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
     this.hideTable = true;
     const formModel = this.formDistinctSpecies.value;
-    this.referenceSpecies = formModel.speciesA;
-    this.targetSpecies = formModel.speciesB;
-    this.referenceInteractome = formModel.interactomeA;
-    this.targetInteractome = formModel.interactomeB;
     this.interactionService.getDistinctSpeciesInteraction(formModel.gene, formModel.interactomeA.id, formModel.interactomeB.id,
       formModel.level, formModel.eValue, formModel.numDescriptions, formModel.minIdentity / 100, formModel.minAlignLength)
       .subscribe((work) => {
+        this.permalink = this.location.normalize('/compare?result=' + work.id.id);
         this.openDialog(work);
       });
   }
@@ -207,7 +218,6 @@ export class FormDistinctSpeciesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      console.log(res.resultReference);
       if ( res.status === Status.COMPLETED ) {
         this.getResult(res.resultReference);
       } else {
@@ -346,8 +356,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
             this.nodes = nodes;
             this.links = links;
 
-            const referenceTitle = this.referenceSpecies.name + '#' + this.referenceInteractome.name;
-            const targetTitle = this.targetSpecies.name + '#' + this.targetInteractome.name;
+            const referenceTitle = 'Reference Species - Interactome';
+            const targetTitle = 'Target Species - Interactome';
             this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
               CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B', referenceTitle, targetTitle], csvData)
             );

@@ -21,64 +21,69 @@
 
 <mat-card>
 <form [formGroup]="formSameSpecies" (change)="onChangeForm()">
-  <mat-form-field class="width-100">
-    <mat-select placeholder="Species" (change)="onChangeSpecies($event.value)" formControlName="species">
-      <mat-option *ngFor="let specie of species" [value]="specie">
-        {{ specie.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="width-50">
-    <mat-select placeholder="Reference Interactome" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)">
-      <mat-option *ngFor="let interactome of interactomesA" [value]="interactome">
-        {{ interactome.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="width-50 right">
-    <mat-select placeholder="Target Interactome" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)">
-      <mat-option *ngFor="let interactome of interactomesB" [value]="interactome">
-        {{ interactome.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="width-100">
-    <mat-label>Genes</mat-label>
-    <input #searchInput type="search" matInput placeholder="Start typing something to search genes"
-           formControlName="gene"
-           autocomplete="off"
-           [value]="genesInput" />
-  </mat-form-field>
-  <div class="div-autocomplete">
-    <mat-progress-bar mode="indeterminate" *ngIf="searchingGenes"></mat-progress-bar>
-    <mat-accordion>
-      <app-autocomplete *ngFor="let gene of genes" [title]="gene.geneId" [names]="gene.names" (radioSelected)="onGeneSelected($event)">
-      </app-autocomplete>
-    </mat-accordion>
-  </div>
-  <mat-form-field class="width-25">
-    <input type="number" matInput placeholder="Interaction level" formControlName="level" [(ngModel)]="level">
-  </mat-form-field>
-  <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [(ngModel)]="level" formControlName="level" class="width-75 right"></mat-slider>
-
-  <button mat-raised-button color="primary" (click)="onCompare()" [disabled]="formSameSpecies.status === 'INVALID'">Compare</button>
+  <span *ngIf="!hideForm">
+    <mat-form-field class="width-100">
+      <mat-select placeholder="Species" [value]="formSameSpecies.value.species" (change)="onChangeSpecies($event.value)" formControlName="species">
+        <mat-option *ngFor="let specie of species" [value]="specie">
+          {{ specie.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="width-50">
+      <mat-select placeholder="Reference Interactome" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)"
+                  [value]="formSameSpecies.value.interactomeA" >
+        <mat-option *ngFor="let interactome of interactomesA" [value]="interactome">
+          {{ interactome.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="width-50 right">
+      <mat-select placeholder="Target Interactome" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)"
+                  [value]="formSameSpecies.value.interactomeB">
+        <mat-option *ngFor="let interactome of interactomesB" [value]="interactome">
+          {{ interactome.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="width-100">
+      <mat-label>Genes</mat-label>
+      <input #searchInput type="search" matInput placeholder="Start typing something to search genes"
+             formControlName="gene"
+             autocomplete="off"
+             [value]="genesInput" />
+    </mat-form-field>
+    <div class="div-autocomplete">
+      <mat-progress-bar mode="indeterminate" *ngIf="searchingGenes"></mat-progress-bar>
+      <mat-accordion>
+        <app-autocomplete *ngFor="let gene of genes" [title]="gene.geneId" [names]="gene.names" (radioSelected)="onGeneSelected($event)">
+        </app-autocomplete>
+      </mat-accordion>
+    </div>
+    <mat-form-field class="width-25">
+      <input type="number" matInput placeholder="Interaction level" formControlName="level" [(ngModel)]="level">
+    </mat-form-field>
+    <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [(ngModel)]="level" formControlName="level" class="width-75 right"></mat-slider>
+    <button mat-raised-button color="primary" (click)="onCompare()" [disabled]="formSameSpecies.status === 'INVALID'">Compare</button>
+  </span>
   <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
   <!--a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeA.id + '/fasta'"
      [download]="formSameSpecies.value.interactomeA.name" *ngIf="csvContent !== ''">
     Export Fasta of {{formSameSpecies.value.interactomeA.name}}
   </a-->
   <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeA.id + '/fasta'"
-     target="_blank" *ngIf="csvContent !== ''">
+     target="_blank" *ngIf="csvContent !== '' && !hideForm">
     Export {{formSameSpecies.value.interactomeA.name}} FASTA
   </a>
   <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formSameSpecies.value.interactomeB.id + '/fasta'"
-     target="_blank" *ngIf="csvContent !== ''">
+     target="_blank" *ngIf="csvContent !== '' && !hideForm">
     Export {{formSameSpecies.value.interactomeB.name}} FASTA
   </a>
   <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/fasta'"
      target="_blank" *ngIf="csvContent !== ''">
     Export Single FASTA
   </a>
+  <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
+      <mat-icon>link</mat-icon> Permalink to result</a>
   <mat-card *ngIf="!hideTable">
     <mat-tab-group>
       <mat-tab label="Table view">
@@ -110,7 +115,7 @@
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
-            <mat-header-cell *matHeaderCellDef>{{referenceInteractome.name}}</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>Reference Interactome</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngIf="row.interactomeDegrees[0].id === referenceInteractome.id">
                 Degree {{row.interactomeDegrees[0].degree}}
@@ -121,7 +126,7 @@
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="TargetInteractome">
-            <mat-header-cell *matHeaderCellDef>{{targetInteractome.name}}</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>Tarjet Interactome</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngIf="row.interactomeDegrees[0].id === targetInteractome.id">
                 Degree {{row.interactomeDegrees[0].degree}}

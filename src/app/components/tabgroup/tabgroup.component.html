@@ -19,17 +19,17 @@
   ~  along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<mat-tab-group class="tab-group">
+<mat-tab-group #tabGroup class="tab-group">
   <mat-tab label="Compare Species">
     <ng-template mat-tab-label>
       <h1>Compare Species</h1>
     </ng-template>
-    <app-form-distinct-species></app-form-distinct-species>
+    <app-form-distinct-species [work]="work"></app-form-distinct-species>
   </mat-tab>
   <mat-tab label="Compare Same Species">
     <ng-template mat-tab-label>
       <h1>Compare Same Species</h1>
     </ng-template>
-    <app-form-same-species></app-form-same-species>
+    <app-form-same-species [work]="work"></app-form-same-species>
   </mat-tab>
 </mat-tab-group>

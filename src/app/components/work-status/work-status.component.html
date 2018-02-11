@@ -21,6 +21,12 @@
 
 <h1 mat-dialog-title>Processing {{work.name}}</h1>
 <mat-card mat-dialog-content>
+  <mat-toolbar>
+    <span>You can leave this page and access your results later using this link:</span>
+    <span><a mat-mini-fab color="primary" href="{{location.normalize('/compare?result=' + work.id.id)}}" target="_blank">
+      <mat-icon>link</mat-icon>
+    </a></span>
+  </mat-toolbar>
   <mat-card-content>
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let step of work.steps">
