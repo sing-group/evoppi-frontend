@@ -30,7 +30,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-50">
-      <mat-select placeholder="Reference Interactome" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)"
+      <mat-select placeholder="Interactome A" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)"
                   [value]="formSameSpecies.value.interactomeA" >
         <mat-option *ngFor="let interactome of interactomesA" [value]="interactome">
           {{ interactome.name }}
@@ -38,7 +38,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-50 right">
-      <mat-select placeholder="Target Interactome" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)"
+      <mat-select placeholder="Interactome B" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)"
                   [value]="formSameSpecies.value.interactomeB">
         <mat-option *ngFor="let interactome of interactomesB" [value]="interactome">
           {{ interactome.name }}
@@ -46,7 +46,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-100">
-      <mat-label>Genes</mat-label>
+      <mat-label>Gene</mat-label>
       <input #searchInput type="search" matInput placeholder="Start typing something to search genes"
              formControlName="gene"
              autocomplete="off"
