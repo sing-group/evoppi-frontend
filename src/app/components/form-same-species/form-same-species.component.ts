@@ -255,7 +255,7 @@ export class FormSameSpeciesComponent implements OnInit {
               const geneInfoB = geneNames.find(x => x.geneId === item.geneB);
               item.firstNameB = GeneService.getFirstName(geneInfoB);
 
-              const from = new Node(nodes.length, item.geneA, item.firstNameB);
+              const from = new Node(nodes.length, item.geneA, item.firstNameA);
               let fromIndex = nodes.findIndex(x => x.label === from.label);
               if (fromIndex === -1) {
                 fromIndex = nodes.length;
