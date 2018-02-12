@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
@@ -27,13 +27,27 @@ import {ErrorHelper} from '../helpers/error.helper';
 import {catchError} from 'rxjs/operators';
 import {Work} from '../interfaces/work';
 import {WorkResult} from '../interfaces/work-result';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/concatMap';
+import 'rxjs/add/operator/combineAll';
+import {from} from 'rxjs/observable/from';
+import {GeneService} from './gene.service';
+import {InteractomeService} from './interactome.service';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/mergeAll';
+import 'rxjs/add/operator/concatAll';
+import 'rxjs/add/operator/combineAll';
+import 'rxjs/add/operator/combineLatest';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+
 
 @Injectable()
 export class InteractionService {
 
   private endpoint = environment.evoppiUrl + 'api/interaction';
 
-  constructor(protected http: HttpClient) { }
+  constructor(protected http: HttpClient, protected geneService: GeneService, protected interactomeService: InteractomeService) { }
 
 
   getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
@@ -46,7 +60,6 @@ export class InteractionService {
   getDistinctSpeciesInteraction(gene: number, referenceInteractome: number, targetInteractome: number,
                                  interactionLevel: number, evalue: number, maxTargetSeqs: number,
                                 minIdentity: number, minAlignmentLenght: number): Observable<Work> {
-
     const params: any = {
       gene: gene,
       referenceInteractome: referenceInteractome,
@@ -62,11 +75,70 @@ export class InteractionService {
   }
 
   getInteractionResult(uri: string): Observable<WorkResult> {
-
     return this.http.get<WorkResult>(uri)
+      .mergeMap(this.retrieveWorkGenes.bind(this))
+      .mergeMap(this.retrieveWorkInteractomes.bind(this))
       .pipe(
         catchError(ErrorHelper.handleError('getInteraction', null))
       );
   }
 
+  private retrieveWorkGenes(workResult: WorkResult): Observable<WorkResult> {
+    if (workResult.genes) {
+      return this.geneService.getGenes(workResult.genes.map(gene => gene.id))
+        .map(genes => {
+          workResult.genes = genes;
+          return workResult;
+        });
+    } else if (workResult.referenceGenes && workResult.targetGenes) {
+      const getAndSetGenes = (inputGenes, callback) =>
+        this.geneService.getGenes(inputGenes.map(gene => gene.id))
+        .map(genes => {
+          callback(genes);
+
+          return workResult;
+        });
+
+      return forkJoin(
+        getAndSetGenes(workResult.referenceGenes, genes => workResult.referenceGenes = genes),
+        getAndSetGenes(workResult.targetGenes, genes => workResult.targetGenes = genes)
+      ).map(workResults => workResults[0]);
+    } else {
+      throw TypeError('Invalid work result. Missing genes.');
+    }
+  }
+
+  private retrieveWorkInteractomes(workResult: WorkResult): Observable<WorkResult> {
+    if (workResult.interactomes) {
+      return forkJoin(
+        from(workResult.interactomes)
+          .mergeMap(
+            interactome => this.interactomeService.getInteractome(interactome.id, true)
+          )
+          .combineLatest(interactome => {
+            const index = workResult.interactomes.findIndex(it => it.id === interactome.id);
+
+            workResult.interactomes[index] = interactome;
+
+            return workResult;
+          })
+      ).map(workResults => workResults[0]);
+    } else if (workResult.referenceInteractome && workResult.targetInteractome) {
+      return forkJoin(
+        from([workResult.referenceInteractome, workResult.targetInteractome])
+          .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
+          .combineLatest(interactome => {
+            if (interactome.id === workResult.referenceInteractome.id) {
+              workResult.referenceInteractome = interactome;
+            } else {
+              workResult.targetInteractome = interactome;
+            }
+
+            return workResult;
+          })
+      ).map(workResults => workResults[0]);
+    } else {
+      throw TypeError('Invalid work result. Missing interactomes.');
+    }
+  }
 }

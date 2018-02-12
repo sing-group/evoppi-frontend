@@ -18,33 +18,39 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
+<mat-card *ngIf="!showForm">
+  <mat-card-content>
+    <button mat-raised-button color="primary" (click)="showForm = true">New query</button>
+  </mat-card-content>
+</mat-card>
 
-<mat-card>
+<mat-card *ngIf="showForm">
+  <mat-card-content>
 <form [formGroup]="formDistinctSpecies" (change)="onChangeForm()">
   <span *ngIf="!hideForm">
     <mat-form-field class="width-50">
-      <mat-select placeholder="Reference Species" (change)="onChangeSpecies($event.value, 1)" formControlName="speciesA">
-        <mat-option *ngFor="let specie of speciesA" [value]="specie">
+      <mat-select placeholder="Reference Species" (change)="onChangeSpecies($event.value, 1)" formControlName="referenceSpecies">
+        <mat-option *ngFor="let specie of referenceSpecies" [value]="specie">
           {{ specie.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-50 right">
-      <mat-select placeholder="Reference Interactome" formControlName="interactomeA">
+      <mat-select placeholder="Reference Interactome" formControlName="referenceInteractome">
         <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome">
           {{ interactome.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-50">
-      <mat-select placeholder="Target Species" (change)="onChangeSpecies($event.value, 2)" formControlName="speciesB">
-        <mat-option *ngFor="let specie of speciesB" [value]="specie">
+      <mat-select placeholder="Target Species" (change)="onChangeSpecies($event.value, 2)" formControlName="targetSpecies">
+        <mat-option *ngFor="let specie of targetSpecies" [value]="specie">
           {{ specie.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-50 right">
-      <mat-select placeholder="Target Interactome" formControlName="interactomeB">
+      <mat-select placeholder="Target Interactome" formControlName="targetInteractome">
         <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome">
           {{ interactome.name }}
         </mat-option>
@@ -88,22 +94,28 @@
 
     <button mat-raised-button button color="primary" (click)="onCompare()" [disabled]="formDistinctSpecies.status === 'INVALID'">Compare</button>
   </span>
-  <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
-  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formDistinctSpecies.value.interactomeA.id + '/fasta'"
-     target="_blank" *ngIf="csvContent !== '' && !hideForm">
-    Export {{formDistinctSpecies.value.speciesA.name}}-{{formDistinctSpecies.value.interactomeA.name}} FASTA
-  </a>
-  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + formDistinctSpecies.value.interactomeB.id + '/fasta'"
-     target="_blank" *ngIf="csvContent !== '' && !hideForm">
-    Export {{formDistinctSpecies.value.speciesB.name}}-{{formDistinctSpecies.value.interactomeB.name}} FASTA
-  </a>
-  <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/fasta'"
-     target="_blank" *ngIf="csvContent !== ''">
-    Export Single FASTA
-  </a>
-  <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
-    <mat-icon>link</mat-icon> Permalink to result</a>
-  <mat-card *ngIf="!hideTable">
+</form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="showTable">
+  <mat-card-content>
+    <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
+    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + referenceInteractome.id + '/fasta'"
+       target="_blank" *ngIf="csvContent !== ''">
+      Export {{referenceInteractome.species.name}}-{{referenceInteractome.name}} FASTA
+    </a>
+    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + targetInteractome.id + '/fasta'"
+       target="_blank" *ngIf="csvContent !== ''">
+      Export {{targetInteractome.species.name}}-{{targetInteractome.name}} FASTA
+    </a>
+    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/fasta'"
+       target="_blank" *ngIf="csvContent !== ''">
+      Export Single FASTA
+    </a>
+    <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
+      <mat-icon>link</mat-icon> Permalink to result</a>
+
     <mat-tab-group>
       <mat-tab label="Table view">
         <mat-table matSort [dataSource]="dataSource" class="table-distinct-species" appAfterViewInit (afterViewInit)="initTable()">
@@ -135,7 +147,8 @@
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              Reference Interactome
+              {{referenceInteractome.species.name}}
+              {{referenceInteractome.name}}
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngIf="row.referenceDegree !== ''">Degree {{row.referenceDegree}}</div>
@@ -143,7 +156,8 @@
           </ng-container>
           <ng-container matColumnDef="TargetInteractome">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              Target Interactome
+              {{targetInteractome.species.name}}
+              {{targetInteractome.name}}
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngFor="let degree of row.targetDegrees">Degree {{degree}}</div>
@@ -152,7 +166,7 @@
         </mat-table>
         <mat-paginator #paginator
                        [pageSize]="10"
-                       [pageSizeOptions]="[5, 10, 20]">
+                       [pageSizeOptions]="[5, 10, 20, 50]">
         </mat-paginator>
       </mat-tab>
       <mat-tab label="Graph view" *ngIf="nodes.length <= 100">
@@ -163,6 +177,5 @@
         <mat-card><h2>Too much genes. Interactions graph is only shown for up to 100 genes.</h2></mat-card>
       </mat-tab>
     </mat-tab-group>
-  </mat-card>
-</form>
+  </mat-card-content>
 </mat-card>

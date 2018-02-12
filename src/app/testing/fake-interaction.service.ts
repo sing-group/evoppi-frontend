@@ -25,6 +25,8 @@ import {Observable} from 'rxjs/Observable';
 import {WorkResult} from '../interfaces/work-result';
 import {InteractionService} from '../services/interaction.service';
 import {of} from 'rxjs/observable/of';
+import {GeneService} from '../services/gene.service';
+import {InteractomeService} from '../services/interactome.service';
 
 @Injectable()
 export class FakeInteractionService extends InteractionService {
@@ -208,12 +210,11 @@ export class FakeInteractionService extends InteractionService {
     ]
   };
 
-  constructor(protected http: HttpClient) {
-    super(http);
+  constructor(protected http: HttpClient, protected geneService: GeneService, protected interactomeService: InteractomeService) {
+    super(http, geneService, interactomeService);
   }
 
   getInteractionResult(uri: string): Observable<WorkResult> {
-
     if (uri === 'differentSpecies') {
       return of(FakeInteractionService.RESULT_DIFF);
     }

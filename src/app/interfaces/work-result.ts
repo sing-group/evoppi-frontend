@@ -27,16 +27,19 @@ import {BlastResult} from './blast-result';
 
 export interface WorkResult {
   id: string;
-  interactions?: Interaction[];
-  interactomes?: Interactome[];
-  genes?: Gene[];
   queryGene: number;
-  queryInteractomes?: number[];
   queryMaxDegree: number;
   status: string;
-  referenceInteractome: IdUri;
-  targetInteractome: IdUri;
-  referenceGenes: Gene[];
-  targetGenes: Gene[];
-  blastResults: BlastResult[];
+  interactions?: Interaction[];
+
+  // Same species
+  genes?: Gene[];
+  interactomes?: Interactome[];
+
+  // Distinct species
+  referenceGenes?: Gene[];
+  targetGenes?: Gene[];
+  referenceInteractome?: Interactome;
+  targetInteractome?: Interactome;
+  blastResults?: BlastResult[];
 }

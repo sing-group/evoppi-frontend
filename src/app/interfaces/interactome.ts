@@ -19,8 +19,11 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Species} from './species';
+
 export interface Interactome {
   id: number;
-  name: string;
+  name?: string;
   uri: string;
+  species?: Species;
 }

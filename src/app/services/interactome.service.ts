@@ -26,18 +26,31 @@ import {environment} from '../../environments/environment';
 import {Interactome} from '../interfaces/interactome';
 import {ErrorHelper} from '../helpers/error.helper';
 import {catchError} from 'rxjs/operators';
+import {SpeciesService} from './species.service';
 
 @Injectable()
 export class InteractomeService {
 
   private endpoint = environment.evoppiUrl + 'api/interactome';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private speciesService: SpeciesService) { }
 
-  getInteractome(id: number): Observable<Interactome> {
-    return this.http.get<Interactome>(this.endpoint + '/' + id)
+  getInteractome(id: number, retrieveSpecies: boolean = false): Observable<Interactome> {
+    let request = this.http.get<Interactome>(this.endpoint + '/' + id);
+
+    if (retrieveSpecies) {
+      request = request.concatMap(
+        interactome => this.speciesService.getSpeciesById(interactome.species.id),
+        (interactome, species) => {
+          interactome.species = species;
+
+          return interactome;
+        }
+      );
+    }
+
+    return request
       .pipe(
         catchError(ErrorHelper.handleError('getInteractome', null))
-      );;
+      );
   }
-
 }

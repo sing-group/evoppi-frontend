@@ -34,7 +34,6 @@ export class SpeciesService {
 
   constructor(private http: HttpClient) { }
 
-
   getSpecies(): Observable<Species[]> {
     return this.http.get<Species[]>(this.endpoint)
       .pipe(
@@ -42,6 +41,11 @@ export class SpeciesService {
       );
   }
 
-
+  getSpeciesById(id: number): Observable<Species> {
+    return this.http.get<Species>(this.endpoint + '/' + id)
+      .pipe(
+        catchError(ErrorHelper.handleError('getSpeciesById', null))
+      );
+  }
 
 }

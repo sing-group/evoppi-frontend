@@ -29,7 +29,7 @@ import {Interactome} from '../../interfaces/interactome';
 import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {Interaction} from '../../interfaces/interaction';
-import {MatDialog, MatSelectionList, MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
+import {MatDialog, MatPaginator, MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
@@ -70,8 +70,8 @@ export class FormSameSpeciesComponent implements OnInit {
   level: number;
   genesInput: string;
 
-  hideTable = true;
-  hideForm = false;
+  showForm = true;
+  showTable = false;
   searchingGenes = false;
 
   nodes: Node[] = [];
@@ -84,8 +84,8 @@ export class FormSameSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
-  referenceInteractome: Interactome;
-  targetInteractome: Interactome;
+  interactomeA: Interactome;
+  interactomeB: Interactome;
 
   permalink: string;
 
@@ -118,9 +118,8 @@ export class FormSameSpeciesComponent implements OnInit {
   @Input()
   set work(value: Work) {
     if (value && value.name.startsWith('Same species')) {
-      this.hideForm = true;
+      this.showForm = false;
       this.openDialog(value);
-      console.log('set work', value);
       this._work = value;
     }
   }
@@ -206,7 +205,7 @@ export class FormSameSpeciesComponent implements OnInit {
       console.log('INVALID');
       return;
     }
-    this.hideTable = true;
+    this.showTable = false;
     const formModel = this.formSameSpecies.value;
     this.interactionService.getSameSpeciesInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id],
       formModel.level)
@@ -224,7 +223,6 @@ export class FormSameSpeciesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      console.log(res.resultReference);
       if ( res.status === Status.COMPLETED ) {
         this.getResult(res.resultReference);
       } else {
@@ -234,90 +232,97 @@ export class FormSameSpeciesComponent implements OnInit {
   }
 
   private getResult(uri: string) {
-    const formModel = this.formSameSpecies.value;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
+        this.interaction = res.interactions;
+        this.interactomeA = res.interactomes[0];
+        this.interactomeB = res.interactomes[1];
 
-        this.geneService.getGeneNames(res.genes)
-          .subscribe((geneNames) => {
+        const nodes = [];
+        const links = [];
+        const csvData = [];
 
-            this.interaction = res.interactions;
-            this.referenceInteractome = res.interactomes[0];
-            this.targetInteractome = res.interactomes[1];
+        const getGene = geneId => res.genes.find(gene => gene.id === geneId);
 
-            const nodes = [];
-            const links = [];
-            const csvData = [];
+        for (const interaction of this.interaction) {
+          const geneInfoA = getGene(interaction.geneA);
+          interaction.firstNameA = GeneService.getFirstName(geneInfoA);
 
-            for (const item of this.interaction) {
-              const geneInfoA = geneNames.find(x => x.geneId === item.geneA);
-              item.firstNameA = GeneService.getFirstName(geneInfoA);
-              const geneInfoB = geneNames.find(x => x.geneId === item.geneB);
-              item.firstNameB = GeneService.getFirstName(geneInfoB);
+          const geneInfoB = getGene(interaction.geneB);
+          interaction.firstNameB = GeneService.getFirstName(geneInfoB);
 
-              const from = new Node(nodes.length, item.geneA, item.firstNameA);
-              let fromIndex = nodes.findIndex(x => x.label === from.label);
-              if (fromIndex === -1) {
-                fromIndex = nodes.length;
-                nodes.push(from);
-              } else {
-                nodes[fromIndex].linkCount++;
-              }
+          const from = new Node(nodes.length, interaction.geneA, interaction.firstNameA);
+          let fromIndex = nodes.findIndex(x => x.label === from.label);
+          if (fromIndex === -1) {
+            fromIndex = nodes.length;
+            nodes.push(from);
+          } else {
+            nodes[fromIndex].linkCount++;
+          }
 
-              const to = new Node(nodes.length, item.geneB, item.firstNameB);
-              let toIndex = nodes.findIndex(x => x.label === to.label);
-              if (toIndex === -1) {
-                toIndex = nodes.length;
-                nodes.push(to);
-              } else {
-                nodes[toIndex].linkCount++;
-              }
+          const to = new Node(nodes.length, interaction.geneB, interaction.firstNameB);
+          let toIndex = nodes.findIndex(x => x.label === to.label);
+          if (toIndex === -1) {
+            toIndex = nodes.length;
+            nodes.push(to);
+          } else {
+            nodes[toIndex].linkCount++;
+          }
 
-              let referenceDegree: number | string = '';
-              let targetDegree: number | string = '';
-              let link;
-              if (item.interactomeDegrees.length === 2) {
-                link = new Link(fromIndex, toIndex, 3);
-                links.push(link);
-                if (item.interactomeDegrees[0].id === this.referenceInteractome.id) {
-                  referenceDegree = item.interactomeDegrees[0].degree;
-                  targetDegree = item.interactomeDegrees[1].degree;
-                } else {
-                  referenceDegree = item.interactomeDegrees[1].degree;
-                  targetDegree = item.interactomeDegrees[0].degree;
-                }
-              } else if (item.interactomeDegrees.length === 1) {
-                if (item.interactomeDegrees[0].id === this.referenceInteractome.id) {
-                  link = new Link(fromIndex, toIndex, 1);
-                  referenceDegree = item.interactomeDegrees[0].degree;
-                } else if (item.interactomeDegrees[0].id === this.targetInteractome.id) {
-                  link = new Link(fromIndex, toIndex, 2);
-                  targetDegree = item.interactomeDegrees[0].degree;
-                } else {
-                  console.error('Shouldn\'t happen');
-                }
-                links.push(link);
-              } else {
-                console.error('Shouldn\'t happen either');
-              }
-
-              csvData.push([item.geneA, item.firstNameA, item.geneB, item.firstNameB, referenceDegree, targetDegree]);
+          let referenceDegree: number | string = '';
+          let targetDegree: number | string = '';
+          let link;
+          if (interaction.interactomeDegrees.length === 2) {
+            link = new Link(fromIndex, toIndex, 3);
+            links.push(link);
+            if (interaction.interactomeDegrees[0].id === this.interactomeA.id) {
+              referenceDegree = interaction.interactomeDegrees[0].degree;
+              targetDegree = interaction.interactomeDegrees[1].degree;
+            } else {
+              referenceDegree = interaction.interactomeDegrees[1].degree;
+              targetDegree = interaction.interactomeDegrees[0].degree;
             }
+          } else if (interaction.interactomeDegrees.length === 1) {
+            if (interaction.interactomeDegrees[0].id === this.interactomeA.id) {
+              link = new Link(fromIndex, toIndex, 1);
+              referenceDegree = interaction.interactomeDegrees[0].degree;
+            } else if (interaction.interactomeDegrees[0].id === this.interactomeB.id) {
+              link = new Link(fromIndex, toIndex, 2);
+              targetDegree = interaction.interactomeDegrees[0].degree;
+            } else {
+              console.error('Shouldn\'t happen');
+            }
+            links.push(link);
+          } else {
+            console.error('Shouldn\'t happen either');
+          }
 
-            this.nodes = nodes;
-            this.links = links;
+          csvData.push(
+            [
+              interaction.geneA, interaction.firstNameA,
+              interaction.geneB, interaction.firstNameB,
+              referenceDegree, targetDegree
+            ]
+          );
+        }
 
-            this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
-              CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B',
-                this.referenceInteractome.name, this.targetInteractome.name], csvData)
-            );
-            this.csvName = 'interaction_' + formModel.gene + '_' + formModel.interactomeA.id + '_' + formModel.interactomeB.id + '.csv';
+        this.nodes = nodes;
+        this.links = links;
 
-            this.hideTable = false;
-            this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
-            this.dataSource.sort = undefined;
-            this.dataSource.paginator = undefined;
-          });
+        this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+          CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B',
+            this.interactomeA.name, this.interactomeB.name], csvData)
+        );
+
+        const interactomeIds = res.interactomes.map(interactome => interactome.id).join('_');
+        this.csvName = 'interaction_' + getGene(res.queryGene) + '_' + interactomeIds + '.csv';
+
+        this.showForm = false;
+        this.showTable = true;
+
+        this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
+        this.dataSource.sort = undefined;
+        this.dataSource.paginator = undefined;
       });
   }
 
