@@ -253,7 +253,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
             let nodeIndex = 0;
             const nodes = res.referenceGenes.map(gene =>
               new Node(nodeIndex++, gene.id, geneNames.filter(geneInfo => geneInfo.geneId === gene.id)
-                  .map(info => GeneService.getFirstName(info) ),
+                  .map(info => GeneService.getFirstName(info) )[0],
                 res.blastResults.filter(blast => blast.qseqid === gene.id))
             );
             const links = [];
@@ -340,11 +340,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
                   consolidatedInteractions.push({
                     geneA: geneAId,
                     typeA: nodes[indexGeneA].type,
-                    nameA: nodes[indexGeneA].description,
+                    firstNameA: nodes[indexGeneA].description,
                     blastResultsA: nodes[indexGeneA].blastResults,
                     geneB: geneBId,
                     typeB: nodes[indexGeneB].type,
-                    nameB: nodes[indexGeneB].description,
+                    firstNameB: nodes[indexGeneB].description,
                     blastResultsB: nodes[indexGeneB].blastResults,
                     referenceDegree: referenceDegree,
                     targetDegrees: targetDegrees

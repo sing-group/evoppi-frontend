@@ -115,7 +115,7 @@
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
-            <mat-header-cell *matHeaderCellDef>Reference Interactome</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Reference Interactome</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngIf="row.interactomeDegrees[0].id === referenceInteractome.id">
                 Degree {{row.interactomeDegrees[0].degree}}
@@ -126,7 +126,7 @@
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="TargetInteractome">
-            <mat-header-cell *matHeaderCellDef>Tarjet Interactome</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Target Interactome</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngIf="row.interactomeDegrees[0].id === targetInteractome.id">
                 Degree {{row.interactomeDegrees[0].degree}}

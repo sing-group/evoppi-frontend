@@ -25,7 +25,9 @@ import {GeneInfo} from './gene-info';
 export interface Interaction {
   geneA: number;
   geneB: number;
-  interactomeDegrees: InteractomeDegree[];
+  interactomeDegrees?: InteractomeDegree[];
+  referenceDegree?: number;
+  targetDegrees?: number[];
   code?: string;
   geneInfoA?: GeneInfo;
   geneInfoB?: GeneInfo;
