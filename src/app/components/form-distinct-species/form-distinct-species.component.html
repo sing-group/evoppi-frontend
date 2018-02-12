@@ -72,23 +72,23 @@
     </div>
 
     <mat-form-field class="width-25">
-      <input type="number" matInput placeholder="Number of descriptions (max_target_seqs)" formControlName="numDescriptions" [(ngModel)]="numDescriptions">
-    </mat-form-field>
-    <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="1000" [(ngModel)]="minAlignLength" formControlName="minAlignLength" class="width-75 right"></mat-slider>
-    <mat-form-field class="width-25">
-      <input type="number" matInput placeholder="Minimum expect value (evalue)" formControlName="eValue" [(ngModel)]="eValue">
-    </mat-form-field>
-    <mat-slider thumbLabel [min]="0" [max]="1" [step]="0.01" [(ngModel)]="eValue" formControlName="eValue" class="width-75 right"></mat-slider>
-    <mat-form-field class="width-25">
-      <input type="number" matInput placeholder="Minimum length of alignment block" formControlName="minAlignLength" [(ngModel)]="minAlignLength">
+      <input type="number" matInput placeholder="Number of descriptions (max_target_seqs)" formControlName="numDescriptions" [(ngModel)]="numDescriptions" [min]="1" [max]="100" [step]="1">
     </mat-form-field>
     <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="100" [(ngModel)]="numDescriptions" formControlName="numDescriptions" class="width-75 right"></mat-slider>
     <mat-form-field class="width-25">
-      <input type="number" matInput placeholder="Minimum identity (%)" formControlName="minIdentity" [(ngModel)]="minIdentity">
+      <input type="number" matInput placeholder="Minimum expect value (evalue)" formControlName="eValue" [(ngModel)]="eValue" [min]="0" [max]="1" [step]="0.01">
+    </mat-form-field>
+    <mat-slider thumbLabel [min]="0" [max]="1" [step]="0.01" [(ngModel)]="eValue" formControlName="eValue" class="width-75 right"></mat-slider>
+    <mat-form-field class="width-25">
+      <input type="number" matInput placeholder="Minimum length of alignment block" formControlName="minAlignLength" [(ngModel)]="minAlignLength" [min]="0" [max]="1000" [step]="1">
+    </mat-form-field>
+    <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="1000" [(ngModel)]="minAlignLength" formControlName="minAlignLength" class="width-75 right"></mat-slider>
+    <mat-form-field class="width-25">
+      <input type="number" matInput placeholder="Minimum identity (%)" formControlName="minIdentity" [(ngModel)]="minIdentity" [min]="0" [max]="100" [step]="1">
     </mat-form-field>
     <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="100" [step]="1" [(ngModel)]="minIdentity" formControlName="minIdentity" class="width-75 right"></mat-slider>
     <mat-form-field class="width-25">
-      <input type="number" matInput placeholder="Interaction level" formControlName="level" [(ngModel)]="level">
+      <input type="number" matInput placeholder="Interaction level" formControlName="level" [(ngModel)]="level" [min]="1" [max]="3" [step]="1">
     </mat-form-field>
     <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [(ngModel)]="level" formControlName="level" class="width-75 right"></mat-slider>
 
