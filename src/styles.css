@@ -44,48 +44,6 @@
   float: right;
 }
 
-.link1 {
-  stroke-width: 4;
-  stroke: rgb(52, 112, 171);
-  background-color: rgb(52, 112, 171) !important;
-  color: white !important;
-  fill: transparent;
-}
-
-.link2 {
-  stroke-width: 4;
-  stroke: rgb(59, 80, 61);
-  background-color: rgb(59, 80, 61)!important;
-  color: white !important;
-  fill: transparent;
-}
-
-.link3 {
-  stroke-width: 4;
-  stroke: rgb(186, 9, 0);
-  background-color: rgb(186, 9, 0) !important;
-  color: white !important;
-  fill: transparent;
-}
-
-.link4 {
-  stroke-width: 4;
-  stroke: rgb(141, 69, 137);
-  background-color: rgb(141, 69, 137) !important;
-  color: white !important;
-  fill: transparent;
-}
-
-.node1 {
-  fill: grey;
-  background-color: grey !important;
-}
-
-.node2 {
-  fill: green;
-  background-color: green !important;
-}
-
 .gene1 {
   cursor: pointer;
   font-weight: bold;
@@ -96,23 +54,6 @@
   cursor: pointer;
   font-weight: bold;
   color: green !important;
-}
-
-.node {
-  cursor: pointer;
-  transition: stroke-width 0.1s ease-out,
-  fill 0.1s ease-out,
-  stroke 0.1s ease-out;
-
-  stroke: white;
-  stroke-width: 0.25;
-}
-
-.node-name {
-  text-anchor: middle;
-  alignment-baseline: central;
-  font-weight: 300;
-  fill: white;
 }
 
 .sequence {

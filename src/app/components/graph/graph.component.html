@@ -18,8 +18,80 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
+<div>
+  <button mat-button (click)="prepareDownload()" color="primary"><mat-icon>file_download</mat-icon></button>
+  <a *ngIf="enableSVG" mat-raised-button [href]="svgURL" download="graph.svg" color="accent">SVG</a>
+  <a *ngIf="enablePNG" mat-raised-button [href]="pngURL" download="graph.png" color="accent">PNG</a>
+  <button *ngIf="enablePDF" mat-raised-button (click)="downloadPDF()" color="accent">PDF</button>
+</div>
+<svg #svg [attr.width]="options.width" [attr.height]="options.height" (mousedown)="graphDirty()">
+  <style type="text/css">
+      svg {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-size: 14px;
+        background-color: white;
+      }
+      .node {
+        cursor: pointer;
+        transition: stroke-width 0.1s ease-out,
+        fill 0.1s ease-out,
+        stroke 0.1s ease-out;
 
-<svg #svg [attr.width]="options.width" [attr.height]="options.height">
+        stroke: white;
+        stroke-width: 0.25;
+      }
+
+      .node-name {
+        text-anchor: middle;
+        alignment-baseline: central;
+        font-weight: 300;
+        fill: white;
+      }
+      .link1 {
+        stroke-width: 4;
+        stroke: rgb(52, 112, 171);
+        background-color: rgb(52, 112, 171) !important;
+        color: white !important;
+        fill: transparent;
+      }
+
+      .link2 {
+        stroke-width: 4;
+        stroke: rgb(59, 80, 61);
+        background-color: rgb(59, 80, 61)!important;
+        color: white !important;
+        fill: transparent;
+      }
+
+      .link3 {
+        stroke-width: 4;
+        stroke: rgb(186, 9, 0);
+        background-color: rgb(186, 9, 0) !important;
+        color: white !important;
+        fill: transparent;
+      }
+
+      .link4 {
+        stroke-width: 4;
+        stroke: rgb(141, 69, 137);
+        background-color: rgb(141, 69, 137) !important;
+        color: white !important;
+        fill: transparent;
+      }
+
+      .node1 {
+        fill: grey;
+        background-color: grey !important;
+      }
+
+      .node2 {
+        fill: green;
+        background-color: green !important;
+      }
+      canvas {
+        display: none;
+      }
+  </style>
   <svg:g [appZoomableOf]="svg">
     <svg:g *ngFor="let link of links">
       <svg:line *ngIf="link.source !== link.target"
@@ -51,3 +123,5 @@
 
   </svg:g>
 </svg>
+<canvas #canvas [attr.width]="options.width" [attr.height]="options.height">
+</canvas>

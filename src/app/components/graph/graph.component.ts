@@ -20,14 +20,16 @@
  */
 
 import {
-  Component, Input, ChangeDetectorRef, HostListener, ChangeDetectionStrategy, SimpleChanges, OnChanges
+  Component, Input, ChangeDetectorRef, HostListener, ChangeDetectionStrategy, SimpleChanges, OnChanges, ViewChild,
+  ElementRef
 } from '@angular/core';
 import {D3Service} from '../../services/d3.service';
 import {ForceDirectedGraph} from '../../classes/force-directed-graph';
 import {Node} from '../../classes/node';
-import {GeneService} from '../../services/gene.service';
 import {MatDialog} from '@angular/material';
 import {GeneInfoComponent} from '../gene-info/gene-info.component';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-graph',
@@ -36,6 +38,8 @@ import {GeneInfoComponent} from '../gene-info/gene-info.component';
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent implements OnChanges {
+  @ViewChild('svg') svg: ElementRef;
+  @ViewChild('canvas') canvas: ElementRef;
 
   @Input() nodes;
   @Input() links;
@@ -45,12 +49,18 @@ export class GraphComponent implements OnChanges {
   graph: ForceDirectedGraph;
   private _options: { width, height };
 
+  svgURL: SafeResourceUrl = null;
+  pngURL: SafeResourceUrl = null;
+  enableSVG = false;
+  enablePNG = false;
+  enablePDF = false;
+
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.graph.initSimulation(this.options);
   }
 
-  constructor(private d3Service: D3Service, private ref: ChangeDetectorRef, public dialog: MatDialog) {}
+  constructor(private d3Service: D3Service, private ref: ChangeDetectorRef, public dialog: MatDialog, private domSanitizer: DomSanitizer) {}
 
   ngOnChanges(changes: SimpleChanges) {
     this.options = { width: this.graphWidth, height: this.graphHeight };
@@ -102,5 +112,51 @@ export class GraphComponent implements OnChanges {
 
 
     return 'M' + x1 + ',' + y1 + 'A' + drx + ',' + dry + ' ' + xRotation + ',' + largeArc + ',' + sweep + ' ' + x2 + ',' + y2;
+  }
+
+  graphDirty() {
+    this.enablePDF = this.enableSVG = this.enablePNG = false;
+  }
+
+  prepareDownload() {
+    const xmlSerializer = new XMLSerializer();
+    const source = xmlSerializer.serializeToString(this.svg.nativeElement);
+    const doctype = '<?xml version="1.0" standalone="no"?>'
+      + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+
+    const blob = new Blob([ doctype + source], { type: 'image/svg+xml;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+
+    const image = new Image();
+    const ctx: CanvasRenderingContext2D = this.canvas.nativeElement.getContext('2d');
+    ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    image.onload = (() => {
+      ctx.drawImage(image, 0, 0);
+      this.pngURL = this.canvas.nativeElement.toDataURL();
+      // This doesn't work with *ngIf, possible angular bug
+      // this.enablePNG = true;
+      // this.enablePDF = true;
+    });
+
+    image.src = url;
+    this.svgURL = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+    this.enableSVG = true;
+    // This two should be inside onload, but fail sometimes
+    this.enablePNG = true;
+    this.enablePDF = true;
+
+  }
+
+  downloadPDF() {
+    const imgData = this.canvas.nativeElement.toDataURL('image/jpeg');
+    const margin = 10;
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'pt',
+      format: [(this.graphWidth + (margin * 2)) * 0.75, (this.graphHeight + (margin * 2)) * 0.75 ]
+    });
+    doc.addImage(imgData, 'JPG', margin, margin);
+    doc.save('graph.pdf');
   }
 }
