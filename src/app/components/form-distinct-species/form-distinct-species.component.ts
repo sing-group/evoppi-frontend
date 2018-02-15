@@ -215,24 +215,25 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
   private openDialog(data: Work) {
     this.resultUrl = data.resultReference;
-    const dialogRef = this.dialog.open(WorkStatusComponent, {
-      disableClose: true,
-      data: {data}
-    });
+    setTimeout(() => {
+      const dialogRef = this.dialog.open(WorkStatusComponent, {
+        disableClose: true,
+        data: {data}
+      });
 
-    dialogRef.afterClosed().subscribe(res => {
-      if ( res.status === Status.COMPLETED ) {
-        this.getResult(res.resultReference);
-      } else {
-        alert('Work unfinished');
-      }
+      dialogRef.afterClosed().subscribe(res => {
+        if (res.status === Status.COMPLETED) {
+          this.getResult(res.resultReference);
+        } else {
+          alert('Work unfinished');
+        }
+      });
     });
   }
 
   public getResult(uri: string) {
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
-        console.log(res);
 
         this.referenceInteractome = res.referenceInteractome;
         this.targetInteractome = res.targetInteractome;
