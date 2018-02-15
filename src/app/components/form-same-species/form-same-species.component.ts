@@ -88,6 +88,7 @@ export class FormSameSpeciesComponent implements OnInit {
   interactomeB: Interactome;
 
   permalink: string;
+  processing = false;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
@@ -201,6 +202,10 @@ export class FormSameSpeciesComponent implements OnInit {
 
   }
   onCompare(): void {
+    if (this.processing) {
+      return;
+    }
+    this.processing = true;
     if (this.formSameSpecies.status === 'INVALID') {
       console.log('INVALID');
       return;
@@ -229,6 +234,7 @@ export class FormSameSpeciesComponent implements OnInit {
         } else {
           alert('Work unfinished');
         }
+        this.processing = false;
       });
     });
   }

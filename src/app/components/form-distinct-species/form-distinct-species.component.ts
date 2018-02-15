@@ -91,6 +91,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   targetInteractome: Interactome;
 
   permalink: string;
+  processing = false;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
@@ -199,6 +200,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
   }
 
   onCompare(): void {
+    if (this.processing) {
+      return;
+    }
+    this.processing = true;
     if (this.formDistinctSpecies.status === 'INVALID') {
       console.log('INVALID');
       return;
@@ -227,6 +232,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
         } else {
           alert('Work unfinished');
         }
+        this.processing = false;
       });
     });
   }
