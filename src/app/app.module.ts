@@ -81,6 +81,8 @@ import {BlastResultComponent} from './components/blast-result/blast-result.compo
 import {OnInitDirective} from './directives/on-init.directive';
 import {AfterViewInitDirective} from './directives/after-view-init.directive';
 import {UserWorkManagerComponent} from './components/user-work-manager/user-work-manager.component';
+import {ResearcherService} from './services/researcher.service';
+import {UserTableComponent} from './components/user-table/user-table.component';
 
 @NgModule({
   imports: [
@@ -156,6 +158,7 @@ export class MaterialModule {
     OnInitDirective,
     AfterViewInitDirective,
     UserWorkManagerComponent,
+    UserTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -178,6 +181,7 @@ export class MaterialModule {
     InteractionService,
     UserService,
     AdminService,
+    ResearcherService,
     AuthService,
     D3Service,
     WorkService,

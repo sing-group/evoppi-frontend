@@ -43,6 +43,7 @@ import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
 import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-species.component';
 import {UserWorkManagerComponent} from '../user-work-manager/user-work-manager.component';
+import {UserTableComponent} from '../user-table/user-table.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -53,7 +54,7 @@ describe('NavbarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
-        AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent ],
+        AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent, UserTableComponent ],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         AuthService,

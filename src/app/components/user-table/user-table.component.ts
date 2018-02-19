@@ -19,33 +19,27 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
-import {Interaction} from '../../interfaces/interaction';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {User} from '../../classes/user';
-import {AdminService} from '../../services/admin.service';
-import {ResearcherService} from '../../services/researcher.service';
 
 @Component({
-  selector: 'app-user-manager',
-  templateUrl: './user-manager.component.html',
-  styleUrls: ['./user-manager.component.css']
+  selector: 'app-user-table',
+  templateUrl: './user-table.component.html',
+  styleUrls: ['./user-table.component.css']
 })
-export class UserManagerComponent implements OnInit {
-  dataSource: MatTableDataSource<User>;
-  dataSourceResearchers: MatTableDataSource<User>;
-  displayedColumns = ['Login', 'Email', 'Role', 'Edit', 'Delete'];
+export class UserTableComponent implements OnInit, AfterViewInit {
 
-  constructor(private adminService: AdminService, private researcherService: ResearcherService) { }
+  @Input() dataSource: MatTableDataSource<User>;
+  @Input() displayedColumns: string[];
+
+  constructor() { }
 
   ngOnInit() {
-    this.adminService.getAdmins().subscribe((res) => {
-      this.dataSource = new MatTableDataSource<User>(res);
-    });
-
-    this.researcherService.getResearchers().subscribe((res) => {
-      this.dataSourceResearchers = new MatTableDataSource<User>(res);
-    });
+    console.log(this.dataSource);
   }
 
+  ngAfterViewInit() {
+    console.log(this.dataSource);
+  }
 }

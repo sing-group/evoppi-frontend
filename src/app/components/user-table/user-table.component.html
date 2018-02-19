@@ -1,0 +1,46 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~  Copyright (C) 2017-2018 - Noé Vázquez González,
+  ~  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
+  ~  and Cristina Vieira.
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+
+<mat-table [dataSource]="dataSource">
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  <ng-container matColumnDef="Login">
+    <mat-header-cell *matHeaderCellDef>Login</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{row.login}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Email">
+    <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{row.email}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Role">
+    <mat-header-cell *matHeaderCellDef>Role</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{row.role}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Edit">
+    <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+    <mat-cell *matCellDef="let row"><button mat-button><mat-icon>edit</mat-icon></button></mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="Delete">
+    <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+    <mat-cell *matCellDef="let row"><button mat-button><mat-icon>delete</mat-icon></button></mat-cell>
+  </ng-container>
+</mat-table>
