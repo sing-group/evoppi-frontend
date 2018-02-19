@@ -25,6 +25,7 @@ import {TabgroupComponent} from './components/tabgroup/tabgroup.component';
 import {LoginComponent} from './components/login/login.component';
 import {UserManagerComponent} from './components/user-manager/user-manager.component';
 import {InteractomesComponent} from './components/interactomes/interactomes.component';
+import {UserWorkManagerComponent} from './components/user-work-manager/user-work-manager.component';
 
 
 const routes: Routes = [
@@ -34,6 +35,7 @@ const routes: Routes = [
   { path: 'logout', component: LoginComponent },
   { path: 'users', component: UserManagerComponent },
   { path: 'interactomes', component: InteractomesComponent },
+  { path: 'results', component: UserWorkManagerComponent },
 ];
 
 @NgModule({

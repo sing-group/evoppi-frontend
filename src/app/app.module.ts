@@ -80,6 +80,7 @@ import {LegendDistinctSpeciesComponent} from './components/legend-distinct-speci
 import {BlastResultComponent} from './components/blast-result/blast-result.component';
 import {OnInitDirective} from './directives/on-init.directive';
 import {AfterViewInitDirective} from './directives/after-view-init.directive';
+import {UserWorkManagerComponent} from './components/user-work-manager/user-work-manager.component';
 
 @NgModule({
   imports: [
@@ -154,6 +155,7 @@ export class MaterialModule {
     BlastResultComponent,
     OnInitDirective,
     AfterViewInitDirective,
+    UserWorkManagerComponent,
   ],
   imports: [
     BrowserModule,
