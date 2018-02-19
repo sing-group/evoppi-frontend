@@ -42,6 +42,7 @@ import {InteractomesComponent} from '../interactomes/interactomes.component';
 import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
 import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-species.component';
+import {UserWorkManagerComponent} from '../user-work-manager/user-work-manager.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -52,7 +53,7 @@ describe('NavbarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
-        AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent ],
+        AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent ],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         AuthService,

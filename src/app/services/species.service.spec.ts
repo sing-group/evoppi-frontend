@@ -27,7 +27,7 @@ import {Species} from '../interfaces/species';
 import {Observable} from 'rxjs/Observable';
 
 export const SPECIES: Species[] = [
-  {id: 1, name: 'Homo Sapiens', interactomes: []}
+  {id: 1, name: 'Homo Sapiens', uri: '', interactomes: []}
 ];
 
 describe('SpeciesService', () => {

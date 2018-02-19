@@ -28,7 +28,6 @@ import {SpeciesService} from '../../services/species.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
-import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InteractionService} from '../../services/interaction.service';
@@ -38,6 +37,7 @@ import {DraggableDirective} from '../../directives/draggable.directive';
 import {D3Service} from '../../services/d3.service';
 import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-species.component';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
@@ -48,7 +48,7 @@ describe('FormSameSpeciesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ FormSameSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent,
         LegendSameSpeciesComponent],
-      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
+      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, RouterTestingModule],
       providers: [ SpeciesService, InteractomeService, GeneService, InteractionService, D3Service ]
     })
     .compileComponents();

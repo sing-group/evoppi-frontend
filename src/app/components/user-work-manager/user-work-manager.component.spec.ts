@@ -22,6 +22,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserWorkManagerComponent } from './user-work-manager.component';
+import {MaterialModule} from '../../app.module';
 
 describe('UserWorkManagerComponent', () => {
   let component: UserWorkManagerComponent;
@@ -29,7 +30,8 @@ describe('UserWorkManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserWorkManagerComponent ]
+      declarations: [ UserWorkManagerComponent ],
+      imports: [ MaterialModule ]
     })
     .compileComponents();
   }));

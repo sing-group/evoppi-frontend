@@ -39,6 +39,7 @@ import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
 import {FakeInteractionService} from '../../testing/fake-interaction.service';
 import Spy = jasmine.Spy;
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
@@ -51,7 +52,7 @@ describe('FormDistinctSpeciesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ FormDistinctSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent,
         LegendDistinctSpeciesComponent],
-      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
+      imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, RouterTestingModule ],
       providers: [ SpeciesService, InteractomeService, GeneService, D3Service,
         {
           provide: InteractionService, useClass: FakeInteractionService
@@ -102,46 +103,45 @@ describe('FormDistinctSpeciesComponent', () => {
 
   it('should create correct node link count',  async(() => {
     expect(component.nodes[0].linkCount).toBe(2);
-    expect(component.nodes[1].linkCount).toBe(2);
+
+    expect(component.nodes[1].linkCount).toBe(1);
     expect(component.nodes[2].linkCount).toBe(1);
     expect(component.nodes[3].linkCount).toBe(2);
     expect(component.nodes[4].linkCount).toBe(1);
-    expect(component.nodes[5].linkCount).toBe(2);
+    expect(component.nodes[5].linkCount).toBe(1);
   }));
 
   it('should create correct link count',  async(() => {
-    expect(component.links.length).toBe(5);
+    expect(component.links.length).toBe(4);
   }));
 
   it('should create correct link types',  async(() => {
-    expect(component.links[0].type).toBe(3);
+    expect(component.links[0].type).toBe(1);
     expect(component.links[1].type).toBe(1);
-    expect(component.links[2].type).toBe(2);
+    expect(component.links[2].type).toBe(1);
     expect(component.links[3].type).toBe(1);
 
   }));
 
   it('should create correct table row count',  async(() => {
     const consolidatedInteractions = component.dataSource.data;
-    expect(consolidatedInteractions.length).toBe(5);
+    expect(consolidatedInteractions.length).toBe(4);
   }));
 
   it('should create correct table geneA',  async(() => {
     const consolidatedInteractions = component.dataSource.data;
     expect(consolidatedInteractions[0].geneA).toBe(100);
     expect(consolidatedInteractions[1].geneA).toBe(100);
-    expect(consolidatedInteractions[2].geneA).toBe(101);
-    expect(consolidatedInteractions[3].geneA).toBe(110);
-    expect(consolidatedInteractions[4].geneA).toBe(120);
+    expect(consolidatedInteractions[2].geneA).toBe(110);
+    expect(consolidatedInteractions[3].geneA).toBe(120);
   }));
 
   it('should create correct table geneB',  async(() => {
     const consolidatedInteractions = component.dataSource.data;
     expect(consolidatedInteractions[0].geneB).toBe(101);
     expect(consolidatedInteractions[1].geneB).toBe(111);
-    expect(consolidatedInteractions[2].geneB).toBe(121);
-    expect(consolidatedInteractions[3].geneB).toBe(111);
-    expect(consolidatedInteractions[4].geneB).toBe(121);
+    expect(consolidatedInteractions[2].geneB).toBe(111);
+    expect(consolidatedInteractions[3].geneB).toBe(121);
   }));
 
 });
