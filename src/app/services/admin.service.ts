@@ -39,4 +39,14 @@ export class AdminService {
         catchError(ErrorHelper.handleError('getAdmins', []))
       );
   }
+
+  createAdmin(login: string, role: string, email: string, password: string): Observable<any> {
+    const body = {
+      login: login,
+      role: role,
+      email: email,
+      password: password
+    };
+    return this.http.post<any>(this.endpoint, body);
+  }
 }

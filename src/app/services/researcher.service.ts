@@ -40,4 +40,13 @@ export class ResearcherService {
       );
   }
 
+  createResearcher(login: string, role: string, email: string, password: string): Observable<any> {
+    const body = {
+      login: login,
+      role: role,
+      email: email,
+      password: password
+    };
+    return this.http.post<any>(this.endpoint, body);
+  }
 }

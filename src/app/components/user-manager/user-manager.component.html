@@ -21,12 +21,18 @@
 
 <mat-card>
   <mat-card-title><h1>Manage administrators</h1></mat-card-title>
+  <mat-card-actions>
+    <a mat-raised-button color="primary" routerLink="/new-user/admin">Add new administrator</a>
+  </mat-card-actions>
   <mat-card-content>
     <app-user-table [dataSource]="dataSource" [displayedColumns]="displayedColumns"></app-user-table>
   </mat-card-content>
 </mat-card>
 <mat-card>
   <mat-card-title><h1>Manage researchers</h1></mat-card-title>
+  <mat-card-actions>
+    <a mat-raised-button color="primary" routerLink="/new-user/researcher">Add new researcher</a>
+  </mat-card-actions>
   <mat-card-content>
     <app-user-table [dataSource]="dataSourceResearchers" [displayedColumns]="displayedColumns"></app-user-table>
   </mat-card-content>

@@ -83,6 +83,7 @@ import {AfterViewInitDirective} from './directives/after-view-init.directive';
 import {UserWorkManagerComponent} from './components/user-work-manager/user-work-manager.component';
 import {ResearcherService} from './services/researcher.service';
 import {UserTableComponent} from './components/user-table/user-table.component';
+import {UserCreateComponent} from './components/user-create/user-create.component';
 
 @NgModule({
   imports: [
@@ -159,6 +160,7 @@ export class MaterialModule {
     AfterViewInitDirective,
     UserWorkManagerComponent,
     UserTableComponent,
+    UserCreateComponent,
   ],
   imports: [
     BrowserModule,

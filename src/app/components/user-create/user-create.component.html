@@ -1,0 +1,62 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~  Copyright (C) 2017-2018 - Noé Vázquez González,
+  ~  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
+  ~  and Cristina Vieira.
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<mat-card class="card-group">
+  <mat-card-title><h1>Create new user</h1></mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="formNewUser" novalidate>
+      <mat-form-field class="width-100">
+        <mat-label>Username</mat-label>
+        <input matInput placeholder="Username" formControlName="login" type="text" />
+        <mat-error *ngIf="formNewUser.get('login').hasError('validLogin')">
+          {{formNewUser.get('login').getError('validLogin')}}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="width-100">
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="Password" formControlName="password" type="password" />
+        <mat-error *ngIf="formNewUser.get('password').hasError('validPassword')">
+          {{formNewUser.get('password').getError('validPassword')}}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="width-100">
+        <mat-label>Email</mat-label>
+        <input #email matInput placeholder="Email" formControlName="email" type="email" email />
+        <mat-error *ngIf="formNewUser.get('email').hasError('validEmail')">
+         {{formNewUser.get('email').getError('validEmail')}}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="width-100">
+        <mat-select placeholder="Role" formControlName="role">
+          <mat-option *ngFor="let role of ['ADMIN', 'RESEARCHER']" [value]="role">
+            {{ role }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-error *ngIf="formNewUser.hasError('invalidForm')">
+        {{formNewUser.getError('invalidForm')}}
+      </mat-error>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <a mat-raised-button color="accent" routerLink="/users">Cancel</a>
+    <button mat-raised-button color="primary" (click)="onCreate()">Create</button>
+  </mat-card-actions>
+</mat-card>

@@ -26,6 +26,7 @@ import {LoginComponent} from './components/login/login.component';
 import {UserManagerComponent} from './components/user-manager/user-manager.component';
 import {InteractomesComponent} from './components/interactomes/interactomes.component';
 import {UserWorkManagerComponent} from './components/user-work-manager/user-work-manager.component';
+import {UserCreateComponent} from './components/user-create/user-create.component';
 
 
 const routes: Routes = [
@@ -34,6 +35,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LoginComponent },
   { path: 'users', component: UserManagerComponent },
+  { path: 'new-user/:role', component: UserCreateComponent },
   { path: 'interactomes', component: InteractomesComponent },
   { path: 'results', component: UserWorkManagerComponent },
 ];

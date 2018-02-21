@@ -49,6 +49,7 @@ import {LegendDistinctSpeciesComponent} from './components/legend-distinct-speci
 import {LegendSameSpeciesComponent} from './components/legend-same-species/legend-same-species.component';
 import {UserWorkManagerComponent} from './components/user-work-manager/user-work-manager.component';
 import {UserTableComponent} from './components/user-table/user-table.component';
+import {UserCreateComponent} from './components/user-create/user-create.component';
 
 
 describe('AppComponent', () => {
@@ -59,7 +60,9 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
-        AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent, UserTableComponent ],
+        AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent, UserTableComponent,
+        UserCreateComponent,
+      ],
       imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
       providers: [SpeciesService, InteractomeService, GeneService, InteractionService, UserService, AuthService,
         { provide: ActivatedRoute, useValue: activatedRoute },
