@@ -23,6 +23,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserTableComponent } from './user-table.component';
 import {MaterialModule} from '../../app.module';
+import {AdminService} from '../../services/admin.service';
+import {ResearcherService} from '../../services/researcher.service';
+import {HttpClientModule} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {RouterStub} from '../../testing/router-stubs';
 
 describe('UserTableComponent', () => {
   let component: UserTableComponent;
@@ -31,7 +36,10 @@ describe('UserTableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ UserTableComponent ],
-      imports: [MaterialModule]
+      imports: [MaterialModule, HttpClientModule],
+      providers: [AdminService, ResearcherService,
+        { provide: Router,         useClass: RouterStub},
+      ]
     })
     .compileComponents();
   }));

@@ -22,17 +22,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserManagerComponent } from './user-manager.component';
-import {InteractomeService} from '../../services/interactome.service';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import {GeneService} from '../../services/gene.service';
 import {MaterialModule} from '../../app.module';
-import {InteractionService} from '../../services/interaction.service';
-import {SpeciesService} from '../../services/species.service';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdminService} from '../../services/admin.service';
 import {UserTableComponent} from '../user-table/user-table.component';
 import {ResearcherService} from '../../services/researcher.service';
+import {Router} from '@angular/router';
+import {RouterStub} from '../../testing/router-stubs';
 
 describe('UserManagerComponent', () => {
   let component: UserManagerComponent;
@@ -42,7 +38,9 @@ describe('UserManagerComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ UserManagerComponent, UserTableComponent ],
       imports: [ MaterialModule, HttpClientModule ],
-      providers: [ AdminService, ResearcherService ]
+      providers: [ AdminService, ResearcherService,
+        { provide: Router,         useClass: RouterStub},
+      ]
     })
     .compileComponents();
   }));
