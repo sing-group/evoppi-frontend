@@ -25,6 +25,7 @@ export class User {
   private _login: string;
   private _email: string;
   private _authHeader: string;
+  private _password?: string;
 
   constructor() {
     const user: User = JSON.parse(localStorage.getItem('user'));
@@ -77,6 +78,14 @@ export class User {
 
   set email(value: string) {
     this._email = value;
+  }
+
+  get password(): string {
+    return this._password;
+  }
+
+  set password(value: string) {
+    this._password = value;
   }
 
   public save() {

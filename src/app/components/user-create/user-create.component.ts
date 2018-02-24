@@ -24,6 +24,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AdminService} from '../../services/admin.service';
 import {ResearcherService} from '../../services/researcher.service';
+import {User} from '../../classes/user';
 
 @Component({
   selector: 'app-user-create',
@@ -33,6 +34,7 @@ import {ResearcherService} from '../../services/researcher.service';
 export class UserCreateComponent implements OnInit {
 
   public role: string;
+  public user: User = null;
   public formNewUser: FormGroup;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private formBuilder: FormBuilder,
@@ -40,6 +42,26 @@ export class UserCreateComponent implements OnInit {
 
   ngOnInit() {
     this.role = this.activatedRoute.snapshot.paramMap.get('role').toUpperCase();
+    if (this.activatedRoute.snapshot.paramMap.has('login')) {
+      const login = this.activatedRoute.snapshot.paramMap.get('login');
+      if (this.role === 'ADMIN') {
+        this.adminService.getAdmin(login)
+          .subscribe((res) => {
+            this.user = res;
+            this.loadFormValues();
+          }, (err) => {
+            this.showErrors(err);
+          });
+      } else if (this.role === 'RESEARCHER') {
+        this.researcherService.getResearcher(login)
+          .subscribe((res) => {
+            this.user = res;
+            this.loadFormValues();
+          }, (err) => {
+            this.showErrors(err);
+          });
+      }
+    }
     this.formNewUser = this.formBuilder.group({
       'role': [this.role, [Validators.required, Validators.pattern('^(ADMIN)$|^(RESEARCHER)$')]],
       'login': ['', [Validators.required, Validators.minLength(1)]],
@@ -50,6 +72,11 @@ export class UserCreateComponent implements OnInit {
 
   onCreate() {
     if (this.formNewUser.status === 'INVALID') {
+      if (this.formNewUser.errors === null) {
+        this.showErrors({error: 'Please fill all the fields in the form before saving it'});
+      } else {
+        this.showErrors(this.formNewUser.errors);
+      }
       return;
     }
     const formModel = this.formNewUser.value;
@@ -70,6 +97,33 @@ export class UserCreateComponent implements OnInit {
     }
   }
 
+  onSave() {
+    if (this.formNewUser.status === 'INVALID') {
+      if (this.formNewUser.errors === null) {
+        this.showErrors({error: 'Please fill all the fields in the form before saving it'});
+      } else {
+        this.showErrors(this.formNewUser.errors);
+      }
+      return;
+    }
+    const formModel = this.formNewUser.value;
+    if (this.role === 'ADMIN') {
+      this.adminService.editAdmin(formModel.login, this.role, formModel.email, formModel.password)
+        .subscribe((res) => {
+          this.router.navigateByUrl('/users');
+        }, (err) => {
+          this.showErrors(err);
+        });
+    } else if (this.role === 'RESEARCHER') {
+      this.researcherService.editResearcher(formModel.login, this.role, formModel.email, formModel.password)
+        .subscribe((res) => {
+          this.router.navigateByUrl('/users');
+        }, (err) => {
+          this.showErrors(err);
+        });
+    }
+  }
+
   private showErrors(err: any): void {
     if (err.error.indexOf('email') >= 0) {
       this.formNewUser.get('email').setErrors({'validEmail': err.error});
@@ -80,6 +134,14 @@ export class UserCreateComponent implements OnInit {
     } else {
       this.formNewUser.setErrors({'invalidForm': err.error});
     }
+  }
+
+  private loadFormValues(): void {
+    this.formNewUser.get('role').disable();
+    this.formNewUser.get('role').setValue(this.user.role);
+    this.formNewUser.get('login').setValue(this.user.login);
+    this.formNewUser.get('email').setValue(this.user.email);
+    this.formNewUser.get('password').setValue(this.user.password);
   }
 
 }

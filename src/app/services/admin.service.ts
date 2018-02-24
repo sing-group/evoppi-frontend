@@ -33,6 +33,10 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  getAdmin(login: string): Observable<User> {
+    return this.http.get<User>(this.endpoint + '/' + login);
+  }
+
   getAdmins(): Observable<User[]> {
     return this.http.get<User[]>(this.endpoint)
       .pipe(
@@ -48,5 +52,19 @@ export class AdminService {
       password: password
     };
     return this.http.post<any>(this.endpoint, body);
+  }
+
+  editAdmin(login: string, role: string, email: string, password: string): Observable<any> {
+    const body = {
+      login: login,
+      role: role,
+      email: email,
+      password: password
+    };
+    return this.http.put<any>(this.endpoint, body);
+  }
+
+  deleteAdmin(login: string): Observable<any> {
+    return this.http.delete<User>(this.endpoint + '/' + login);
   }
 }

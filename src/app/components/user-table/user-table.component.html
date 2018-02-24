@@ -37,10 +37,14 @@
   </ng-container>
   <ng-container matColumnDef="Edit">
     <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
-    <mat-cell *matCellDef="let row"><button mat-button><mat-icon>edit</mat-icon></button></mat-cell>
+    <mat-cell *matCellDef="let row">
+      <button mat-button (click)="edit(row.login, row.role)" color="primary"><mat-icon>edit</mat-icon></button>
+    </mat-cell>
   </ng-container>
   <ng-container matColumnDef="Delete">
     <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
-    <mat-cell *matCellDef="let row"><button mat-button><mat-icon>delete</mat-icon></button></mat-cell>
+    <mat-cell *matCellDef="let row">
+      <button mat-button (click)="delete(row.login, row.role)" color="warn"><mat-icon>delete</mat-icon></button>
+    </mat-cell>
   </ng-container>
 </mat-table>

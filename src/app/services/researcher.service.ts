@@ -33,6 +33,10 @@ export class ResearcherService {
 
   constructor(private http: HttpClient) { }
 
+  getResearcher(login: string): Observable<User> {
+    return this.http.get<User>(this.endpoint + '/' + login);
+  }
+
   getResearchers(): Observable<User[]> {
     return this.http.get<User[]>(this.endpoint)
       .pipe(
@@ -48,5 +52,19 @@ export class ResearcherService {
       password: password
     };
     return this.http.post<any>(this.endpoint, body);
+  }
+
+  editResearcher(login: string, role: string, email: string, password: string): Observable<any> {
+    const body = {
+      login: login,
+      role: role,
+      email: email,
+      password: password
+    };
+    return this.http.put<any>(this.endpoint, body);
+  }
+
+  deleteResearcher(login: string): Observable<any> {
+    return this.http.delete<User>(this.endpoint + '/' + login);
   }
 }

@@ -39,10 +39,25 @@ export class UserManagerComponent implements OnInit {
   constructor(private adminService: AdminService, private researcherService: ResearcherService) { }
 
   ngOnInit() {
+    this.loadAdmins();
+    this.loadResearchers();
+  }
+
+  onChange(role: string) {
+    if (role === 'ADMIN') {
+      this.loadAdmins();
+    } else if (role === 'RESEARCHER') {
+      this.loadResearchers();
+    }
+  }
+
+  loadAdmins() {
     this.adminService.getAdmins().subscribe((res) => {
       this.dataSource = new MatTableDataSource<User>(res);
     });
+  }
 
+  loadResearchers() {
     this.researcherService.getResearchers().subscribe((res) => {
       this.dataSourceResearchers = new MatTableDataSource<User>(res);
     });

@@ -36,8 +36,8 @@ export class DialogComponent implements OnInit {
   }
 
 
-  close(): void {
-    this.dialogRef.close(0);
+  close(result: number = 0): void {
+    this.dialogRef.close(result);
   }
 
 }

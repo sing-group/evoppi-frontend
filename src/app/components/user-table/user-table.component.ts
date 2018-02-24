@@ -19,9 +19,13 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MatDialog, MatTableDataSource} from '@angular/material';
 import {User} from '../../classes/user';
+import {AdminService} from '../../services/admin.service';
+import {ResearcherService} from '../../services/researcher.service';
+import {DialogComponent} from '../dialog/dialog.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-user-table',
@@ -32,14 +36,45 @@ export class UserTableComponent implements OnInit, AfterViewInit {
 
   @Input() dataSource: MatTableDataSource<User>;
   @Input() displayedColumns: string[];
+  @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() { }
+  constructor(private adminService: AdminService, private researcherService: ResearcherService, private dialog: MatDialog,
+              private router: Router) { }
 
   ngOnInit() {
-    console.log(this.dataSource);
   }
 
   ngAfterViewInit() {
-    console.log(this.dataSource);
+  }
+
+  edit(login: string, role: string) {
+    this.router.navigateByUrl('/edit-user/' + login + '/' + role);
+  }
+
+  delete(login: string, role: string) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '250px',
+      data: { title: 'Confirmation', content: 'Are you sure you want to delete user "' + login + '"?', type: 'YES_NO' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 1) {
+        if (role === 'ADMIN') {
+          this.adminService.deleteAdmin(login)
+            .subscribe((res) => {
+              this.change.emit(role);
+            }, (err) => {
+              console.log('ERROR', err);
+            });
+        } else if (role === 'RESEARCHER') {
+          this.researcherService.deleteResearcher(login)
+            .subscribe((res) => {
+              this.change.emit(role);
+            }, (err) => {
+              console.log('ERROR', err);
+            });
+        }
+      }
+    });
   }
 }

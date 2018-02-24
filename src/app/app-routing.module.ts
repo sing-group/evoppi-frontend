@@ -36,6 +36,7 @@ const routes: Routes = [
   { path: 'logout', component: LoginComponent },
   { path: 'users', component: UserManagerComponent },
   { path: 'new-user/:role', component: UserCreateComponent },
+  { path: 'edit-user/:login/:role', component: UserCreateComponent },
   { path: 'interactomes', component: InteractomesComponent },
   { path: 'results', component: UserWorkManagerComponent },
 ];

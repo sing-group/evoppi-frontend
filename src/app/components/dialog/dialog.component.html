@@ -20,9 +20,13 @@
   -->
 
 <h1 mat-dialog-title>{{data.title}}</h1>
-<div mat-dialog-content>
+<mat-dialog-content>
   <p>{{data.content}}</p>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="close()">Ok</button>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <span *ngIf="data.type === 'YES_NO'">
+    <button mat-raised-button color="accent" (click)="close(0)">No</button>
+    <button mat-raised-button color="primary" (click)="close(1)">Yes</button>
+  </span>
+  <button *ngIf="data.type !== 'YES_NO'" mat-raised-button (click)="close()">Ok</button>
+</mat-dialog-actions>
