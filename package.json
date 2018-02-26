@@ -1,6 +1,6 @@
 {
   "name": "@evoppi/frontend",
-  "version": "0.1.0-alpha.21",
+  "version": "0.1.0",
   "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
   "author": {
@@ -15,7 +15,7 @@
   ],
   "repository": "https://github.com/sing-group/evoppi-frontend.git",
   "publishConfig": {
-    "registry": "https://maven.sing-group.org/repository/npm-snapshots/"
+    "registry": "https://maven.sing-group.org/repository/npm-releases/"
   },
   "scripts": {
     "ng": "ng",
