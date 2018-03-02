@@ -79,6 +79,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
   nodes: Node[] = [];
   links: Link[] = [];
+  lastQueryMaxDegree: number;
 
   graphWidth = 900;
   graphHeight = 450;
@@ -240,7 +241,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
   public getResult(uri: string) {
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
-
+        this.lastQueryMaxDegree = res.queryMaxDegree;
         this.referenceInteractome = res.referenceInteractome;
         this.targetInteractome = res.targetInteractome;
 

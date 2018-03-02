@@ -76,6 +76,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
   nodes: Node[] = [];
   links: Link[] = [];
+  lastQueryMaxDegree: number;
 
   graphWidth = 900;
   graphHeight = 450;
@@ -242,6 +243,7 @@ export class FormSameSpeciesComponent implements OnInit {
   private getResult(uri: string) {
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
+        this.lastQueryMaxDegree = res.queryMaxDegree;
         this.interaction = res.interactions;
         this.interactomeA = res.interactomes[0];
         this.interactomeB = res.interactomes[1];
