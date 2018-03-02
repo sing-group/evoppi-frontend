@@ -76,9 +76,9 @@
     </mat-form-field>
     <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="100" [(ngModel)]="numDescriptions" formControlName="numDescriptions" class="width-75 right"></mat-slider>
     <mat-form-field class="width-25">
-      <input type="number" matInput placeholder="Minimum expect value (evalue)" formControlName="eValue" [(ngModel)]="eValue" [min]="0" [max]="1" [step]="0.01">
+      <input type="number" matInput placeholder="Minimum expect value (evalue)" formControlName="eValue" [(ngModel)]="eValue" [min]="0" [step]="0.01">
     </mat-form-field>
-    <mat-slider thumbLabel [min]="0" [max]="1" [step]="0.01" [(ngModel)]="eValue" formControlName="eValue" class="width-75 right"></mat-slider>
+    <mat-slider thumbLabel [min]="0" [max]="10" [step]="0.01" [(ngModel)]="eValue" formControlName="eValue" class="width-75 right"></mat-slider>
     <mat-form-field class="width-25">
       <input type="number" matInput placeholder="Minimum length of alignment block" formControlName="minAlignLength" [(ngModel)]="minAlignLength" [min]="0" [max]="1000" [step]="1">
     </mat-form-field>
@@ -92,6 +92,9 @@
     </mat-form-field>
     <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [(ngModel)]="level" formControlName="level" class="width-75 right"></mat-slider>
 
+    <mat-error *ngIf="formDistinctSpecies.hasError('invalidForm')">
+        {{formDistinctSpecies.getError('invalidForm')}}
+      </mat-error>
     <button mat-raised-button button color="primary" (click)="onCompare()" [disabled]="formDistinctSpecies.status === 'INVALID' || processing">Compare</button>
   </span>
 </form>

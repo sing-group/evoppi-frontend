@@ -111,7 +111,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
       'referenceInteractome': ['', Validators.required],
       'targetInteractome': ['', Validators.required],
       'gene': ['', Validators.required],
-      'eValue': ['0.05', [Validators.required, Validators.min(0), Validators.max(1)]],
+      'eValue': ['0.05', [Validators.required, Validators.min(0)]],
       'minAlignLength': ['18', [Validators.required, Validators.min(0)]],
       'numDescriptions': ['1', [Validators.required, Validators.min(1), Validators.max(100)]],
       'minIdentity': ['95', [Validators.required, Validators.min(0), Validators.max(100)]],
@@ -216,7 +216,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
       .subscribe((work) => {
         this.permalink = this.location.normalize('/compare?result=' + work.id.id);
         this.openDialog(work);
-      });
+      }, (error) => {
+        this.formDistinctSpecies.setErrors({'invalidForm': 'Error: ' + error.error});
+        this.processing = false;
+    });
   }
 
   private openDialog(data: Work) {
