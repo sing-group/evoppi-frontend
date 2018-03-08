@@ -24,21 +24,59 @@
   <mat-table #table [dataSource]="dataSource" matSort>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Identifier</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+    <ng-container matColumnDef="species">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Species</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.species.id}}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
       <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
     </ng-container>
-    <ng-container matColumnDef="species">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Species</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row.species}}</mat-cell>
+    <ng-container matColumnDef="dbSourceIdType">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>DB source ID type</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.dbSourceIdType}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numOriginalInteractions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Original interactions</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numOriginalInteractions}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numUniqueOriginalInteractions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Unique original interactions</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numUniqueOriginalInteractions}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numUniqueOriginalGenes">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Unique original genes</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numUniqueOriginalGenes}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numInteractionsNotToUniProtKB">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Interactions not to UniProtKB</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numInteractionsNotToUniProtKB}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numGenesNotToUniProtKB">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Genes not to UniPortKB</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numGenesNotToUniProtKB}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numInteractionsNotToGeneId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Interactions not to GeneID</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numInteractionsNotToGeneId}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numGenesNotToGeneId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Genes not to GeneID</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numGenesNotToGeneId}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="numFinalInteractions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header># Final Interactions</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.numFinalInteractions}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="probFinalInteractions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>% Final Interactions</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.probFinalInteractions}}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="download">
       <mat-header-cell *matHeaderCellDef>Download</mat-header-cell>
-      <mat-cell *matCellDef="let row"><button mat-button><mat-icon>download</mat-icon></button></mat-cell>
+      <mat-cell *matCellDef="let row">
+        <button mat-button color="primary"><mat-icon>file_download</mat-icon></button>
+      </mat-cell>
     </ng-container>
   </mat-table>
 </mat-card>

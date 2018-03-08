@@ -53,4 +53,11 @@ export class InteractomeService {
         catchError(ErrorHelper.handleError('getInteractome', null))
       );
   }
+
+  getInteractomes(): Observable<Interactome[]> {
+    return this.http.get<Interactome[]>(this.endpoint)
+      .pipe(
+        catchError(ErrorHelper.handleError('getInteractomes', []))
+      );
+  }
 }

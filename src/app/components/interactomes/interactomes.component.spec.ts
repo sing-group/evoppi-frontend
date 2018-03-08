@@ -23,6 +23,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InteractomesComponent } from './interactomes.component';
   import {MaterialModule} from '../../app.module';
+  import {InteractomeService} from '../../services/interactome.service';
+  import {HttpClientModule} from '@angular/common/http';
+  import {SpeciesService} from '../../services/species.service';
 
 describe('InteractomesComponent', () => {
   let component: InteractomesComponent;
@@ -31,7 +34,8 @@ describe('InteractomesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ InteractomesComponent ],
-      imports: [ MaterialModule ]
+      imports: [ MaterialModule, HttpClientModule ],
+      providers: [ InteractomeService, SpeciesService ]
     })
     .compileComponents();
   }));
