@@ -218,6 +218,8 @@ export class FormSameSpeciesComponent implements OnInit {
       .subscribe((work) => {
         this.permalink = this.location.normalize('/compare?result=' + work.id.id);
         this.openDialog(work);
+      }, (error) => {
+        this.formSameSpecies.setErrors({'invalidForm': 'Error: ' + error.error});
       });
   }
 
