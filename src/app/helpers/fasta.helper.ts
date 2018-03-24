@@ -3,7 +3,7 @@ export class FastaHelper {
   public static getFasta(header: string, data: Array<string>): string {
     let res = 'data:text/x-fasta;base64,';
     let plain = '';
-    for (const row of data){
+    for (const row of data) {
       plain += '>' + header + '\n';
       let aux: string;
       let i = 0;

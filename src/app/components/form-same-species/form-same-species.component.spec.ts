@@ -42,7 +42,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
   let fixture: ComponentFixture<FormSameSpeciesComponent>;
-  let de: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

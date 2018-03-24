@@ -56,7 +56,7 @@ export class GeneService {
 
   getGeneNames(genes: Gene[]): Observable<GeneInfo[]> {
     const observables: Observable<GeneInfo>[] = [];
-    for (const gene of genes){
+    for (const gene of genes) {
       observables.push(<Observable<GeneInfo>> this.http.get(this.endpoint + '/' + gene.id + '/name'));
     }
     return forkJoin(observables);

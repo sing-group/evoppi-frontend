@@ -44,7 +44,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
   let fixture: ComponentFixture<FormDistinctSpeciesComponent>;
-  let de: DebugElement;
   let interactionService: InteractionService;
   let spy: Spy;
 

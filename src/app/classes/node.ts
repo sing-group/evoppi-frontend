@@ -34,7 +34,7 @@ export class Node implements d3.SimulationNodeDatum {
   id: string;
   label: string | number;
   description: string;
-  linkCount: number = 0;
+  linkCount = 0;
   type?: number;
   blastResults?: BlastResult[];
 
