@@ -26,6 +26,7 @@ import { InteractomesComponent } from './interactomes.component';
   import {InteractomeService} from '../../services/interactome.service';
   import {HttpClientModule} from '@angular/common/http';
   import {SpeciesService} from '../../services/species.service';
+  import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('InteractomesComponent', () => {
   let component: InteractomesComponent;
@@ -34,7 +35,7 @@ describe('InteractomesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ InteractomesComponent ],
-      imports: [ MaterialModule, HttpClientModule ],
+      imports: [ MaterialModule, HttpClientModule, BrowserAnimationsModule ],
       providers: [ InteractomeService, SpeciesService ]
     })
     .compileComponents();
