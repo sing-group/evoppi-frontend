@@ -39,7 +39,7 @@ export interface WorkResult {
   // Distinct species
   referenceGenes?: Gene[];
   targetGenes?: Gene[];
-  referenceInteractome?: Interactome;
-  targetInteractome?: Interactome;
+  referenceInteractomes?: Interactome[];
+  targetInteractomes?: Interactome[];
   blastResults?: BlastResult[];
 }

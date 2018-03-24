@@ -88,8 +88,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
-  referenceInteractome: Interactome;
-  targetInteractome: Interactome;
+  referenceInteractomes: Interactome[];
+  targetInteractomes: Interactome[];
 
   permalink: string;
   processing = false;
@@ -192,7 +192,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
       return;
     }
     this.searchingGenes = true;
-    this.geneService.getGeneName(value, [this.formDistinctSpecies.value.referenceInteractome.id])
+    this.geneService.getGeneName(value, this.formDistinctSpecies.value.referenceInteractome.map((item) => item.id))
       .subscribe(res => {
         this.genes = res;
         this.searchingGenes = false;
@@ -211,8 +211,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
     this.showTable = false;
     const formModel = this.formDistinctSpecies.value;
-    this.interactionService.getDistinctSpeciesInteraction(formModel.gene, formModel.referenceInteractome.id, formModel.targetInteractome.id,
-      formModel.level, formModel.eValue, formModel.numDescriptions, formModel.minIdentity / 100, formModel.minAlignLength)
+    this.interactionService.getDistinctSpeciesInteraction(formModel.gene, formModel.referenceInteractome.map((item) => item.id),
+      formModel.targetInteractome.map((item) => item.id), formModel.level, formModel.eValue, formModel.numDescriptions,
+      formModel.minIdentity / 100, formModel.minAlignLength)
       .subscribe((work) => {
         this.permalink = this.location.normalize('/compare?result=' + work.id.id);
         this.openDialog(work);
@@ -245,8 +246,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.lastQueryMaxDegree = res.queryMaxDegree;
-        this.referenceInteractome = res.referenceInteractome;
-        this.targetInteractome = res.targetInteractome;
+        this.referenceInteractomes = res.referenceInteractomes;
+        this.targetInteractomes = res.targetInteractomes;
 
         this.referenceInteraction = [];
         this.targetInteraction = [];
@@ -255,7 +256,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
         // Filter out interactions which don't include the referenceInteractome
         for (const interaction of res.interactions) {
-          if (interaction.interactomeDegrees.find(x => x.id === res.referenceInteractome.id)) {
+          if (interaction.interactomeDegrees.find(
+            x => res.referenceInteractomes.filter( item => item.id === x.id).length > 0)) {
             this.referenceInteraction.push(interaction);
           } else {
             this.targetInteraction.push(interaction);
@@ -326,13 +328,13 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
               if (inReference) {
                 type = 1;
-                interactomes.push(res.referenceInteractome.id);
+                interactomes.push(res.referenceInteractomes.map(x => x.id));
                 referenceDegree = referenceInteraction.interactomeDegrees[0].degree;
               }
 
               if (inTarget) {
                 type = 2;
-                interactomes.push(res.targetInteractome.id);
+                interactomes.push(res.targetInteractomes.map(x => x.id));
                 targetDegrees = targetInteractions.map(interaction => interaction.interactomeDegrees[0].degree)
                   .filter((item, position, self) => self.indexOf(item) === position) // Removes duplicates
                   .sort((d1, d2) => d1 - d2);
@@ -376,7 +378,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
           CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B', referenceTitle, targetTitle], csvData)
         );
-        this.csvName = 'interaction_' + res.queryGene + '_' + res.referenceInteractome.id + '_' + res.targetInteractome.id + '.csv';
+        this.csvName = 'interaction_' + res.queryGene + '_' + res.referenceInteractomes.map(x => x.id) + '_'
+          + res.targetInteractomes.map(x => x.id) + '.csv';
 
         this.showForm = false;
         this.showTable = true;

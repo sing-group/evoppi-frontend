@@ -36,7 +36,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-50 right">
-      <mat-select placeholder="Reference Interactome" formControlName="referenceInteractome">
+      <mat-select placeholder="Reference Interactomes" formControlName="referenceInteractome" [multiple]="true">
         <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome">
           {{ interactome.name }}
         </mat-option>
@@ -50,7 +50,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="width-50 right">
-      <mat-select placeholder="Target Interactome" formControlName="targetInteractome">
+      <mat-select placeholder="Target Interactomes" formControlName="targetInteractome" [multiple]="true">
         <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome">
           {{ interactome.name }}
         </mat-option>
@@ -104,13 +104,13 @@
 <mat-card *ngIf="showTable">
   <mat-card-content>
     <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
-    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + referenceInteractome.id + '/fasta'"
+    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + referenceInteractomes[0].id + '/fasta'"
        target="_blank" *ngIf="csvContent !== ''">
-      Export {{referenceInteractome.species.name}}-{{referenceInteractome.name}} FASTA
+      Export {{referenceInteractomes[0].species.name}}-{{referenceInteractomes[0].name}} FASTA
     </a>
-    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + targetInteractome.id + '/fasta'"
+    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + targetInteractomes[0].id + '/fasta'"
        target="_blank" *ngIf="csvContent !== ''">
-      Export {{targetInteractome.species.name}}-{{targetInteractome.name}} FASTA
+      Export {{targetInteractomes[0].species.name}}-{{targetInteractomes[0].name}} FASTA
     </a>
     <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/fasta'"
        target="_blank" *ngIf="csvContent !== ''">
@@ -150,8 +150,7 @@
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{referenceInteractome.species.name}}
-              {{referenceInteractome.name}}
+              <span *ngFor="let ri of referenceInteractomes">{{ri.name}} ({{ri.species.name}})</span>
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngIf="row.referenceDegree !== ''">Degree {{row.referenceDegree}}</div>
@@ -159,8 +158,7 @@
           </ng-container>
           <ng-container matColumnDef="TargetInteractome">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              {{targetInteractome.species.name}}
-              {{targetInteractome.name}}
+              <span *ngFor="let ti of targetInteractomes">{{ti.name}} ({{ti.species.name}})</span>
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngFor="let degree of row.targetDegrees">Degree {{degree}}</div>

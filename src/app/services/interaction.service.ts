@@ -57,7 +57,7 @@ export class InteractionService {
     return this.http.get<Work>(this.endpoint, {params : params});
   }
 
-  getDistinctSpeciesInteraction(gene: number, referenceInteractome: number, targetInteractome: number,
+  getDistinctSpeciesInteraction(gene: number, referenceInteractome: number[], targetInteractome: number[],
                                  interactionLevel: number, evalue: number, maxTargetSeqs: number,
                                 minIdentity: number, minAlignmentLenght: number): Observable<Work> {
     const params: any = {
@@ -123,20 +123,33 @@ export class InteractionService {
             return workResult;
           })
       ).map(workResults => workResults[0]);
-    } else if (workResult.referenceInteractome && workResult.targetInteractome) {
+    } else if (workResult.referenceInteractomes && workResult.targetInteractomes) {
       return forkJoin(
-        from([workResult.referenceInteractome, workResult.targetInteractome])
+        from( workResult.referenceInteractomes )
           .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
           .combineLatest(interactome => {
-            if (interactome.id === workResult.referenceInteractome.id) {
-              workResult.referenceInteractome = interactome;
+            const index = workResult.referenceInteractomes.findIndex(x => x.id === interactome.id);
+            if (index !== -1) {
+              workResult.referenceInteractomes[index] = interactome;
             } else {
-              workResult.targetInteractome = interactome;
+              throw TypeError('Reference interactome not found: ' + interactome.id);
+            }
+
+            return workResult;
+          }),
+        from( workResult.targetInteractomes )
+          .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
+          .combineLatest(interactome => {
+            const index = workResult.targetInteractomes.findIndex(x => x.id === interactome.id);
+            if (index !== -1) {
+              workResult.targetInteractomes[index] = interactome;
+            } else {
+              throw TypeError('Target interactome not found: ' + interactome.id);
             }
 
             return workResult;
           })
-      ).map(workResults => workResults[0]);
+        ).map(workResults => workResults[0]);
     } else {
       throw TypeError('Invalid work result. Missing interactomes.');
     }

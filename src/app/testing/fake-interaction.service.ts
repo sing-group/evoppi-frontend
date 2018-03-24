@@ -98,14 +98,16 @@ export class FakeInteractionService extends InteractionService {
       }
     ],
     'status': 'COMPLETED',
-    'referenceInteractome': {
-      'id': 1,
-      'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/1'
-    },
-    'targetInteractome': {
-      'id': 2,
-      'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/2'
-    },
+    'referenceInteractomes': [
+      {
+        'id': 1,
+        'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/1'
+      }],
+    'targetInteractomes': [
+      {
+        'id': 2,
+        'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/2'
+      }],
     'referenceGenes': [
       {
         'id': 100,
