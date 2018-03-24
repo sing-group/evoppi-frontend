@@ -36,16 +36,16 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="width-50">
-          <mat-select placeholder="Interactome A" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)"
-                      [value]="formSameSpecies.value.interactomeA" >
+          <mat-select placeholder="Interactomes A" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)"
+                      [value]="formSameSpecies.value.interactomeA" [multiple]="true">
             <mat-option *ngFor="let interactome of interactomesA" [value]="interactome">
               {{ interactome.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="width-50 right">
-          <mat-select placeholder="Interactome B" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)"
-                      [value]="formSameSpecies.value.interactomeB">
+          <mat-select placeholder="Interactomes B" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)"
+                      [value]="formSameSpecies.value.interactomeB" [multiple]="true">
             <mat-option *ngFor="let interactome of interactomesB" [value]="interactome">
               {{ interactome.name }}
             </mat-option>

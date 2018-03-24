@@ -173,16 +173,20 @@ export class FormSameSpeciesComponent implements OnInit {
     }
   }
 
-  onSelectInteractomeA(value: Interactome): void {
+  onSelectInteractomeA(values: Interactome[]): void {
     this.interactomesB = this.interactomes.slice();
-    const index: number = this.interactomesB.indexOf(value);
-    this.interactomesB.splice(index, 1);
+    values.forEach((item) => {
+      const index: number = this.interactomesB.indexOf(item);
+      this.interactomesB.splice(index, 1);
+    });
   }
 
-  onSelectInteractomeB(value: Interactome): void {
+  onSelectInteractomeB(values: Interactome[]): void {
     this.interactomesA = this.interactomes.slice();
-    const index: number = this.interactomesA.indexOf(value);
-    this.interactomesA.splice(index, 1);
+    values.forEach((item) => {
+      const index: number = this.interactomesA.indexOf(item);
+      this.interactomesA.splice(index, 1);
+    });
   }
 
   onSearchGenes(value: string): void {
@@ -213,13 +217,16 @@ export class FormSameSpeciesComponent implements OnInit {
     }
     this.showTable = false;
     const formModel = this.formSameSpecies.value;
-    this.interactionService.getSameSpeciesInteraction(formModel.gene, [formModel.interactomeA.id, formModel.interactomeB.id],
+    const interactomes: number[] = formModel.interactomeA.map((item) => item.id)
+      .concat(formModel.interactomeB.map((item) => item.id));
+    this.interactionService.getSameSpeciesInteraction(formModel.gene, interactomes,
       formModel.level)
       .subscribe((work) => {
         this.permalink = this.location.normalize('/compare?result=' + work.id.id);
         this.openDialog(work);
       }, (error) => {
         this.formSameSpecies.setErrors({'invalidForm': 'Error: ' + error.error});
+        this.processing = false;
       });
   }
 
