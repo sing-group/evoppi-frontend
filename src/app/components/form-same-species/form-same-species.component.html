@@ -35,18 +35,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="width-50">
-          <mat-select placeholder="Interactomes A" formControlName="interactomeA" (selectionChange)="onSelectInteractomeA($event.value)"
-                      [value]="formSameSpecies.value.interactomeA" [multiple]="true">
-            <mat-option *ngFor="let interactome of interactomesA" [value]="interactome">
-              {{ interactome.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="width-50 right">
-          <mat-select placeholder="Interactomes B" formControlName="interactomeB" (selectionChange)="onSelectInteractomeB($event.value)"
-                      [value]="formSameSpecies.value.interactomeB" [multiple]="true">
-            <mat-option *ngFor="let interactome of interactomesB" [value]="interactome">
+        <mat-form-field class="width-100">
+          <mat-select placeholder="Interactomes" formControlName="interactomes"
+                      [value]="formSameSpecies.value.interactomes" [multiple]="true">
+            <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
               {{ interactome.name }}
             </mat-option>
           </mat-select>
@@ -82,18 +74,19 @@
 <mat-card *ngIf="showTable">
   <mat-card-content>
     <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
-    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + interactomeA.id + '/fasta'"
-       target="_blank" *ngIf="csvContent !== ''">
-      Export {{interactomeA.name}} FASTA
-    </a>
-    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/' + interactomeB.id + '/fasta'"
-       target="_blank" *ngIf="csvContent !== ''">
-      Export {{interactomeB.name}} FASTA
-    </a>
-    <a mat-raised-button color="primary" [href]="resultUrl + '/interactome/fasta'"
-       target="_blank" *ngIf="csvContent !== ''">
-      Export Single FASTA
-    </a>
+    <mat-menu #exportMenu="matMenu">
+      <a mat-menu-item [href]="resultUrl + '/interactome/fasta'" target="_blank">
+        Single FASTA
+      </a>
+      <a mat-menu-item *ngFor="let resInteractome of resInteractomes" [href]="resultUrl + '/interactome/' + resInteractome.id + '/fasta'"
+         target="_blank">
+        {{resInteractome.name}}
+      </a>
+    </mat-menu>
+    <button mat-raised-button color="primary" [matMenuTriggerFor]="exportMenu" *ngIf="csvContent !== ''">
+      <mat-icon>more_vert</mat-icon> Export FASTA
+    </button>
+
     <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
         <mat-icon>link</mat-icon> Permalink to result</a>
 
@@ -126,26 +119,14 @@
               <a (click)="onClickGene(row.geneB)" class="gene1">{{row.firstNameB}}</a>
             </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="ReferenceInteractome">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{interactomeA.name}}</mat-header-cell>
+          <ng-container *ngFor="let resInteractome of resInteractomes" matColumnDef="Interactome-{{resInteractome.id}}">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>{{resInteractome.name}}</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <div *ngIf="row.interactomeDegrees[0].id === interactomeA.id">
-                Degree {{row.interactomeDegrees[0].degree}}
-              </div>
-              <div *ngIf="row.interactomeDegrees.length === 2 && row.interactomeDegrees[1].id === interactomeA.id">
-                Degree {{row.interactomeDegrees[1].degree}}
-              </div>
-            </mat-cell>
-          </ng-container>
-          <ng-container matColumnDef="TargetInteractome">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{interactomeB.name}}</mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              <div *ngIf="row.interactomeDegrees[0].id === interactomeB.id">
-                Degree {{row.interactomeDegrees[0].degree}}
-              </div>
-              <div *ngIf="row.interactomeDegrees.length === 2 && row.interactomeDegrees[1].id === interactomeB.id">
-                Degree {{row.interactomeDegrees[1].degree}}
-              </div>
+              <span *ngFor="let degree of row.interactomeDegrees">
+                <span *ngIf="degree.id === resInteractome.id">
+                  Degree {{degree.degree}}
+                </span>
+              </span>
             </mat-cell>
           </ng-container>
         </mat-table>

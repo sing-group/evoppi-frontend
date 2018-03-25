@@ -59,13 +59,13 @@ export class FormSameSpeciesComponent implements OnInit {
 
   formSameSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
-  displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'ReferenceInteractome', 'TargetInteractome'];
+  displayedColumns: string[];
 
   species: Species[];
   interactomes: Interactome[] = [];
-  interactomesA: Interactome[] = [];
-  interactomesB: Interactome[] = [];
+  selectedInteractomes: Interactome[] = [];
   interaction: Interaction[] = [];
+  resInteractomes: Interactome[] = [];
   genes: GeneInfo[];
   level: number;
   genesInput: string;
@@ -85,8 +85,6 @@ export class FormSameSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
-  interactomeA: Interactome;
-  interactomeB: Interactome;
 
   permalink: string;
   processing = false;
@@ -102,8 +100,7 @@ export class FormSameSpeciesComponent implements OnInit {
     this.genesInput = '';
     this.formSameSpecies = this.formBuilder.group({
       'species': ['', Validators.required],
-      'interactomeA': ['', Validators.required],
-      'interactomeB': ['', Validators.required],
+      'interactomes': ['', Validators.required],
       'gene': ['', Validators.required],
       'level': ['1', [Validators.required, Validators.min(1), Validators.max(3)]],
     });
@@ -160,33 +157,13 @@ export class FormSameSpeciesComponent implements OnInit {
 
   onChangeSpecies(value: Species): void {
     this.interactomes = [];
-    this.interactomesA = [];
-    this.interactomesB = [];
 
     for (const interactome of value.interactomes) {
       this.interactomeService.getInteractome(interactome.id)
         .subscribe(res => {
           this.interactomes.push(res);
-          this.interactomesA.push(res);
-          this.interactomesB.push(res);
         });
     }
-  }
-
-  onSelectInteractomeA(values: Interactome[]): void {
-    this.interactomesB = this.interactomes.slice();
-    values.forEach((item) => {
-      const index: number = this.interactomesB.indexOf(item);
-      this.interactomesB.splice(index, 1);
-    });
-  }
-
-  onSelectInteractomeB(values: Interactome[]): void {
-    this.interactomesA = this.interactomes.slice();
-    values.forEach((item) => {
-      const index: number = this.interactomesA.indexOf(item);
-      this.interactomesA.splice(index, 1);
-    });
   }
 
   onSearchGenes(value: string): void {
@@ -217,9 +194,7 @@ export class FormSameSpeciesComponent implements OnInit {
     }
     this.showTable = false;
     const formModel = this.formSameSpecies.value;
-    const interactomes: number[] = formModel.interactomeA.map((item) => item.id)
-      .concat(formModel.interactomeB.map((item) => item.id));
-    this.interactionService.getSameSpeciesInteraction(formModel.gene, interactomes,
+    this.interactionService.getSameSpeciesInteraction(formModel.gene, formModel.interactomes.map((item) => item.id),
       formModel.level)
       .subscribe((work) => {
         this.permalink = this.location.normalize('/compare?result=' + work.id.id);
@@ -254,8 +229,7 @@ export class FormSameSpeciesComponent implements OnInit {
       .subscribe((res) => {
         this.lastQueryMaxDegree = res.queryMaxDegree;
         this.interaction = res.interactions;
-        this.interactomeA = res.interactomes[0];
-        this.interactomeB = res.interactomes[1];
+        this.resInteractomes = res.interactomes;
 
         const nodes = [];
         const links = [];
@@ -288,53 +262,57 @@ export class FormSameSpeciesComponent implements OnInit {
             nodes[toIndex].linkCount++;
           }
 
-          let referenceDegree: number | string = '';
-          let targetDegree: number | string = '';
           let link;
-          if (interaction.interactomeDegrees.length === 2) {
+
+          if (interaction.interactomeDegrees.length === res.interactomes.length) {
             link = new Link(fromIndex, toIndex, 3);
             links.push(link);
-            if (interaction.interactomeDegrees[0].id === this.interactomeA.id) {
-              referenceDegree = interaction.interactomeDegrees[0].degree;
-              targetDegree = interaction.interactomeDegrees[1].degree;
-            } else {
-              referenceDegree = interaction.interactomeDegrees[1].degree;
-              targetDegree = interaction.interactomeDegrees[0].degree;
-            }
           } else if (interaction.interactomeDegrees.length === 1) {
-            if (interaction.interactomeDegrees[0].id === this.interactomeA.id) {
-              link = new Link(fromIndex, toIndex, 1);
-              referenceDegree = interaction.interactomeDegrees[0].degree;
-            } else if (interaction.interactomeDegrees[0].id === this.interactomeB.id) {
-              link = new Link(fromIndex, toIndex, 2);
-              targetDegree = interaction.interactomeDegrees[0].degree;
-            } else {
-              console.error('Shouldn\'t happen');
-            }
+            link = new Link(fromIndex, toIndex, 1);
+            links.push(link);
+          } else if (interaction.interactomeDegrees.length > 1 && interaction.interactomeDegrees.length < res.interactomes.length) {
+            link = new Link(fromIndex, toIndex, 2);
             links.push(link);
           } else {
-            console.error('Shouldn\'t happen either');
+            console.error('Shouldn\'t happen', interaction.interactomeDegrees);
           }
 
-          csvData.push(
+          const csvRow =
             [
               interaction.geneA, interaction.firstNameA,
               interaction.geneB, interaction.firstNameB,
-              referenceDegree, targetDegree
-            ]
-          );
+            ];
+          res.interactomes.forEach((resInteractome) => {
+            const index: number = interaction.interactomeDegrees.findIndex((degree) => degree.id === resInteractome.id);
+            if (index !== -1) {
+              csvRow.push(interaction.interactomeDegrees[index].degree);
+            } else {
+              csvRow.push('');
+            }
+          });
+          csvData.push(csvRow);
+
         }
 
         this.nodes = nodes;
         this.links = links;
 
+        const headers: string[] = ['Gene A', 'Name A', 'Gene B', 'Name B',
+          ...res.interactomes.map( resInteractome => resInteractome.name)];
+        this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
+          ...res.interactomes.map( resInteractome => 'Interactome-' + resInteractome.id.toString())];
+
         this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
-          CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B',
-            this.interactomeA.name, this.interactomeB.name], csvData)
+          CsvHelper.getCSV(headers, csvData)
         );
 
         const interactomeIds = res.interactomes.map(interactome => interactome.id).join('_');
-        this.csvName = 'interaction_' + getGene(res.queryGene) + '_' + interactomeIds + '.csv';
+        const gene = getGene(res.queryGene);
+        let name: string = res.queryGene.toString();
+        if (gene && gene.names && gene.names.length > 0 && gene.names[0].names && gene.names[0].names.length > 0) {
+          name = gene.names[0].names[0];
+        }
+        this.csvName = 'interaction_' + name + '_' + interactomeIds + '.csv';
 
         this.showForm = false;
         this.showTable = true;

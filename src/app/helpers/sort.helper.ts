@@ -65,6 +65,13 @@ export class SortHelper {
       case 'InteractsSpeciesB':
       case 'Code':
       default:
+        if (sortHeaderId.startsWith('Interactome-')) {
+          const id: number = +sortHeaderId.substr(sortHeaderId.lastIndexOf('-') + 1);
+          const index: number = data.interactomeDegrees.findIndex(degree => degree.id === id);
+          if (index !== -1) {
+            return data.interactomeDegrees[index].degree;
+          }
+        }
         return '';
     }
   }
