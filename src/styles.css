@@ -67,3 +67,7 @@
   min-height: 5px;
   padding-bottom: 10px;
 }
+
+.filter-option > .mat-pseudo-checkbox {
+  display: none !important;
+}

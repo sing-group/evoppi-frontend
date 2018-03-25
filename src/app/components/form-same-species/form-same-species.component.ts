@@ -155,6 +155,14 @@ export class FormSameSpeciesComponent implements OnInit {
     this.csvContent = '';
   }
 
+  selectAllInteractomes(control: string, values) {
+    this.formSameSpecies.controls[control].setValue(values);
+  }
+
+  deselectAllInteractomes(control: string) {
+    this.formSameSpecies.controls[control].setValue([]);
+  }
+
   onChangeSpecies(value: Species): void {
     this.interactomes = [];
 
@@ -307,10 +315,10 @@ export class FormSameSpeciesComponent implements OnInit {
         );
 
         const interactomeIds = res.interactomes.map(interactome => interactome.id).join('_');
-        const gene = getGene(res.queryGene);
+        const geneData = getGene(res.queryGene);
         let name: string = res.queryGene.toString();
-        if (gene && gene.names && gene.names.length > 0 && gene.names[0].names && gene.names[0].names.length > 0) {
-          name = gene.names[0].names[0];
+        if (geneData && geneData.names && geneData.names.length > 0 && geneData.names[0].names && geneData.names[0].names.length > 0) {
+          name = geneData.names[0].names[0];
         }
         this.csvName = 'interaction_' + name + '_' + interactomeIds + '.csv';
 

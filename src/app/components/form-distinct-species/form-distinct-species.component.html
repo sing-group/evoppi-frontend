@@ -37,6 +37,16 @@
     </mat-form-field>
     <mat-form-field class="width-50 right">
       <mat-select placeholder="Reference Interactomes" formControlName="referenceInteractome" [multiple]="true">
+        <mat-option disabled="disabled" *ngIf="interactomes[1]" class="filter-option">
+            <button mat-raised-button color="primary"
+                    (click)="selectAllInteractomes('referenceInteractome', interactomes[1])">
+              Select All
+            </button>
+            <button mat-raised-button color="accent"
+                    (click)="deselectAllInteractomes('referenceInteractome')">
+              Deselect All
+            </button>
+        </mat-option>
         <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome">
           {{ interactome.name }}
         </mat-option>
@@ -51,6 +61,16 @@
     </mat-form-field>
     <mat-form-field class="width-50 right">
       <mat-select placeholder="Target Interactomes" formControlName="targetInteractome" [multiple]="true">
+        <mat-option disabled="disabled" *ngIf="interactomes[2]" class="filter-option">
+            <button mat-raised-button color="primary"
+                    (click)="selectAllInteractomes('targetInteractome', interactomes[2])">
+              Select All
+            </button>
+            <button mat-raised-button color="accent"
+                    (click)="deselectAllInteractomes('targetInteractome')">
+              Deselect All
+            </button>
+        </mat-option>
         <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome">
           {{ interactome.name }}
         </mat-option>

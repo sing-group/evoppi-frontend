@@ -165,6 +165,14 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.csvContent = '';
   }
 
+  selectAllInteractomes(control: string, values) {
+    this.formDistinctSpecies.controls[control].setValue(values);
+  }
+
+  deselectAllInteractomes(control: string) {
+    this.formDistinctSpecies.controls[control].setValue([]);
+  }
+
   onChangeSpecies(value: Species, index: number): void {
     this.interactomes[index] = [];
     if (index === 1) {
