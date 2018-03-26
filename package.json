@@ -1,6 +1,6 @@
 {
   "name": "@evoppi/frontend",
-  "version": "0.2.0-alpha.9",
+  "version": "0.2.0-alpha.10",
   "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
   "author": {
@@ -17,6 +17,9 @@
   "publishConfig": {
     "registry": "https://maven.sing-group.org/repository/npm-snapshots/"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -24,7 +27,8 @@
     "dist": "ng build -prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "prepublishOnly": "ng lint && ng test --single-run && ng build -prod -e docker"
   },
   "dependencies": {
     "@angular/animations": "^5.2.9",
