@@ -236,21 +236,21 @@ export class FormSameSpeciesComponent implements OnInit {
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.lastQueryMaxDegree = res.queryMaxDegree;
-        this.interaction = res.interactions;
+        this.interaction = res.interactions.interactions;
         this.resInteractomes = res.interactomes;
 
         const nodes = [];
         const links = [];
         const csvData = [];
 
-        const getGene = geneId => res.genes.find(gene => gene.id === geneId);
+        const getGene = geneId => res.interactions.genes.find(gene => gene.geneId === geneId);
 
         for (const interaction of this.interaction) {
           const geneInfoA = getGene(interaction.geneA);
-          interaction.firstNameA = GeneService.getFirstName(geneInfoA);
+          interaction.firstNameA = geneInfoA.defaultName;
 
           const geneInfoB = getGene(interaction.geneB);
-          interaction.firstNameB = GeneService.getFirstName(geneInfoB);
+          interaction.firstNameB = geneInfoB.defaultName;
 
           const from = new Node(nodes.length, interaction.geneA, interaction.firstNameA);
           let fromIndex = nodes.findIndex(x => x.label === from.label);

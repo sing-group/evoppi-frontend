@@ -263,7 +263,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
         const consolidatedInteractions = [];
 
         // Filter out interactions which don't include the referenceInteractome
-        for (const interaction of res.interactions) {
+        for (const interaction of res.interactions.interactions) {
           if (interaction.interactomeDegrees.find(
             x => res.referenceInteractomes.filter( item => item.id === x.id).length > 0)) {
             this.referenceInteraction.push(interaction);
@@ -274,17 +274,17 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
         // Construct nodes and links
         let nodeIndex = 0;
-        const nodes = res.referenceGenes.map(gene =>
+        const nodes = res.interactions.referenceGenes.map(gene =>
           new Node(
             nodeIndex++,
-            gene.id,
-            GeneService.getFirstName(gene),
-            res.blastResults.filter(blast => blast.qseqid === gene.id))
+            gene.geneId,
+            gene.defaultName,
+            res.interactions.blastResults.filter(blast => blast.qseqid === gene.geneId))
         );
         const links = [];
         const csvData = [];
 
-        const getOrthologs = referenceGene => res.blastResults.filter(blast => blast.qseqid === referenceGene)
+        const getOrthologs = referenceGene => res.interactions.blastResults.filter(blast => blast.qseqid === referenceGene)
           .map(blast => blast.sseqid)
           .filter((item, position, self) => self.indexOf(item) === position); // Removes duplicates
 
@@ -315,7 +315,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
           return interactions;
         };
 
-        const geneIds = res.referenceGenes.map(gene => gene.id)
+        const geneIds = res.interactions.referenceGenes.map(gene => gene.geneId)
           .sort((idA, idB) => idA - idB);
 
         for (let i = 0; i < geneIds.length; i++) {

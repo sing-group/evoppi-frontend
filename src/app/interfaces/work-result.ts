@@ -22,7 +22,6 @@
 import {Interactome} from './interactome';
 import {Gene} from './gene';
 import {Interaction} from './interaction';
-import {IdUri} from './id-uri';
 import {BlastResult} from './blast-result';
 
 export interface WorkResult {
@@ -30,16 +29,23 @@ export interface WorkResult {
   queryGene: number;
   queryMaxDegree: number;
   status: string;
-  interactions?: Interaction[];
+  interactions: {
+    blastResults?: BlastResult[],
+    filteringOptions?: object,
+    interactions: Interaction[],
+    result?: {id: string, uri: string},
+    // Same species
+    genes?: Gene[]
+    // Distinct species
+    referenceGenes?: Gene[],
+    targetGenes?: Gene[],
+  };
+  totalInteractions?: number;
 
   // Same species
-  genes?: Gene[];
   interactomes?: Interactome[];
 
   // Distinct species
-  referenceGenes?: Gene[];
-  targetGenes?: Gene[];
   referenceInteractomes?: Interactome[];
   targetInteractomes?: Interactome[];
-  blastResults?: BlastResult[];
 }

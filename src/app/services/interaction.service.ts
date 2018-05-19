@@ -76,36 +76,10 @@ export class InteractionService {
 
   getInteractionResult(uri: string): Observable<WorkResult> {
     return this.http.get<WorkResult>(uri)
-      .mergeMap(this.retrieveWorkGenes.bind(this))
       .mergeMap(this.retrieveWorkInteractomes.bind(this))
       .pipe(
         catchError(ErrorHelper.handleError('getInteraction', null))
       );
-  }
-
-  private retrieveWorkGenes(workResult: WorkResult): Observable<WorkResult> {
-    if (workResult.genes) {
-      return this.geneService.getGenes(workResult.genes.map(gene => gene.id))
-        .map(genes => {
-          workResult.genes = genes;
-          return workResult;
-        });
-    } else if (workResult.referenceGenes && workResult.targetGenes) {
-      const getAndSetGenes = (inputGenes, callback) =>
-        this.geneService.getGenes(inputGenes.map(gene => gene.id))
-        .map(genes => {
-          callback(genes);
-
-          return workResult;
-        });
-
-      return forkJoin(
-        getAndSetGenes(workResult.referenceGenes, genes => workResult.referenceGenes = genes),
-        getAndSetGenes(workResult.targetGenes, genes => workResult.targetGenes = genes)
-      ).map(workResults => workResults[0]);
-    } else {
-      throw TypeError('Invalid work result. Missing genes.');
-    }
   }
 
   private retrieveWorkInteractomes(workResult: WorkResult): Observable<WorkResult> {

@@ -47,7 +47,7 @@ export class GeneInfoComponent implements OnInit {
       this.gene = res;
       this.blastResults = this.data.blastResults;
       this.sequences = this.domSanitizer.bypassSecurityTrustResourceUrl(
-        FastaHelper.getFasta(this.gene.id.toString(), this.gene.sequences)
+        FastaHelper.getFasta(this.gene.geneId.toString(), this.gene.sequences)
       );
     });
   }
