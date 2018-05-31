@@ -190,6 +190,7 @@
                        [pageSize]="10"
                        [pageSizeOptions]="[5, 10, 20, 50]">
         </mat-paginator>
+        <app-legend-table></app-legend-table>
       </mat-tab>
       <mat-tab label="Graph view" *ngIf="nodes.length <= 100 || lastQueryMaxDegree <= 1">
         <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
