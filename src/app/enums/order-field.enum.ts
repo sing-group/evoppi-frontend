@@ -22,7 +22,7 @@
 export enum OrderField {
   GENE_A_ID = 'GENE_A_ID',
   GENE_A_NAME = 'GENE_A_NAME',
-  GENE_B_ID = 'GENE_A_ID',
-  GENE_B_NAME = 'GENE_A_NAME',
+  GENE_B_ID = 'GENE_B_ID',
+  GENE_B_NAME = 'GENE_B_NAME',
   INTERACTOME = 'INTERACTOME'
 }
