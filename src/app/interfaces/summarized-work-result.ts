@@ -19,20 +19,20 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Interactome} from './interactome';
 
-.table-same-species {
-  flex: 1 1 auto;
-  overflow: auto;
-}
+export interface SummarizedWorkResult {
+  id: string;
+  queryGene: number;
+  queryMaxDegree: number;
+  status: string;
+  interactions: string;
+  totalInteractions?: number;
 
-mat-card{
-  margin: 2px;
-}
+  // Same species
+  interactomes?: Interactome[];
 
-a {
-  margin-bottom: 5px;
-}
-
-.app-spinner {
-  margin: 0 auto;
+  // Distinct species
+  referenceInteractomes?: Interactome[];
+  targetInteractomes?: Interactome[];
 }

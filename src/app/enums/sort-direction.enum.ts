@@ -19,20 +19,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-.table-same-species {
-  flex: 1 1 auto;
-  overflow: auto;
-}
-
-mat-card{
-  margin: 2px;
-}
-
-a {
-  margin-bottom: 5px;
-}
-
-.app-spinner {
-  margin: 0 auto;
+export enum SortDirection {
+  ASCENDING = 'ASCENDING',
+  DESCENDING = 'DESCENDING',
+  NONE = 'NONE'
 }

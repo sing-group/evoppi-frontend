@@ -40,6 +40,9 @@ import 'rxjs/add/operator/concatAll';
 import 'rxjs/add/operator/combineAll';
 import 'rxjs/add/operator/combineLatest';
 import {forkJoin} from 'rxjs/observable/forkJoin';
+import {SortDirection} from '../enums/sort-direction.enum';
+import {OrderField} from '../enums/order-field.enum';
+import {SummarizedWorkResult} from '../interfaces/summarized-work-result';
 
 
 @Injectable()
@@ -74,11 +77,34 @@ export class InteractionService {
     return this.http.get<Work>(this.endpoint, {params : params});
   }
 
+  getInteractionResultSummarized(uri: string): Observable<SummarizedWorkResult> {
+    return this.http.get<WorkResult>(uri + '?summarize=true')
+      .mergeMap(this.retrieveWorkInteractomes.bind(this))
+      .pipe(
+        catchError(ErrorHelper.handleError('getInteractionResultSummarized', null))
+      );
+  }
+
   getInteractionResult(uri: string): Observable<WorkResult> {
     return this.http.get<WorkResult>(uri)
       .mergeMap(this.retrieveWorkInteractomes.bind(this))
       .pipe(
-        catchError(ErrorHelper.handleError('getInteraction', null))
+        catchError(ErrorHelper.handleError('getInteractionResult', null))
+      );
+  }
+
+  getInteractions(uri: string, page: number = 0, pageSize: number = 10, sortDirection: SortDirection = SortDirection.ASCENDING,
+                  orderField: OrderField = OrderField.GENE_A_ID, interactomeId?: number): Observable<WorkResult> {
+    return this.http.get<WorkResult>(uri, {
+      params: {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+        sortDirection: sortDirection,
+        orderField: orderField,
+        ...(interactomeId && {interactomeId: interactomeId.toString()})
+      }})
+      .pipe(
+        catchError(ErrorHelper.handleError('getInteractions', null))
       );
   }
 

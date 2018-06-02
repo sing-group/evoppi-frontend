@@ -19,20 +19,10 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-.table-same-species {
-  flex: 1 1 auto;
-  overflow: auto;
-}
-
-mat-card{
-  margin: 2px;
-}
-
-a {
-  margin-bottom: 5px;
-}
-
-.app-spinner {
-  margin: 0 auto;
+export enum OrderField {
+  GENE_A_ID = 'GENE_A_ID',
+  GENE_A_NAME = 'GENE_A_NAME',
+  GENE_B_ID = 'GENE_A_ID',
+  GENE_B_NAME = 'GENE_A_NAME',
+  INTERACTOME = 'INTERACTOME'
 }

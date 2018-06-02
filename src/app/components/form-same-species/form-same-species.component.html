@@ -81,6 +81,9 @@
   </mat-card-content>
 </mat-card>
 
+<mat-card *ngIf="!showTable && paginatedDataSource.loading$ | async">
+  <mat-spinner class="app-spinner"></mat-spinner>
+</mat-card>
 <mat-card *ngIf="showTable">
   <mat-card-content>
     <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
@@ -102,7 +105,7 @@
 
     <mat-tab-group>
       <mat-tab label="Table view">
-        <mat-table matSort #table [dataSource]="dataSource" class="table-same-species" appAfterViewInit (afterViewInit)="initTable()">
+        <mat-table matSort #table [dataSource]="paginatedDataSource" class="table-same-species" appAfterViewInit>
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           <ng-container matColumnDef="GeneA">
@@ -140,9 +143,10 @@
             </mat-cell>
           </ng-container>
         </mat-table>
-        <mat-paginator #paginator
+        <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
                        [pageSize]="10"
-                       [pageSizeOptions]="[5, 10, 20, 50]">
+                       [pageSizeOptions]="[5, 10, 20, 50]"
+                       [length]="paginatorLength">
         </mat-paginator>
         <app-legend-table></app-legend-table>
       </mat-tab>

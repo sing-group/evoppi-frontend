@@ -41,9 +41,12 @@ import {SortHelper} from '../../helpers/sort.helper';
 import {WorkStatusComponent} from '../work-status/work-status.component';
 import {Work} from '../../interfaces/work';
 import {Status} from '../../interfaces/status';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {GeneInfoComponent} from '../gene-info/gene-info.component';
 import {Location} from '@angular/common';
+import {SameSpeciesDataSource} from './same-species-data-source';
+import {SortDirection} from '../../enums/sort-direction.enum';
+import {OrderField} from '../../enums/order-field.enum';
 
 @Component({
   selector: 'app-form-same-species',
@@ -59,6 +62,8 @@ export class FormSameSpeciesComponent implements OnInit {
 
   formSameSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
+  paginatedDataSource: SameSpeciesDataSource;
+  paginatorLength: number;
   displayedColumns: string[];
 
   species: Species[];
@@ -85,6 +90,7 @@ export class FormSameSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
+  paginatedResultUrl = '';
 
   permalink: string;
   processing = false;
@@ -112,6 +118,53 @@ export class FormSameSpeciesComponent implements OnInit {
       this.onSearchGenes(res);
     });
 
+    this.paginatedDataSource = new SameSpeciesDataSource(this.interactionService);
+
+  }
+
+  initPaginator() {
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
+    this.sort.sortChange
+      .pipe(
+        tap(() => this.loadCurrentResultsPage())
+      )
+      .subscribe();
+
+    this.paginator.page
+      .pipe(
+        tap(() => this.loadCurrentResultsPage())
+      )
+      .subscribe();
+  }
+  loadResultsPage(uri: string, page: number = 0, pageSize: number = 10, sortDirection: SortDirection = SortDirection.ASCENDING,
+                  orderField: OrderField = OrderField.GENE_A_ID, interactomeId?: number) {
+    this.paginatedDataSource.load(uri, page, pageSize, sortDirection, orderField, interactomeId);
+  }
+
+  loadCurrentResultsPage() {
+    let sortDirection: SortDirection = SortDirection.NONE;
+    if (this.sort.direction === 'desc') {
+      sortDirection = SortDirection.DESCENDING;
+    } else if (this.sort.direction === 'asc') {
+      sortDirection = SortDirection.ASCENDING;
+    }
+
+    let orderField: OrderField = OrderField.GENE_A_ID;
+    let interactomeId: number;
+    if (this.sort.active === 'GeneB') {
+      orderField = OrderField.GENE_B_ID;
+    } else if (this.sort.active === 'NameB') {
+      orderField = OrderField.GENE_B_NAME;
+    } else if (this.sort.active === 'NameA') {
+      orderField = OrderField.GENE_A_NAME;
+    } else if (this.sort.active && this.sort.active.indexOf('-') !== -1) {
+      orderField = OrderField.INTERACTOME;
+      interactomeId = +this.sort.active.substring(this.sort.active.indexOf('-') + 1);
+    }
+
+    this.paginatedDataSource.load(this.paginatedResultUrl, this.paginator.pageIndex, this.paginator.pageSize, sortDirection,
+      orderField, interactomeId);
   }
 
   @Input()
@@ -223,13 +276,30 @@ export class FormSameSpeciesComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(res => {
         if ( res.status === Status.COMPLETED ) {
-          this.getResult(res.resultReference);
+          this.getResultPaginated(res.resultReference);
         } else {
           alert('Work unfinished');
         }
         this.processing = false;
       });
     });
+  }
+
+  private getResultPaginated(uri: string) {
+    this.paginatedResultUrl = uri;
+    this.interactionService.getInteractionResultSummarized(uri)
+      .subscribe((workRes) => {
+        this.resInteractomes = workRes.interactomes;
+        this.paginatorLength = workRes.totalInteractions;
+        this.paginatedDataSource.load(uri);
+        this.paginatedDataSource.loading$.subscribe((res) => {
+          if (res === false) {
+            this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
+              ...workRes.interactomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
+            this.showTable = true;
+          }
+        });
+      });
   }
 
   private getResult(uri: string) {
