@@ -123,7 +123,6 @@
 
 <mat-card *ngIf="showTable">
   <mat-card-content>
-    <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
     <mat-menu #exportMenu="matMenu">
       <a mat-menu-item [href]="resultUrl + '/interactome/fasta'" target="_blank">
         Single FASTA
@@ -133,16 +132,24 @@
         {{resInteractome.name}}
       </a>
     </mat-menu>
-    <button mat-raised-button color="primary" [matMenuTriggerFor]="exportMenu" *ngIf="csvContent !== ''">
+    <button mat-raised-button color="primary" [matMenuTriggerFor]="exportMenu">
       <mat-icon>more_vert</mat-icon> Export FASTA
     </button>
+    <button mat-raised-button color="primary" *ngIf="csvContent === '' && !processing" (click)="onPrepareCSV()">Prepare CSV export</button>
+    <button mat-raised-button color="primary" *ngIf="csvContent === '' && processing">
+      Preparing CSV...
+    </button>
+    <button mat-button *ngIf="csvContent === '' && processing" disabled>
+      <mat-icon><mat-spinner [diameter]="20" color="accent"></mat-spinner></mat-icon>
+    </button>
+    <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName" *ngIf="csvContent !== ''">Export CSV</a>
 
     <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
       <mat-icon>link</mat-icon> Permalink to result</a>
 
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="onChangeTab($event)">
       <mat-tab label="Table view">
-        <mat-table matSort [dataSource]="dataSource" class="table-distinct-species" appAfterViewInit (afterViewInit)="initTable()">
+        <mat-table matSort [dataSource]="paginatedDataSource" class="table-distinct-species" appAfterViewInit (afterViewInit)="initTable()">
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           <ng-container matColumnDef="GeneA">
@@ -170,7 +177,7 @@
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>
+            <mat-header-cell *matHeaderCellDef>
               <span *ngFor="let ri of referenceInteractomes">{{ri.name}} ({{ri.species.name}})</span>
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
@@ -178,7 +185,7 @@
             </mat-cell>
           </ng-container>
           <ng-container matColumnDef="TargetInteractome">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>
+            <mat-header-cell *matHeaderCellDef>
               <span *ngFor="let ti of targetInteractomes">{{ti.name}} ({{ti.species.name}})</span>
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
@@ -186,15 +193,19 @@
             </mat-cell>
           </ng-container>
         </mat-table>
-        <mat-paginator #paginator
+        <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
                        [pageSize]="10"
-                       [pageSizeOptions]="[5, 10, 20, 50]">
+                       [pageSizeOptions]="[5, 10, 20, 50]"
+                       [length]="paginatorLength">
         </mat-paginator>
         <app-legend-table></app-legend-table>
       </mat-tab>
       <mat-tab label="Graph view" *ngIf="nodes.length <= 100 || lastQueryMaxDegree <= 1">
-        <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
-        <app-legend-distinct-species [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-distinct-species>
+        <mat-card *ngIf="processing && !fullResultAvailable">
+          <mat-spinner class="app-spinner"></mat-spinner>
+        </mat-card>
+        <app-graph *ngIf="fullResultAvailable" [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
+        <app-legend-distinct-species *ngIf="fullResultAvailable" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-distinct-species>
       </mat-tab>
       <mat-tab label="Graph view" *ngIf="nodes.length > 100 && lastQueryMaxDegree > 1">
         <mat-card>

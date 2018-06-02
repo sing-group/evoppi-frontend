@@ -21,6 +21,7 @@
 
 import {InteractomeDegree} from './interactome-degree';
 import {GeneInfo} from './gene-info';
+import {BlastResult} from './blast-result';
 
 export interface Interaction {
   geneA: number;
@@ -33,4 +34,8 @@ export interface Interaction {
   geneInfoB?: GeneInfo;
   firstNameA?: string;
   firstNameB?: string;
+  typeA?: number;
+  typeB?: number;
+  blastResultsA?: BlastResult[];
+  blastResultsB?: BlastResult[];
 }

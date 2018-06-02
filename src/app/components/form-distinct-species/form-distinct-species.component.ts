@@ -27,7 +27,7 @@ import {InteractomeService} from '../../services/interactome.service';
 import {GeneService} from '../../services/gene.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Interaction} from '../../interfaces/interaction';
-import {MatDialog, MatSelectionList, MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
+import {MatDialog, MatSelectionList, MatSort, MatTableDataSource, MatPaginator, MatTabChangeEvent} from '@angular/material';
 import {Node} from '../../classes/node';
 import {Link} from '../../classes/link';
 import {InteractionService} from '../../services/interaction.service';
@@ -42,6 +42,10 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {GeneInfoComponent} from '../gene-info/gene-info.component';
 import {BlastResult} from '../../interfaces/blast-result';
 import {Location} from '@angular/common';
+import {DistinctSpeciesDataSource} from './distinct-species-data-source';
+import {tap} from 'rxjs/operators';
+import {OrderField} from '../../enums/order-field.enum';
+import {SortDirection} from '../../enums/sort-direction.enum';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -57,6 +61,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
   formDistinctSpecies: FormGroup;
   dataSource: MatTableDataSource<Interaction>;
+  paginatedDataSource: DistinctSpeciesDataSource;
+  paginatorLength: number;
   displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'ReferenceInteractome', 'TargetInteractome'];
 
   species: Species[];
@@ -88,6 +94,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
   csvName = 'data.csv';
 
   resultUrl = '';
+  paginatedResultUrl = '';
+  fullResultAvailable = false;
+
   referenceInteractomes: Interactome[];
   targetInteractomes: Interactome[];
 
@@ -125,6 +134,45 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.formDistinctSpecies.controls.gene.valueChanges.debounceTime(500).subscribe((res) => {
       this.onSearchGenes(res);
     });
+
+    this.paginatedDataSource = new DistinctSpeciesDataSource(this.interactionService);
+  }
+
+  initPaginator() {
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
+    this.sort.sortChange
+      .pipe(
+        tap(() => this.loadCurrentResultsPage())
+      )
+      .subscribe();
+
+    this.paginator.page
+      .pipe(
+        tap(() => this.loadCurrentResultsPage())
+      )
+      .subscribe();
+  }
+
+  loadCurrentResultsPage() {
+    let sortDirection: SortDirection = SortDirection.NONE;
+    if (this.sort.direction === 'desc') {
+      sortDirection = SortDirection.DESCENDING;
+    } else if (this.sort.direction === 'asc') {
+      sortDirection = SortDirection.ASCENDING;
+    }
+
+    let orderField: OrderField = OrderField.GENE_A_ID;
+    if (this.sort.active === 'GeneB') {
+      orderField = OrderField.GENE_B_ID;
+    } else if (this.sort.active === 'NameB') {
+      orderField = OrderField.GENE_B_NAME;
+    } else if (this.sort.active === 'NameA') {
+      orderField = OrderField.GENE_A_NAME;
+    } // TODO: order by interactome
+
+    this.paginatedDataSource.load(this.paginatedResultUrl, this.paginator.pageIndex, this.paginator.pageSize, sortDirection,
+      orderField);
   }
 
   @Input()
@@ -212,6 +260,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
     if (this.processing) {
       return;
     }
+    this.fullResultAvailable = false;
     this.processing = true;
     if (this.formDistinctSpecies.status === 'INVALID') {
       console.log('INVALID');
@@ -241,7 +290,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(res => {
         if (res.status === Status.COMPLETED) {
-          this.getResult(res.resultReference);
+          this.getResultPaginated(res.resultReference);
         } else {
           alert('Work unfinished');
         }
@@ -250,7 +299,24 @@ export class FormDistinctSpeciesComponent implements OnInit {
     });
   }
 
+  private getResultPaginated(uri: string) {
+    this.paginatedResultUrl = uri;
+    this.interactionService.getInteractionResultSummarized(uri)
+      .subscribe((workRes) => {
+        this.referenceInteractomes = workRes.referenceInteractomes;
+        this.targetInteractomes = workRes.targetInteractomes;
+        this.paginatorLength = workRes.totalInteractions;
+        this.paginatedDataSource.load(uri);
+        this.paginatedDataSource.loading$.subscribe((res) => {
+          if (res === false) {
+            this.showTable = true;
+          }
+        });
+      });
+  }
+
   public getResult(uri: string) {
+    this.processing = true;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.lastQueryMaxDegree = res.queryMaxDegree;
@@ -396,6 +462,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.dataSource = new MatTableDataSource<Interaction>(consolidatedInteractions);
         this.dataSource.sort = undefined;
         this.dataSource.paginator = undefined;
+        this.fullResultAvailable = true;
       });
   }
 
@@ -425,4 +492,17 @@ export class FormDistinctSpeciesComponent implements OnInit {
     });
 
   }
+
+  onChangeTab(event: MatTabChangeEvent) {
+    if (event.tab.textLabel === 'Graph view' && !this.fullResultAvailable) {
+      this.getResult(this.resultUrl);
+    }
+  }
+
+  onPrepareCSV() {
+    if (!this.processing && !this.fullResultAvailable) {
+      this.getResult(this.resultUrl);
+    }
+  }
+
 }

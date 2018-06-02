@@ -442,7 +442,6 @@ export class FormSameSpeciesComponent implements OnInit {
 
   onChangeTab(event: MatTabChangeEvent) {
     if (event.tab.textLabel === 'Graph view' && !this.fullResultAvailable) {
-      console.log(event.tab);
       this.getResult(this.resultUrl);
     }
   }

@@ -32,3 +32,7 @@ mat-card{
 a {
   margin-bottom: 5px;
 }
+
+.app-spinner {
+  margin: 0 auto;
+}
