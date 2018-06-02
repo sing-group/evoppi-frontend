@@ -29,7 +29,7 @@ import {Interactome} from '../../interfaces/interactome';
 import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {Interaction} from '../../interfaces/interaction';
-import {MatDialog, MatPaginator, MatSelectionList, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatPaginator, MatSelectionList, MatSort, MatTab, MatTabChangeEvent, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
@@ -57,6 +57,7 @@ export class FormSameSpeciesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSelectionList) geneList: MatSelectionList;
+  @ViewChild(MatTab) graphViewTab: MatTab;
 
   private _work: Work;
 
@@ -91,6 +92,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
   resultUrl = '';
   paginatedResultUrl = '';
+  fullResultAvailable = false;
 
   permalink: string;
   processing = false;
@@ -248,6 +250,7 @@ export class FormSameSpeciesComponent implements OnInit {
     if (this.processing) {
       return;
     }
+    this.fullResultAvailable = false;
     this.processing = true;
     if (this.formSameSpecies.status === 'INVALID') {
       console.log('INVALID');
@@ -303,6 +306,7 @@ export class FormSameSpeciesComponent implements OnInit {
   }
 
   private getResult(uri: string) {
+    this.processing = true;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
         this.lastQueryMaxDegree = res.queryMaxDegree;
@@ -398,6 +402,7 @@ export class FormSameSpeciesComponent implements OnInit {
         this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
         this.dataSource.sort = undefined;
         this.dataSource.paginator = undefined;
+        this.fullResultAvailable = true;
       });
   }
 
@@ -433,5 +438,18 @@ export class FormSameSpeciesComponent implements OnInit {
       console.log('The dialog was closed');
     });
 
+  }
+
+  onChangeTab(event: MatTabChangeEvent) {
+    if (event.tab.textLabel === 'Graph view' && !this.fullResultAvailable) {
+      console.log(event.tab);
+      this.getResult(this.resultUrl);
+    }
+  }
+
+  onPrepareCSV() {
+    if (!this.processing && !this.fullResultAvailable) {
+      this.getResult(this.resultUrl);
+    }
   }
 }
