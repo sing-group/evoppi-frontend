@@ -40,6 +40,7 @@ import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-
 import {FakeInteractionService} from '../../testing/fake-interaction.service';
 import Spy = jasmine.Spy;
 import {RouterTestingModule} from '@angular/router/testing';
+import {LegendTableComponent} from '../legend-table/legend-table.component';
 
 describe('FormDistinctSpeciesComponent', () => {
   let component: FormDistinctSpeciesComponent;
@@ -50,7 +51,7 @@ describe('FormDistinctSpeciesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FormDistinctSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent,
-        LegendDistinctSpeciesComponent],
+        LegendDistinctSpeciesComponent, LegendTableComponent],
       imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, RouterTestingModule ],
       providers: [ SpeciesService, InteractomeService, GeneService, D3Service,
         {

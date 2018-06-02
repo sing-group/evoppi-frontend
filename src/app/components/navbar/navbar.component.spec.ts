@@ -45,6 +45,7 @@ import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-spe
 import {UserWorkManagerComponent} from '../user-work-manager/user-work-manager.component';
 import {UserTableComponent} from '../user-table/user-table.component';
 import {UserCreateComponent} from '../user-create/user-create.component';
+import {LegendTableComponent} from '../legend-table/legend-table.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -56,7 +57,7 @@ describe('NavbarComponent', () => {
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
         AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent, UserTableComponent,
-        UserCreateComponent],
+        UserCreateComponent, LegendTableComponent],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         AuthService,

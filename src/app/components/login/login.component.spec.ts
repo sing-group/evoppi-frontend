@@ -47,6 +47,7 @@ import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-spe
 import {UserWorkManagerComponent} from '../user-work-manager/user-work-manager.component';
 import {UserTableComponent} from '../user-table/user-table.component';
 import {UserCreateComponent} from '../user-create/user-create.component';
+import {LegendTableComponent} from '../legend-table/legend-table.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -57,7 +58,8 @@ describe('LoginComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent, LoginComponent,
         UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent, AutocompleteComponent,
-        LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent, UserTableComponent, UserCreateComponent],
+        LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent, UserTableComponent, UserCreateComponent,
+        LegendTableComponent],
       imports: [MaterialModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule, AppRoutingModule, HttpClientModule ],
       providers: [
         UserService, AuthService,

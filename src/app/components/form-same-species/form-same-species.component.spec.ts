@@ -38,6 +38,7 @@ import {D3Service} from '../../services/d3.service';
 import {AutocompleteComponent} from '../autocomplete/autocomplete.component';
 import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-species.component';
 import {RouterTestingModule} from '@angular/router/testing';
+import {LegendTableComponent} from '../legend-table/legend-table.component';
 
 describe('FormSameSpeciesComponent', () => {
   let component: FormSameSpeciesComponent;
@@ -46,7 +47,7 @@ describe('FormSameSpeciesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FormSameSpeciesComponent, GraphComponent, ZoomableDirective, DraggableDirective, AutocompleteComponent,
-        LegendSameSpeciesComponent],
+        LegendSameSpeciesComponent, LegendTableComponent],
       imports: [ BrowserAnimationsModule, MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, RouterTestingModule],
       providers: [ SpeciesService, InteractomeService, GeneService, InteractionService, D3Service ]
     })

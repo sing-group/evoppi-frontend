@@ -50,6 +50,7 @@ import {LegendSameSpeciesComponent} from './components/legend-same-species/legen
 import {UserWorkManagerComponent} from './components/user-work-manager/user-work-manager.component';
 import {UserTableComponent} from './components/user-table/user-table.component';
 import {UserCreateComponent} from './components/user-create/user-create.component';
+import {LegendTableComponent} from './components/legend-table/legend-table.component';
 
 
 describe('AppComponent', () => {
@@ -61,7 +62,7 @@ describe('AppComponent', () => {
       declarations: [ AppComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, NavbarComponent, TabgroupComponent,
         LoginComponent, UserManagerComponent, GraphComponent, ZoomableDirective, DraggableDirective, InteractomesComponent,
         AutocompleteComponent, LegendDistinctSpeciesComponent, LegendSameSpeciesComponent, UserWorkManagerComponent, UserTableComponent,
-        UserCreateComponent,
+        UserCreateComponent, LegendTableComponent,
       ],
       imports: [MaterialModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule ],
       providers: [SpeciesService, InteractomeService, GeneService, InteractionService, UserService, AuthService,
