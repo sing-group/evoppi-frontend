@@ -161,8 +161,8 @@
         <mat-card *ngIf="processing && !fullResultAvailable">
           <mat-spinner class="app-spinner"></mat-spinner>
         </mat-card>
-        <app-graph [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
-        <app-legend-same-species [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-same-species>
+        <app-graph *ngIf="fullResultAvailable" [nodes]="nodes" [links]="links" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
+        <app-legend-same-species *ngIf="fullResultAvailable" [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-legend-same-species>
       </mat-tab>
       <mat-tab label="Graph view" *ngIf="nodes.length > 100 && lastQueryMaxDegree > 1">
         <mat-card>
