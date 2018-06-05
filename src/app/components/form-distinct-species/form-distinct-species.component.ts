@@ -447,8 +447,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.nodes = nodes;
         this.links = links;
 
-        const referenceTitle = 'Reference Species - Interactome';
-        const targetTitle = 'Target Species - Interactome';
+        const referenceTitle = res.referenceInteractomes.map( resInteractome => resInteractome.name + '(' + resInteractome.species.name + ')').join(', ');
+        const targetTitle = res.targetInteractomes.map( targetInteractome => targetInteractome.name + '(' + targetInteractome.species.name + ')').join(', ');
         this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
           CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B', referenceTitle, targetTitle], csvData)
         );
