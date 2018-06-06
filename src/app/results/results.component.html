@@ -1,0 +1,204 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~ Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+  ~ Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+  ~ Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+  ~ .
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Distinct species</h4>
+                        <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>
+                                    Reference Species
+                                </th>
+                                <th>
+                                    Target Species
+                                </th>
+                                <th>
+                                    # Interactomes
+                                </th>
+                                <th>
+                                    Completion
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        Homo Sapiens
+                                    </td>
+                                    <td>
+                                        Drosophila melanogaster
+                                    </td>
+                                    <td>
+                                        3 / 5
+                                    </td>
+                                    <td>
+                                        <mat-progress-bar mode="buffer" value="25" bufferValue="25"></mat-progress-bar>
+                                    </td>
+                                    <td>
+                                        Calculating interactome X interactions
+                                    </td>
+                                    <td>
+                                        <button mat-icon-button color="primary">
+                                            <mat-icon aria-label="Show interacions">list</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="secondary">
+                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn">
+                                            <mat-icon aria-label="Delete">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Homo Sapiens
+                                    </td>
+                                    <td>
+                                        Drosophila melanogaster
+                                    </td>
+                                    <td>
+                                        3 / 5
+                                    </td>
+                                    <td>
+                                        Completed
+                                    </td>
+                                    <td>
+                                        12,000 interactions found
+                                    </td>
+                                    <td>
+                                        <button mat-icon-button color="primary">
+                                            <mat-icon aria-label="Show interacions">list</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="secondary">
+                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn">
+                                            <mat-icon aria-label="Delete">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title ">Same species</h4>
+                        <p class="card-category">Analysis done with interactomes coming from the same species</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>
+                                    Species
+                                </th>
+                                <th>
+                                    # Interactomes
+                                </th>
+                                <th>
+                                    Completion
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        Homo Sapiens
+                                    </td>
+                                    <td>
+                                        3
+                                    </td>
+                                    <td>
+                                        <mat-progress-bar mode="buffer" value="40" bufferValue="40"></mat-progress-bar>
+                                    </td>
+                                    <td>
+                                        Calculating interactome X interactions
+                                    </td>
+                                    <td>
+                                        <button mat-icon-button color="primary">
+                                            <mat-icon aria-label="Show interacions">list</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="secondary">
+                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn">
+                                            <mat-icon aria-label="Delete">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Drosophila melanogaster
+                                    </td>
+                                    <td>
+                                        5
+                                    </td>
+                                    <td>
+                                        Completed
+                                    </td>
+                                    <td>
+                                        12,000 interactions found
+                                    </td>
+                                    <td>
+                                        <button mat-icon-button color="primary">
+                                            <mat-icon aria-label="Show interacions">list</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="secondary">
+                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn">
+                                            <mat-icon aria-label="Delete">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

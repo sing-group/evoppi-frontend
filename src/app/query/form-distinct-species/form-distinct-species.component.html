@@ -1,0 +1,169 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~ Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+  ~ Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+  ~ Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+  ~ .
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<form>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field class="width-50">
+                    <mat-select placeholder="Reference Species">
+                        <mat-option value="Species 1">Species 1</mat-option>
+                        <mat-option value="Species 2">Species 2</mat-option>
+                        <mat-option value="Species 3">Species 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+                <mat-form-field class="width-50 right">
+                    <mat-select placeholder="Reference Interactomes" [multiple]="true">
+                        <mat-option class="filter-option">
+                            <button mat-raised-button color="primary">
+                                Select All
+                            </button>
+                            <button mat-raised-button color="accent">
+                                Deselect All
+                            </button>
+                        </mat-option>
+                        <mat-option value="Interactome 1">Interactome 1</mat-option>
+                        <mat-option value="Interactome 2">Interactome 2</mat-option>
+                        <mat-option value="Interactome 3">Interactome 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field class="width-50">
+                    <mat-select placeholder="Target Species">
+                        <mat-option value="Species 1">Species 1</mat-option>
+                        <mat-option value="Species 2">Species 2</mat-option>
+                        <mat-option value="Species 3">Species 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+                <mat-form-field class="width-50 right">
+                    <mat-select placeholder="Target Interactomes" [multiple]="true">
+                        <mat-option class="filter-option">
+                            <button mat-raised-button color="primary">
+                                Select All
+                            </button>
+                            <button mat-raised-button color="accent">
+                                Deselect All
+                            </button>
+                        </mat-option>
+                        <mat-option value="Interactome 1">Interactome 1</mat-option>
+                        <mat-option value="Interactome 2">Interactome 2</mat-option>
+                        <mat-option value="Interactome 3">Interactome 3</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <mat-form-field class="width-100">
+                    <mat-label>Gene</mat-label>
+                    <input type="search" matInput placeholder="Start typing something to search genes"
+                           autocomplete="off" value="KRAS"/>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="width-25">
+                    <input type="number" matInput placeholder="Number of descriptions (max_target_seqs)"
+                           [min]="1" [max]="100" [step]="1" value="95"/>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-9">
+                <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="100" class="width-75 right"
+                            value="95"></mat-slider>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="width-25">
+                    <input type="number" matInput placeholder="Minimum expect value (evalue)" [min]="0" [step]="0.01"
+                           value="0.05">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-9">
+                <mat-slider thumbLabel [min]="0" [max]="10" [step]="0.01" class="width-75 right"
+                            value="0.05"></mat-slider>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="width-25">
+                    <input type="number" matInput placeholder="Minimum length of alignment block"
+                           [min]="0" [max]="1000" [step]="1" value="100">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-9">
+                <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="1000" class="width-75 right"
+                            value="100"></mat-slider>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="width-25">
+                    <input type="number" matInput placeholder="Minimum identity (%)"
+                           [min]="0" [max]="100" [step]="1" value="80">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-9">
+                <mat-slider thumbLabel tickInterval="1" [min]="0" [max]="100" [step]="1"
+                            class="width-75 right" value="80"></mat-slider>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="width-25">
+                    <input type="number" matInput placeholder="Interaction level"
+                           [min]="1" [max]="3" [step]="1" value="1">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-9">
+                <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" value="1"></mat-slider>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <button mat-raised-button button color="primary" (click)="showNotification()">Compare</button>
+        </div>
+    </div>
+</form>

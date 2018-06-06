@@ -36,11 +36,11 @@
 
         @if $side == left {
           transform: translateX(
-            -$size - 10px
+                          -$size - 10px
           ); // initial position of drawer (closed), way off screen
         } @else {
           transform: translateX(
-            $size + 10px
+                          $size + 10px
           ); // initial position of drawer (closed), way off screen
         }
       }
@@ -66,11 +66,11 @@
 
         @if $side == top {
           transform: translateY(
-            -$size - 10px
+                          -$size - 10px
           ); // initial position of drawer (closed), way off screen
         } @else {
           transform: translateY(
-            $size + 10px
+                          $size + 10px
           ); // initial position of drawer (closed), way off screen
         }
       }
