@@ -22,8 +22,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-
-declare var $: any;
+import {MatSnackBar} from '@angular/material';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-form-distinct-species',
@@ -32,26 +32,18 @@ declare var $: any;
 })
 export class FormDistinctSpeciesComponent implements OnInit {
 
-    constructor() {
+    constructor(private snackBar: MatSnackBar, private router: Router) {
     }
 
     ngOnInit() {
     }
 
     showNotification() {
-        $.notify(
-            {
-                icon: 'add_alert',
-                message: '<strong>Different species</strong> interactions requested'
-            },
-            {
-                type: 'warning',
-                timer: 5000,
-                placement: {
-                    from: 'bottom',
-                    align: 'center'
-                }
-            }
-        );
+        const snackBar = this.snackBar.open('Different species interactions requested', 'Go to results', {
+            duration: 5000
+        });
+        snackBar.onAction().subscribe(() => {
+           this.router.navigateByUrl('/results');
+        });
     }
 }

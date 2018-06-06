@@ -29,12 +29,6 @@ import {FormsModule} from '@angular/forms';
 import {AdminLayoutRoutes} from './admin-layout.routing';
 
 import {DashboardComponent} from '../../dashboard/dashboard.component';
-import {UserProfileComponent} from '../../user-profile/user-profile.component';
-import {TableListComponent} from '../../table-list/table-list.component';
-import {TypographyComponent} from '../../typography/typography.component';
-import {IconsComponent} from '../../icons/icons.component';
-import {NotificationsComponent} from '../../notifications/notifications.component';
-import {UpgradeComponent} from '../../upgrade/upgrade.component';
 import {QueryComponent} from '../../query/query.component';
 import {FormSameSpeciesComponent} from '../../query/form-same-species/form-same-species.component';
 import {FormDistinctSpeciesComponent} from '../../query/form-distinct-species/form-distinct-species.component';
@@ -48,6 +42,7 @@ import {
     MatProgressBarModule,
     MatRippleModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatSliderModule,
     MatTabsModule,
     MatTooltipModule
@@ -65,18 +60,13 @@ import {
         MatProgressBarModule,
         MatRippleModule,
         MatSelectModule,
+        MatSnackBarModule,
         MatSliderModule,
         MatTabsModule,
         MatTooltipModule
     ],
     declarations: [
         DashboardComponent,
-        UserProfileComponent,
-        TableListComponent,
-        TypographyComponent,
-        IconsComponent,
-        NotificationsComponent,
-        UpgradeComponent,
         QueryComponent,
         FormSameSpeciesComponent,
         FormDistinctSpeciesComponent,
