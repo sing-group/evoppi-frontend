@@ -27,9 +27,11 @@ import 'rxjs/add/operator/filter';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
+import {routerTransition} from './router.animations';
 
 @Component({
     selector: 'app-admin-layout',
+    animations: [ routerTransition ],
     templateUrl: './admin-layout.component.html',
     styleUrls: ['./admin-layout.component.scss']
 })
@@ -99,6 +101,10 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
 
     isMac(): boolean {
         return navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.platform.toUpperCase().indexOf('IPAD') >= 0;
+    }
+
+    public getState(outlet) {
+        return outlet.activatedRouteData.state;
     }
 
 }

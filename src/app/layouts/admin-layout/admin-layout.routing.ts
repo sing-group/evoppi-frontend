@@ -74,7 +74,7 @@ export const AdminLayoutRoutes: Routes = [
     // }
     {path: 'dashboard', component: DashboardComponent},
     {path: 'query', component: QueryComponent},
-    {path: 'results', component: ResultsComponent},
-    {path: 'results/table/distinct/:id', component: TableDistinctSpeciesComponent},
-    {path: 'results/table/same/:id', component: TableSameSpeciesComponent}
+    {path: 'results', component: ResultsComponent, data: {state: 'results'}},
+    {path: 'results/table/distinct/:id', component: TableDistinctSpeciesComponent, data: {state: 'results-table'}},
+    {path: 'results/table/same/:id', component: TableSameSpeciesComponent, data: {state: 'results-table'}}
 ];

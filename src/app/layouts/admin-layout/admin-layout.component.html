@@ -26,8 +26,8 @@
         <app-sidebar></app-sidebar>
         <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
     </div>
-    <div class="main-panel">
+    <div class="main-panel" [@routerTransition]="getState(outlet)">
         <app-navbar></app-navbar>
-        <router-outlet></router-outlet>
+        <router-outlet #outlet="outlet"></router-outlet>
     </div>
 </div>
