@@ -23,17 +23,34 @@
 
 import {Component, OnInit} from '@angular/core';
 
-declare interface RouteInfo {
+export declare interface RouteInfo {
     path: string;
     title: string;
-    icon: string;
-    class: string;
+    showInMenu: boolean;
+    icon?: string;
+    class?: string;
+    backRoute?: string;
+    backRouteTitle?: string;
 }
 
 export const ROUTES: RouteInfo[] = [
-    {path: '/dashboard', title: 'Dashboard', icon: 'dashboard', class: ''},
-    {path: '/query', title: 'Query', icon: 'search', class: ''},
-    {path: '/results', title: 'Results', icon: 'list', class: ''}
+    {path: '/dashboard', title: 'Dashboard', showInMenu: true, icon: 'dashboard'},
+    {path: '/query', title: 'Query', showInMenu: true, icon: 'search'},
+    {path: '/results', title: 'Results', showInMenu: true, icon: 'list'},
+    {
+        path: '/results/table/same',
+        title: 'Same species results table',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    },
+    {
+        path: '/results/table/distinct',
+        title: 'Distinct species results table',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    }
 ];
 
 @Component({
@@ -48,7 +65,7 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.menuItems = ROUTES.filter(menuItem => menuItem);
+        this.menuItems = ROUTES.filter(menuItem => menuItem.showInMenu);
     }
 
     isMobileMenu() {

@@ -21,3 +21,8 @@
  *
  */
 
+div.navigation-bar {
+    margin-top: 70px;
+    margin-bottom: -95px;
+    padding: 0px 15px;
+}

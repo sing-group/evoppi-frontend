@@ -26,6 +26,8 @@ import {Routes} from '@angular/router';
 import {DashboardComponent} from '../../dashboard/dashboard.component';
 import {QueryComponent} from '../../query/query.component';
 import {ResultsComponent} from '../../results/results.component';
+import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
+import {TableDistinctSpeciesComponent} from '../../results/table-distinct-species/table-distinct-species.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -72,5 +74,7 @@ export const AdminLayoutRoutes: Routes = [
     // }
     {path: 'dashboard', component: DashboardComponent},
     {path: 'query', component: QueryComponent},
-    {path: 'results', component: ResultsComponent}
+    {path: 'results', component: ResultsComponent},
+    {path: 'results/table/distinct/:id', component: TableDistinctSpeciesComponent},
+    {path: 'results/table/same/:id', component: TableSameSpeciesComponent}
 ];

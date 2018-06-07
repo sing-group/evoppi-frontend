@@ -30,9 +30,11 @@ import {AdminLayoutRoutes} from './admin-layout.routing';
 
 import {DashboardComponent} from '../../dashboard/dashboard.component';
 import {QueryComponent} from '../../query/query.component';
-import {FormSameSpeciesComponent} from '../../query/form-same-species/form-same-species.component';
 import {FormDistinctSpeciesComponent} from '../../query/form-distinct-species/form-distinct-species.component';
+import {FormSameSpeciesComponent} from '../../query/form-same-species/form-same-species.component';
 import {ResultsComponent} from '../../results/results.component';
+import {TableDistinctSpeciesComponent} from '../../results/table-distinct-species/table-distinct-species.component';
+import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
 
 import {
     MatButtonModule,
@@ -68,9 +70,11 @@ import {
     declarations: [
         DashboardComponent,
         QueryComponent,
-        FormSameSpeciesComponent,
         FormDistinctSpeciesComponent,
-        ResultsComponent
+        FormSameSpeciesComponent,
+        ResultsComponent,
+        TableDistinctSpeciesComponent,
+        TableSameSpeciesComponent
     ]
 })
 export class AdminLayoutModule {

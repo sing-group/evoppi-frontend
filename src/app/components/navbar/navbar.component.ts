@@ -21,8 +21,8 @@
  *
  */
 
-import {Component, ElementRef, OnInit} from '@angular/core';
-import {ROUTES} from '../sidebar/sidebar.component';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {RouteInfo, ROUTES} from '../sidebar/sidebar.component';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 
@@ -32,122 +32,142 @@ import {Router} from '@angular/router';
     styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-    location: Location;
-    mobile_menu_visible: any = 0;
-    private listTitles: any[];
-    private toggleButton: any;
-    private sidebarVisible: boolean;
 
-    constructor(location: Location, private element: ElementRef, private router: Router) {
-        this.location = location;
-        this.sidebarVisible = false;
+    private sidebarVisible: boolean;
+    private mobileMenuVisible = false;
+
+    @ViewChild('navbarToggler') private buttonToggleMenuReference: ElementRef;
+    private layerHideBodyElement: HTMLElement;
+
+    constructor(private location: Location, private element: ElementRef, private router: Router) {
     }
 
     ngOnInit() {
-        this.listTitles = ROUTES.filter(listTitle => listTitle);
-        const navbar: HTMLElement = this.element.nativeElement;
-        this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
+        this.sidebarVisible = false;
+
+        this.layerHideBodyElement = document.createElement('div');
+        this.layerHideBodyElement.classList.add('close-layer');
+
         this.router.events.subscribe((event) => {
             this.sidebarClose();
-            var $layer: any = document.getElementsByClassName('close-layer')[0];
-            if ($layer) {
-                $layer.remove();
-                this.mobile_menu_visible = 0;
+
+            if (this.layerHideBody) {
+                this.layerHideBody.remove();
+                this.mobileMenuVisible = false;
             }
         });
     }
 
-    sidebarOpen() {
-        const toggleButton = this.toggleButton;
-        const body = document.getElementsByTagName('body')[0];
-        setTimeout(function () {
-            toggleButton.classList.add('toggled');
-        }, 500);
+    private get buttonToggleMenu(): HTMLElement {
+        return this.buttonToggleMenuReference.nativeElement;
+    }
 
-        body.classList.add('nav-open');
+    private get body(): HTMLElement {
+        return document.getElementsByTagName('body')[0];
+    }
+
+    private get layerHideBody(): HTMLElement {
+        return this.layerHideBodyElement;
+    }
+
+    private setButtonToggleMenuAsOpened(ms = 0) {
+        if (ms <= 0) {
+            this.buttonToggleMenu.classList.add('toggled');
+        } else {
+            setTimeout(() => this.buttonToggleMenu.classList.add('toggled'), ms);
+        }
+    }
+
+    private setButtonToggleMenuAsClosed(ms = 0) {
+        if (ms <= 0) {
+            this.buttonToggleMenu.classList.remove('toggled');
+        } else {
+            setTimeout(() => this.buttonToggleMenu.classList.remove('toggled'), ms);
+        }
+    }
+
+    public get currentRoute(): RouteInfo {
+        let title = this.location.prepareExternalUrl(this.location.path());
+        if (title.charAt(0) === '#') {
+            title = title.slice(2);
+        }
+
+        let longestMatch = null;
+
+        for (const route of ROUTES) {
+            if (title.startsWith(route.path)) {
+                if (longestMatch === null || longestMatch.path.length < route.path.length) {
+                    longestMatch = route;
+                }
+            }
+        }
+
+        return longestMatch;
+    }
+
+    sidebarOpen() {
+        this.setButtonToggleMenuAsOpened(500);
+
+        this.body.classList.add('nav-open');
 
         this.sidebarVisible = true;
-    };
+    }
 
     sidebarClose() {
-        const body = document.getElementsByTagName('body')[0];
-        this.toggleButton.classList.remove('toggled');
+        this.setButtonToggleMenuAsClosed();
+
         this.sidebarVisible = false;
-        body.classList.remove('nav-open');
-    };
+
+        this.body.classList.remove('nav-open');
+    }
 
     sidebarToggle() {
-        // const toggleButton = this.toggleButton;
-        // const body = document.getElementsByTagName('body')[0];
-        var $toggle = document.getElementsByClassName('navbar-toggler')[0];
-
         if (this.sidebarVisible === false) {
             this.sidebarOpen();
         } else {
             this.sidebarClose();
         }
-        const body = document.getElementsByTagName('body')[0];
 
-        if (this.mobile_menu_visible == 1) {
-            // $('html').removeClass('nav-open');
-            body.classList.remove('nav-open');
-            if ($layer) {
-                $layer.remove();
+        if (this.mobileMenuVisible) {
+            this.body.classList.remove('nav-open');
+            if (this.layerHideBody) {
+                this.layerHideBody.remove();
             }
-            setTimeout(function () {
-                $toggle.classList.remove('toggled');
-            }, 400);
 
-            this.mobile_menu_visible = 0;
+            this.setButtonToggleMenuAsClosed(400);
+
+            this.mobileMenuVisible = false;
         } else {
-            setTimeout(function () {
-                $toggle.classList.add('toggled');
-            }, 430);
+            this.setButtonToggleMenuAsOpened(430);
 
-            var $layer = document.createElement('div');
-            $layer.setAttribute('class', 'close-layer');
-
-
-            if (body.querySelectorAll('.main-panel')) {
-                document.getElementsByClassName('main-panel')[0].appendChild($layer);
-            } else if (body.classList.contains('off-canvas-sidebar')) {
-                document.getElementsByClassName('wrapper-full-page')[0].appendChild($layer);
+            if (this.body.querySelectorAll('.main-panel')) {
+                document.getElementsByClassName('main-panel')[0].appendChild(this.layerHideBody);
+            } else if (this.body.classList.contains('off-canvas-sidebar')) {
+                document.getElementsByClassName('wrapper-full-page')[0].appendChild(this.layerHideBody);
             }
 
-            setTimeout(function () {
-                $layer.classList.add('visible');
-            }, 100);
+            setTimeout(() => this.layerHideBody.classList.add('visible'), 100);
 
-            $layer.onclick = function () { //asign a function
-                body.classList.remove('nav-open');
-                this.mobile_menu_visible = 0;
-                $layer.classList.remove('visible');
-                setTimeout(function () {
-                    $layer.remove();
-                    $toggle.classList.remove('toggled');
+            this.layerHideBody.onclick = function() { // asign a function
+                this.body.classList.remove('nav-open');
+                this.mobileMenuVisible = false;
+                this.layerHideBody.classList.remove('visible');
+                setTimeout(() => {
+                    this.layerHideBody.remove();
+                    this.buttonToggleMenu.classList.remove('toggled');
                 }, 400);
             }.bind(this);
 
-            body.classList.add('nav-open');
-            this.mobile_menu_visible = 1;
-
+            this.body.classList.add('nav-open');
+            this.mobileMenuVisible = true;
         }
-    };
+    }
 
-    getTitle() {
-        let titlee = this.location.prepareExternalUrl(this.location.path());
-        if (titlee.charAt(0) === '#') {
-            titlee = titlee.slice(2);
-        }
-        titlee = titlee.split('/').pop();
-        titlee = '/' + titlee;
+    getTitle(): string {
+        return this.currentRoute === null ? 'EvoPPI' : this.currentRoute.title;
+    }
 
-        for (let item = 0; item < this.listTitles.length; item++) {
-            if (this.listTitles[item].path === titlee) {
-                return this.listTitles[item].title;
-            }
-        }
-
-        return 'Dashboard';
+    hasBackRoute(): boolean {
+        return this.currentRoute.backRoute !== undefined;
     }
 }
