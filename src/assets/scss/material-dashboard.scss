@@ -21,6 +21,18 @@
  *
  */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~@angular/material/theming";
+
+@include mat-core();
+
+$evoppi-app-primary: mat-palette($mat-blue-gray);
+$evoppi-app-accent: mat-palette($mat-brown, A200, A100, A400);
+$evoppi-app-warn: mat-palette($mat-red);
+
+$evoppi-app-theme: mat-light-theme($evoppi-app-primary, $evoppi-app-accent, $evoppi-app-warn);
+
+@include angular-material-theme($evoppi-app-theme);
+
 @import "core/variables";
 @import "core/mixins";
 @import "~bootstrap/scss/bootstrap";
