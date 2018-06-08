@@ -27,43 +27,10 @@ import 'rxjs/add/operator/filter';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
-import {routerTransition} from './router.animations';
+import {routerTransition} from './admin-layout.animations';
 import {Navigation} from '../../navigation/navigation.module';
 import NavigationInfo = Navigation.NavigationInfo;
-
-const ROUTES = [
-    {path: '/dashboard', title: 'Dashboard', showInMenu: true, icon: 'dashboard'},
-    {path: '/query', title: 'Query', showInMenu: true, icon: 'search'},
-    {path: '/results', title: 'Results', showInMenu: true, icon: 'list'},
-    {
-        path: '/results/chart/same',
-        title: 'Same species results chart',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    },
-    {
-        path: '/results/chart/distinct',
-        title: 'Distinct species results chart',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    },
-    {
-        path: '/results/table/same',
-        title: 'Same species results table',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    },
-    {
-        path: '/results/table/distinct',
-        title: 'Distinct species results table',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    }
-];
+import {ADMIN_LAYOUT_NAVIGATION_INFO} from './admin-layout.navigation';
 
 @Component({
     selector: 'app-admin-layout',
@@ -144,7 +111,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
     }
 
     public get routes(): NavigationInfo[] {
-        return ROUTES;
+        return ADMIN_LAYOUT_NAVIGATION_INFO;
     }
 
 }

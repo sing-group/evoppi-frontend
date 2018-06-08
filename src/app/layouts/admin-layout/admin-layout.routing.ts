@@ -23,7 +23,7 @@
 
 import {Routes} from '@angular/router';
 
-import {DashboardComponent} from '../../dashboard/dashboard.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
 import {QueryComponent} from '../../query/query.component';
 import {ResultsComponent} from '../../results/results.component';
 import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
@@ -31,54 +31,31 @@ import {TableDistinctSpeciesComponent} from '../../results/table-distinct-specie
 import {ChartDistinctSpeciesComponent} from '../../results/chart-distinct-species/chart-distinct-species.component';
 import {ChartSameSpeciesComponent} from '../../results/chart-same-species/chart-same-species.component';
 
-export const AdminLayoutRoutes: Routes = [
-    // {
-    //   path: '',
-    //   children: [ {
-    //     path: 'dashboard',
-    //     component: DashboardComponent
-    // }]}, {
-    // path: '',
-    // children: [ {
-    //   path: 'userprofile',
-    //   component: UserProfileComponent
-    // }]
-    // }, {
-    //   path: '',
-    //   children: [ {
-    //     path: 'icons',
-    //     component: IconsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'notifications',
-    //         component: NotificationsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'maps',
-    //         component: MapsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'typography',
-    //         component: TypographyComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'upgrade',
-    //         component: UpgradeComponent
-    //     }]
-    // }
+export const ADMIN_LAYOUT_ROUTES: Routes = [
     {path: 'dashboard', component: DashboardComponent},
-    {path: 'query', component: QueryComponent},
-    {path: 'results', component: ResultsComponent, data: {state: 'results-list'}},
-    {path: 'results/chart/distinct/:id', component: ChartDistinctSpeciesComponent, data: {state: 'results-detail'}},
-    {path: 'results/chart/same/:id', component: ChartSameSpeciesComponent, data: {state: 'results-detail'}},
-    {path: 'results/table/distinct/:id', component: TableDistinctSpeciesComponent, data: {state: 'results-detail'}},
-    {path: 'results/table/same/:id', component: TableSameSpeciesComponent, data: {state: 'results-detail'}}
+    {path: 'query', component: QueryComponent, data: {resultsPath: '/results'}},
+    {
+        path: 'results', component: ResultsComponent, data: {state: 'results-list'}, children: [
+            {
+                path: 'chart', redirectTo: '/results', children: [
+                    {path: 'distinct/:id', component: ChartDistinctSpeciesComponent, data: {state: 'results-detail'}},
+                    {path: 'same/:id', component: ChartSameSpeciesComponent, data: {state: 'results-detail'}},
+                ]
+            },
+            {
+                path: 'table', redirectTo: '/results', children: [
+
+                    {path: 'table/distinct/:id', component: TableDistinctSpeciesComponent, data: {state: 'results-detail'}},
+                    {path: 'table/same/:id', component: TableSameSpeciesComponent, data: {state: 'results-detail'}}
+                ]
+            }
+        ]
+    }
+
 ];
+
+
+
+
+
+

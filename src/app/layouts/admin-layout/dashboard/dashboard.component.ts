@@ -22,6 +22,10 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+import {Navigation} from '../../../navigation/navigation.module';
+import NavigationInfo = Navigation.NavigationInfo;
+import {ADMIN_LAYOUT_NAVIGATION_INFO} from '../admin-layout.navigation';
+import {QUERY_NAVIGATION_INFO, RESULTS_NAVIGATION_INFO} from '../admin-layout.navigation';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,4 +41,11 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  get resultsNavigationInfo(): NavigationInfo {
+    return RESULTS_NAVIGATION_INFO;
+  }
+
+  get queryNavigationInfo(): NavigationInfo {
+    return QUERY_NAVIGATION_INFO;
+  }
 }

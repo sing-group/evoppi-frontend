@@ -21,7 +21,7 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
     selector: 'app-query',
@@ -29,7 +29,6 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./query.component.scss']
 })
 export class QueryComponent implements OnInit {
-
     constructor() {
     }
 

@@ -31,7 +31,6 @@ import {Router} from '@angular/router';
     styleUrls: ['./form-same-species.component.scss']
 })
 export class FormSameSpeciesComponent implements OnInit {
-
     constructor(private snackBar: MatSnackBar, private router: Router) {
     }
 
@@ -42,9 +41,7 @@ export class FormSameSpeciesComponent implements OnInit {
         const snackBar = this.snackBar.open('Same species interactions requested', 'Go to results', {
             duration: 5000
         });
-        snackBar.onAction().subscribe(() => {
-            this.router.navigateByUrl('/results');
-        });
+        snackBar.onAction().subscribe(() => this.router.navigate(['results']));
     }
 
 }

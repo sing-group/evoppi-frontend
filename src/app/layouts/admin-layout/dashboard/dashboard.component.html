@@ -51,7 +51,7 @@
                         you can go to Query section.
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-outline-primary" routerLink="/query">Go to Query</button>
+                        <button class="btn btn-outline-primary" [routerLink]="queryNavigationInfo.path">Go to Query</button>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                         status and access the results if finished.
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-outline-primary" routerLink="/results">Go to Results</button>
+                        <button class="btn btn-outline-primary" [routerLink]="resultsNavigationInfo.path">Go to Results</button>
                     </div>
                 </div>
             </div>

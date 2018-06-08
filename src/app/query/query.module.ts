@@ -22,26 +22,49 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import {ADMIN_LAYOUT_ROUTES} from './admin-layout.routing';
+import {
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatSnackBarModule,
+    MatTabsModule,
+    MatTooltipModule
+} from '@angular/material';
 
-import {DashboardComponent} from './dashboard/dashboard.component';
-
-import {ResultsModule} from '../../results/results.module';
-import {QueryModule} from '../../query/query.module';
+import {QueryComponent} from './query.component';
+import {FormDistinctSpeciesComponent} from './form-distinct-species/form-distinct-species.component';
+import {FormSameSpeciesComponent} from './form-same-species/form-same-species.component';
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule.forChild(ADMIN_LAYOUT_ROUTES),
-        QueryModule,
-        ResultsModule
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatSliderModule,
+        MatTabsModule,
+        MatTooltipModule
     ],
     declarations: [
-        DashboardComponent
+        QueryComponent,
+        FormDistinctSpeciesComponent,
+        FormSameSpeciesComponent
+    ],
+    exports: [
+        QueryComponent,
+        FormDistinctSpeciesComponent,
+        FormSameSpeciesComponent
     ]
 })
-export class AdminLayoutModule {
+export class QueryModule {
 }
