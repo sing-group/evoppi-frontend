@@ -2,7 +2,8 @@ import {animate, group, query, style, transition, trigger} from '@angular/animat
 
 export const routerTransition = trigger('routerTransition', [
     transition('results => results-table', [
-        query(':enter, :leave', style({position: 'fixed', width: '100%'}), {optional: true}),
+        query('.footer', style({opacity: 0})),
+        query(':enter, :leave', style({position: 'fixed', width: '100%', height: '100%'}), {optional: true}),
         group([
             query(':enter', [
                 style({transform: 'translateX(100%)'}),
@@ -12,10 +13,12 @@ export const routerTransition = trigger('routerTransition', [
                 style({transform: 'translateX(0%)'}),
                 animate('0.5s ease-in-out', style({transform: 'translateX(-100%)', opacity: 0.5}))
             ], {optional: true})
-        ])
+        ]),
+        query('.footer', style({opacity: 1}))
     ]),
     transition('results-table => results', [
-        query(':leave, :enter', style({position: 'fixed', width: '90%'}), {optional: true}),
+        query('.footer', style({opacity: 0})),
+        query(':leave, :enter', style({position: 'fixed', width: '100%', height: '100%'}), {optional: true}),
         group([
             query(':enter', [
                 style({transform: 'translateX(-100%)'}),
@@ -25,6 +28,7 @@ export const routerTransition = trigger('routerTransition', [
                 style({transform: 'translateX(0%)'}),
                 animate('0.5s ease-in-out', style({transform: 'translateX(100%)', opacity: 0.5}))
             ], {optional: true}),
-        ])
+        ]),
+        query('.footer', style({opacity: 1}))
     ])
 ]);
