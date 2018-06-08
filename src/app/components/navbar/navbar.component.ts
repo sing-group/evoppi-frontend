@@ -21,10 +21,11 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {RouteInfo, ROUTES} from '../sidebar/sidebar.component';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
+import {Components} from '../entities/RouteInfo';
+import RouteInfo = Components.RouteInfo;
 
 @Component({
     selector: 'app-navbar',
@@ -35,6 +36,8 @@ export class NavbarComponent implements OnInit {
 
     private sidebarVisible: boolean;
     private mobileMenuVisible = false;
+
+    @Input() public routes: RouteInfo[];
 
     @ViewChild('navbarToggler') private buttonToggleMenuReference: ElementRef;
     private layerHideBodyElement: HTMLElement;
@@ -94,7 +97,7 @@ export class NavbarComponent implements OnInit {
 
         let longestMatch = null;
 
-        for (const route of ROUTES) {
+        for (const route of this.routes) {
             if (title.startsWith(route.path)) {
                 if (longestMatch === null || longestMatch.path.length < route.path.length) {
                     longestMatch = route;

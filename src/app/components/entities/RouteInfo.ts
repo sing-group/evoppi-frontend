@@ -21,29 +21,14 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-
-import {FooterComponent} from './footer/footer.component';
-import {NavbarComponent} from './navbar/navbar.component';
-import {SidebarComponent} from './sidebar/sidebar.component';
-
-@NgModule({
-    imports: [
-        CommonModule,
-        RouterModule
-    ],
-    declarations: [
-        FooterComponent,
-        NavbarComponent,
-        SidebarComponent
-    ],
-    exports: [
-        FooterComponent,
-        NavbarComponent,
-        SidebarComponent
-    ]
-})
-export class ComponentsModule {
+export module Components {
+    export interface RouteInfo {
+        path: string;
+        title: string;
+        showInMenu: boolean;
+        icon?: string;
+        class?: string;
+        backRoute?: string;
+        backRouteTitle?: string;
+    }
 }

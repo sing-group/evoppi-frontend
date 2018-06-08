@@ -21,51 +21,9 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-
-export declare interface RouteInfo {
-    path: string;
-    title: string;
-    showInMenu: boolean;
-    icon?: string;
-    class?: string;
-    backRoute?: string;
-    backRouteTitle?: string;
-}
-
-export const ROUTES: RouteInfo[] = [
-    {path: '/dashboard', title: 'Dashboard', showInMenu: true, icon: 'dashboard'},
-    {path: '/query', title: 'Query', showInMenu: true, icon: 'search'},
-    {path: '/results', title: 'Results', showInMenu: true, icon: 'list'},
-    {
-        path: '/results/chart/same',
-        title: 'Same species results chart',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    },
-    {
-        path: '/results/chart/distinct',
-        title: 'Distinct species results chart',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    },
-    {
-        path: '/results/table/same',
-        title: 'Same species results table',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    },
-    {
-        path: '/results/table/distinct',
-        title: 'Distinct species results table',
-        showInMenu: false,
-        backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
-    }
-];
+import {Component, Input, OnInit} from '@angular/core';
+import {Components} from '../entities/RouteInfo';
+import RouteInfo = Components.RouteInfo;
 
 @Component({
     selector: 'app-sidebar',
@@ -73,13 +31,19 @@ export const ROUTES: RouteInfo[] = [
     styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-    menuItems: any[];
+    @Input() public routes: RouteInfo[];
+
+    private filteredRoutes: RouteInfo[];
 
     constructor() {
     }
 
     ngOnInit() {
-        this.menuItems = ROUTES.filter(menuItem => menuItem.showInMenu);
+        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
+    }
+
+    public get menuItems(): RouteInfo[] {
+        return this.filteredRoutes;
     }
 
     isMobileMenu() {

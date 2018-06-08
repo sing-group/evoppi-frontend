@@ -23,11 +23,11 @@
 
 <div class="wrapper">
     <div class="sidebar" data-color="primary" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
-        <app-sidebar></app-sidebar>
+        <app-sidebar [routes]="routes"></app-sidebar>
         <div class="sidebar-background" style="background-image: url(../assets/img/sidebar-4.jpg)"></div>
     </div>
     <div class="main-panel" [@routerTransition]="getState(outlet)">
-        <app-navbar></app-navbar>
+        <app-navbar [routes]="routes"></app-navbar>
         <router-outlet #outlet="outlet"></router-outlet>
         <app-footer></app-footer>
     </div>

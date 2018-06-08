@@ -28,6 +28,42 @@ import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
 import {routerTransition} from './router.animations';
+import {Components} from '../../components/entities/RouteInfo';
+import RouteInfo = Components.RouteInfo;
+
+const ROUTES = [
+    {path: '/dashboard', title: 'Dashboard', showInMenu: true, icon: 'dashboard'},
+    {path: '/query', title: 'Query', showInMenu: true, icon: 'search'},
+    {path: '/results', title: 'Results', showInMenu: true, icon: 'list'},
+    {
+        path: '/results/chart/same',
+        title: 'Same species results chart',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    },
+    {
+        path: '/results/chart/distinct',
+        title: 'Distinct species results chart',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    },
+    {
+        path: '/results/table/same',
+        title: 'Same species results table',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    },
+    {
+        path: '/results/table/distinct',
+        title: 'Distinct species results table',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    }
+];
 
 @Component({
     selector: 'app-admin-layout',
@@ -105,6 +141,10 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
 
     public getState(outlet) {
         return outlet.activatedRouteData.state;
+    }
+
+    public get routes(): RouteInfo[] {
+        return ROUTES;
     }
 
 }
