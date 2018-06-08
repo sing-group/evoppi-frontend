@@ -38,6 +38,20 @@ export const ROUTES: RouteInfo[] = [
     {path: '/query', title: 'Query', showInMenu: true, icon: 'search'},
     {path: '/results', title: 'Results', showInMenu: true, icon: 'list'},
     {
+        path: '/results/chart/same',
+        title: 'Same species results chart',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    },
+    {
+        path: '/results/chart/distinct',
+        title: 'Distinct species results chart',
+        showInMenu: false,
+        backRoute: '/results',
+        backRouteTitle: 'Go back to Results'
+    },
+    {
         path: '/results/table/same',
         title: 'Same species results table',
         showInMenu: false,

@@ -49,6 +49,8 @@ import {
     MatTabsModule,
     MatTooltipModule
 } from '@angular/material';
+import {ChartDistinctSpeciesComponent} from '../../results/chart-distinct-species/chart-distinct-species.component';
+import {ChartSameSpeciesComponent} from '../../results/chart-same-species/chart-same-species.component';
 
 @NgModule({
     imports: [
@@ -73,6 +75,8 @@ import {
         FormDistinctSpeciesComponent,
         FormSameSpeciesComponent,
         ResultsComponent,
+        ChartDistinctSpeciesComponent,
+        ChartSameSpeciesComponent,
         TableDistinctSpeciesComponent,
         TableSameSpeciesComponent
     ]

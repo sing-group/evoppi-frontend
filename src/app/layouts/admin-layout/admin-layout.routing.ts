@@ -28,6 +28,8 @@ import {QueryComponent} from '../../query/query.component';
 import {ResultsComponent} from '../../results/results.component';
 import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
 import {TableDistinctSpeciesComponent} from '../../results/table-distinct-species/table-distinct-species.component';
+import {ChartDistinctSpeciesComponent} from '../../results/chart-distinct-species/chart-distinct-species.component';
+import {ChartSameSpeciesComponent} from '../../results/chart-same-species/chart-same-species.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -74,7 +76,9 @@ export const AdminLayoutRoutes: Routes = [
     // }
     {path: 'dashboard', component: DashboardComponent},
     {path: 'query', component: QueryComponent},
-    {path: 'results', component: ResultsComponent, data: {state: 'results'}},
-    {path: 'results/table/distinct/:id', component: TableDistinctSpeciesComponent, data: {state: 'results-table'}},
-    {path: 'results/table/same/:id', component: TableSameSpeciesComponent, data: {state: 'results-table'}}
+    {path: 'results', component: ResultsComponent, data: {state: 'results-list'}},
+    {path: 'results/chart/distinct/:id', component: ChartDistinctSpeciesComponent, data: {state: 'results-detail'}},
+    {path: 'results/chart/same/:id', component: ChartSameSpeciesComponent, data: {state: 'results-detail'}},
+    {path: 'results/table/distinct/:id', component: TableDistinctSpeciesComponent, data: {state: 'results-detail'}},
+    {path: 'results/table/same/:id', component: TableSameSpeciesComponent, data: {state: 'results-detail'}}
 ];
