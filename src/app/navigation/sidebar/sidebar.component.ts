@@ -21,29 +21,32 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import {Component, Input, OnInit} from '@angular/core';
+import {Navigation} from '../navigation.module';
+import RouteInfo = Navigation.NavigationInfo;
 
-import {FooterComponent} from './footer/footer.component';
-import {NavbarComponent} from './navbar/navbar.component';
-import {SidebarComponent} from './sidebar/sidebar.component';
-
-@NgModule({
-    imports: [
-        CommonModule,
-        RouterModule
-    ],
-    declarations: [
-        FooterComponent,
-        NavbarComponent,
-        SidebarComponent
-    ],
-    exports: [
-        FooterComponent,
-        NavbarComponent,
-        SidebarComponent
-    ]
+@Component({
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.css']
 })
-export class ComponentsModule {
+export class SidebarComponent implements OnInit {
+    @Input() public routes: RouteInfo[];
+
+    private filteredRoutes: RouteInfo[];
+
+    constructor() {
+    }
+
+    ngOnInit() {
+        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
+    }
+
+    public get menuItems(): RouteInfo[] {
+        return this.filteredRoutes;
+    }
+
+    isMobileMenu() {
+        return window.screen.width <= 991;
+    };
 }

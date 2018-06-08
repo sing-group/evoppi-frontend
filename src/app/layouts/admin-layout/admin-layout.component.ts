@@ -28,8 +28,8 @@ import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
 import {routerTransition} from './router.animations';
-import {Components} from '../../components/entities/RouteInfo';
-import RouteInfo = Components.RouteInfo;
+import {Navigation} from '../../navigation/navigation.module';
+import NavigationInfo = Navigation.NavigationInfo;
 
 const ROUTES = [
     {path: '/dashboard', title: 'Dashboard', showInMenu: true, icon: 'dashboard'},
@@ -143,7 +143,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
         return outlet.activatedRouteData.state;
     }
 
-    public get routes(): RouteInfo[] {
+    public get routes(): NavigationInfo[] {
         return ROUTES;
     }
 

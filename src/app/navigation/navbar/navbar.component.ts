@@ -24,8 +24,8 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
-import {Components} from '../entities/RouteInfo';
-import RouteInfo = Components.RouteInfo;
+import {Navigation} from '../navigation.module';
+import RouteInfo = Navigation.NavigationInfo;
 
 @Component({
     selector: 'app-navbar',

@@ -21,32 +21,41 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Components} from '../entities/RouteInfo';
-import RouteInfo = Components.RouteInfo;
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
 
-@Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
+import {FooterComponent} from './footer/footer.component';
+import {NavbarComponent} from './navbar/navbar.component';
+import {SidebarComponent} from './sidebar/sidebar.component';
+
+export module Navigation {
+    export interface NavigationInfo {
+        path: string;
+        title: string;
+        showInMenu: boolean;
+        icon?: string;
+        class?: string;
+        backRoute?: string;
+        backRouteTitle?: string;
+    }
+}
+
+@NgModule({
+    imports: [
+        CommonModule,
+        RouterModule
+    ],
+    declarations: [
+        FooterComponent,
+        NavbarComponent,
+        SidebarComponent
+    ],
+    exports: [
+        FooterComponent,
+        NavbarComponent,
+        SidebarComponent
+    ]
 })
-export class SidebarComponent implements OnInit {
-    @Input() public routes: RouteInfo[];
-
-    private filteredRoutes: RouteInfo[];
-
-    constructor() {
-    }
-
-    ngOnInit() {
-        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
-    }
-
-    public get menuItems(): RouteInfo[] {
-        return this.filteredRoutes;
-    }
-
-    isMobileMenu() {
-        return window.screen.width <= 991;
-    };
+export class NavigationModule {
 }
