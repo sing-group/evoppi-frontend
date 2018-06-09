@@ -29,7 +29,8 @@ import {
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
 } from '@angular/material';
 
 import {ResultsComponent} from './results.component';
@@ -37,16 +38,16 @@ import {ChartDistinctSpeciesComponent} from './chart-distinct-species/chart-dist
 import {ChartSameSpeciesComponent} from './chart-same-species/chart-same-species.component';
 import {TableDistinctSpeciesComponent} from './table-distinct-species/table-distinct-species.component';
 import {TableSameSpeciesComponent} from './table-same-species/table-same-species.component';
-import {RESULTS_ROUTES} from './results.routing';
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule.forChild(RESULTS_ROUTES),
+        RouterModule,
         MatButtonModule,
         MatCardModule,
         MatIconModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatTooltipModule
     ],
     declarations: [
         ResultsComponent,

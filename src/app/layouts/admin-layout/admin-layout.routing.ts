@@ -26,32 +26,45 @@ import {Routes} from '@angular/router';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {QueryComponent} from '../../query/query.component';
 import {ResultsComponent} from '../../results/results.component';
-import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
 import {TableDistinctSpeciesComponent} from '../../results/table-distinct-species/table-distinct-species.component';
-import {ChartDistinctSpeciesComponent} from '../../results/chart-distinct-species/chart-distinct-species.component';
+import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
 import {ChartSameSpeciesComponent} from '../../results/chart-same-species/chart-same-species.component';
+import {ChartDistinctSpeciesComponent} from '../../results/chart-distinct-species/chart-distinct-species.component';
 
 export const ADMIN_LAYOUT_ROUTES: Routes = [
     {path: 'dashboard', component: DashboardComponent},
-    {path: 'query', component: QueryComponent, data: {resultsPath: '/results'}},
+    {path: 'query', component: QueryComponent, data: {resultsResource: 'results'}},
     {
-        path: 'results', component: ResultsComponent, data: {state: 'results-list'}, children: [
-            {
-                path: 'chart', redirectTo: '/results', children: [
-                    {path: 'distinct/:id', component: ChartDistinctSpeciesComponent, data: {state: 'results-detail'}},
-                    {path: 'same/:id', component: ChartSameSpeciesComponent, data: {state: 'results-detail'}},
-                ]
-            },
-            {
-                path: 'table', redirectTo: '/results', children: [
-
-                    {path: 'table/distinct/:id', component: TableDistinctSpeciesComponent, data: {state: 'results-detail'}},
-                    {path: 'table/same/:id', component: TableSameSpeciesComponent, data: {state: 'results-detail'}}
-                ]
-            }
-        ]
+        path: 'results',
+        component: ResultsComponent,
+        data: {
+            state: 'results-list',
+            chartDistinctSpeciesPath: '/results/chart/distinct/{0}',
+            chartSameSpeciesPath: '/results/chart/same/{0}',
+            tableDistinctSpeciesPath: '/results/table/distinct/{0}',
+            tableSameSpeciesPath: '/results/table/same/{0}'
+        }
+    },
+    {
+        path: 'results/chart/distinct/:id',
+        component: ChartDistinctSpeciesComponent,
+        data: {state: 'results-detail', resultsResource: 'results'}
+    },
+    {
+        path: 'results/chart/same/:id',
+        component: ChartSameSpeciesComponent,
+        data: {state: 'results-detail', resultsResource: 'results'}
+    },
+    {
+        path: 'results/table/distinct/:id',
+        component: TableDistinctSpeciesComponent,
+        data: {state: 'results-detail', resultsResource: 'results'}
+    },
+    {
+        path: 'results/table/same/:id',
+        component: TableSameSpeciesComponent,
+        data: {state: 'results-detail', resultsResource: 'results'}
     }
-
 ];
 
 

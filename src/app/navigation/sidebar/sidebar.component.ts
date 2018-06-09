@@ -24,6 +24,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Navigation} from '../navigation.module';
 import RouteInfo = Navigation.NavigationInfo;
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-sidebar',
@@ -35,7 +36,7 @@ export class SidebarComponent implements OnInit {
 
     private filteredRoutes: RouteInfo[];
 
-    constructor() {
+    constructor(private route: ActivatedRoute, private  router: Router) {
     }
 
     ngOnInit() {

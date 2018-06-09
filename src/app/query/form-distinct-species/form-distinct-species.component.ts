@@ -23,7 +23,7 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-form-distinct-species',
@@ -31,7 +31,7 @@ import {Router} from '@angular/router';
     styleUrls: ['./form-distinct-species.component.scss']
 })
 export class FormDistinctSpeciesComponent implements OnInit {
-    constructor(private snackBar: MatSnackBar, private router: Router) {
+    constructor(private snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute) {
     }
 
     ngOnInit() {
@@ -41,6 +41,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
         const snackBar = this.snackBar.open('Different species interactions requested', 'Go to results', {
             duration: 5000
         });
-        snackBar.onAction().subscribe(() => this.router.navigate(['results']));
+        snackBar.onAction().subscribe(() => this.router.navigate([
+            this.route.routeConfig.data.resultsResource
+        ]));
     }
 }

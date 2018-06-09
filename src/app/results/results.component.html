@@ -41,7 +41,7 @@
                                     Target Species
                                 </th>
                                 <th>
-                                    # Interactomes
+                                    #Interactomes
                                 </th>
                                 <th>
                                     Completion
@@ -54,55 +54,36 @@
                                 </th>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr *ngFor="let result of distinctSpeciesResults">
                                     <td>
-                                        Homo Sapiens
+                                        {{result.referenceSpecies}}
                                     </td>
                                     <td>
-                                        Drosophila melanogaster
+                                        {{result.targetSpecies}}
                                     </td>
                                     <td>
-                                        3 / 5
+                                        <span class="interactome-count" matTooltip="{{'Reference: ' + result.referenceInteractomes.join(', ')}}">
+                                            {{result.referenceInteractomes.length}}
+                                        </span>
+                                        /
+                                        <span class="interactome-count" matTooltip="{{'Target: ' + result.targetInteractomes.join(', ')}}">
+                                            {{result.targetInteractomes.length}}
+                                        </span>
                                     </td>
-                                    <td>
-                                        <mat-progress-bar mode="buffer" value="25" bufferValue="25"></mat-progress-bar>
+                                    <td *ngIf="result.progress < 1">
+                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100" [bufferValue]="result.progress * 100"></mat-progress-bar>
                                     </td>
-                                    <td>
-                                        Calculating interactome X interactions
-                                    </td>
-                                    <td>
-                                        <button mat-icon-button color="primary" routerLink="/results/table/distinct/abcdef-1234-5678-0000-abcdefghijkl">
-                                            <mat-icon aria-label="Show interacions">list</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="secondary" routerLink="/results/chart/distinct/abcdef-1234-5678-0000-abcdefghijkl">
-                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="warn">
-                                            <mat-icon aria-label="Delete">delete</mat-icon>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Homo Sapiens
-                                    </td>
-                                    <td>
-                                        Drosophila melanogaster
-                                    </td>
-                                    <td>
-                                        3 / 5
-                                    </td>
-                                    <td>
+                                    <td *ngIf="result.progress === 1">
                                         Completed
                                     </td>
                                     <td>
-                                        12,000 interactions found
+                                        {{result.status}}
                                     </td>
                                     <td>
-                                        <button mat-icon-button color="primary" routerLink="/results/table/distinct/abcdef-1234-5678-1111-abcdefghijkl">
+                                        <button mat-icon-button color="primary" routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="secondary" routerLink="/results/chart/distinct/abcdef-1234-5678-0000-abcdefghijkl">
+                                        <button mat-icon-button color="secondary" routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn">
@@ -130,7 +111,7 @@
                                     Species
                                 </th>
                                 <th>
-                                    # Interactomes
+                                    #Interactomes
                                 </th>
                                 <th>
                                     Completion
@@ -143,49 +124,29 @@
                                 </th>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr *ngFor="let result of sameSpeciesResults">
                                     <td>
-                                        Homo Sapiens
+                                        {{result.species}}
                                     </td>
                                     <td>
-                                        3
+                                        <span class="interactome-count" matTooltip="{{result.interactomes.join(', ')}}">
+                                            {{result.interactomes.length}}
+                                        </span>
                                     </td>
-                                    <td>
-                                        <mat-progress-bar mode="buffer" value="40" bufferValue="40"></mat-progress-bar>
+                                    <td *ngIf="result.progress < 1">
+                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100" [bufferValue]="result.progress * 100"></mat-progress-bar>
+                                    </td>
+                                    <td *ngIf="result.progress === 1">
+                                        Completed
                                     </td>
                                     <td>
                                         Calculating interactome X interactions
                                     </td>
                                     <td>
-                                        <button mat-icon-button color="primary" routerLink="/results/table/same/abcdef-1234-5678-0000-abcdefghijkl">
+                                        <button mat-icon-button color="primary" routerLink="{{getSameSpeciesTablePath(result.uuid)}}">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="secondary" routerLink="/results/chart/same/abcdef-1234-5678-0000-abcdefghijkl">
-                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="warn">
-                                            <mat-icon aria-label="Delete">delete</mat-icon>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Drosophila melanogaster
-                                    </td>
-                                    <td>
-                                        5
-                                    </td>
-                                    <td>
-                                        Completed
-                                    </td>
-                                    <td>
-                                        12,000 interactions found
-                                    </td>
-                                    <td>
-                                        <button mat-icon-button color="primary" routerLink="/results/table/same/abcdef-1234-5678-1111-abcdefghijkl">
-                                            <mat-icon aria-label="Show interacions">list</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="secondary" routerLink="/results/chart/same/abcdef-1234-5678-0000-abcdefghijkl">
+                                        <button mat-icon-button color="secondary" routerLink="{{getSameSpeciesChartPath(result.uuid)}}">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn">
