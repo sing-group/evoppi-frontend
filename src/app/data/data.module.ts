@@ -22,34 +22,22 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-
-import {ADMIN_LAYOUT_ROUTES} from './admin-layout.routing';
-
-import {DashboardComponent} from './dashboard/dashboard.component';
-
-import {ResultsModule} from '../../results/results.module';
-import {QueryModule} from '../../query/query.module';
-import {AuthenticationModule} from '../../authentication/authentication.module';
-import {ManagementModule} from '../../management/management.module';
-import {AdminGuard} from './security/admin.guard';
+import {InteractomeListComponent} from './interactome-list/interactome-list.component';
+import {SpeciesListComponent} from './species-list/species-list.component';
 
 @NgModule({
     imports: [
-        CommonModule,
-        RouterModule.forChild(ADMIN_LAYOUT_ROUTES),
-        QueryModule,
-        ResultsModule,
-        AuthenticationModule,
-        ManagementModule
-    ],
-    providers: [
-        AdminGuard
+        CommonModule
     ],
     declarations: [
-        DashboardComponent
+        InteractomeListComponent,
+        SpeciesListComponent
+    ],
+    exports: [
+        InteractomeListComponent,
+        SpeciesListComponent
     ]
 })
-export class AdminLayoutModule {
+export class DataModule {
 }

@@ -21,18 +21,30 @@
  *
  */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import {Component, OnInit} from '@angular/core';
+import {Navigation} from '../../navigation/navigation.module';
+import {QUERY_NAVIGATION_INFO, RESULTS_NAVIGATION_INFO} from '../main.navigation';
+import NavigationInfo = Navigation.NavigationInfo;
 
-import { AdminGuard } from './admin.guard';
+@Component({
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements OnInit {
 
-describe('AdminGuard', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [AdminGuard]
-    });
-  });
+    constructor() {
+    }
 
-  it('should ...', inject([AdminGuard], (guard: AdminGuard) => {
-    expect(guard).toBeTruthy();
-  }));
-});
+    ngOnInit() {
+
+    }
+
+    get resultsNavigationInfo(): NavigationInfo {
+        return RESULTS_NAVIGATION_INFO;
+    }
+
+    get queryNavigationInfo(): NavigationInfo {
+        return QUERY_NAVIGATION_INFO;
+    }
+}

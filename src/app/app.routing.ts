@@ -26,7 +26,8 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule, Routes} from '@angular/router';
 
-import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.component';
+import {MainComponent} from './main/main.component';
+import {MainModule} from './main/main.module';
 
 const routes: Routes = [
     {
@@ -35,10 +36,10 @@ const routes: Routes = [
         pathMatch: 'full',
     }, {
         path: '',
-        component: AdminLayoutComponent,
+        component: MainComponent,
         children: [{
             path: '',
-            loadChildren: './layouts/admin-layout/admin-layout.module#AdminLayoutModule'
+            loadChildren: () => MainModule
         }]
     }
 ];

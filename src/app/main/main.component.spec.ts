@@ -21,28 +21,28 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-@Injectable()
-export class AuthenticationService {
+import {MainComponent} from './main.component';
 
-    constructor() {
-    }
+describe('MainComponent', () => {
+    let component: MainComponent;
+    let fixture: ComponentFixture<MainComponent>;
 
-    public getUserName(): string {
-        // return null;
-        // return 'Administrator';
-        return 'Researcher';
-    }
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [MainComponent]
+        })
+            .compileComponents();
+    }));
 
-    public getUserRole(): string {
-        // return 'GUEST';
-        // return 'ADMIN';
-        return 'RESEARCHER';
-    }
+    beforeEach(() => {
+        fixture = TestBed.createComponent(MainComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-    public isGuest(): boolean {
-        // return true;
-        return false;
-    }
-}
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

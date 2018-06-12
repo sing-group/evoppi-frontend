@@ -27,19 +27,19 @@ import 'rxjs/add/operator/filter';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
-import {routerTransition} from './admin-layout.animations';
-import {Navigation} from '../../navigation/navigation.module';
+import {routerTransition} from './main.animations';
+import {Navigation} from '../navigation/navigation.module';
 import NavigationInfo = Navigation.NavigationInfo;
-import {ADMIN_LAYOUT_NAVIGATION_INFO} from './admin-layout.navigation';
-import {AuthenticationService} from '../../authentication/authentication.service';
+import {MAIN_NAVIGATION_INFO} from './main.navigation';
+import {AuthenticationService} from '../authentication/authentication.service';
 
 @Component({
     selector: 'app-admin-layout',
     animations: [ routerTransition ],
-    templateUrl: './admin-layout.component.html',
-    styleUrls: ['./admin-layout.component.scss']
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.scss']
 })
-export class AdminLayoutComponent implements OnInit, AfterViewInit {
+export class MainComponent implements OnInit, AfterViewInit {
     private _router: Subscription;
     private lastPoppedUrl: string;
     private yScrollStack: number[] = [];
@@ -100,7 +100,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
     }
 
     isWindows(): boolean {
-        return navigator.platform.indexOf('Win') > -1 ? true : false;
+        return navigator.platform.indexOf('Win') > -1;
     }
 
     isMac(): boolean {
@@ -112,7 +112,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
     }
 
     public get routes(): NavigationInfo[] {
-        return ADMIN_LAYOUT_NAVIGATION_INFO.filter(
+        return MAIN_NAVIGATION_INFO.filter(
             navigationInfo =>
                 navigationInfo.allowedRoles === undefined
                 || navigationInfo.allowedRoles.includes(this.authentication.getUserRole())

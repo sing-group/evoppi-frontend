@@ -23,28 +23,26 @@
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
 import {AppRoutingModule} from './app.routing';
-import {NavigationModule} from './navigation/navigation.module';
 
 import {AppComponent} from './app.component';
-import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.component';
 import {AuthenticationModule} from './authentication/authentication.module';
+import {BrowserModule} from '@angular/platform-browser';
+import {MainModule} from './main/main.module';
 
 @NgModule({
     imports: [
         AppRoutingModule,
         AuthenticationModule.forRoot(),
+        BrowserModule,
         BrowserAnimationsModule,
-        FormsModule,
-        NavigationModule,
+        MainModule,
         RouterModule
     ],
     declarations: [
-        AppComponent,
-        AdminLayoutComponent
+        AppComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -21,31 +21,18 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Navigation} from '../../../navigation/navigation.module';
-import NavigationInfo = Navigation.NavigationInfo;
-import {ADMIN_LAYOUT_NAVIGATION_INFO} from '../admin-layout.navigation';
-import {QUERY_NAVIGATION_INFO, RESULTS_NAVIGATION_INFO} from '../admin-layout.navigation';
+import {inject, TestBed} from '@angular/core/testing';
 
-@Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
-})
-export class DashboardComponent implements OnInit {
+import {ResearcherGuard} from './researcher.guard';
 
-  constructor() {
-  }
+describe('ResearcherGuard', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [ResearcherGuard]
+        });
+    });
 
-  ngOnInit() {
-
-  }
-
-  get resultsNavigationInfo(): NavigationInfo {
-    return RESULTS_NAVIGATION_INFO;
-  }
-
-  get queryNavigationInfo(): NavigationInfo {
-    return QUERY_NAVIGATION_INFO;
-  }
-}
+    it('should ...', inject([ResearcherGuard], (guard: ResearcherGuard) => {
+        expect(guard).toBeTruthy();
+    }));
+});

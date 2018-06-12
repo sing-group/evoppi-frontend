@@ -21,7 +21,7 @@
  *
  */
 
-import {Navigation} from '../../navigation/navigation.module';
+import {Navigation} from '../navigation/navigation.module';
 import NavigationInfo = Navigation.NavigationInfo;
 
 export const QUERY_NAVIGATION_INFO: NavigationInfo = {
@@ -30,7 +30,7 @@ export const QUERY_NAVIGATION_INFO: NavigationInfo = {
 export const RESULTS_NAVIGATION_INFO: NavigationInfo = {
     path: '/results', title: 'Results', showInMenu: true, icon: 'list'
 };
-export const ADMIN_LAYOUT_NAVIGATION_INFO: NavigationInfo[] = [
+export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
     {path: '/dashboard', title: 'Dashboard', showInMenu: true, icon: 'dashboard'},
     QUERY_NAVIGATION_INFO,
     RESULTS_NAVIGATION_INFO,
@@ -61,6 +61,20 @@ export const ADMIN_LAYOUT_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/results',
         backRouteTitle: 'Go back to Results'
+    },
+    {
+        path: '/species',
+        title: 'Species',
+        showInMenu: true,
+        icon: 'pets',
+        allowedRoles: [ 'RESEARCHER' ]
+    },
+    {
+        path: '/interactomes',
+        title: 'Interactomes',
+        showInMenu: true,
+        icon: 'repeat',
+        allowedRoles: [ 'RESEARCHER' ]
     },
     {
         path: '/management/users',

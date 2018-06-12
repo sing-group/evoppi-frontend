@@ -21,28 +21,18 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import {inject, TestBed} from '@angular/core/testing';
 
-@Injectable()
-export class AuthenticationService {
+import {AdminGuard} from './admin.guard';
 
-    constructor() {
-    }
+describe('AdminGuard', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [AdminGuard]
+        });
+    });
 
-    public getUserName(): string {
-        // return null;
-        // return 'Administrator';
-        return 'Researcher';
-    }
-
-    public getUserRole(): string {
-        // return 'GUEST';
-        // return 'ADMIN';
-        return 'RESEARCHER';
-    }
-
-    public isGuest(): boolean {
-        // return true;
-        return false;
-    }
-}
+    it('should ...', inject([AdminGuard], (guard: AdminGuard) => {
+        expect(guard).toBeTruthy();
+    }));
+});

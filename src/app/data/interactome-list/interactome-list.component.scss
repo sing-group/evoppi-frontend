@@ -1,4 +1,4 @@
-/*
+/*!
  *  EvoPPI Frontend
  *
  * Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
@@ -21,28 +21,3 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-
-@Injectable()
-export class AuthenticationService {
-
-    constructor() {
-    }
-
-    public getUserName(): string {
-        // return null;
-        // return 'Administrator';
-        return 'Researcher';
-    }
-
-    public getUserRole(): string {
-        // return 'GUEST';
-        // return 'ADMIN';
-        return 'RESEARCHER';
-    }
-
-    public isGuest(): boolean {
-        // return true;
-        return false;
-    }
-}

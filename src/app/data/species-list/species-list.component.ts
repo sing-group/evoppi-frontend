@@ -21,18 +21,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from '../../../authentication/authentication.service';
+import {Component, OnInit} from '@angular/core';
 
-@Injectable()
-export class AdminGuard implements CanActivateChild {
-    constructor(private authentication: AuthenticationService) {
+@Component({
+    selector: 'app-species-list',
+    templateUrl: './species-list.component.html',
+    styleUrls: ['./species-list.component.scss']
+})
+export class SpeciesListComponent implements OnInit {
+
+    constructor() {
     }
 
-    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        return this.authentication.getUserRole() === 'ADMIN'; // TODO: replace with a constant
+    ngOnInit() {
     }
 
 }

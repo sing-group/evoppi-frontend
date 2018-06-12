@@ -24,19 +24,22 @@
 import {Routes} from '@angular/router';
 
 import {DashboardComponent} from './dashboard/dashboard.component';
-import {QueryComponent} from '../../query/query.component';
-import {ResultsComponent} from '../../results/results.component';
-import {TableDistinctSpeciesComponent} from '../../results/table-distinct-species/table-distinct-species.component';
-import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
-import {ChartSameSpeciesComponent} from '../../results/chart-same-species/chart-same-species.component';
-import {ChartDistinctSpeciesComponent} from '../../results/chart-distinct-species/chart-distinct-species.component';
+import {QueryComponent} from '../query/query.component';
+import {ResultsComponent} from '../results/results.component';
+import {TableDistinctSpeciesComponent} from '../results/table-distinct-species/table-distinct-species.component';
+import {TableSameSpeciesComponent} from '../results/table-same-species/table-same-species.component';
+import {ChartSameSpeciesComponent} from '../results/chart-same-species/chart-same-species.component';
+import {ChartDistinctSpeciesComponent} from '../results/chart-distinct-species/chart-distinct-species.component';
 import {AdminGuard} from './security/admin.guard';
-import {UserManagementComponent} from '../../management/user-management/user-management.component';
-import {SpeciesManagementComponent} from '../../management/species-management/species-management.component';
-import {InteractomeManagementComponent} from '../../management/interactome-management/interactome-management.component';
+import {UserManagementComponent} from '../management/user-management/user-management.component';
+import {SpeciesManagementComponent} from '../management/species-management/species-management.component';
+import {InteractomeManagementComponent} from '../management/interactome-management/interactome-management.component';
+import {SpeciesListComponent} from '../data/species-list/species-list.component';
+import {ResearcherGuard} from './security/researcher.guard';
+import {InteractomeListComponent} from '../data/interactome-list/interactome-list.component';
 
-export const ADMIN_LAYOUT_ROUTES: Routes = [
-    {path: '', redirectTo: 'dashboard'},
+export const MAIN_ROUTES: Routes = [
+    {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
     {path: 'dashboard', component: DashboardComponent},
     {path: 'query', component: QueryComponent, data: {resultsResource: 'results'}},
     {
@@ -71,6 +74,16 @@ export const ADMIN_LAYOUT_ROUTES: Routes = [
         data: {state: 'results-detail', resultsResource: 'results'}
     },
     {
+        path: 'species',
+        component: SpeciesListComponent,
+        canActivate: [ResearcherGuard]
+    },
+    {
+        path: 'interactomes',
+        component: InteractomeListComponent,
+        canActivate: [ResearcherGuard]
+    },
+    {
         path: 'management',
         canActivateChild: [AdminGuard],
         children: [
@@ -89,9 +102,3 @@ export const ADMIN_LAYOUT_ROUTES: Routes = [
         ]
     }
 ];
-
-
-
-
-
-

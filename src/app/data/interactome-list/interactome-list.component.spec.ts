@@ -21,28 +21,28 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-@Injectable()
-export class AuthenticationService {
+import {InteractomeListComponent} from './interactome-list.component';
 
-    constructor() {
-    }
+describe('InteractomeListComponent', () => {
+    let component: InteractomeListComponent;
+    let fixture: ComponentFixture<InteractomeListComponent>;
 
-    public getUserName(): string {
-        // return null;
-        // return 'Administrator';
-        return 'Researcher';
-    }
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [InteractomeListComponent]
+        })
+            .compileComponents();
+    }));
 
-    public getUserRole(): string {
-        // return 'GUEST';
-        // return 'ADMIN';
-        return 'RESEARCHER';
-    }
+    beforeEach(() => {
+        fixture = TestBed.createComponent(InteractomeListComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-    public isGuest(): boolean {
-        // return true;
-        return false;
-    }
-}
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

@@ -21,28 +21,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-@Injectable()
-export class AuthenticationService {
+@Component({
+    selector: 'app-interactome-list',
+    templateUrl: './interactome-list.component.html',
+    styleUrls: ['./interactome-list.component.scss']
+})
+export class InteractomeListComponent implements OnInit {
 
     constructor() {
     }
 
-    public getUserName(): string {
-        // return null;
-        // return 'Administrator';
-        return 'Researcher';
+    ngOnInit() {
     }
 
-    public getUserRole(): string {
-        // return 'GUEST';
-        // return 'ADMIN';
-        return 'RESEARCHER';
-    }
-
-    public isGuest(): boolean {
-        // return true;
-        return false;
-    }
 }

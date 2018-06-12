@@ -21,28 +21,20 @@
  *
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {AuthenticationService} from '../../authentication/authentication.service';
 
-import {AdminLayoutComponent} from './admin-layout.component';
+@Injectable()
+export class ResearcherGuard implements CanActivate {
+    constructor(private authentication: AuthenticationService) {
+    }
 
-describe('AdminLayoutComponent', () => {
-    let component: AdminLayoutComponent;
-    let fixture: ComponentFixture<AdminLayoutComponent>;
-
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [AdminLayoutComponent]
-        })
-            .compileComponents();
-    }));
-
-    beforeEach(() => {
-        fixture = TestBed.createComponent(AdminLayoutComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
-});
+    canActivate(
+        next: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
+    ): Observable<boolean> | Promise<boolean> | boolean {
+        return this.authentication.getUserRole() === 'RESEARCHER'; // TODO: replace with a constant
+    }
+}
