@@ -22,34 +22,20 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-
-import {ADMIN_LAYOUT_ROUTES} from './admin-layout.routing';
-
-import {DashboardComponent} from './dashboard/dashboard.component';
-
-import {ResultsModule} from '../../results/results.module';
-import {QueryModule} from '../../query/query.module';
-import {AuthenticationModule} from '../../authentication/authentication.module';
-import {ManagementModule} from '../../management/management.module';
-import {AdminGuard} from './security/admin.guard';
+import {AuthenticationService} from './authentication.service';
+import {ModuleWithProviders} from '@angular/compiler/src/core';
 
 @NgModule({
     imports: [
-        CommonModule,
-        RouterModule.forChild(ADMIN_LAYOUT_ROUTES),
-        QueryModule,
-        ResultsModule,
-        AuthenticationModule,
-        ManagementModule
-    ],
-    providers: [
-        AdminGuard
-    ],
-    declarations: [
-        DashboardComponent
+        CommonModule
     ]
 })
-export class AdminLayoutModule {
+export class AuthenticationModule {
+    public static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: AuthenticationModule,
+            providers: [ AuthenticationService ]
+        }
+    }
 }

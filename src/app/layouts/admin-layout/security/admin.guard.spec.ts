@@ -21,33 +21,18 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Navigation} from '../navigation.module';
-import {ActivatedRoute, Router} from '@angular/router';
-import RouteInfo = Navigation.NavigationInfo;
+import { TestBed, async, inject } from '@angular/core/testing';
 
-@Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
-})
-export class SidebarComponent implements OnInit {
-    @Input() public routes: RouteInfo[];
+import { AdminGuard } from './admin.guard';
 
-    private filteredRoutes: RouteInfo[];
+describe('AdminGuard', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [AdminGuard]
+    });
+  });
 
-    constructor(private route: ActivatedRoute, private router: Router) {
-    }
-
-    ngOnInit() {
-        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
-    }
-
-    public get menuItems(): RouteInfo[] {
-        return this.filteredRoutes;
-    }
-
-    isMobileMenu() {
-        return window.screen.width <= 991;
-    };
-}
+  it('should ...', inject([AdminGuard], (guard: AdminGuard) => {
+    expect(guard).toBeTruthy();
+  }));
+});

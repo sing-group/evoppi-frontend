@@ -21,33 +21,23 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Navigation} from '../navigation.module';
-import {ActivatedRoute, Router} from '@angular/router';
-import RouteInfo = Navigation.NavigationInfo;
+import {Injectable} from '@angular/core';
 
-@Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
-})
-export class SidebarComponent implements OnInit {
-    @Input() public routes: RouteInfo[];
+@Injectable()
+export class AuthenticationService {
 
-    private filteredRoutes: RouteInfo[];
-
-    constructor(private route: ActivatedRoute, private router: Router) {
+    constructor() {
     }
 
-    ngOnInit() {
-        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
+    public getUserName(): string {
+        return null;
     }
 
-    public get menuItems(): RouteInfo[] {
-        return this.filteredRoutes;
+    public getUserRole(): string {
+        return 'GUEST';
     }
 
-    isMobileMenu() {
-        return window.screen.width <= 991;
-    };
+    public isGuest(): boolean {
+        return true;
+    }
 }

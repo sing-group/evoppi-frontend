@@ -21,33 +21,18 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Navigation} from '../navigation.module';
-import {ActivatedRoute, Router} from '@angular/router';
-import RouteInfo = Navigation.NavigationInfo;
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {AuthenticationService} from '../../../authentication/authentication.service';
 
-@Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
-})
-export class SidebarComponent implements OnInit {
-    @Input() public routes: RouteInfo[];
-
-    private filteredRoutes: RouteInfo[];
-
-    constructor(private route: ActivatedRoute, private router: Router) {
+@Injectable()
+export class AdminGuard implements CanActivateChild {
+    constructor(private authentication: AuthenticationService) {
     }
 
-    ngOnInit() {
-        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
+    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        return this.authentication.getUserRole() === 'ADMIN'; // TODO: replace with a constant
     }
 
-    public get menuItems(): RouteInfo[] {
-        return this.filteredRoutes;
-    }
-
-    isMobileMenu() {
-        return window.screen.width <= 991;
-    };
 }

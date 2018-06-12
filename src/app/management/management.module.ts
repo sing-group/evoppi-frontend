@@ -22,34 +22,27 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-
-import {ADMIN_LAYOUT_ROUTES} from './admin-layout.routing';
-
-import {DashboardComponent} from './dashboard/dashboard.component';
-
-import {ResultsModule} from '../../results/results.module';
-import {QueryModule} from '../../query/query.module';
-import {AuthenticationModule} from '../../authentication/authentication.module';
-import {ManagementModule} from '../../management/management.module';
-import {AdminGuard} from './security/admin.guard';
+import {UserManagementComponent} from './user-management/user-management.component';
+import {SpeciesManagementComponent} from './species-management/species-management.component';
+import {InteractomeManagementComponent} from './interactome-management/interactome-management.component';
+import {MatButtonModule} from '@angular/material';
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule.forChild(ADMIN_LAYOUT_ROUTES),
-        QueryModule,
-        ResultsModule,
-        AuthenticationModule,
-        ManagementModule
-    ],
-    providers: [
-        AdminGuard
+        MatButtonModule
     ],
     declarations: [
-        DashboardComponent
+        InteractomeManagementComponent,
+        SpeciesManagementComponent,
+        UserManagementComponent
+    ],
+    exports: [
+        InteractomeManagementComponent,
+        SpeciesManagementComponent,
+        UserManagementComponent
     ]
 })
-export class AdminLayoutModule {
+export class ManagementModule {
 }

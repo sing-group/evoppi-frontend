@@ -31,14 +31,16 @@ import {NavigationModule} from './navigation/navigation.module';
 
 import {AppComponent} from './app.component';
 import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.component';
+import {AuthenticationModule} from './authentication/authentication.module';
 
 @NgModule({
     imports: [
+        AppRoutingModule,
+        AuthenticationModule.forRoot(),
         BrowserAnimationsModule,
         FormsModule,
         NavigationModule,
-        RouterModule,
-        AppRoutingModule
+        RouterModule
     ],
     declarations: [
         AppComponent,

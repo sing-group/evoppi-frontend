@@ -30,8 +30,13 @@ import {TableDistinctSpeciesComponent} from '../../results/table-distinct-specie
 import {TableSameSpeciesComponent} from '../../results/table-same-species/table-same-species.component';
 import {ChartSameSpeciesComponent} from '../../results/chart-same-species/chart-same-species.component';
 import {ChartDistinctSpeciesComponent} from '../../results/chart-distinct-species/chart-distinct-species.component';
+import {AdminGuard} from './security/admin.guard';
+import {UserManagementComponent} from '../../management/user-management/user-management.component';
+import {SpeciesManagementComponent} from '../../management/species-management/species-management.component';
+import {InteractomeManagementComponent} from '../../management/interactome-management/interactome-management.component';
 
 export const ADMIN_LAYOUT_ROUTES: Routes = [
+    {path: '', redirectTo: 'dashboard'},
     {path: 'dashboard', component: DashboardComponent},
     {path: 'query', component: QueryComponent, data: {resultsResource: 'results'}},
     {
@@ -64,6 +69,24 @@ export const ADMIN_LAYOUT_ROUTES: Routes = [
         path: 'results/table/same/:id',
         component: TableSameSpeciesComponent,
         data: {state: 'results-detail', resultsResource: 'results'}
+    },
+    {
+        path: 'management',
+        canActivateChild: [AdminGuard],
+        children: [
+            {
+                path: 'users',
+                component: UserManagementComponent
+            },
+            {
+                path: 'species',
+                component: SpeciesManagementComponent
+            },
+            {
+                path: 'interactomes',
+                component: InteractomeManagementComponent
+            }
+        ]
     }
 ];
 

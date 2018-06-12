@@ -61,5 +61,26 @@ export const ADMIN_LAYOUT_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/results',
         backRouteTitle: 'Go back to Results'
+    },
+    {
+        path: '/management/users',
+        title: 'Users',
+        showInMenu: true,
+        icon: 'face',
+        allowedRoles: [ 'ADMIN' ]
+    },
+    {
+        path: '/management/species',
+        title: 'Species',
+        showInMenu: true,
+        icon: 'pets',
+        allowedRoles: [ 'ADMIN' ]
+    },
+    {
+        path: '/management/interactomes',
+        title: 'Interactomes',
+        showInMenu: true,
+        icon: 'repeat',
+        allowedRoles: [ 'ADMIN' ]
     }
 ];

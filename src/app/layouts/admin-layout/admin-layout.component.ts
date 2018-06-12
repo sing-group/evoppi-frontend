@@ -31,6 +31,7 @@ import {routerTransition} from './admin-layout.animations';
 import {Navigation} from '../../navigation/navigation.module';
 import NavigationInfo = Navigation.NavigationInfo;
 import {ADMIN_LAYOUT_NAVIGATION_INFO} from './admin-layout.navigation';
+import {AuthenticationService} from '../../authentication/authentication.service';
 
 @Component({
     selector: 'app-admin-layout',
@@ -43,7 +44,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
     private lastPoppedUrl: string;
     private yScrollStack: number[] = [];
 
-    constructor(public location: Location, private router: Router) {
+    constructor(public location: Location, private router: Router, private authentication: AuthenticationService) {
     }
 
     ngOnInit() {
@@ -111,7 +112,11 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
     }
 
     public get routes(): NavigationInfo[] {
-        return ADMIN_LAYOUT_NAVIGATION_INFO;
+        return ADMIN_LAYOUT_NAVIGATION_INFO.filter(
+            navigationInfo =>
+                navigationInfo.allowedRoles === undefined
+                || navigationInfo.allowedRoles.includes(this.authentication.getUserRole())
+        );
     }
 
 }

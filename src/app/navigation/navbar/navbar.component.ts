@@ -25,6 +25,7 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {Navigation} from '../navigation.module';
+import {AuthenticationService} from '../../authentication/authentication.service';
 import RouteInfo = Navigation.NavigationInfo;
 
 @Component({
@@ -42,7 +43,11 @@ export class NavbarComponent implements OnInit {
     @ViewChild('navbarToggler') private buttonToggleMenuReference: ElementRef;
     private layerHideBodyElement: HTMLElement;
 
-    constructor(private location: Location, private element: ElementRef, private router: Router) {
+    constructor(
+        private location: Location,
+        private router: Router,
+        private authentication: AuthenticationService
+    ) {
     }
 
     ngOnInit() {
@@ -108,6 +113,14 @@ export class NavbarComponent implements OnInit {
         return longestMatch;
     }
 
+    public isGuest(): boolean {
+        return this.authentication.isGuest();
+    }
+
+    public getUserName(): string {
+        return this.authentication.getUserName();
+    }
+
     sidebarOpen() {
         this.setButtonToggleMenuAsOpened(500);
 
@@ -151,7 +164,7 @@ export class NavbarComponent implements OnInit {
 
             setTimeout(() => this.layerHideBody.classList.add('visible'), 100);
 
-            this.layerHideBody.onclick = function() { // asign a function
+            this.layerHideBody.onclick = function () { // asign a function
                 this.body.classList.remove('nav-open');
                 this.mobileMenuVisible = false;
                 this.layerHideBody.classList.remove('visible');

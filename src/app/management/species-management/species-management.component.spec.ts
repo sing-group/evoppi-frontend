@@ -21,33 +21,28 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Navigation} from '../navigation.module';
-import {ActivatedRoute, Router} from '@angular/router';
-import RouteInfo = Navigation.NavigationInfo;
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-@Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
-})
-export class SidebarComponent implements OnInit {
-    @Input() public routes: RouteInfo[];
+import {SpeciesManagementComponent} from './species-management.component';
 
-    private filteredRoutes: RouteInfo[];
+describe('SpeciesManagementComponent', () => {
+    let component: SpeciesManagementComponent;
+    let fixture: ComponentFixture<SpeciesManagementComponent>;
 
-    constructor(private route: ActivatedRoute, private router: Router) {
-    }
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [SpeciesManagementComponent]
+        })
+            .compileComponents();
+    }));
 
-    ngOnInit() {
-        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
-    }
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SpeciesManagementComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-    public get menuItems(): RouteInfo[] {
-        return this.filteredRoutes;
-    }
-
-    isMobileMenu() {
-        return window.screen.width <= 991;
-    };
-}
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

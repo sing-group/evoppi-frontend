@@ -38,6 +38,7 @@ export module Navigation {
         class?: string;
         backRoute?: string;
         backRouteTitle?: string;
+        allowedRoles?: string[];
     }
 }
 
