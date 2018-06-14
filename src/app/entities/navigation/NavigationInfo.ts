@@ -21,36 +21,13 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
-
-import {MainComponent} from './modules/main/main.component';
-import {MainModule} from './modules/main/main.module';
-
-const routes: Routes = [
-    {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-    }, {
-        path: '',
-        component: MainComponent,
-        children: [{
-            path: '',
-            loadChildren: () => MainModule
-        }]
-    }
-];
-
-@NgModule({
-    imports: [
-        CommonModule,
-        BrowserModule,
-        RouterModule.forRoot(routes)
-    ],
-    exports: [],
-})
-export class AppRoutingModule {
+export interface NavigationInfo {
+    path: string;
+    title: string;
+    showInMenu: boolean;
+    icon?: string;
+    class?: string;
+    backRoute?: string;
+    backRouteTitle?: string;
+    allowedRoles?: string[];
 }

@@ -21,36 +21,32 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
+import {Component, Input, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {NavigationInfo} from '../../../entities';
 
-import {MainComponent} from './modules/main/main.component';
-import {MainModule} from './modules/main/main.module';
-
-const routes: Routes = [
-    {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-    }, {
-        path: '',
-        component: MainComponent,
-        children: [{
-            path: '',
-            loadChildren: () => MainModule
-        }]
-    }
-];
-
-@NgModule({
-    imports: [
-        CommonModule,
-        BrowserModule,
-        RouterModule.forRoot(routes)
-    ],
-    exports: [],
+@Component({
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.css']
 })
-export class AppRoutingModule {
+export class SidebarComponent implements OnInit {
+    @Input() public routes: NavigationInfo[];
+
+    private filteredRoutes: NavigationInfo[];
+
+    constructor(private route: ActivatedRoute, private router: Router) {
+    }
+
+    ngOnInit() {
+        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
+    }
+
+    public get menuItems(): NavigationInfo[] {
+        return this.filteredRoutes;
+    }
+
+    isMobileMenu() {
+        return window.screen.width <= 991;
+    };
 }

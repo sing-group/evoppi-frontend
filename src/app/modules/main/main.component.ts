@@ -28,10 +28,9 @@ import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
 import {routerTransition} from './main.animations';
-import {Navigation} from '../navigation/navigation.module';
-import NavigationInfo = Navigation.NavigationInfo;
 import {MAIN_NAVIGATION_INFO} from './main.navigation';
 import {AuthenticationService} from '../authentication/authentication.service';
+import {NavigationInfo} from '../../entities';
 
 @Component({
     selector: 'app-admin-layout',

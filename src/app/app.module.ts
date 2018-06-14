@@ -28,9 +28,9 @@ import {RouterModule} from '@angular/router';
 import {AppRoutingModule} from './app.routing';
 
 import {AppComponent} from './app.component';
-import {AuthenticationModule} from './authentication/authentication.module';
+import {AuthenticationModule} from './modules/authentication/authentication.module';
 import {BrowserModule} from '@angular/platform-browser';
-import {MainModule} from './main/main.module';
+import {MainModule} from './modules/main/main.module';
 
 @NgModule({
     imports: [

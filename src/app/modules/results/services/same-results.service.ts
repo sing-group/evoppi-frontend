@@ -21,36 +21,35 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
+import { Injectable } from '@angular/core';
+import {SameResult} from '../../../entities';
+import {of} from 'rxjs/observable/of';
+import {Observable} from 'rxjs/Observable';
 
-import {MainComponent} from './modules/main/main.component';
-import {MainModule} from './modules/main/main.module';
-
-const routes: Routes = [
+const SAME_RESULTS: SameResult[] = [
     {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-    }, {
-        path: '',
-        component: MainComponent,
-        children: [{
-            path: '',
-            loadChildren: () => MainModule
-        }]
+        uuid: 'a59f3e69-af3d-4fe8-8437-d7bb139f5459',
+        species: 'Homo sapiens',
+        interactomes: ['A', 'B', 'C'],
+        progress: 0.6,
+        status: 'Calculating interactome A interactions'
+    },
+    {
+        uuid: '42676d45-dbb5-4392-9c2d-b04b74e26c37',
+        species: 'Drosophila Melanogaster',
+        interactomes: ['W', 'X', 'Y', 'Z'],
+        progress: 1,
+        status: '1,234 interactions found'
     }
 ];
 
-@NgModule({
-    imports: [
-        CommonModule,
-        BrowserModule,
-        RouterModule.forRoot(routes)
-    ],
-    exports: [],
-})
-export class AppRoutingModule {
+@Injectable()
+export class SameResultsService {
+
+  constructor() { }
+
+    public getResults(): Observable<SameResult[]> {
+        return of(SAME_RESULTS);
+    }
+
 }

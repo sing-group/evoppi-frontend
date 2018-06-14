@@ -21,30 +21,6 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Navigation} from '../../navigation/navigation.module';
-import {QUERY_NAVIGATION_INFO, RESULTS_NAVIGATION_INFO} from '../main.navigation';
-import NavigationInfo = Navigation.NavigationInfo;
-
-@Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.css']
-})
-export class DashboardComponent implements OnInit {
-
-    constructor() {
-    }
-
-    ngOnInit() {
-
-    }
-
-    get resultsNavigationInfo(): NavigationInfo {
-        return RESULTS_NAVIGATION_INFO;
-    }
-
-    get queryNavigationInfo(): NavigationInfo {
-        return QUERY_NAVIGATION_INFO;
-    }
-}
+export * from './Interactome';
+export * from './Species';
+export * from './results';

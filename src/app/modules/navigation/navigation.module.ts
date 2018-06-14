@@ -25,44 +25,25 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 
-import {
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatTooltipModule
-} from '@angular/material';
-
-import {ResultsComponent} from './results.component';
-import {ChartDistinctSpeciesComponent} from './chart-distinct-species/chart-distinct-species.component';
-import {ChartSameSpeciesComponent} from './chart-same-species/chart-same-species.component';
-import {TableDistinctSpeciesComponent} from './table-distinct-species/table-distinct-species.component';
-import {TableSameSpeciesComponent} from './table-same-species/table-same-species.component';
+import {FooterComponent} from './footer/footer.component';
+import {NavbarComponent} from './navbar/navbar.component';
+import {SidebarComponent} from './sidebar/sidebar.component';
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
-        MatButtonModule,
-        MatCardModule,
-        MatIconModule,
-        MatProgressBarModule,
-        MatTooltipModule
+        RouterModule
     ],
     declarations: [
-        ResultsComponent,
-        ChartDistinctSpeciesComponent,
-        ChartSameSpeciesComponent,
-        TableDistinctSpeciesComponent,
-        TableSameSpeciesComponent
+        FooterComponent,
+        NavbarComponent,
+        SidebarComponent
     ],
     exports: [
-        ResultsComponent,
-        ChartDistinctSpeciesComponent,
-        ChartSameSpeciesComponent,
-        TableDistinctSpeciesComponent,
-        TableSameSpeciesComponent
+        FooterComponent,
+        NavbarComponent,
+        SidebarComponent
     ]
 })
-export class ResultsModule {
+export class NavigationModule {
 }

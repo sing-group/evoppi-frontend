@@ -21,8 +21,7 @@
  *
  */
 
-import {Navigation} from '../navigation/navigation.module';
-import NavigationInfo = Navigation.NavigationInfo;
+import {NavigationInfo} from '../../entities';
 
 export const QUERY_NAVIGATION_INFO: NavigationInfo = {
     path: '/query', title: 'Query', showInMenu: true, icon: 'search'

@@ -23,62 +23,9 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-
-export interface DistinctResults {
-    uuid: string,
-    referenceSpecies: string,
-    targetSpecies: string,
-    referenceInteractomes: string[],
-    targetInteractomes: string[],
-    progress: number,
-    status: string
-}
-
-export interface SameResults {
-    uuid: string,
-    species: string,
-    interactomes: string[],
-    progress: number,
-    status: string
-}
-
-const DISTINCT_RESULTS: DistinctResults[] = [
-    {
-        uuid: '3e61aab7-5e32-4c65-89ad-e837f1fb55bd',
-        referenceSpecies: 'Homo sapiens',
-        targetSpecies: 'Drosophila Melanogaster',
-        referenceInteractomes: ['A', 'B', 'C'],
-        targetInteractomes: ['X', 'Y', 'Z'],
-        progress: 0.6,
-        status: 'Calculating interactome X interactions'
-    },
-    {
-        uuid: '564163b7-d299-4a6b-9cbf-abf363d8906d',
-        referenceSpecies: 'Drosophila Melanogaster',
-        targetSpecies: 'Homo sapiens',
-        referenceInteractomes: ['A'],
-        targetInteractomes: ['W', 'X', 'Y', 'Z'],
-        progress: 1,
-        status: '12,000 interactions found'
-    }
-];
-
-const SAME_RESULTS: SameResults[] = [
-    {
-        uuid: 'a59f3e69-af3d-4fe8-8437-d7bb139f5459',
-        species: 'Homo sapiens',
-        interactomes: ['A', 'B', 'C'],
-        progress: 0.6,
-        status: 'Calculating interactome A interactions'
-    },
-    {
-        uuid: '42676d45-dbb5-4392-9c2d-b04b74e26c37',
-        species: 'Drosophila Melanogaster',
-        interactomes: ['W', 'X', 'Y', 'Z'],
-        progress: 1,
-        status: '1,234 interactions found'
-    }
-];
+import {DistinctResult, SameResult} from '../../entities';
+import {DistinctResultsService} from './services/distinct-results.service';
+import {SameResultsService} from './services/same-results.service';
 
 @Component({
     selector: 'app-results',
@@ -86,19 +33,27 @@ const SAME_RESULTS: SameResults[] = [
     styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
+    private sameResults: SameResult[];
+    private distinctResults: DistinctResult[];
 
-    constructor(private route: ActivatedRoute) {
+    constructor(
+        private route: ActivatedRoute,
+        private distinctResultsService: DistinctResultsService,
+        private sameResultsService: SameResultsService
+    ) {
     }
 
     ngOnInit() {
+        this.distinctResultsService.getResults().subscribe(results => this.distinctResults = results);
+        this.sameResultsService.getResults().subscribe(results => this.sameResults = results);
     }
 
-    get sameSpeciesResults(): SameResults[] {
-        return SAME_RESULTS;
+    get sameSpeciesResults(): SameResult[] {
+        return this.sameResults;
     }
 
-    get distinctSpeciesResults(): DistinctResults[] {
-        return DISTINCT_RESULTS;
+    get distinctSpeciesResults(): DistinctResult[] {
+        return this.distinctResults;
     }
 
     getDistinctSpeciesChartPath(uuid: string): string {

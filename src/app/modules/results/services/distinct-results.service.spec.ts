@@ -21,36 +21,18 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
+import { TestBed, inject } from '@angular/core/testing';
 
-import {MainComponent} from './modules/main/main.component';
-import {MainModule} from './modules/main/main.module';
+import { DistinctResultsService } from './distinct-results.service';
 
-const routes: Routes = [
-    {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-    }, {
-        path: '',
-        component: MainComponent,
-        children: [{
-            path: '',
-            loadChildren: () => MainModule
-        }]
-    }
-];
+describe('DistinctResultsService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [DistinctResultsService]
+    });
+  });
 
-@NgModule({
-    imports: [
-        CommonModule,
-        BrowserModule,
-        RouterModule.forRoot(routes)
-    ],
-    exports: [],
-})
-export class AppRoutingModule {
-}
+  it('should be created', inject([DistinctResultsService], (service: DistinctResultsService) => {
+    expect(service).toBeTruthy();
+  }));
+});

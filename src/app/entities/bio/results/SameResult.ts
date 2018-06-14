@@ -21,33 +21,10 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Navigation} from '../navigation.module';
-import {ActivatedRoute, Router} from '@angular/router';
-import RouteInfo = Navigation.NavigationInfo;
-
-@Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css']
-})
-export class SidebarComponent implements OnInit {
-    @Input() public routes: RouteInfo[];
-
-    private filteredRoutes: RouteInfo[];
-
-    constructor(private route: ActivatedRoute, private router: Router) {
-    }
-
-    ngOnInit() {
-        this.filteredRoutes = this.routes.filter(route => route.showInMenu);
-    }
-
-    public get menuItems(): RouteInfo[] {
-        return this.filteredRoutes;
-    }
-
-    isMobileMenu() {
-        return window.screen.width <= 991;
-    };
+export interface SameResult {
+    uuid: string,
+    species: string,
+    interactomes: string[],
+    progress: number,
+    status: string
 }

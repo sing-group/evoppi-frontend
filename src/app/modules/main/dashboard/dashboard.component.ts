@@ -21,36 +21,29 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {QUERY_NAVIGATION_INFO, RESULTS_NAVIGATION_INFO} from '../main.navigation';
+import {NavigationInfo} from '../../../entities';
 
-import {MainComponent} from './modules/main/main.component';
-import {MainModule} from './modules/main/main.module';
-
-const routes: Routes = [
-    {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-    }, {
-        path: '',
-        component: MainComponent,
-        children: [{
-            path: '',
-            loadChildren: () => MainModule
-        }]
-    }
-];
-
-@NgModule({
-    imports: [
-        CommonModule,
-        BrowserModule,
-        RouterModule.forRoot(routes)
-    ],
-    exports: [],
+@Component({
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css']
 })
-export class AppRoutingModule {
+export class DashboardComponent implements OnInit {
+
+    constructor() {
+    }
+
+    ngOnInit() {
+
+    }
+
+    get resultsNavigationInfo(): NavigationInfo {
+        return RESULTS_NAVIGATION_INFO;
+    }
+
+    get queryNavigationInfo(): NavigationInfo {
+        return QUERY_NAVIGATION_INFO;
+    }
 }

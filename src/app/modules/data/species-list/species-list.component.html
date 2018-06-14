@@ -1,0 +1,93 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~ Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+  ~ Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+  ~ Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+  ~ .
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h4 class="card-title ">Species List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>
+                                    Species
+                                </th>
+                                <th>
+                                    #Interactomes
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let result of []">
+                                    <td>
+                                        {{result.referenceSpecies}}
+                                    </td>
+                                    <td>
+                                        {{result.targetSpecies}}
+                                    </td>
+                                    <td>
+                                        <span class="interactome-count">
+                                            {{result.referenceInteractomes.length}}
+                                        </span>
+                                        /
+                                        <span class="interactome-count">
+                                            {{result.targetInteractomes.length}}
+                                        </span>
+                                    </td>
+                                    <td *ngIf="result.progress < 1">
+                                    </td>
+                                    <td *ngIf="result.progress === 1">
+                                        Completed
+                                    </td>
+                                    <td>
+                                        {{result.status}}
+                                    </td>
+                                    <td>
+                                        <!--button mat-icon-button color="primary"
+                                                routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}">
+                                            <mat-icon aria-label="Show interacions">list</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="secondary"
+                                                routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}">
+                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn">
+                                            <mat-icon aria-label="Delete">delete</mat-icon>
+                                        </button-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

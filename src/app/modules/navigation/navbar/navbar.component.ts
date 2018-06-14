@@ -24,9 +24,8 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
-import {Navigation} from '../navigation.module';
 import {AuthenticationService} from '../../authentication/authentication.service';
-import RouteInfo = Navigation.NavigationInfo;
+import {NavigationInfo} from '../../../entities';
 
 @Component({
     selector: 'app-navbar',
@@ -38,7 +37,7 @@ export class NavbarComponent implements OnInit {
     private sidebarVisible: boolean;
     private mobileMenuVisible = false;
 
-    @Input() public routes: RouteInfo[];
+    @Input() public routes: NavigationInfo[];
 
     @ViewChild('navbarToggler') private buttonToggleMenuReference: ElementRef;
     private layerHideBodyElement: HTMLElement;
@@ -94,7 +93,7 @@ export class NavbarComponent implements OnInit {
         }
     }
 
-    public get currentRoute(): RouteInfo {
+    public get currentRoute(): NavigationInfo {
         let title = this.location.prepareExternalUrl(this.location.path());
         if (title.charAt(0) === '#') {
             title = title.slice(2);
