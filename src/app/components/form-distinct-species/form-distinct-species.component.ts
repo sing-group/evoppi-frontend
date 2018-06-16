@@ -235,7 +235,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     for (const interactome of value.interactomes) {
       this.interactomeService.getInteractome(interactome.id)
-        .subscribe(res => this.interactomes[index].push(res));
+        .subscribe(res => this.interactomes[index].push(res),
+            err => {},
+          () => {
+          this.interactomes[index].sort((a, b) => a.name < b.name ? -1 : 1);
+        });
     }
   }
 

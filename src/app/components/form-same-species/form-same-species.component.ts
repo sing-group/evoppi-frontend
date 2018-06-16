@@ -225,6 +225,10 @@ export class FormSameSpeciesComponent implements OnInit {
       this.interactomeService.getInteractome(interactome.id)
         .subscribe(res => {
           this.interactomes.push(res);
+        },
+          err => {},
+          () => {
+          this.interactomes.sort((a, b) => a.name < b.name ? -1 : 1);
         });
     }
   }
