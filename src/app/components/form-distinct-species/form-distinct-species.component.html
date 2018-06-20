@@ -121,6 +121,9 @@
   </mat-card-content>
 </mat-card>
 
+<mat-card *ngIf="!showTable && paginatedDataSource.loading$ | async">
+  <mat-spinner class="app-spinner"></mat-spinner>
+</mat-card>
 <mat-card *ngIf="showTable">
   <mat-card-content>
     <mat-menu #exportMenu="matMenu">
