@@ -1,6 +1,6 @@
 {
   "name": "@evoppi/frontend",
-  "version": "1.0.0-alpha.17",
+  "version": "1.0.0-alpha.18",
   "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
   "author": {
@@ -71,7 +71,7 @@
     "@types/bootstrap": "3.3.32",
     "@types/chartist": "0.9.34",
     "@types/googlemaps": "^3.30.8",
-    "@types/jasmine": "2.5.38",
+    "@types/jasmine": "2.8.8",
     "@types/jquery": "1.10.31",
     "@types/node": "6.0.73",
     "codelyzer": "4.2.1",
