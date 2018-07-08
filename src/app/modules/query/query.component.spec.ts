@@ -24,14 +24,31 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {QueryComponent} from './query.component';
+import {FormDistinctSpeciesComponent} from './form-distinct-species/form-distinct-species.component';
+import {FormSameSpeciesComponent} from './form-same-species/form-same-species.component';
+import {
+    MatCardModule, MatInputModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule,
+    MatTabsModule
+} from '@angular/material';
+import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RouterStub} from '../../../testing/router-stub';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('QueryComponent', () => {
     let component: QueryComponent;
     let fixture: ComponentFixture<QueryComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [QueryComponent]
+            declarations: [QueryComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent],
+            imports: [NoopAnimationsModule, MatTabsModule, MatCardModule, MatOptionModule, MatSelectModule, MatSliderModule,
+                MatSnackBarModule, MatInputModule],
+            providers: [
+                { provide: Router, useClass: RouterStub},
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
         })
             .compileComponents();
     }));

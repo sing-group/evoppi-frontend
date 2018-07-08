@@ -24,6 +24,10 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {NavbarComponent} from './navbar.component';
+import {RouterTestingModule} from '@angular/router/testing';
+import {AuthenticationService} from '../../authentication/authentication.service';
+import {MAIN_NAVIGATION_INFO} from '../../main/main.navigation';
+import {Location} from '@angular/common';
 
 describe('NavbarComponent', () => {
     let component: NavbarComponent;
@@ -31,7 +35,9 @@ describe('NavbarComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [NavbarComponent]
+            declarations: [NavbarComponent],
+            imports: [RouterTestingModule],
+            providers: [AuthenticationService, Location]
         })
             .compileComponents();
     }));
@@ -39,6 +45,8 @@ describe('NavbarComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(NavbarComponent);
         component = fixture.componentInstance;
+        component.routes = MAIN_NAVIGATION_INFO;
+        component.routes.push({path: '/', title: 'Dashboard', showInMenu: true, icon: 'dashboard'});
         fixture.detectChanges();
     });
 

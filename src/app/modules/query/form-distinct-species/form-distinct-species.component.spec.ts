@@ -24,14 +24,29 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FormDistinctSpeciesComponent} from './form-distinct-species.component';
+import {
+    MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatSliderModule,
+    MatSnackBarModule
+} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RouterStub} from '../../../../testing/router-stub';
+import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('FormDistinctSpeciesComponent', () => {
     let component: FormDistinctSpeciesComponent;
     let fixture: ComponentFixture<FormDistinctSpeciesComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [FormDistinctSpeciesComponent]
+            declarations: [FormDistinctSpeciesComponent],
+            imports: [NoopAnimationsModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule, MatButtonModule,
+                MatInputModule],
+            providers: [
+                { provide: Router, useClass: RouterStub},
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
         })
             .compileComponents();
     }));

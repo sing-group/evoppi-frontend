@@ -24,6 +24,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SidebarComponent} from './sidebar.component';
+import {RouterTestingModule} from '@angular/router/testing';
+import {MAIN_NAVIGATION_INFO} from '../../main/main.navigation';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
@@ -31,7 +33,8 @@ describe('SidebarComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [SidebarComponent]
+            declarations: [SidebarComponent],
+            imports: [RouterTestingModule]
         })
             .compileComponents();
     }));
@@ -39,6 +42,7 @@ describe('SidebarComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(SidebarComponent);
         component = fixture.componentInstance;
+        component.routes = MAIN_NAVIGATION_INFO;
         fixture.detectChanges();
     });
 

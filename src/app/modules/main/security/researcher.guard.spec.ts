@@ -24,11 +24,12 @@
 import {inject, TestBed} from '@angular/core/testing';
 
 import {ResearcherGuard} from './researcher.guard';
+import {AuthenticationService} from '../../authentication/authentication.service';
 
 describe('ResearcherGuard', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [ResearcherGuard]
+            providers: [ResearcherGuard, AuthenticationService]
         });
     });
 

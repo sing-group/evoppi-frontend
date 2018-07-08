@@ -24,14 +24,28 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ResultsComponent} from './results.component';
+import {MatIconModule, MatProgressBarModule, MatSliderModule, MatTooltipModule} from '@angular/material';
+import {RouterTestingModule} from '@angular/router/testing';
+import {DistinctResultsService} from './services/distinct-results.service';
+import {SameResultsService} from './services/same-results.service';
+import {of} from 'rxjs/observable/of';
+import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RouterStub} from '../../../testing/router-stub';
 
 describe('ResultsComponent', () => {
     let component: ResultsComponent;
     let fixture: ComponentFixture<ResultsComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ResultsComponent]
+            declarations: [ResultsComponent],
+            imports: [RouterTestingModule, MatTooltipModule, MatSliderModule, MatProgressBarModule, MatIconModule],
+            providers: [DistinctResultsService, SameResultsService,
+                { provide: Router, useClass: RouterStub},
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
         })
             .compileComponents();
     }));
@@ -42,7 +56,9 @@ describe('ResultsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it('should create', async(() => {
+        spyOn((<any>component).distinctResultsService, 'getResults').and.returnValue(of([]));
+        spyOn((<any>component).sameResultsService, 'getResults').and.returnValue(of([]));
         expect(component).toBeTruthy();
-    });
+    }));
 });

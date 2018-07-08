@@ -24,14 +24,25 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FormSameSpeciesComponent} from './form-same-species.component';
+import {MatInputModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule} from '@angular/material';
+import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RouterStub} from '../../../../testing/router-stub';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('FormSameSpeciesComponent', () => {
     let component: FormSameSpeciesComponent;
     let fixture: ComponentFixture<FormSameSpeciesComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [FormSameSpeciesComponent]
+            declarations: [FormSameSpeciesComponent],
+            imports: [NoopAnimationsModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule, MatInputModule],
+            providers: [
+                { provide: Router, useClass: RouterStub},
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
         })
             .compileComponents();
     }));
