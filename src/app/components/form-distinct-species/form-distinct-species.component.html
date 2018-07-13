@@ -181,7 +181,10 @@
           </ng-container>
           <ng-container matColumnDef="ReferenceInteractome">
             <mat-header-cell *matHeaderCellDef>
-              <span *ngFor="let ri of referenceInteractomes">{{ri.name}} ({{ri.species.name}})</span>
+              <span *ngFor="let isFirst=first; let ri of referenceInteractomes; let isLast=last">
+                {{isFirst ? ri.species.name + ':' : ''}}
+                {{ri.name}}{{isLast ?  '': ','}}
+              </span>
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngIf="row.referenceDegree !== ''">Degree {{row.referenceDegree}}</div>
@@ -189,7 +192,10 @@
           </ng-container>
           <ng-container matColumnDef="TargetInteractome">
             <mat-header-cell *matHeaderCellDef>
-              <span *ngFor="let ti of targetInteractomes">{{ti.name}} ({{ti.species.name}})</span>
+              <span *ngFor="let isFirst=first; let ti of targetInteractomes; let isLast=last">
+                {{isFirst ? ti.species.name + ':' : ''}}
+                {{ti.name}}{{isLast ?  '': ','}}
+              </span>
             </mat-header-cell>
             <mat-cell *matCellDef="let row">
               <div *ngFor="let degree of row.targetDegrees">Degree {{degree}}</div>
