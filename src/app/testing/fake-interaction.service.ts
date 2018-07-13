@@ -213,12 +213,24 @@ export class FakeInteractionService extends InteractionService {
     'referenceInteractomes': [
       {
         'id': 1,
-        'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/1'
+        'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/1',
+        'species': {
+          'id': 1,
+          'name': 'Drosophila melanogaster',
+          'uri': '',
+          'interactomes': [],
+        }
       }],
     'targetInteractomes': [
       {
         'id': 2,
-        'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/2'
+        'uri': 'http://192.168.0.16:8080/evoppi/rest/api/interactome/2',
+        'species': {
+          'id': 2,
+          'name': 'Homo sapiens',
+          'uri': '',
+          'interactomes': [],
+        }
       }],
   };
 
