@@ -29,7 +29,10 @@ import {Interactome} from '../../interfaces/interactome';
 import {GeneService} from '../../services/gene.service';
 import {InteractionService} from '../../services/interaction.service';
 import {Interaction} from '../../interfaces/interaction';
-import {MatDialog, MatPaginator, MatSelectionList, MatSort, MatTab, MatTabChangeEvent, MatTableDataSource} from '@angular/material';
+import {
+  MatCheckboxChange, MatDialog, MatPaginator, MatSelectionList, MatSort, MatTab, MatTabChangeEvent,
+  MatTableDataSource
+} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Link} from '../../classes/link';
 import {Node} from '../../classes/node';
@@ -96,6 +99,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
   permalink: string;
   processing = false;
+  collapseInteractomes = false;
 
   constructor(private speciesService: SpeciesService, private interactomeService: InteractomeService, private domSanitizer: DomSanitizer,
               private geneService: GeneService, private interactionService: InteractionService, private formBuilder: FormBuilder,
@@ -301,8 +305,12 @@ export class FormSameSpeciesComponent implements OnInit {
         this.paginatedDataSource.load(uri);
         this.paginatedDataSource.loading$.subscribe((res) => {
           if (res === false) {
-            this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
-              ...workRes.interactomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
+            if (this.collapseInteractomes) {
+              this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'Interactomes'];
+            } else {
+              this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
+                ...workRes.interactomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
+            }
             this.showTable = true;
           }
         });
@@ -368,14 +376,18 @@ export class FormSameSpeciesComponent implements OnInit {
               interaction.geneA, interaction.firstNameA,
               interaction.geneB, interaction.firstNameB,
             ];
-          res.interactomes.forEach((resInteractome) => {
-            const index: number = interaction.interactomeDegrees.findIndex((degree) => degree.id === resInteractome.id);
-            if (index !== -1) {
-              csvRow.push(interaction.interactomeDegrees[index].degree);
-            } else {
-              csvRow.push('');
-            }
-          });
+          if (this.collapseInteractomes) {
+            csvRow.push(interaction.interactomeDegrees.map(interactomeDegree => interactomeDegree.degree).join(','));
+          } else {
+            res.interactomes.forEach((resInteractome) => {
+              const index: number = interaction.interactomeDegrees.findIndex((degree) => degree.id === resInteractome.id);
+              if (index !== -1) {
+                csvRow.push(interaction.interactomeDegrees[index].degree);
+              } else {
+                csvRow.push('');
+              }
+            });
+          }
           csvData.push(csvRow);
 
         }
@@ -383,10 +395,16 @@ export class FormSameSpeciesComponent implements OnInit {
         this.nodes = nodes;
         this.links = links;
 
-        const headers: string[] = ['Gene A', 'Name A', 'Gene B', 'Name B',
-          ...res.interactomes.map( resInteractome => resInteractome.name)];
-        this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
-          ...res.interactomes.map( resInteractome => 'Interactome-' + resInteractome.id.toString())];
+        let headers: string[];
+        if (this.collapseInteractomes) {
+          headers = ['Gene A', 'Name A', 'Gene B', 'Name B', 'Interactomes'];
+          this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'Interactomes'];
+        } else {
+          headers = ['Gene A', 'Name A', 'Gene B', 'Name B',
+            ...res.interactomes.map( resInteractome => resInteractome.name)];
+          this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
+            ...res.interactomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
+        }
 
         this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
           CsvHelper.getCSV(headers, csvData)
@@ -453,6 +471,16 @@ export class FormSameSpeciesComponent implements OnInit {
   onPrepareCSV() {
     if (!this.processing && !this.fullResultAvailable) {
       this.getResult(this.resultUrl);
+    }
+  }
+
+  onCollapseInteractomes(event: MatCheckboxChange) {
+    this.collapseInteractomes = event.checked;
+    if (this.collapseInteractomes) {
+      this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'Interactomes'];
+    } else {
+      this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
+        ...this.resInteractomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
     }
   }
 }
