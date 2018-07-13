@@ -36,3 +36,7 @@ a {
 .app-spinner {
   margin: 0 auto;
 }
+
+.app-checkbox {
+  padding-left: 10px;
+}
