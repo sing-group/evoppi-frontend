@@ -377,7 +377,12 @@ export class FormSameSpeciesComponent implements OnInit {
               interaction.geneB, interaction.firstNameB,
             ];
           if (this.collapseInteractomes) {
-            csvRow.push(interaction.interactomeDegrees.map(interactomeDegree => interactomeDegree.degree).join(','));
+            const degrees = interaction.interactomeDegrees.map(interactomeDegree => interactomeDegree.degree)
+              .filter((filterItem, position, self) => self.indexOf(filterItem) === position) // Removes duplicates
+              .sort()
+              .join(',');
+
+            csvRow.push(degrees);
           } else {
             res.interactomes.forEach((resInteractome) => {
               const index: number = interaction.interactomeDegrees.findIndex((degree) => degree.id === resInteractome.id);

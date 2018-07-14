@@ -154,16 +154,9 @@
           <ng-container matColumnDef="Interactomes">
             <mat-header-cell *matHeaderCellDef>Interactomes</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <div *ngIf="row.interactomeDegrees.length === 1">
-                Degree
-                <span *ngFor="let degree of row.interactomeDegrees">
-                  {{degree.degree}}
-                </span>
-              </div>
-              <div *ngIf="row.interactomeDegrees.length > 1">
-                Degrees:
-                <span *ngFor="let degree of row.interactomeDegrees; let isLast=last">
-                  {{degree.degree}}{{isLast ? '': ','}}
+              <div *ngIf="row.distinctDegrees.length > 0">
+                <span *ngFor="let degree of row.distinctDegrees; let isLast=last">
+                  {{degree}}{{isLast ? '': ', '}}
                 </span>
               </div>
             </mat-cell>

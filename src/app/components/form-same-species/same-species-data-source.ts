@@ -59,7 +59,10 @@ export class SameSpeciesDataSource implements DataSource<Interaction> {
               firstNameA: res.interactions.genes.find(gene => gene.geneId === item.geneA).defaultName,
               geneB: item.geneB,
               firstNameB: res.interactions.genes.find(gene => gene.geneId === item.geneB).defaultName,
-              interactomeDegrees: item.interactomeDegrees
+              interactomeDegrees: item.interactomeDegrees,
+              distinctDegrees: item.interactomeDegrees.map(intDegree => intDegree.degree)
+                .filter((filterItem, position, self) => self.indexOf(filterItem) === position) // Removes duplicates
+                .sort()
             };
             return row;
           });
