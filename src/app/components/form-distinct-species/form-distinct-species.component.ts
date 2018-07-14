@@ -46,6 +46,7 @@ import {DistinctSpeciesDataSource} from './distinct-species-data-source';
 import {tap} from 'rxjs/operators';
 import {OrderField} from '../../enums/order-field.enum';
 import {SortDirection} from '../../enums/sort-direction.enum';
+import {WorkResultManager} from './work-result-manager';
 
 @Component({
   selector: 'app-form-distinct-species',
@@ -323,6 +324,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
     this.processing = true;
     this.interactionService.getInteractionResult(uri)
       .subscribe((res) => {
+        const workManager = new WorkResultManager(res);
+
         this.lastQueryMaxDegree = res.queryMaxDegree;
         this.referenceInteractomes = res.referenceInteractomes;
         this.targetInteractomes = res.targetInteractomes;
@@ -354,37 +357,6 @@ export class FormDistinctSpeciesComponent implements OnInit {
         const links = [];
         const csvData = [];
 
-        const getOrthologs = referenceGene => res.interactions.blastResults.filter(blast => blast.qseqid === referenceGene)
-          .map(blast => blast.sseqid)
-          .filter((item, position, self) => self.indexOf(item) === position); // Removes duplicates
-
-        const getInteractionsOf = (geneA, geneB, interactions) =>
-          interactions.filter(interaction =>
-            (interaction.geneA === geneA && interaction.geneB === geneB)
-            || (interaction.geneA === geneB && interaction.geneB === geneA)
-          );
-
-        const getReferenceInteractionOf = (geneA, geneB) => {
-          const interactions = getInteractionsOf(geneA, geneB, this.referenceInteraction);
-
-          return interactions.length === 1 ? interactions[0] : null;
-        };
-        const getTargetInteractionsOf = (geneA, geneB) => getInteractionsOf(geneA, geneB, this.targetInteraction);
-
-        const getTargetInteractionsOfReferenceGenes = (geneA, geneB) => {
-          const orthologsA = getOrthologs(geneA);
-          const orthologsB = getOrthologs(geneB);
-
-          let interactions = [];
-          for (const orthologA of orthologsA) {
-            for (const orthologB of orthologsB) {
-              interactions = interactions.concat(getTargetInteractionsOf(orthologA, orthologB));
-            }
-          }
-
-          return interactions;
-        };
-
         const geneIds = res.interactions.referenceGenes.map(gene => gene.geneId)
           .sort((idA, idB) => idA - idB);
 
@@ -393,8 +365,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
             const geneAId = geneIds[i];
             const geneBId = geneIds[j];
 
-            const referenceInteraction = getReferenceInteractionOf(geneAId, geneBId);
-            const targetInteractions = getTargetInteractionsOfReferenceGenes(geneAId, geneBId);
+            const referenceInteraction = workManager.getReferenceInteractionOf(geneAId, geneBId);
+            const targetInteractions = workManager.getTargetInteractionsOf(geneAId, geneBId);
             const inReference = referenceInteraction !== null;
             const inTarget = targetInteractions.length > 0;
 
@@ -407,7 +379,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
               if (inReference) {
                 type = 1;
                 interactomes.push(res.referenceInteractomes.map(x => x.id));
-                referenceDegree = referenceInteraction.interactomeDegrees[0].degree;
+                referenceDegree = String(referenceInteraction.interactomeDegrees[0].degree);
               }
 
               if (inTarget) {
