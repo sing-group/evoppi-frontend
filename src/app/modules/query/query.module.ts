@@ -23,37 +23,24 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-import {
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSliderModule,
-    MatSnackBarModule,
-    MatTabsModule,
-    MatTooltipModule
-} from '@angular/material';
-
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {QueryComponent} from './query.component';
 import {FormDistinctSpeciesComponent} from './form-distinct-species/form-distinct-species.component';
 import {FormSameSpeciesComponent} from './form-same-species/form-same-species.component';
+import {MaterialDesignModule} from '../material-design/material-design.module';
+import {DataModule} from '../data/data.module';
+import {SpeciesService} from '../results/services/species.service';
+import {InteractomeService} from '../results/services/interactome.service';
+import {InteractionService} from '../results/services/interaction.service';
+import {GeneService} from '../results/services/gene.service';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
-        MatButtonModule,
-        MatCardModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        MatSnackBarModule,
-        MatSliderModule,
-        MatTabsModule,
-        MatTooltipModule
+        ReactiveFormsModule,
+        MaterialDesignModule,
+        DataModule
     ],
     declarations: [
         QueryComponent,
@@ -64,6 +51,12 @@ import {FormSameSpeciesComponent} from './form-same-species/form-same-species.co
         QueryComponent,
         FormDistinctSpeciesComponent,
         FormSameSpeciesComponent
+    ],
+    providers: [
+        SpeciesService,
+        InteractomeService,
+        InteractionService,
+        GeneService
     ]
 })
 export class QueryModule {

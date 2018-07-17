@@ -24,14 +24,18 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FormDistinctSpeciesComponent} from './form-distinct-species.component';
-import {
-    MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatSliderModule,
-    MatSnackBarModule
-} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterStub} from '../../../../testing/router-stub';
 import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+import {ReactiveFormsModule} from '@angular/forms';
+import {AutocompleteComponent} from '../../data/autocomplete/autocomplete.component';
+import {SpeciesService} from '../../results/services/species.service';
+import {HttpClientModule} from '@angular/common/http';
+import {InteractomeService} from '../../results/services/interactome.service';
+import {InteractionService} from '../../results/services/interaction.service';
+import {GeneService} from '../../results/services/gene.service';
 
 describe('FormDistinctSpeciesComponent', () => {
     let component: FormDistinctSpeciesComponent;
@@ -40,10 +44,10 @@ describe('FormDistinctSpeciesComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [FormDistinctSpeciesComponent],
-            imports: [NoopAnimationsModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule, MatButtonModule,
-                MatInputModule],
+            declarations: [FormDistinctSpeciesComponent, AutocompleteComponent],
+            imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientModule],
             providers: [
+                SpeciesService, InteractomeService, InteractionService, GeneService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]

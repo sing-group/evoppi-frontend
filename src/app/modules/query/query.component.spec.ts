@@ -26,14 +26,18 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {QueryComponent} from './query.component';
 import {FormDistinctSpeciesComponent} from './form-distinct-species/form-distinct-species.component';
 import {FormSameSpeciesComponent} from './form-same-species/form-same-species.component';
-import {
-    MatCardModule, MatInputModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule,
-    MatTabsModule
-} from '@angular/material';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterStub} from '../../../testing/router-stub';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MaterialDesignModule} from '../material-design/material-design.module';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AutocompleteComponent} from '../data/autocomplete/autocomplete.component';
+import {SpeciesService} from '../results/services/species.service';
+import {HttpClientModule} from '@angular/common/http';
+import {InteractomeService} from '../results/services/interactome.service';
+import {InteractionService} from '../results/services/interaction.service';
+import {GeneService} from '../results/services/gene.service';
 
 describe('QueryComponent', () => {
     let component: QueryComponent;
@@ -42,10 +46,10 @@ describe('QueryComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [QueryComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent],
-            imports: [NoopAnimationsModule, MatTabsModule, MatCardModule, MatOptionModule, MatSelectModule, MatSliderModule,
-                MatSnackBarModule, MatInputModule],
+            declarations: [QueryComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, AutocompleteComponent],
+            imports: [NoopAnimationsModule, MaterialDesignModule, FormsModule, ReactiveFormsModule, HttpClientModule],
             providers: [
+                SpeciesService, InteractomeService, InteractionService, GeneService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]
