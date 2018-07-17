@@ -26,11 +26,11 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {finalize, mergeMap} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-import {WorkResultManager} from './work-result-manager';
-import {Interaction} from '../../../entities/bio/Interaction';
-import {InteractionService} from '../../results/services/interaction.service';
+import {WorkResultManager} from '../../query/form-distinct-species/work-result-manager';
+import {InteractionService} from '../services/interaction.service';
 import {OrderField} from '../../../enums/order-field.enum';
 import {SortDirection} from '../../../enums/sort-direction.enum';
+import {Interaction} from '../../../entities/bio';
 
 export class DistinctSpeciesDataSource implements DataSource<Interaction> {
 
