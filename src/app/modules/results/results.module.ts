@@ -24,15 +24,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-
-import {
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatTooltipModule
-} from '@angular/material';
-
 import {ResultsComponent} from './results.component';
 import {ChartDistinctSpeciesComponent} from './chart-distinct-species/chart-distinct-species.component';
 import {ChartSameSpeciesComponent} from './chart-same-species/chart-same-species.component';
@@ -40,16 +31,15 @@ import {TableDistinctSpeciesComponent} from './table-distinct-species/table-dist
 import {TableSameSpeciesComponent} from './table-same-species/table-same-species.component';
 import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
+import {HttpClientModule} from '@angular/common/http';
+import {MaterialDesignModule} from '../material-design/material-design.module';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
-        MatButtonModule,
-        MatCardModule,
-        MatIconModule,
-        MatProgressBarModule,
-        MatTooltipModule
+        MaterialDesignModule,
+        HttpClientModule
     ],
     declarations: [
         ResultsComponent,
