@@ -21,28 +21,31 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {InteractomeListComponent} from './interactome-list/interactome-list.component';
-import {SpeciesListComponent} from './species-list/species-list.component';
-import {AutocompleteComponent} from './autocomplete/autocomplete.component';
-import {MaterialDesignModule} from '../material-design/material-design.module';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-@NgModule({
-    imports: [
-        CommonModule,
-        MaterialDesignModule
-    ],
-    declarations: [
-        InteractomeListComponent,
-        SpeciesListComponent,
-        AutocompleteComponent
-    ],
-    exports: [
-        InteractomeListComponent,
-        SpeciesListComponent,
-        AutocompleteComponent
-    ]
-})
-export class DataModule {
-}
+import { AutocompleteComponent } from './autocomplete.component';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+
+describe('AutocompleteComponent', () => {
+  let component: AutocompleteComponent;
+  let fixture: ComponentFixture<AutocompleteComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ AutocompleteComponent ],
+      imports: [MaterialDesignModule],
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AutocompleteComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+  /*
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+  */
+});

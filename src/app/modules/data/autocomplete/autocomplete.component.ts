@@ -21,28 +21,32 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {InteractomeListComponent} from './interactome-list/interactome-list.component';
-import {SpeciesListComponent} from './species-list/species-list.component';
-import {AutocompleteComponent} from './autocomplete/autocomplete.component';
-import {MaterialDesignModule} from '../material-design/material-design.module';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-@NgModule({
-    imports: [
-        CommonModule,
-        MaterialDesignModule
-    ],
-    declarations: [
-        InteractomeListComponent,
-        SpeciesListComponent,
-        AutocompleteComponent
-    ],
-    exports: [
-        InteractomeListComponent,
-        SpeciesListComponent,
-        AutocompleteComponent
-    ]
+@Component({
+  selector: 'app-autocomplete',
+  templateUrl: './autocomplete.component.html',
+  styleUrls: ['./autocomplete.component.css']
 })
-export class DataModule {
+export class AutocompleteComponent implements OnInit {
+
+  @Input()
+  public title: string;
+  @Input()
+  public subtitle: string;
+  @Input()
+  public names: Array<{source: string, names: Array<string>}>;
+
+  @Output()
+  public radioSelected: EventEmitter<number> = new EventEmitter<number>();
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  onChange(value) {
+    this.radioSelected.emit(value);
+  }
+
 }
