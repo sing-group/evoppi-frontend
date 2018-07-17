@@ -22,5 +22,6 @@
  */
 
 export const environment = {
-    production: true
+    production: true,
+    evoppiUrl: 'http://evoppi.sing-group.org/evoppi-backend/rest/'
 };
