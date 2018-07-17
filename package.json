@@ -1,6 +1,6 @@
 {
   "name": "@evoppi/frontend",
-  "version": "1.0.0-alpha.20",
+  "version": "1.0.0-alpha.21",
   "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
   "author": {
@@ -63,7 +63,8 @@
     "popper.js": "1.14.3",
     "rxjs": "5.5.10",
     "web-animations-js": "2.3.1",
-    "zone.js": "0.8.26"
+    "zone.js": "0.8.26",
+    "d3": "4.13.0"
   },
   "devDependencies": {
     "@angular/compiler-cli": "5.2.9",
@@ -86,6 +87,7 @@
     "protractor": "5.3.1",
     "ts-node": "5.0.1",
     "tslint": "5.9.1",
-    "typescript": "2.4.2"
+    "typescript": "2.4.2",
+    "@types/d3": "4.13.0"
   }
 }
