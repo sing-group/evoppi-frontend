@@ -21,11 +21,32 @@
  *
  */
 
-export * from './Interactome';
-export * from './Species';
-export * from './results';
-export * from './Gene';
-export * from './GeneInfo';
-export * from './GeneNames';
-export * from './Interaction';
-export * from './InteractomeDegree';
+
+import {BlastResult} from '../bio/results/BlastResult';
+import {Gene, Interaction, Interactome} from '../bio';
+
+export interface WorkResult {
+  id: string;
+  queryGene: number;
+  queryMaxDegree: number;
+  status: string;
+  interactions: {
+    blastResults?: BlastResult[],
+    filteringOptions?: object,
+    interactions: Interaction[],
+    result?: {id: string, uri: string},
+    // Same species
+    genes?: Gene[]
+    // Distinct species
+    referenceGenes?: Gene[],
+    targetGenes?: Gene[],
+  };
+  totalInteractions?: number;
+
+  // Same species
+  interactomes?: Interactome[];
+
+  // Distinct species
+  referenceInteractomes?: Interactome[];
+  targetInteractomes?: Interactome[];
+}

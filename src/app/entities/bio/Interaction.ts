@@ -21,11 +21,24 @@
  *
  */
 
-export * from './Interactome';
-export * from './Species';
-export * from './results';
-export * from './Gene';
-export * from './GeneInfo';
-export * from './GeneNames';
-export * from './Interaction';
-export * from './InteractomeDegree';
+
+import {InteractomeDegree} from './InteractomeDegree';
+import {GeneInfo} from './GeneInfo';
+import {BlastResult} from './results/BlastResult';
+
+export interface Interaction {
+  geneA: number;
+  geneB: number;
+  interactomeDegrees?: InteractomeDegree[];
+  referenceDegree?: number;
+  targetDegrees?: number[];
+  code?: string;
+  geneInfoA?: GeneInfo;
+  geneInfoB?: GeneInfo;
+  firstNameA?: string;
+  firstNameB?: string;
+  typeA?: number;
+  typeB?: number;
+  blastResultsA?: BlastResult[];
+  blastResultsB?: BlastResult[];
+}

@@ -21,11 +21,18 @@
  *
  */
 
-export * from './Interactome';
-export * from './Species';
-export * from './results';
-export * from './Gene';
-export * from './GeneInfo';
-export * from './GeneNames';
-export * from './Interaction';
-export * from './InteractomeDegree';
+
+import {Status} from './Status';
+import {Step} from './Step';
+
+export interface Work {
+  id: {id: string, uri: string};
+  name: string;
+  description: string;
+  creationDateTime: Date;
+  startDateTime: Date;
+  endDateTime: Date;
+  resultReference: string;
+  status: Status;
+  steps: Array<Step>;
+}

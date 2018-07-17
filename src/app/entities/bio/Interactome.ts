@@ -21,7 +21,11 @@
  *
  */
 
+import {Species} from './Species';
+
 export interface Interactome {
     id: number,
-    name: string
+    name?: string;
+    uri: string;
+    species?: Species;
 }

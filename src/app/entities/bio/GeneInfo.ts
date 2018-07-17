@@ -21,11 +21,9 @@
  *
  */
 
-export * from './Interactome';
-export * from './Species';
-export * from './results';
-export * from './Gene';
-export * from './GeneInfo';
-export * from './GeneNames';
-export * from './Interaction';
-export * from './InteractomeDegree';
+import {GeneNames} from './GeneNames';
+
+export interface GeneInfo {
+  geneId: number;
+  names: Array<GeneNames>;
+}

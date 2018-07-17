@@ -21,8 +21,11 @@
  *
  */
 
+import {Interactome} from './Interactome';
+
 export interface Species {
-    id: number,
-    name: string,
-    interactomes: number
+    id: number;
+    name: string;
+    uri: string;
+    interactomes: Interactome[];
 }

@@ -21,11 +21,21 @@
  *
  */
 
-export * from './Interactome';
-export * from './Species';
-export * from './results';
-export * from './Gene';
-export * from './GeneInfo';
-export * from './GeneNames';
-export * from './Interaction';
-export * from './InteractomeDegree';
+
+import {Interactome} from '../bio';
+
+export interface SummarizedWorkResult {
+  id: string;
+  queryGene: number;
+  queryMaxDegree: number;
+  status: string;
+  interactions: string;
+  totalInteractions?: number;
+
+  // Same species
+  interactomes?: Interactome[];
+
+  // Distinct species
+  referenceInteractomes?: Interactome[];
+  targetInteractomes?: Interactome[];
+}

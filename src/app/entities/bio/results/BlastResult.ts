@@ -21,11 +21,19 @@
  *
  */
 
-export * from './Interactome';
-export * from './Species';
-export * from './results';
-export * from './Gene';
-export * from './GeneInfo';
-export * from './GeneNames';
-export * from './Interaction';
-export * from './InteractomeDegree';
+export interface BlastResult {
+  qseqid: number;
+  qseqversion: number;
+  sseqid: number;
+  sseqversion: number;
+  pident: number;
+  length: number;
+  mismatch: number;
+  gapopen: number;
+  qstart: number;
+  qend: number;
+  sstart: number;
+  send: number;
+  evalue: string;
+  bitscore: number;
+}
