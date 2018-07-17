@@ -24,11 +24,18 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FormSameSpeciesComponent} from './form-same-species.component';
-import {MatInputModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule} from '@angular/material';
 import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterStub} from '../../../../testing/router-stub';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+import {ReactiveFormsModule} from '@angular/forms';
+import {AutocompleteComponent} from '../../data/autocomplete/autocomplete.component';
+import {SpeciesService} from '../../results/services/species.service';
+import {GeneService} from '../../results/services/gene.service';
+import {InteractionService} from '../../results/services/interaction.service';
+import {InteractomeService} from '../../results/services/interactome.service';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('FormSameSpeciesComponent', () => {
     let component: FormSameSpeciesComponent;
@@ -37,9 +44,10 @@ describe('FormSameSpeciesComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [FormSameSpeciesComponent],
-            imports: [NoopAnimationsModule, MatOptionModule, MatSelectModule, MatSliderModule, MatSnackBarModule, MatInputModule],
+            declarations: [FormSameSpeciesComponent, AutocompleteComponent],
+            imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientModule],
             providers: [
+                SpeciesService, GeneService, InteractionService, InteractomeService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]
