@@ -43,8 +43,8 @@ import {Work} from '../../../entities/execution/Work';
 import {SummarizedWorkResult} from '../../../entities/execution/SummarizedWorkResult';
 import {WorkResult} from '../../../entities/execution/WorkResult';
 import {ErrorHelper} from '../../../helpers/error.helper';
-import {SortDirection} from '../../../enums/sort-direction.enum';
-import {OrderField} from '../../../enums/order-field.enum';
+import {SortDirection} from '../../../entities/data/sort-direction.enum';
+import {OrderField} from '../../../entities/data/order-field.enum';
 
 
 @Injectable()
