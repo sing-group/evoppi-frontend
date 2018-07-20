@@ -21,9 +21,11 @@
  *
  */
 
-import {GeneNames} from './GeneNames';
+import {Species} from './species.model';
 
-export interface GeneInfo {
-  geneId: number;
-  names: Array<GeneNames>;
+export interface Interactome {
+    id: number,
+    name?: string;
+    uri: string;
+    species?: Species;
 }

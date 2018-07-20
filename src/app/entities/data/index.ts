@@ -21,11 +21,6 @@
  *
  */
 
-import {Species} from './Species';
-
-export interface Interactome {
-    id: number,
-    name?: string;
-    uri: string;
-    species?: Species;
-}
+export * from './sort-direction.enum';
+export * from './order-field.enum';
+export * from './role.enum';

@@ -22,7 +22,7 @@
  */
 
 import {NavigationInfo} from '../../entities';
-import {Role} from '../../entities/data/role.enum';
+import {Role} from '../../entities/data';
 
 export const QUERY_NAVIGATION_INFO: NavigationInfo = {
     path: '/query', title: 'Query', showInMenu: true, icon: 'search'

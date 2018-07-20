@@ -21,21 +21,9 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {Role} from '../../../entities/data';
+import {GeneNames} from './gene-names.model';
 
-@Injectable()
-export class ResearcherGuard implements CanActivate {
-    constructor(private authentication: AuthenticationService) {
-    }
-
-    canActivate(
-        next: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
-    ): Observable<boolean> | Promise<boolean> | boolean {
-        return this.authentication.getUserRole() === Role.RESEARCHER;
-    }
+export interface GeneInfo {
+  geneId: number;
+  names: Array<GeneNames>;
 }

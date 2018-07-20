@@ -22,7 +22,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Role} from '../../../entities/data/role.enum';
+import {Role} from '../../../entities/data';
 import {User} from '../../../entities/user';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';

@@ -21,7 +21,7 @@
  *
  */
 
-import {Role} from '../data/role.enum';
+import {Role} from '../data';
 
 export class User {
   private _authenticated: boolean;

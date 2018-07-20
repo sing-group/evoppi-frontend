@@ -21,11 +21,32 @@
  *
  */
 
-import {Interactome} from './Interactome';
 
-export interface Species {
-    id: number;
-    name: string;
-    uri: string;
-    interactomes: Interactome[];
+import {Gene, Interaction, Interactome} from '../bio';
+import {BlastResult} from '../bio/results';
+
+export interface WorkResult {
+  id: string;
+  queryGene: number;
+  queryMaxDegree: number;
+  status: string;
+  interactions: {
+    blastResults?: BlastResult[],
+    filteringOptions?: object,
+    interactions: Interaction[],
+    result?: {id: string, uri: string},
+    // Same species
+    genes?: Gene[]
+    // Distinct species
+    referenceGenes?: Gene[],
+    targetGenes?: Gene[],
+  };
+  totalInteractions?: number;
+
+  // Same species
+  interactomes?: Interactome[];
+
+  // Distinct species
+  referenceInteractomes?: Interactome[];
+  targetInteractomes?: Interactome[];
 }

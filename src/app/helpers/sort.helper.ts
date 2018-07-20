@@ -21,8 +21,7 @@
  *
  */
 
-import {Interaction} from '../entities/bio/Interaction';
-import {InteractomeDegree} from '../entities/bio/InteractomeDegree';
+import {Interaction, InteractomeDegree} from '../entities/bio';
 
 export class SortHelper {
   public static sortInteraction(data: Interaction, sortHeaderId: string): number | string {

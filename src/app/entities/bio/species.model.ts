@@ -21,18 +21,11 @@
  *
  */
 
+import {Interactome} from './interactome.model';
 
-import {Status} from './Status';
-import {Step} from './Step';
-
-export interface Work {
-  id: {id: string, uri: string};
-  name: string;
-  description: string;
-  creationDateTime: Date;
-  startDateTime: Date;
-  endDateTime: Date;
-  resultReference: string;
-  status: Status;
-  steps: Array<Step>;
+export interface Species {
+    id: number;
+    name: string;
+    uri: string;
+    interactomes: Interactome[];
 }

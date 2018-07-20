@@ -21,21 +21,23 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {Role} from '../../../entities/data';
+import {InteractomeDegree} from './interactome-degree.model';
+import {GeneInfo} from './gene-info.model';
+import {BlastResult} from './results';
 
-@Injectable()
-export class ResearcherGuard implements CanActivate {
-    constructor(private authentication: AuthenticationService) {
-    }
-
-    canActivate(
-        next: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
-    ): Observable<boolean> | Promise<boolean> | boolean {
-        return this.authentication.getUserRole() === Role.RESEARCHER;
-    }
+export interface Interaction {
+  geneA: number;
+  geneB: number;
+  interactomeDegrees?: InteractomeDegree[];
+  referenceDegree?: number;
+  targetDegrees?: number[];
+  code?: string;
+  geneInfoA?: GeneInfo;
+  geneInfoB?: GeneInfo;
+  firstNameA?: string;
+  firstNameB?: string;
+  typeA?: number;
+  typeB?: number;
+  blastResultsA?: BlastResult[];
+  blastResultsB?: BlastResult[];
 }

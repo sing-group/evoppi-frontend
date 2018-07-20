@@ -28,8 +28,7 @@ import {finalize, mergeMap} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 import {Interaction} from '../../../entities/bio';
 import {InteractionService} from '../services/interaction.service';
-import {OrderField} from '../../../entities/data/order-field.enum';
-import {SortDirection} from '../../../entities/data/sort-direction.enum';
+import {OrderField, SortDirection} from '../../../entities/data';
 
 export class SameSpeciesDataSource implements DataSource<Interaction> {
 

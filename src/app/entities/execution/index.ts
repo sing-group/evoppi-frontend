@@ -21,24 +21,8 @@
  *
  */
 
-
-import {InteractomeDegree} from './InteractomeDegree';
-import {GeneInfo} from './GeneInfo';
-import {BlastResult} from './results/BlastResult';
-
-export interface Interaction {
-  geneA: number;
-  geneB: number;
-  interactomeDegrees?: InteractomeDegree[];
-  referenceDegree?: number;
-  targetDegrees?: number[];
-  code?: string;
-  geneInfoA?: GeneInfo;
-  geneInfoB?: GeneInfo;
-  firstNameA?: string;
-  firstNameB?: string;
-  typeA?: number;
-  typeB?: number;
-  blastResultsA?: BlastResult[];
-  blastResultsB?: BlastResult[];
-}
+export * from './status.model';
+export * from './step.model';
+export * from './sumarized-work-result.model';
+export * from './work.model';
+export * from './work.result.model';

@@ -39,12 +39,9 @@ import {forkJoin} from 'rxjs/observable/forkJoin';
 import {environment} from '../../../../environments/environment';
 import {GeneService} from './gene.service';
 import {InteractomeService} from './interactome.service';
-import {Work} from '../../../entities/execution/Work';
-import {SummarizedWorkResult} from '../../../entities/execution/SummarizedWorkResult';
-import {WorkResult} from '../../../entities/execution/WorkResult';
 import {ErrorHelper} from '../../../helpers/error.helper';
-import {SortDirection} from '../../../entities/data/sort-direction.enum';
-import {OrderField} from '../../../entities/data/order-field.enum';
+import {OrderField, SortDirection} from '../../../entities/data';
+import {SummarizedWorkResult, Work, WorkResult} from '../../../entities/execution';
 
 
 @Injectable()

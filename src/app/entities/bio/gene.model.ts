@@ -22,7 +22,7 @@
  */
 
 
-import {IdUri} from './IdUri';
+import {IdUri} from './id-uri.model';
 
 export interface Gene {
   geneId: number;

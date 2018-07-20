@@ -21,4 +21,4 @@
  *
  */
 
-export * from './NavigationInfo';
+export * from './navigation-info.model';

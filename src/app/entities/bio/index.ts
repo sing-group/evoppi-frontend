@@ -21,11 +21,11 @@
  *
  */
 
-export * from './Interactome';
-export * from './Species';
+export * from './interactome.model';
+export * from './species.model';
 export * from './results';
-export * from './Gene';
-export * from './GeneInfo';
-export * from './GeneNames';
-export * from './Interaction';
-export * from './InteractomeDegree';
+export * from './gene.model';
+export * from './gene-info.model';
+export * from './gene-names.model';
+export * from './interaction.model';
+export * from './interactome-degree.model';

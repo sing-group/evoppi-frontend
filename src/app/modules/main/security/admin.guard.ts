@@ -24,7 +24,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot} from '@angular/router';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {Role} from '../../../entities/data/role.enum';
+import {Role} from '../../../entities/data';
 
 @Injectable()
 export class AdminGuard implements CanActivateChild {

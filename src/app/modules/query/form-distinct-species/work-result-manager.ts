@@ -21,8 +21,9 @@
  *
  */
 
-import {WorkResult} from '../../../entities/execution/WorkResult';
-import {Interaction} from '../../../entities/bio/Interaction';
+
+import {WorkResult} from '../../../entities/execution';
+import {Interaction} from '../../../entities/bio';
 
 export class WorkResultManager {
   constructor(private result: WorkResult) {

@@ -21,32 +21,17 @@
  *
  */
 
+import {Status} from './status.model';
+import {Step} from './step.model';
 
-import {BlastResult} from '../bio/results/BlastResult';
-import {Gene, Interaction, Interactome} from '../bio';
-
-export interface WorkResult {
-  id: string;
-  queryGene: number;
-  queryMaxDegree: number;
-  status: string;
-  interactions: {
-    blastResults?: BlastResult[],
-    filteringOptions?: object,
-    interactions: Interaction[],
-    result?: {id: string, uri: string},
-    // Same species
-    genes?: Gene[]
-    // Distinct species
-    referenceGenes?: Gene[],
-    targetGenes?: Gene[],
-  };
-  totalInteractions?: number;
-
-  // Same species
-  interactomes?: Interactome[];
-
-  // Distinct species
-  referenceInteractomes?: Interactome[];
-  targetInteractomes?: Interactome[];
+export interface Work {
+  id: {id: string, uri: string};
+  name: string;
+  description: string;
+  creationDateTime: Date;
+  startDateTime: Date;
+  endDateTime: Date;
+  resultReference: string;
+  status: Status;
+  steps: Array<Step>;
 }

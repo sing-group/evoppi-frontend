@@ -21,5 +21,6 @@
  *
  */
 
-export * from './DistinctResult';
-export * from './SameResult';
+export * from './distinct-result.model';
+export * from './same-result.model';
+export * from './blast-result.model';
