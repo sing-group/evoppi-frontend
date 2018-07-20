@@ -29,7 +29,7 @@ import {Subscription} from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
 import {routerTransition} from './main.animations';
 import {MAIN_NAVIGATION_INFO} from './main.navigation';
-import {AuthenticationService} from '../authentication/authentication.service';
+import {AuthenticationService} from '../authentication/services/authentication.service';
 import {NavigationInfo} from '../../entities';
 
 @Component({

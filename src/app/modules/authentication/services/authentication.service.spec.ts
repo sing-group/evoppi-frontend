@@ -21,28 +21,20 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import {inject, TestBed} from '@angular/core/testing';
 
-@Injectable()
-export class AuthenticationService {
+import {AuthenticationService} from './authentication.service';
+import {HttpClientModule} from '@angular/common/http';
 
-    constructor() {
-    }
+describe('AuthenticationService', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [AuthenticationService],
+            imports: [HttpClientModule]
+        });
+    });
 
-    public getUserName(): string {
-        // return null;
-        // return 'Administrator';
-        return 'Researcher';
-    }
-
-    public getUserRole(): string {
-        // return 'GUEST';
-        // return 'ADMIN';
-        return 'RESEARCHER';
-    }
-
-    public isGuest(): boolean {
-        // return true;
-        return false;
-    }
-}
+    it('should be created', inject([AuthenticationService], (service: AuthenticationService) => {
+        expect(service).toBeTruthy();
+    }));
+});

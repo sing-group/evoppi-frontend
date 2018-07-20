@@ -24,7 +24,8 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from '../../authentication/authentication.service';
+import {AuthenticationService} from '../../authentication/services/authentication.service';
+import {Role} from '../../../entities/data/role.enum';
 
 @Injectable()
 export class ResearcherGuard implements CanActivate {
@@ -35,6 +36,6 @@ export class ResearcherGuard implements CanActivate {
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean> | Promise<boolean> | boolean {
-        return this.authentication.getUserRole() === 'RESEARCHER'; // TODO: replace with a constant
+        return this.authentication.getUserRole() === Role.RESEARCHER;
     }
 }

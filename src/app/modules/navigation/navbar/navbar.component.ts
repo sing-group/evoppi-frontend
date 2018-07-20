@@ -24,7 +24,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
-import {AuthenticationService} from '../../authentication/authentication.service';
+import {AuthenticationService} from '../../authentication/services/authentication.service';
 import {NavigationInfo} from '../../../entities';
 
 @Component({

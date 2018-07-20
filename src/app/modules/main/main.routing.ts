@@ -37,6 +37,7 @@ import {InteractomeManagementComponent} from '../management/interactome-manageme
 import {SpeciesListComponent} from '../data/species-list/species-list.component';
 import {ResearcherGuard} from './security/researcher.guard';
 import {InteractomeListComponent} from '../data/interactome-list/interactome-list.component';
+import {LoginComponent} from '../authentication/login/login.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -100,5 +101,16 @@ export const MAIN_ROUTES: Routes = [
                 component: InteractomeManagementComponent
             }
         ]
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
+        data: {state: 'login'}
+    },
+    {
+        path: 'logout',
+        component: LoginComponent,
+        canActivateChild: [AdminGuard],
+        data: {state: 'logout'}
     }
 ];

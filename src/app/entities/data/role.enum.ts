@@ -21,18 +21,9 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot} from '@angular/router';
-import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {Role} from '../../../entities/data/role.enum';
-
-@Injectable()
-export class AdminGuard implements CanActivateChild {
-    constructor(private authentication: AuthenticationService) {
-    }
-
-    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        return this.authentication.getUserRole() === Role.ADMIN;
-    }
-
+export enum Role {
+    GUEST = 'GUEST',
+    ADMIN = 'ADMIN',
+    RESEARCHER = 'RESEARCHER',
+    INVALID = 'INVALID'
 }

@@ -23,12 +23,23 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {AuthenticationService} from './authentication.service';
+import {AuthenticationService} from './services/authentication.service';
 import {ModuleWithProviders} from '@angular/compiler/src/core';
+import {LoginComponent} from './login/login.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MaterialDesignModule} from '../material-design/material-design.module';
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
+        MaterialDesignModule,
+        ReactiveFormsModule
+    ],
+    declarations: [
+        LoginComponent
+    ],
+    exports: [
+        LoginComponent
     ]
 })
 export class AuthenticationModule {

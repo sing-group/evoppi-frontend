@@ -22,6 +22,7 @@
  */
 
 import {NavigationInfo} from '../../entities';
+import {Role} from '../../entities/data/role.enum';
 
 export const QUERY_NAVIGATION_INFO: NavigationInfo = {
     path: '/query', title: 'Query', showInMenu: true, icon: 'search'
@@ -66,34 +67,50 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         title: 'Species',
         showInMenu: true,
         icon: 'pets',
-        allowedRoles: [ 'RESEARCHER' ]
+        allowedRoles: [ Role.RESEARCHER ]
     },
     {
         path: '/interactomes',
         title: 'Interactomes',
         showInMenu: true,
         icon: 'repeat',
-        allowedRoles: [ 'RESEARCHER' ]
+        allowedRoles: [ Role.RESEARCHER ]
     },
     {
         path: '/management/users',
         title: 'Users',
         showInMenu: true,
         icon: 'face',
-        allowedRoles: [ 'ADMIN' ]
+        allowedRoles: [ Role.ADMIN ]
     },
     {
         path: '/management/species',
         title: 'Species',
         showInMenu: true,
         icon: 'pets',
-        allowedRoles: [ 'ADMIN' ]
+        allowedRoles: [ Role.ADMIN ]
     },
     {
         path: '/management/interactomes',
         title: 'Interactomes',
         showInMenu: true,
         icon: 'repeat',
-        allowedRoles: [ 'ADMIN' ]
+        allowedRoles: [ Role.ADMIN ]
+    },
+    {
+        path: '/login',
+        title: 'Login',
+        showInMenu: false,
+        backRoute: '/dashboard',
+        icon: 'lock_open',
+        allowedRoles: [ Role.GUEST ]
+    },
+    {
+        path: '/logout',
+        title: 'Logout',
+        showInMenu: false,
+        backRoute: '/dashboard',
+        icon: 'lock_close',
+        allowedRoles: [ Role.GUEST ]
     }
 ];

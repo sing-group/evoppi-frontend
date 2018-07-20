@@ -28,7 +28,7 @@ import {SidebarComponent} from '../navigation/sidebar/sidebar.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {NavbarComponent} from '../navigation/navbar/navbar.component';
 import {FooterComponent} from '../navigation/footer/footer.component';
-import {AuthenticationService} from '../authentication/authentication.service';
+import {AuthenticationService} from '../authentication/services/authentication.service';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MainComponent', () => {

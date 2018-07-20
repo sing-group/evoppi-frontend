@@ -22,32 +22,37 @@
  */
 
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {NavbarComponent} from './navbar.component';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {MAIN_NAVIGATION_INFO} from '../../main/main.navigation';
-import {Location} from '@angular/common';
+import {LoginComponent} from './login.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+import {AuthenticationService} from '../services/authentication.service';
+import {RouterStub} from '../../../../testing/router-stub';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-describe('NavbarComponent', () => {
-    let component: NavbarComponent;
-    let fixture: ComponentFixture<NavbarComponent>;
+
+describe('LoginComponent', () => {
+    let component: LoginComponent;
+    let fixture: ComponentFixture<LoginComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [NavbarComponent],
-            imports: [RouterTestingModule, HttpClientModule],
-            providers: [AuthenticationService, Location]
+            declarations: [LoginComponent],
+            imports: [BrowserAnimationsModule, FormsModule, ReactiveFormsModule, HttpClientModule, MaterialDesignModule],
+            providers: [AuthenticationService,
+                { provide: Router, useClass: RouterStub},
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(NavbarComponent);
+        fixture = TestBed.createComponent(LoginComponent);
         component = fixture.componentInstance;
-        component.routes = MAIN_NAVIGATION_INFO;
-        component.routes.push({path: '/', title: 'Dashboard', showInMenu: true, icon: 'dashboard'});
         fixture.detectChanges();
     });
 
