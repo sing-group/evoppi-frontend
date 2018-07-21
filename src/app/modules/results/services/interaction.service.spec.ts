@@ -24,7 +24,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { InteractionService } from './interaction.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {GeneService} from './gene.service';
 import {InteractomeService} from './interactome.service';
 import {SpeciesService} from './species.service';
@@ -33,7 +33,7 @@ describe('InteractionService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [InteractionService, GeneService, InteractomeService, SpeciesService],
-      imports: [ HttpClientModule ],
+      imports: [ HttpClientTestingModule ],
     });
   });
 

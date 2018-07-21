@@ -25,13 +25,13 @@ import {inject, TestBed} from '@angular/core/testing';
 
 import {AdminGuard} from './admin.guard';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('AdminGuard', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [AdminGuard, AuthenticationService],
-            imports: [HttpClientModule]
+            imports: [HttpClientTestingModule]
         });
     });
 

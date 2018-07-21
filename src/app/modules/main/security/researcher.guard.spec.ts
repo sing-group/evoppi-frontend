@@ -25,13 +25,13 @@ import {inject, TestBed} from '@angular/core/testing';
 
 import {ResearcherGuard} from './researcher.guard';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('ResearcherGuard', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [ResearcherGuard, AuthenticationService],
-            imports: [HttpClientModule]
+            imports: [HttpClientTestingModule]
         });
     });
 

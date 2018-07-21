@@ -32,7 +32,7 @@ import {MaterialDesignModule} from '../../material-design/material-design.module
 import {ReactiveFormsModule} from '@angular/forms';
 import {AutocompleteComponent} from '../../data/autocomplete/autocomplete.component';
 import {SpeciesService} from '../../results/services/species.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {InteractomeService} from '../../results/services/interactome.service';
 import {InteractionService} from '../../results/services/interaction.service';
 import {GeneService} from '../../results/services/gene.service';
@@ -45,7 +45,7 @@ describe('FormDistinctSpeciesComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [FormDistinctSpeciesComponent, AutocompleteComponent],
-            imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientModule],
+            imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientTestingModule],
             providers: [
                 SpeciesService, InteractomeService, InteractionService, GeneService,
                 { provide: Router, useClass: RouterStub},

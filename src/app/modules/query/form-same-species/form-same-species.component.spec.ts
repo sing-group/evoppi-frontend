@@ -35,7 +35,7 @@ import {SpeciesService} from '../../results/services/species.service';
 import {GeneService} from '../../results/services/gene.service';
 import {InteractionService} from '../../results/services/interaction.service';
 import {InteractomeService} from '../../results/services/interactome.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('FormSameSpeciesComponent', () => {
     let component: FormSameSpeciesComponent;
@@ -45,7 +45,7 @@ describe('FormSameSpeciesComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [FormSameSpeciesComponent, AutocompleteComponent],
-            imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientModule],
+            imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientTestingModule],
             providers: [
                 SpeciesService, GeneService, InteractionService, InteractomeService,
                 { provide: Router, useClass: RouterStub},

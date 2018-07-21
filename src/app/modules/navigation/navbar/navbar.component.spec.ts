@@ -28,7 +28,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
 import {MAIN_NAVIGATION_INFO} from '../../main/main.navigation';
 import {Location} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('NavbarComponent', () => {
     let component: NavbarComponent;
@@ -37,7 +37,7 @@ describe('NavbarComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [NavbarComponent],
-            imports: [RouterTestingModule, HttpClientModule],
+            imports: [RouterTestingModule, HttpClientTestingModule],
             providers: [AuthenticationService, Location]
         })
             .compileComponents();

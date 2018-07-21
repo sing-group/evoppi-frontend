@@ -24,9 +24,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { SpeciesService } from './species.service';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {Species} from '../../../entities/bio';
 import {of} from 'rxjs/observable/of';
+import {HttpClient} from '@angular/common/http';
 
 export const SPECIES: Species[] = [
   {id: 1, name: 'Homo Sapiens', uri: '', interactomes: []}
@@ -36,7 +37,7 @@ describe('SpeciesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [SpeciesService],
-      imports: [ HttpClientModule ],
+      imports: [ HttpClientTestingModule ],
     });
   });
 
