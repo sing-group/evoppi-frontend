@@ -31,8 +31,9 @@ import {TableDistinctSpeciesComponent} from './table-distinct-species/table-dist
 import {TableSameSpeciesComponent} from './table-same-species/table-same-species.component';
 import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MaterialDesignModule} from '../material-design/material-design.module';
+import {AuthenticationInterceptor} from '../authentication/services/authentication.interceptor';
 
 @NgModule({
     imports: [
@@ -50,7 +51,12 @@ import {MaterialDesignModule} from '../material-design/material-design.module';
     ],
     providers: [
         DistinctResultsService,
-        SameResultsService
+        SameResultsService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthenticationInterceptor,
+            multi: true
+        }
     ],
     exports: [
         ResultsComponent,
