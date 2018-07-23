@@ -26,6 +26,11 @@ import { TestBed, inject } from '@angular/core/testing';
 import {DistinctResultsService} from './distinct-results.service';
 
 import {DistinctResult} from '../../../entities';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {InteractionService} from './interaction.service';
+import {GeneService} from './gene.service';
+import {InteractomeService} from './interactome.service';
+import {SpeciesService} from './species.service';
 
 const DISTINCT_RESULTS: DistinctResult[] = [
     {
@@ -51,7 +56,8 @@ const DISTINCT_RESULTS: DistinctResult[] = [
 describe('DistinctResultsService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [DistinctResultsService]
+            providers: [DistinctResultsService, InteractionService, GeneService, InteractionService, InteractomeService, SpeciesService],
+            imports: [HttpClientTestingModule]
         });
     });
 

@@ -44,8 +44,15 @@ export class ResultsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.distinctResultsService.getResults().subscribe(results => this.distinctResults = results);
-        this.sameResultsService.getResults().subscribe(results => this.sameResults = results);
+        this.distinctResultsService.getResults().subscribe(results => {
+            console.log("distinct", results);
+            this.distinctResults = results;
+        });
+        this.sameResultsService.getResults().subscribe(results => {
+            console.log("same", results);
+            this.sameResults = results;
+        });
+
     }
 
     get sameSpeciesResults(): SameResult[] {

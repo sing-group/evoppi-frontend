@@ -23,8 +23,13 @@
 
 import { TestBed, inject } from '@angular/core/testing';
 
-import { SameResultsService } from './same-results.service';
+import {SameResultsService} from './same-results.service';
 import {SameResult} from '../../../entities';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {InteractionService} from './interaction.service';
+import {GeneService} from './gene.service';
+import {InteractomeService} from './interactome.service';
+import {SpeciesService} from './species.service';
 
 const SAME_RESULTS: SameResult[] = [
     {
@@ -44,13 +49,14 @@ const SAME_RESULTS: SameResult[] = [
 ];
 
 describe('SameResultsService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [SameResultsService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [SameResultsService, InteractionService, GeneService, InteractionService, InteractomeService, SpeciesService],
+            imports: [HttpClientTestingModule]
+        });
     });
-  });
 
-  it('should be created', inject([SameResultsService], (service: SameResultsService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', inject([SameResultsService], (service: SameResultsService) => {
+        expect(service).toBeTruthy();
+    }));
 });

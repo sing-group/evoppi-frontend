@@ -32,6 +32,11 @@ import {of} from 'rxjs/observable/of';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterStub} from '../../../testing/router-stub';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {InteractomeService} from './services/interactome.service';
+import {InteractionService} from './services/interaction.service';
+import {SpeciesService} from './services/species.service';
+import {GeneService} from './services/gene.service';
 
 describe('ResultsComponent', () => {
     let component: ResultsComponent;
@@ -41,8 +46,8 @@ describe('ResultsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ResultsComponent],
-            imports: [RouterTestingModule, MatTooltipModule, MatSliderModule, MatProgressBarModule, MatIconModule],
-            providers: [DistinctResultsService, SameResultsService,
+            imports: [RouterTestingModule, MatTooltipModule, MatSliderModule, MatProgressBarModule, MatIconModule, HttpClientTestingModule],
+            providers: [DistinctResultsService, SameResultsService, InteractionService, SpeciesService, GeneService, InteractomeService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]
