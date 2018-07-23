@@ -24,6 +24,24 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { SameResultsService } from './same-results.service';
+import {SameResult} from '../../../entities';
+
+const SAME_RESULTS: SameResult[] = [
+    {
+        uuid: 'a59f3e69-af3d-4fe8-8437-d7bb139f5459',
+        species: 'Homo sapiens',
+        interactomes: ['A', 'B', 'C'],
+        progress: 0.6,
+        status: 'Calculating interactome A interactions'
+    },
+    {
+        uuid: '42676d45-dbb5-4392-9c2d-b04b74e26c37',
+        species: 'Drosophila Melanogaster',
+        interactomes: ['W', 'X', 'Y', 'Z'],
+        progress: 1,
+        status: '1,234 interactions found'
+    }
+];
 
 describe('SameResultsService', () => {
   beforeEach(() => {

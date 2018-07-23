@@ -107,7 +107,7 @@ export class InteractionService {
       );
   }
 
-  private retrieveWorkInteractomes(workResult: WorkResult): Observable<WorkResult> {
+  public retrieveWorkInteractomes(workResult: WorkResult): Observable<WorkResult> {
     if (workResult.interactomes) {
       return forkJoin(
         from(workResult.interactomes)

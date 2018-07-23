@@ -23,33 +23,51 @@
 
 import { Injectable } from '@angular/core';
 import {SameResult} from '../../../entities';
-import {of} from 'rxjs/observable/of';
 import {Observable} from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../../environments/environment';
+import {ErrorHelper} from '../../../helpers/error.helper';
+import {catchError} from 'rxjs/operators';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {WorkResult} from '../../../entities/execution';
+import {InteractionService} from './interaction.service';
 
-const SAME_RESULTS: SameResult[] = [
-    {
-        uuid: 'a59f3e69-af3d-4fe8-8437-d7bb139f5459',
-        species: 'Homo sapiens',
-        interactomes: ['A', 'B', 'C'],
-        progress: 0.6,
-        status: 'Calculating interactome A interactions'
-    },
-    {
-        uuid: '42676d45-dbb5-4392-9c2d-b04b74e26c37',
-        species: 'Drosophila Melanogaster',
-        interactomes: ['W', 'X', 'Y', 'Z'],
-        progress: 1,
-        status: '1,234 interactions found'
-    }
-];
 
 @Injectable()
 export class SameResultsService {
+    private endpoint = environment.evoppiUrl + 'api/user/interaction/result/same';
 
-  constructor() { }
+    constructor(private http: HttpClient, private interactionService: InteractionService) {
+    }
 
     public getResults(): Observable<SameResult[]> {
-        return of(SAME_RESULTS);
+        return this.http.get<WorkResult[]>(this.endpoint)
+            .mergeMap (
+                workResults => {
+                    const observables: Observable<WorkResult>[] = [];
+                    workResults.forEach(workResult => {
+                        observables.push(this.interactionService.retrieveWorkInteractomes(workResult));
+                    });
+                    return forkJoin(observables);
+                }
+
+            )
+            .map( workResults => {
+                const sameResult: SameResult[] = [];
+                workResults.forEach(workResult => {
+                    sameResult.push({
+                        uuid: workResult.id,
+                        species: workResult.interactomes[0].species.name,
+                        interactomes: workResult.interactomes.map(interactome => interactome.name),
+                        progress: workResult.status === 'COMPLETED' ? 1: 0.5, // TODO
+                        status: workResult.status
+                    });
+                });
+                return sameResult;
+            })
+            .pipe(
+                catchError(ErrorHelper.handleError('SameResultsService.getResults', []))
+            );
     }
 
 }

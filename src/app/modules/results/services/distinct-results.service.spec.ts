@@ -23,16 +23,39 @@
 
 import { TestBed, inject } from '@angular/core/testing';
 
-import { DistinctResultsService } from './distinct-results.service';
+import {DistinctResultsService} from './distinct-results.service';
+
+import {DistinctResult} from '../../../entities';
+
+const DISTINCT_RESULTS: DistinctResult[] = [
+    {
+        uuid: '3e61aab7-5e32-4c65-89ad-e837f1fb55bd',
+        referenceSpecies: 'Homo sapiens',
+        targetSpecies: 'Drosophila Melanogaster',
+        referenceInteractomes: ['A', 'B', 'C'],
+        targetInteractomes: ['X', 'Y', 'Z'],
+        progress: 0.6,
+        status: 'Calculating interactome X interactions'
+    },
+    {
+        uuid: '564163b7-d299-4a6b-9cbf-abf363d8906d',
+        referenceSpecies: 'Drosophila Melanogaster',
+        targetSpecies: 'Homo sapiens',
+        referenceInteractomes: ['A'],
+        targetInteractomes: ['W', 'X', 'Y', 'Z'],
+        progress: 1,
+        status: '12,000 interactions found'
+    }
+];
 
 describe('DistinctResultsService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [DistinctResultsService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [DistinctResultsService]
+        });
     });
-  });
 
-  it('should be created', inject([DistinctResultsService], (service: DistinctResultsService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', inject([DistinctResultsService], (service: DistinctResultsService) => {
+        expect(service).toBeTruthy();
+    }));
 });

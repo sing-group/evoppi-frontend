@@ -23,38 +23,55 @@
 
 import {Injectable} from '@angular/core';
 import {DistinctResult} from '../../../entities';
-import {of} from 'rxjs/observable/of';
 import {Observable} from 'rxjs/Observable';
+import {ErrorHelper} from '../../../helpers/error.helper';
+import {environment} from '../../../../environments/environment';
+import {catchError} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {WorkResult} from '../../../entities/execution';
+import {InteractionService} from './interaction.service';
 
-const DISTINCT_RESULTS: DistinctResult[] = [
-    {
-        uuid: '3e61aab7-5e32-4c65-89ad-e837f1fb55bd',
-        referenceSpecies: 'Homo sapiens',
-        targetSpecies: 'Drosophila Melanogaster',
-        referenceInteractomes: ['A', 'B', 'C'],
-        targetInteractomes: ['X', 'Y', 'Z'],
-        progress: 0.6,
-        status: 'Calculating interactome X interactions'
-    },
-    {
-        uuid: '564163b7-d299-4a6b-9cbf-abf363d8906d',
-        referenceSpecies: 'Drosophila Melanogaster',
-        targetSpecies: 'Homo sapiens',
-        referenceInteractomes: ['A'],
-        targetInteractomes: ['W', 'X', 'Y', 'Z'],
-        progress: 1,
-        status: '12,000 interactions found'
-    }
-];
+
 
 @Injectable()
 export class DistinctResultsService {
 
-    constructor() {
+    private endpoint = environment.evoppiUrl + 'api/user/interaction/result/different';
+
+    constructor(private http: HttpClient, private interactionService: InteractionService) {
     }
 
     public getResults(): Observable<DistinctResult[]> {
-        return of(DISTINCT_RESULTS);
+        return this.http.get<WorkResult[]>(this.endpoint)
+            .mergeMap (
+                workResults => {
+                    const observables: Observable<WorkResult>[] = [];
+                    workResults.forEach(workResult => {
+                        observables.push(this.interactionService.retrieveWorkInteractomes(workResult));
+                    });
+                    return forkJoin(observables);
+                }
+
+            )
+            .map( workResults => {
+                const distinctResult: DistinctResult[] = [];
+                workResults.forEach(workResult => {
+                    distinctResult.push({
+                        uuid: workResult.id,
+                        referenceSpecies: workResult.referenceInteractomes[0].species.name,
+                        targetSpecies: workResult.targetInteractomes[0].species.name,
+                        referenceInteractomes: workResult.referenceInteractomes.map(interactome => interactome.name),
+                        targetInteractomes: workResult.targetInteractomes.map(interactome => interactome.name),
+                        progress: workResult.status === 'COMPLETED' ? 1: 0.5, // TODO
+                        status: workResult.status
+                    });
+                });
+                return distinctResult;
+            })
+            .pipe(
+                catchError(ErrorHelper.handleError('DistinctResultsService.getResults', []))
+            );
     }
 
 }
