@@ -314,6 +314,7 @@ export class FormSameSpeciesComponent implements OnInit {
             this.showTable = true;
           }
         });
+        this.processing = false;
       });
   }
 
@@ -430,6 +431,8 @@ export class FormSameSpeciesComponent implements OnInit {
         this.dataSource.sort = undefined;
         this.dataSource.paginator = undefined;
         this.fullResultAvailable = true;
+
+        this.processing = false;
       });
   }
 
