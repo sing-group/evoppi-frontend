@@ -21,7 +21,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map} from 'rxjs/operators';
@@ -32,23 +32,24 @@ import {ErrorHelper} from '../../../helpers/error.helper';
 @Injectable()
 export class SpeciesService {
 
-  private endpoint = environment.evoppiUrl + 'api/species';
+    private endpoint = environment.evoppiUrl + 'api/species';
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
-  getSpecies(): Observable<Species[]> {
-    return this.http.get<Species[]>(this.endpoint)
-      .pipe(
-        map(res => res.sort((a, b) => a.name < b.name ? -1 : 1)),
-        catchError(ErrorHelper.handleError('getSpecies', []))
-      );
-  }
+    getSpecies(): Observable<Species[]> {
+        return this.http.get<Species[]>(this.endpoint)
+            .pipe(
+                map(res => res.sort((a, b) => a.name < b.name ? -1 : 1)),
+                catchError(ErrorHelper.handleError('getSpecies', []))
+            );
+    }
 
-  getSpeciesById(id: number): Observable<Species> {
-    return this.http.get<Species>(this.endpoint + '/' + id)
-      .pipe(
-        catchError(ErrorHelper.handleError('getSpeciesById', null))
-      );
-  }
+    getSpeciesById(id: number): Observable<Species> {
+        return this.http.get<Species>(this.endpoint + '/' + id)
+            .pipe(
+                catchError(ErrorHelper.handleError('getSpeciesById', null))
+            );
+    }
 
 }

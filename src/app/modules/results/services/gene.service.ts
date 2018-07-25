@@ -21,7 +21,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {catchError} from 'rxjs/operators';
@@ -34,52 +34,54 @@ import {ErrorHelper} from '../../../helpers/error.helper';
 @Injectable()
 export class GeneService {
 
-  private endpoint = environment.evoppiUrl + 'api/gene';
-  constructor(private http: HttpClient) { }
+    private endpoint = environment.evoppiUrl + 'api/gene';
 
-  public static getFirstName(geneInfo: GeneInfo | Gene): string {
-    if (geneInfo && geneInfo.names && geneInfo.names.length > 0 && geneInfo.names[0].names.length > 0) {
-      return geneInfo.names[0].names[0];
-    } else {
-      return '';
+    constructor(private http: HttpClient) {
     }
-  }
 
-  getGeneName(prefix: string, interactomes: number[] = [], limit: number = 10): Observable<GeneInfo[]> {
-
-    const params: any = {prefix: prefix, interactome: interactomes, maxResults: limit};
-
-    return this.http.get<GeneInfo[]>(this.endpoint + '/name', {params : params})
-      .pipe(
-        catchError(ErrorHelper.handleError('getGeneName', []))
-      );
-  }
-
-  getGeneNames(genes: Gene[]): Observable<GeneInfo[]> {
-    const observables: Observable<GeneInfo>[] = [];
-    for (const gene of genes) {
-      observables.push(<Observable<GeneInfo>> this.http.get(this.endpoint + '/' + gene.geneId + '/name'));
+    public static getFirstName(geneInfo: GeneInfo | Gene): string {
+        if (geneInfo && geneInfo.names && geneInfo.names.length > 0 && geneInfo.names[0].names.length > 0) {
+            return geneInfo.names[0].names[0];
+        } else {
+            return '';
+        }
     }
-    return forkJoin(observables);
-  }
 
-  getGene(id: number): Observable<Gene> {
+    getGeneName(prefix: string, interactomes: number[] = [], limit: number = 10): Observable<GeneInfo[]> {
 
-    return this.http.get<Gene>(this.endpoint + '/' + id)
-      .pipe(
-        catchError(ErrorHelper.handleError('getGene', null))
-      );
-  }
+        const params: any = {prefix: prefix, interactome: interactomes, maxResults: limit};
 
-  getGenes(ids: number[]): Observable<Gene[]> {
-    if (ids.length === 0) {
-      return of([]);
-    } else {
-      return this.http.get<Gene>(this.endpoint + '?ids=' + ids.join(','))
-        .pipe(
-          catchError(ErrorHelper.handleError('getGene', null))
-        );
+        return this.http.get<GeneInfo[]>(this.endpoint + '/name', {params: params})
+            .pipe(
+                catchError(ErrorHelper.handleError('getGeneName', []))
+            );
     }
-  }
+
+    getGeneNames(genes: Gene[]): Observable<GeneInfo[]> {
+        const observables: Observable<GeneInfo>[] = [];
+        for (const gene of genes) {
+            observables.push(<Observable<GeneInfo>> this.http.get(this.endpoint + '/' + gene.geneId + '/name'));
+        }
+        return forkJoin(observables);
+    }
+
+    getGene(id: number): Observable<Gene> {
+
+        return this.http.get<Gene>(this.endpoint + '/' + id)
+            .pipe(
+                catchError(ErrorHelper.handleError('getGene', null))
+            );
+    }
+
+    getGenes(ids: number[]): Observable<Gene[]> {
+        if (ids.length === 0) {
+            return of([]);
+        } else {
+            return this.http.get<Gene>(this.endpoint + '?ids=' + ids.join(','))
+                .pipe(
+                    catchError(ErrorHelper.handleError('getGene', null))
+                );
+        }
+    }
 
 }

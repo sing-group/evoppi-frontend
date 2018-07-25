@@ -21,21 +21,21 @@
  *
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 
-import { InteractomeService } from './interactome.service';
+import {InteractomeService} from './interactome.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {SpeciesService} from './species.service';
 
 describe('InteractomeService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [InteractomeService, SpeciesService],
-      imports: [ HttpClientTestingModule ],
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [InteractomeService, SpeciesService],
+            imports: [HttpClientTestingModule],
+        });
     });
-  });
 
-  it('should be created', inject([InteractomeService], (service: InteractomeService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', inject([InteractomeService], (service: InteractomeService) => {
+        expect(service).toBeTruthy();
+    }));
 });

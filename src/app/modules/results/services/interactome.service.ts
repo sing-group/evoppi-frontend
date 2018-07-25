@@ -21,7 +21,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
@@ -33,33 +33,35 @@ import {ErrorHelper} from '../../../helpers/error.helper';
 @Injectable()
 export class InteractomeService {
 
-  private endpoint = environment.evoppiUrl + 'api/interactome';
-  constructor(private http: HttpClient, private speciesService: SpeciesService) { }
+    private endpoint = environment.evoppiUrl + 'api/interactome';
 
-  getInteractome(id: number, retrieveSpecies: boolean = false): Observable<Interactome> {
-    let request = this.http.get<Interactome>(this.endpoint + '/' + id);
-
-    if (retrieveSpecies) {
-      request = request.concatMap(
-        interactome => this.speciesService.getSpeciesById(interactome.species.id),
-        (interactome, species) => {
-          interactome.species = species;
-
-          return interactome;
-        }
-      );
+    constructor(private http: HttpClient, private speciesService: SpeciesService) {
     }
 
-    return request
-      .pipe(
-        catchError(ErrorHelper.handleError('getInteractome', null))
-      );
-  }
+    getInteractome(id: number, retrieveSpecies: boolean = false): Observable<Interactome> {
+        let request = this.http.get<Interactome>(this.endpoint + '/' + id);
 
-  getInteractomes(): Observable<Interactome[]> {
-    return this.http.get<Interactome[]>(this.endpoint)
-      .pipe(
-        catchError(ErrorHelper.handleError('getInteractomes', []))
-      );
-  }
+        if (retrieveSpecies) {
+            request = request.concatMap(
+                interactome => this.speciesService.getSpeciesById(interactome.species.id),
+                (interactome, species) => {
+                    interactome.species = species;
+
+                    return interactome;
+                }
+            );
+        }
+
+        return request
+            .pipe(
+                catchError(ErrorHelper.handleError('getInteractome', null))
+            );
+    }
+
+    getInteractomes(): Observable<Interactome[]> {
+        return this.http.get<Interactome[]>(this.endpoint)
+            .pipe(
+                catchError(ErrorHelper.handleError('getInteractomes', []))
+            );
+    }
 }

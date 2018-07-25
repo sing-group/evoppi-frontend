@@ -47,110 +47,112 @@ import {SummarizedWorkResult, Work, WorkResult} from '../../../entities/executio
 @Injectable()
 export class InteractionService {
 
-  private endpoint = environment.evoppiUrl + 'api/interaction';
+    private endpoint = environment.evoppiUrl + 'api/interaction';
 
-  constructor(protected http: HttpClient, protected geneService: GeneService, protected interactomeService: InteractomeService) { }
-
-
-  getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
-
-    const params: any = {gene: gene, interactome: interactomes, maxDegree: interactionLevel};
-
-    return this.http.get<Work>(this.endpoint, {params : params});
-  }
-
-  getDistinctSpeciesInteraction(gene: number, referenceInteractome: number[], targetInteractome: number[],
-                                 interactionLevel: number, evalue: number, maxTargetSeqs: number,
-                                minIdentity: number, minAlignmentLenght: number): Observable<Work> {
-    const params: any = {
-      gene: gene,
-      referenceInteractome: referenceInteractome,
-      targetInteractome: targetInteractome,
-      maxDegree: interactionLevel,
-      evalue: evalue,
-      maxTargetSeqs: maxTargetSeqs,
-      minIdentity: minIdentity,
-      minAlignmentLength: minAlignmentLenght
-    };
-
-    return this.http.get<Work>(this.endpoint, {params : params});
-  }
-
-  getInteractionResultSummarized(uri: string): Observable<SummarizedWorkResult> {
-    return this.http.get<WorkResult>(uri + '?summarize=true')
-      .mergeMap(this.retrieveWorkInteractomes.bind(this))
-      .pipe(
-        catchError(ErrorHelper.handleError('getInteractionResultSummarized', null))
-      );
-  }
-
-  getInteractionResult(uri: string): Observable<WorkResult> {
-    return this.http.get<WorkResult>(uri)
-      .mergeMap(this.retrieveWorkInteractomes.bind(this))
-      .pipe(
-        catchError(ErrorHelper.handleError('getInteractionResult', null))
-      );
-  }
-
-  getInteractions(uri: string, page: number = 0, pageSize: number = 10, sortDirection: SortDirection = SortDirection.ASCENDING,
-                  orderField: OrderField = OrderField.GENE_A_ID, interactomeId?: number): Observable<WorkResult> {
-    return this.http.get<WorkResult>(uri, {
-      params: {
-        page: page.toString(),
-        pageSize: pageSize.toString(),
-        sortDirection: sortDirection,
-        orderField: orderField,
-        ...(interactomeId && {interactomeId: interactomeId.toString()})
-      }})
-      .pipe(
-        catchError(ErrorHelper.handleError('getInteractions', null))
-      );
-  }
-
-  public retrieveWorkInteractomes(workResult: WorkResult): Observable<WorkResult> {
-    if (workResult.interactomes) {
-      return forkJoin(
-        from(workResult.interactomes)
-          .mergeMap(
-            interactome => this.interactomeService.getInteractome(interactome.id, true)
-          )
-          .combineLatest(interactome => {
-            const index = workResult.interactomes.findIndex(it => it.id === interactome.id);
-
-            workResult.interactomes[index] = interactome;
-
-            return workResult;
-          })
-      ).map(workResults => workResults[0]);
-    } else if (workResult.referenceInteractomes && workResult.targetInteractomes) {
-      return forkJoin(
-        from( workResult.referenceInteractomes )
-          .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
-          .combineLatest(interactome => {
-            const index = workResult.referenceInteractomes.findIndex(x => x.id === interactome.id);
-            if (index !== -1) {
-              workResult.referenceInteractomes[index] = interactome;
-            } else {
-              throw TypeError('Reference interactome not found: ' + interactome.id);
-            }
-
-            return workResult;
-          }),
-        from( workResult.targetInteractomes )
-          .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
-          .combineLatest(interactome => {
-            const index = workResult.targetInteractomes.findIndex(x => x.id === interactome.id);
-            if (index !== -1) {
-              workResult.targetInteractomes[index] = interactome;
-            } else {
-              throw TypeError('Target interactome not found: ' + interactome.id);
-            }
-
-            return workResult;
-          })
-        ).map(workResults => workResults[0]);
-    } else {
-      throw TypeError('Invalid work result. Missing interactomes.');
+    constructor(protected http: HttpClient, protected geneService: GeneService, protected interactomeService: InteractomeService) {
     }
-  }
+
+
+    getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
+
+        const params: any = {gene: gene, interactome: interactomes, maxDegree: interactionLevel};
+
+        return this.http.get<Work>(this.endpoint, {params: params});
+    }
+
+    getDistinctSpeciesInteraction(gene: number, referenceInteractome: number[], targetInteractome: number[],
+                                  interactionLevel: number, evalue: number, maxTargetSeqs: number,
+                                  minIdentity: number, minAlignmentLenght: number): Observable<Work> {
+        const params: any = {
+            gene: gene,
+            referenceInteractome: referenceInteractome,
+            targetInteractome: targetInteractome,
+            maxDegree: interactionLevel,
+            evalue: evalue,
+            maxTargetSeqs: maxTargetSeqs,
+            minIdentity: minIdentity,
+            minAlignmentLength: minAlignmentLenght
+        };
+
+        return this.http.get<Work>(this.endpoint, {params: params});
+    }
+
+    getInteractionResultSummarized(uri: string): Observable<SummarizedWorkResult> {
+        return this.http.get<WorkResult>(uri + '?summarize=true')
+            .mergeMap(this.retrieveWorkInteractomes.bind(this))
+            .pipe(
+                catchError(ErrorHelper.handleError('getInteractionResultSummarized', null))
+            );
+    }
+
+    getInteractionResult(uri: string): Observable<WorkResult> {
+        return this.http.get<WorkResult>(uri)
+            .mergeMap(this.retrieveWorkInteractomes.bind(this))
+            .pipe(
+                catchError(ErrorHelper.handleError('getInteractionResult', null))
+            );
+    }
+
+    getInteractions(uri: string, page: number = 0, pageSize: number = 10, sortDirection: SortDirection = SortDirection.ASCENDING,
+                    orderField: OrderField = OrderField.GENE_A_ID, interactomeId?: number): Observable<WorkResult> {
+        return this.http.get<WorkResult>(uri, {
+            params: {
+                page: page.toString(),
+                pageSize: pageSize.toString(),
+                sortDirection: sortDirection,
+                orderField: orderField,
+                ...(interactomeId && {interactomeId: interactomeId.toString()})
+            }
+        })
+            .pipe(
+                catchError(ErrorHelper.handleError('getInteractions', null))
+            );
+    }
+
+    public retrieveWorkInteractomes(workResult: WorkResult): Observable<WorkResult> {
+        if (workResult.interactomes) {
+            return forkJoin(
+                from(workResult.interactomes)
+                    .mergeMap(
+                        interactome => this.interactomeService.getInteractome(interactome.id, true)
+                    )
+                    .combineLatest(interactome => {
+                        const index = workResult.interactomes.findIndex(it => it.id === interactome.id);
+
+                        workResult.interactomes[index] = interactome;
+
+                        return workResult;
+                    })
+            ).map(workResults => workResults[0]);
+        } else if (workResult.referenceInteractomes && workResult.targetInteractomes) {
+            return forkJoin(
+                from(workResult.referenceInteractomes)
+                    .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
+                    .combineLatest(interactome => {
+                        const index = workResult.referenceInteractomes.findIndex(x => x.id === interactome.id);
+                        if (index !== -1) {
+                            workResult.referenceInteractomes[index] = interactome;
+                        } else {
+                            throw TypeError('Reference interactome not found: ' + interactome.id);
+                        }
+
+                        return workResult;
+                    }),
+                from(workResult.targetInteractomes)
+                    .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
+                    .combineLatest(interactome => {
+                        const index = workResult.targetInteractomes.findIndex(x => x.id === interactome.id);
+                        if (index !== -1) {
+                            workResult.targetInteractomes[index] = interactome;
+                        } else {
+                            throw TypeError('Target interactome not found: ' + interactome.id);
+                        }
+
+                        return workResult;
+                    })
+            ).map(workResults => workResults[0]);
+        } else {
+            throw TypeError('Invalid work result. Missing interactomes.');
+        }
+    }
 }

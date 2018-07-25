@@ -21,20 +21,20 @@
  *
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 
-import { GeneService } from './gene.service';
+import {GeneService} from './gene.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('GeneService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [GeneService],
-      imports: [ HttpClientTestingModule ],
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [GeneService],
+            imports: [HttpClientTestingModule],
+        });
     });
-  });
 
-  it('should be created', inject([GeneService], (service: GeneService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', inject([GeneService], (service: GeneService) => {
+        expect(service).toBeTruthy();
+    }));
 });
