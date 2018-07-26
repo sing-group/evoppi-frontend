@@ -34,7 +34,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        if(request.url.endsWith('/user/role')){
+        if (request.url.endsWith('/user/role')) {
             return next.handle(request);
         }
         request = request.clone({

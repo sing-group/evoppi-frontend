@@ -60,7 +60,7 @@ export class TableSameSpeciesComponent implements OnInit {
     processing = false;
     collapseInteractomes = false;
 
-    uuid: string = '';
+    uuid = '';
 
     constructor(private interactionService: InteractionService, private dialog: MatDialog, private domSanitizer: DomSanitizer,
                 private route: ActivatedRoute) {
@@ -203,7 +203,8 @@ export class TableSameSpeciesComponent implements OnInit {
                 const interactomeIds = res.interactomes.map(interactome => interactome.id).join('_');
                 const geneData = getGene(res.queryGene);
                 let name: string = res.queryGene.toString();
-                if (geneData && geneData.names && geneData.names.length > 0 && geneData.names[0].names && geneData.names[0].names.length > 0) {
+                if (geneData && geneData.names && geneData.names.length > 0
+                    && geneData.names[0].names && geneData.names[0].names.length > 0) {
                     name = geneData.names[0].names[0];
                 }
                 this.csvName = 'interaction_' + name + '_' + interactomeIds + '.csv';

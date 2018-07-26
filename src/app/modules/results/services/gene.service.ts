@@ -36,15 +36,15 @@ export class GeneService {
 
     private endpoint = environment.evoppiUrl + 'api/gene';
 
-    constructor(private http: HttpClient) {
-    }
-
     public static getFirstName(geneInfo: GeneInfo | Gene): string {
         if (geneInfo && geneInfo.names && geneInfo.names.length > 0 && geneInfo.names[0].names.length > 0) {
             return geneInfo.names[0].names[0];
         } else {
             return '';
         }
+    }
+
+    constructor(private http: HttpClient) {
     }
 
     getGeneName(prefix: string, interactomes: number[] = [], limit: number = 10): Observable<GeneInfo[]> {

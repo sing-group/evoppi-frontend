@@ -63,7 +63,7 @@ export class DistinctResultsService {
                         targetSpecies: workResult.targetInteractomes[0].species.name,
                         referenceInteractomes: workResult.referenceInteractomes.map(interactome => interactome.name),
                         targetInteractomes: workResult.targetInteractomes.map(interactome => interactome.name),
-                        progress: workResult.status === 'COMPLETED' ? 1: 0.5, // TODO
+                        progress: workResult.status === 'COMPLETED' ? 1 : 0.5, // TODO
                         status: workResult.status
                     });
                 });

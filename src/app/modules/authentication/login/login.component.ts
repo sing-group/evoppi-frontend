@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        if(this.route.routeConfig.data.state === 'logout'){
+        if (this.route.routeConfig.data.state === 'logout') {
             this.authenticationService.logOut();
         }
 

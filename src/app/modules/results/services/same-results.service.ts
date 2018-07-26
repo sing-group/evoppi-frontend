@@ -59,7 +59,7 @@ export class SameResultsService {
                         uuid: workResult.id,
                         species: workResult.interactomes[0].species.name,
                         interactomes: workResult.interactomes.map(interactome => interactome.name),
-                        progress: workResult.status === 'COMPLETED' ? 1: 0.5, // TODO
+                        progress: workResult.status === 'COMPLETED' ? 1 : 0.5, // TODO
                         status: workResult.status
                     });
                 });
