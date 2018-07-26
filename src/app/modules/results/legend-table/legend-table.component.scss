@@ -1,4 +1,4 @@
-/*
+/*!
  *  EvoPPI Frontend
  *
  * Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
@@ -21,15 +21,14 @@
  *
  */
 
+.gene1 {
+  cursor: pointer;
+  font-weight: bold;
+  color: grey !important;
+}
 
-import {IdUri} from './id-uri.model';
-
-export interface Gene {
-  geneId: number;
-  id?: number;
-  uri: string;
-  speciesId?: IdUri;
-  names?: {source: string, names: Array<string>}[];
-  sequences?: Array<string>;
-  defaultName: string;
+.gene2 {
+  cursor: pointer;
+  font-weight: bold;
+  color: green !important;
 }

@@ -34,6 +34,11 @@ import {SameResultsService} from './services/same-results.service';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {AuthenticationInterceptor} from '../authentication/services/authentication.interceptor';
+import {LegendTableComponent} from './legend-table/legend-table.component';
+import {GeneInfoComponent} from './gene-info/gene-info.component';
+import {BlastResultComponent} from './blast-result/blast-result.component';
+import {AfterViewInitDirective} from './directives/after-view-init.directive';
+import {OnInitDirective} from './directives/on-init.directive';
 
 @NgModule({
     imports: [
@@ -47,7 +52,12 @@ import {AuthenticationInterceptor} from '../authentication/services/authenticati
         ChartDistinctSpeciesComponent,
         ChartSameSpeciesComponent,
         TableDistinctSpeciesComponent,
-        TableSameSpeciesComponent
+        TableSameSpeciesComponent,
+        LegendTableComponent,
+        GeneInfoComponent,
+        BlastResultComponent,
+        AfterViewInitDirective,
+        OnInitDirective
     ],
     providers: [
         DistinctResultsService,
@@ -63,7 +73,15 @@ import {AuthenticationInterceptor} from '../authentication/services/authenticati
         ChartDistinctSpeciesComponent,
         ChartSameSpeciesComponent,
         TableDistinctSpeciesComponent,
-        TableSameSpeciesComponent
+        TableSameSpeciesComponent,
+        LegendTableComponent,
+        GeneInfoComponent,
+        BlastResultComponent,
+        AfterViewInitDirective,
+        OnInitDirective
+    ],
+    entryComponents: [
+        GeneInfoComponent,
     ]
 })
 export class ResultsModule {

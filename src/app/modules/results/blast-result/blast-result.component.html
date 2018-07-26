@@ -1,0 +1,78 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~ Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+  ~ Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+  ~ Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+  ~ .
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<mat-card>
+    <mat-form-field>
+        <input matInput placeholder="Query sequence id (qseqid)" [value]="blastResult.qseqid" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Subject sequence id (sseqid)" [value]="blastResult.sseqid" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Alignment length (length)" [value]="blastResult.length" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Number of mismatches (mismatch)" [value]="blastResult.mismatch" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Number of gap openings (gapopen)" [value]="blastResult.gapopen" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Start of alignment in query (qstart)" [value]="blastResult.qstart" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="End of alignment in query (qend)" [value]="blastResult.qend" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Start of alignment in subject (sstart)" [value]="blastResult.sstart" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="End of alignment in subject (send)" [value]="blastResult.send" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Expect value (evalue)" [value]="blastResult.evalue" readonly/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Bit score (bitscore)" [value]="blastResult.bitscore" readonly/>
+    </mat-form-field>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Alignment
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{blastResult.qseqid}} - {{blastResult.sseqid}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="sequence" *ngIf="query">
+                {{query.id}}
+                {{qAlignment}}
+            </div>
+            <div class="sequence" *ngIf="subject">
+                {{subject.id}}
+                {{sAlignment}}
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</mat-card>

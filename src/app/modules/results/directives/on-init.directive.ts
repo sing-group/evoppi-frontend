@@ -21,15 +21,20 @@
  *
  */
 
+import {Directive, EventEmitter, OnInit, Output} from '@angular/core';
 
-import {IdUri} from './id-uri.model';
+@Directive({
+    selector: '[appOnInit]'
+})
+export class OnInitDirective implements OnInit {
 
-export interface Gene {
-  geneId: number;
-  id?: number;
-  uri: string;
-  speciesId?: IdUri;
-  names?: {source: string, names: Array<string>}[];
-  sequences?: Array<string>;
-  defaultName: string;
+    @Output() init: EventEmitter<boolean> = new EventEmitter();
+
+    constructor() {
+    }
+
+    ngOnInit(): void {
+        this.init.emit(true);
+    }
+
 }

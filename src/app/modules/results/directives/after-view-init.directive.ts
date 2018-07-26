@@ -21,15 +21,20 @@
  *
  */
 
+import {AfterViewInit, Directive, EventEmitter, Output} from '@angular/core';
 
-import {IdUri} from './id-uri.model';
+@Directive({
+    selector: '[appAfterViewInit]'
+})
+export class AfterViewInitDirective implements AfterViewInit {
 
-export interface Gene {
-  geneId: number;
-  id?: number;
-  uri: string;
-  speciesId?: IdUri;
-  names?: {source: string, names: Array<string>}[];
-  sequences?: Array<string>;
-  defaultName: string;
+    @Output() afterViewInit: EventEmitter<boolean> = new EventEmitter();
+
+    constructor() {
+    }
+
+    ngAfterViewInit(): void {
+        setTimeout(() => this.afterViewInit.emit(true), 100);
+    }
+
 }

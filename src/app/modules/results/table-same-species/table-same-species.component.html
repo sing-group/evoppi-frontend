@@ -27,11 +27,70 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h4 class="card-title ">Distinct species</h4>
+                        <h4 class="card-title ">Same species</h4>
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
                     </div>
                     <div class="card-body">
-                        table-same-species works!
+                        <mat-checkbox (change)="onCollapseInteractomes($event)" class="app-checkbox">Collapse
+                            interactomes
+                        </mat-checkbox>
+                        <mat-table matSort #table [dataSource]="paginatedDataSource" class="table-same-species"
+                                   appAfterViewInit>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                            <ng-container matColumnDef="GeneA">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <a (click)="onClickGene(row.geneA)" class="gene1">{{row.geneA}}</a>
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="NameA">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name A</mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <a (click)="onClickGene(row.geneA)" class="gene1">{{row.firstNameA}}</a>
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="GeneB">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <a (click)="onClickGene(row.geneB)" class="gene1">{{row.geneB}}</a>
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="NameB">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name B</mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <a (click)="onClickGene(row.geneB)" class="gene1">{{row.firstNameB}}</a>
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container *ngFor="let resInteractome of resInteractomes"
+                                          matColumnDef="Interactome-{{resInteractome.id}}">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{resInteractome.name}}
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <span *ngFor="let degree of row.interactomeDegrees">
+                                        <span *ngIf="degree.id === resInteractome.id">
+                                            Degree {{degree.degree}}
+                                        </span>
+                                    </span>
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="Interactomes">
+                                <mat-header-cell *matHeaderCellDef>Interactomes</mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <div *ngIf="row.distinctDegrees.length > 0">
+                                        <span *ngFor="let degree of row.distinctDegrees; let isLast=last">
+                                            {{degree}}{{isLast ? '': ', '}}
+                                        </span>
+                                    </div>
+                                </mat-cell>
+                            </ng-container>
+                        </mat-table>
+                        <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
+                                       [pageSize]="10"
+                                       [pageSizeOptions]="[5, 10, 20, 50]"
+                                       [length]="paginatorLength">
+                        </mat-paginator>
+                        <app-legend-table></app-legend-table>
                     </div>
                 </div>
             </div>

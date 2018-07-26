@@ -21,15 +21,16 @@
  *
  */
 
+import {Component} from '@angular/core';
 
-import {IdUri} from './id-uri.model';
+@Component({
+    selector: 'app-legend-table',
+    templateUrl: './legend-table.component.html',
+    styleUrls: ['./legend-table.component.scss']
+})
+export class LegendTableComponent {
 
-export interface Gene {
-  geneId: number;
-  id?: number;
-  uri: string;
-  speciesId?: IdUri;
-  names?: {source: string, names: Array<string>}[];
-  sequences?: Array<string>;
-  defaultName: string;
+    constructor() {
+    }
+
 }
