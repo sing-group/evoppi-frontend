@@ -20,29 +20,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { TableSameSpeciesComponent } from './table-same-species.component';
+import {TableSameSpeciesComponent} from './table-same-species.component';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+import {LegendTableComponent} from '../legend-table/legend-table.component';
+import {InteractionService} from '../services/interaction.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {GeneService} from '../services/gene.service';
+import {InteractomeService} from '../services/interactome.service';
+import {SpeciesService} from '../services/species.service';
+import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
+import {ActivatedRoute, convertToParamMap, Router} from '@angular/router';
+import {RouterStub} from '../../../../testing/router-stub';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('TableSameSpeciesComponent', () => {
-  let component: TableSameSpeciesComponent;
-  let fixture: ComponentFixture<TableSameSpeciesComponent>;
+    let component: TableSameSpeciesComponent;
+    let fixture: ComponentFixture<TableSameSpeciesComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
+    activatedRoute.snapshot.paramMap = convertToParamMap({id: '04e077f9-ef95-484b-b28a-8798bca1767b'});
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TableSameSpeciesComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [TableSameSpeciesComponent, LegendTableComponent],
+            imports: [NoopAnimationsModule, MaterialDesignModule, HttpClientTestingModule],
+            providers: [InteractionService, GeneService, InteractomeService, SpeciesService,
+                { provide: Router, useClass: RouterStub},
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TableSameSpeciesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TableSameSpeciesComponent);
+        component = fixture.componentInstance;
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
