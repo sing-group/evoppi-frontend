@@ -33,11 +33,23 @@ import {CsvHelper} from '../../../helpers/csv.helper';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'app-table-same-species',
     templateUrl: './table-same-species.component.html',
-    styleUrls: ['./table-same-species.component.scss']
+    styleUrls: ['./table-same-species.component.scss'],
+    animations: [
+        trigger('slideInOut', [
+            transition(':enter', [
+                style({transform: 'translateY(-100%)'}),
+                animate('100ms ease-in', style({transform: 'translateY(0%)'}))
+            ]),
+            transition(':leave', [
+                animate('300ms ease-in', style({transform: 'translateY(-100%)'}))
+            ])
+        ])
+    ]
 })
 export class TableSameSpeciesComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;

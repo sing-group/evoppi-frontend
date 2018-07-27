@@ -91,6 +91,9 @@
                                        [length]="paginatorLength">
                         </mat-paginator>
                         <app-legend-table></app-legend-table>
+                        <div class="offset-5 col-6 app-table-spinner" *ngIf="paginatedDataSource.loading$ | async" [@slideInOut]>
+                            <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
+                        </div>
                     </div>
                 </div>
             </div>
