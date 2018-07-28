@@ -34,6 +34,12 @@ import {InteractionService} from '../services/interaction.service';
 import {ActivatedRoute} from '@angular/router';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {environment} from '../../../../environments/environment';
+import {InteractomeService} from '../services/interactome.service';
+import {WorkResultManager} from '../../query/form-distinct-species/work-result-manager';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {CsvHelper} from '../../../helpers/csv.helper';
+import {Node} from '../../../entities/bio/results/node.model';
+import {Location} from '@angular/common';
 
 @Component({
     selector: 'app-table-distinct-species',
@@ -65,11 +71,16 @@ export class TableDistinctSpeciesComponent implements OnInit {
     referenceInteractomes: Interactome[];
     targetInteractomes: Interactome[];
 
+    csvContent: SafeResourceUrl = '';
+    csvName = 'data.csv';
+    permalink: string;
+
     processing = false;
 
     uuid = '';
 
-    constructor(private interactionService: InteractionService, private dialog: MatDialog, private route: ActivatedRoute) {
+    constructor(private interactionService: InteractionService, private interactomeService: InteractomeService, private dialog: MatDialog,
+                private domSanitizer: DomSanitizer, private route: ActivatedRoute, private location: Location) {
     }
 
     ngOnInit() {
@@ -128,8 +139,87 @@ export class TableDistinctSpeciesComponent implements OnInit {
             orderField);
     }
 
-    private getResultPaginated(uri: string) {
-        this.paginatedResultUrl = environment.evoppiUrl + 'api/interaction/result/' + uri;
+    public getResult(uri: string) {
+        this.processing = true;
+        this.interactionService.getInteractionResult(uri)
+            .subscribe((res) => {
+                const workManager = new WorkResultManager(res);
+
+                this.referenceInteractomes = res.referenceInteractomes;
+                this.targetInteractomes = res.targetInteractomes;
+
+                // Construct nodes and links
+                let nodeIndex = 0;
+                const nodes = res.interactions.referenceGenes.map(gene =>
+                    new Node(
+                        nodeIndex++,
+                        gene.geneId,
+                        gene.defaultName,
+                        res.interactions.blastResults.filter(blast => blast.qseqid === gene.geneId))
+                );
+                const csvData = [];
+
+                const geneIds = res.interactions.referenceGenes.map(gene => gene.geneId)
+                    .sort((idA, idB) => idA - idB);
+
+                for (let i = 0; i < geneIds.length; i++) {
+                    for (let j = i; j < geneIds.length; j++) {
+                        const geneAId = geneIds[i];
+                        const geneBId = geneIds[j];
+
+                        const referenceInteraction = workManager.getReferenceInteractionOf(geneAId, geneBId);
+                        const targetInteractions = workManager.getTargetInteractionsOf(geneAId, geneBId);
+                        const inReference = referenceInteraction !== null;
+                        const inTarget = targetInteractions.length > 0;
+
+                        if (inReference || inTarget) {
+                            let type;
+                            let referenceDegree = '';
+                            let targetDegrees = [];
+
+                            if (inReference) {
+                                referenceDegree = String(referenceInteraction.interactomeDegrees[0].degree);
+                            }
+
+                            if (inTarget) {
+                                targetDegrees = targetInteractions.map(interaction => interaction.interactomeDegrees[0].degree)
+                                    .filter((item, position, self) => self.indexOf(item) === position) // Removes duplicates
+                                    .sort((d1, d2) => d1 - d2);
+                            }
+
+                            if (inReference && inTarget) {
+                                type = 3;
+                            }
+
+                            const indexGeneA = nodes.findIndex(node => node.label === geneAId);
+                            const indexGeneB = nodes.findIndex(node => node.label === geneBId);
+
+                            nodes[indexGeneA].linkCount++;
+                            nodes[indexGeneB].linkCount++;
+
+                            csvData.push([geneAId, nodes[indexGeneA].description, geneBId, nodes[indexGeneB].description,
+                                referenceDegree, targetDegrees.join(', ')]);
+                        }
+                    }
+                }
+
+                const referenceTitle = res.referenceInteractomes[0].species.name + ': '
+                    + res.referenceInteractomes.map(resInteractome => resInteractome.name).join(', ');
+                const targetTitle = res.targetInteractomes[0].species.name + ': '
+                    + res.targetInteractomes.map(targetInteractome => targetInteractome.name).join(', ');
+                this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                    CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B', referenceTitle, targetTitle], csvData)
+                );
+                this.csvName = 'interaction_' + res.queryGene + '_' + res.referenceInteractomes.map(x => x.id) + '_'
+                    + res.targetInteractomes.map(x => x.id) + '.csv';
+
+                this.processing = false;
+            });
+    }
+
+    private getResultPaginated(uuid: string) {
+        this.paginatedResultUrl = environment.evoppiUrl + 'api/interaction/result/' + uuid;
+        this.permalink = this.location.normalize('/results/table/distinct/' + uuid);
         this.interactionService.getInteractionResultSummarized(this.paginatedResultUrl)
             .subscribe((workRes) => {
                 this.referenceInteractomes = workRes.referenceInteractomes;
@@ -156,6 +246,20 @@ export class TableDistinctSpeciesComponent implements OnInit {
             console.log('The dialog was closed');
         });
 
+    }
+
+    onPrepareCSV() {
+        if (!this.processing) {
+            this.getResult(this.paginatedResultUrl);
+        }
+    }
+
+    downloadSingleFasta() {
+        this.interactomeService.downloadSingleFasta(this.paginatedResultUrl, this.uuid);
+    }
+
+    downloadFasta(suffix: string, id: number) {
+        this.interactomeService.downloadFasta(this.paginatedResultUrl, suffix, id);
     }
 
 }

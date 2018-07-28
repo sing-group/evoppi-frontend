@@ -35,6 +35,7 @@ import {ActivatedRoute, convertToParamMap, Router} from '@angular/router';
 import {InteractomeService} from '../services/interactome.service';
 import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {LegendTableComponent} from '../legend-table/legend-table.component';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('TableDistinctSpeciesComponent', () => {
     let component: TableDistinctSpeciesComponent;
@@ -45,7 +46,7 @@ describe('TableDistinctSpeciesComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TableDistinctSpeciesComponent, LegendTableComponent],
-            imports: [NoopAnimationsModule, MaterialDesignModule, HttpClientTestingModule],
+            imports: [NoopAnimationsModule, MaterialDesignModule, HttpClientTestingModule, RouterTestingModule],
             providers: [InteractionService, GeneService, InteractomeService, SpeciesService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }

@@ -31,6 +31,41 @@
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
                     </div>
                     <div class="card-body">
+                        <div>
+                            <span *ngIf="referenceInteractomes">
+                                <mat-menu #exportMenu="matMenu">
+                                    <button mat-menu-item (click)="downloadSingleFasta()">
+                                        Single FASTA
+                                    </button>
+                                    <button mat-menu-item
+                                            *ngFor="let resInteractome of referenceInteractomes.concat(targetInteractomes)"
+                                            (click)="downloadFasta(resInteractome.name, resInteractome.id)">
+                                        {{resInteractome.name}}
+                                    </button>
+                                </mat-menu>
+                                <button mat-raised-button color="primary" [matMenuTriggerFor]="exportMenu">
+                                    <mat-icon>more_vert</mat-icon>
+                                    Export FASTA
+                                </button>
+                            </span>
+                            <button mat-raised-button color="primary" *ngIf="csvContent === '' && !processing"
+                                    (click)="onPrepareCSV()">Prepare CSV export
+                            </button>
+                            <button mat-raised-button color="primary" *ngIf="csvContent === '' && processing">
+                                Preparing CSV...
+                            </button>
+                            <button mat-button *ngIf="csvContent === '' && processing" disabled>
+                                <mat-icon>
+                                    <mat-spinner [diameter]="20" color="accent"></mat-spinner>
+                                </mat-icon>
+                            </button>
+                            <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName"
+                               *ngIf="csvContent !== ''">Export CSV</a>
+
+                            <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
+                                <mat-icon>link</mat-icon>
+                                Permalink to result</a>
+                        </div>
                         <mat-table matSort [dataSource]="paginatedDataSource" class="table-distinct-species"
                                    appAfterViewInit (afterViewInit)="initTable()">
                             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
