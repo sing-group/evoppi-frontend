@@ -21,28 +21,45 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TableDistinctSpeciesComponent } from './table-distinct-species.component';
+import {TableDistinctSpeciesComponent} from './table-distinct-species.component';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+import {RouterStub} from '../../../../testing/router-stub';
+import {SpeciesService} from '../services/species.service';
+import {InteractionService} from '../services/interaction.service';
+import {GeneService} from '../services/gene.service';
+import {ActivatedRoute, convertToParamMap, Router} from '@angular/router';
+import {InteractomeService} from '../services/interactome.service';
+import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
+import {LegendTableComponent} from '../legend-table/legend-table.component';
 
 describe('TableDistinctSpeciesComponent', () => {
-  let component: TableDistinctSpeciesComponent;
-  let fixture: ComponentFixture<TableDistinctSpeciesComponent>;
+    let component: TableDistinctSpeciesComponent;
+    let fixture: ComponentFixture<TableDistinctSpeciesComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
+    activatedRoute.snapshot.paramMap = convertToParamMap({id: '04e077f9-ef95-484b-b28a-8798bca1767b'});
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TableDistinctSpeciesComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [TableDistinctSpeciesComponent, LegendTableComponent],
+            imports: [NoopAnimationsModule, MaterialDesignModule, HttpClientTestingModule],
+            providers: [InteractionService, GeneService, InteractomeService, SpeciesService,
+                { provide: Router, useClass: RouterStub},
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TableDistinctSpeciesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TableDistinctSpeciesComponent);
+        component = fixture.componentInstance;
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
