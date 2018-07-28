@@ -34,6 +34,8 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {Location} from '@angular/common';
+import {InteractomeService} from '../services/interactome.service';
 
 @Component({
     selector: 'app-table-same-species',
@@ -66,6 +68,7 @@ export class TableSameSpeciesComponent implements OnInit {
 
     csvContent: SafeResourceUrl = '';
     csvName = 'data.csv';
+    permalink: string;
 
     paginatedResultUrl = '';
 
@@ -74,8 +77,8 @@ export class TableSameSpeciesComponent implements OnInit {
 
     uuid = '';
 
-    constructor(private interactionService: InteractionService, private dialog: MatDialog, private domSanitizer: DomSanitizer,
-                private route: ActivatedRoute) {
+    constructor(private interactionService: InteractionService, private interactomeService: InteractomeService, private dialog: MatDialog,
+                private domSanitizer: DomSanitizer, private route: ActivatedRoute, private location: Location) {
     }
 
     ngOnInit() {
@@ -162,7 +165,7 @@ export class TableSameSpeciesComponent implements OnInit {
 
                 const csvData = [];
 
-                const getGene = geneId => res.interactions.genes.find(gene => gene.id === geneId);
+                const getGene = geneId => res.interactions.genes.find(gene => gene.geneId === geneId);
 
                 for (const interaction of this.interaction) {
                     const geneInfoA = getGene(interaction.geneA);
@@ -231,6 +234,7 @@ export class TableSameSpeciesComponent implements OnInit {
 
     private getResultPaginated(uuid: string) {
         this.paginatedResultUrl = environment.evoppiUrl + 'api/interaction/result/' + uuid ;
+        this.permalink = this.location.normalize('/results/table/same/' + uuid);
         this.interactionService.getInteractionResultSummarized(this.paginatedResultUrl)
             .subscribe((workRes) => {
                 this.resInteractomes = workRes.interactomes;
@@ -248,5 +252,19 @@ export class TableSameSpeciesComponent implements OnInit {
                 });
                 this.processing = false;
             });
+    }
+
+    onPrepareCSV() {
+        if (!this.processing) {
+            this.getResult(this.paginatedResultUrl);
+        }
+    }
+
+    downloadSingleFasta() {
+        this.interactomeService.downloadSingleFasta(this.paginatedResultUrl, this.uuid);
+    }
+
+    downloadFasta(suffix: string, id: number) {
+        this.interactomeService.downloadFasta(this.paginatedResultUrl, suffix, id);
     }
 }

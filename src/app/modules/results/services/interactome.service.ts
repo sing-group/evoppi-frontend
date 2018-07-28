@@ -29,6 +29,7 @@ import {environment} from '../../../../environments/environment';
 import {SpeciesService} from './species.service';
 import {Interactome} from '../../../entities/bio';
 import {ErrorHelper} from '../../../helpers/error.helper';
+import {saveAs} from 'file-saver/FileSaver';
 
 @Injectable()
 export class InteractomeService {
@@ -63,5 +64,21 @@ export class InteractomeService {
             .pipe(
                 catchError(ErrorHelper.handleError('getInteractomes', []))
             );
+    }
+
+    downloadSingleFasta(resultUrl: string, suffix: string) {
+        this.http.get(resultUrl + '/interactome/fasta', {responseType: 'blob'})
+            .subscribe(res => {
+                const blob = new Blob([res], {type: 'text/x-fasta'});
+                saveAs(blob, 'SingleFasta_' + suffix + '.fasta');
+            });
+    }
+
+    downloadFasta(resultUrl: string, suffix: string, id: number ) {
+        this.http.get(resultUrl + '/interactome/' + id + '/fasta', {responseType: 'blob'})
+            .subscribe(res => {
+                const blob = new Blob([res], {type: 'text/x-fasta'});
+                saveAs(blob, 'Fasta_' + suffix + '.fasta');
+            });
     }
 }
