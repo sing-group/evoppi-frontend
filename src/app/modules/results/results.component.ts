@@ -26,15 +26,32 @@ import {ActivatedRoute} from '@angular/router';
 import {DistinctResult, SameResult} from '../../entities';
 import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
+import {zip} from 'rxjs/observable/zip';
+import {interval} from 'rxjs/observable/interval';
+import {Subscription} from 'rxjs/Subscription';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'app-results',
     templateUrl: './results.component.html',
-    styleUrls: ['./results.component.scss']
+    styleUrls: ['./results.component.scss'],
+    animations: [
+        trigger('slideInOut', [
+            transition(':enter', [
+                style({transform: 'translateY(-100%)'}),
+                animate('100ms ease-in', style({transform: 'translateY(0%)'}))
+            ]),
+            transition(':leave', [
+                animate('300ms ease-in', style({transform: 'translateY(-100%)'}))
+            ])
+        ])
+    ]
 })
 export class ResultsComponent implements OnInit {
     private sameResults: SameResult[];
     private distinctResults: DistinctResult[];
+
+    loading = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -44,11 +61,22 @@ export class ResultsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.distinctResultsService.getResults().subscribe(results => {
-            this.distinctResults = results;
-        });
-        this.sameResultsService.getResults().subscribe(results => {
-            this.sameResults = results;
+        this.refresh();
+    }
+
+    refresh() {
+        this.loading = true;
+        zip(
+            this.distinctResultsService.getResults(),
+            this.sameResultsService.getResults(),
+        ).subscribe(result => {
+            this.distinctResults = result[0];
+            this.sameResults = result[1];
+            this.loading = false;
+            const subscriptionInterval: Subscription = interval(5000).subscribe(() => {
+                subscriptionInterval.unsubscribe();
+                this.refresh();
+            });
         });
 
     }
