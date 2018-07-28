@@ -37,6 +37,8 @@ import {InteractomeService} from './services/interactome.service';
 import {InteractionService} from './services/interaction.service';
 import {SpeciesService} from './services/species.service';
 import {GeneService} from './services/gene.service';
+import {MaterialDesignModule} from '../material-design/material-design.module';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('ResultsComponent', () => {
     let component: ResultsComponent;
@@ -46,7 +48,7 @@ describe('ResultsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ResultsComponent],
-            imports: [RouterTestingModule, MatTooltipModule, MatSliderModule, MatProgressBarModule, MatIconModule, HttpClientTestingModule],
+            imports: [NoopAnimationsModule, RouterTestingModule, MaterialDesignModule, HttpClientTestingModule],
             providers: [DistinctResultsService, SameResultsService, InteractionService, SpeciesService, GeneService, InteractomeService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }

@@ -34,6 +34,7 @@ import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {ActivatedRoute, convertToParamMap, Router} from '@angular/router';
 import {RouterStub} from '../../../../testing/router-stub';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('TableSameSpeciesComponent', () => {
     let component: TableSameSpeciesComponent;
@@ -44,11 +45,11 @@ describe('TableSameSpeciesComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TableSameSpeciesComponent, LegendTableComponent],
-            imports: [NoopAnimationsModule, MaterialDesignModule, HttpClientTestingModule],
+            imports: [NoopAnimationsModule, MaterialDesignModule, HttpClientTestingModule, RouterTestingModule],
             providers: [InteractionService, GeneService, InteractomeService, SpeciesService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
-            ]
+            ],
         })
             .compileComponents();
     }));
