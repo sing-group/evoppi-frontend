@@ -21,28 +21,45 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ChartSameSpeciesComponent } from './chart-same-species.component';
+import {ChartSameSpeciesComponent} from './chart-same-species.component';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+import {GraphComponent} from '../graph/graph.component';
+import {LegendSameSpeciesComponent} from '../legend-same-species/legend-same-species.component';
+import {ZoomableDirective} from '../directives/zoomable.directive';
+import {DraggableDirective} from '../directives/draggable.directive';
+import {InteractionService} from '../services/interaction.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {GeneService} from '../services/gene.service';
+import {InteractomeService} from '../services/interactome.service';
+import {SpeciesService} from '../services/species.service';
+import {ActivatedRoute, convertToParamMap} from '@angular/router';
+import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 
 describe('ChartSameSpeciesComponent', () => {
-  let component: ChartSameSpeciesComponent;
-  let fixture: ComponentFixture<ChartSameSpeciesComponent>;
+    let component: ChartSameSpeciesComponent;
+    let fixture: ComponentFixture<ChartSameSpeciesComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
+    activatedRoute.snapshot.paramMap = convertToParamMap({id: '04e077f9-ef95-484b-b28a-8798bca1767b'});
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ChartSameSpeciesComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [MaterialDesignModule, HttpClientTestingModule],
+            declarations: [ChartSameSpeciesComponent, GraphComponent, LegendSameSpeciesComponent, ZoomableDirective, DraggableDirective],
+            providers: [InteractionService, GeneService, InteractomeService, SpeciesService,
+                { provide: ActivatedRoute, useValue: activatedRoute }
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ChartSameSpeciesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ChartSameSpeciesComponent);
+        component = fixture.componentInstance;
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

@@ -31,7 +31,21 @@
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
                     </div>
                     <div class="card-body">
-                        chart-same-species works!
+                        <div *ngIf="nodes.length <= 100 || lastQueryMaxDegree <= 1">
+                            <div class="offset-5 col-6 app-table-spinner" *ngIf="processing && !fullResultAvailable" [@slideInOut]>
+                                <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
+                            </div>
+                            <app-graph *ngIf="fullResultAvailable" [nodes]="nodes" [links]="links"
+                                       [graphWidth]="graphWidth" [graphHeight]="graphHeight"></app-graph>
+                            <app-legend-same-species *ngIf="fullResultAvailable" [graphWidth]="graphWidth"
+                                                     [graphHeight]="graphHeight"></app-legend-same-species>
+                        </div>
+                        <div *ngIf="nodes.length > 100 && lastQueryMaxDegree > 1">
+                            <mat-card>
+                                <h2>Too much genes. Interactions graph is only shown for up to 100 genes when degree is
+                                    greater than one.</h2>
+                            </mat-card>
+                        </div>
                     </div>
                 </div>
             </div>

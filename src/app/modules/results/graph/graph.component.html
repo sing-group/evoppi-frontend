@@ -1,0 +1,135 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~ Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+  ~ Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+  ~ Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+  ~ .
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<div>
+    <button mat-button (click)="prepareDownload()" color="primary">
+        <mat-icon>file_download</mat-icon>
+    </button>
+    <a *ngIf="enableSVG" mat-raised-button [href]="svgURL" download="graph.svg" color="accent">SVG</a>
+    <a *ngIf="enablePNG" mat-raised-button [href]="pngURL" download="graph.png" color="accent">PNG</a>
+    <button *ngIf="enablePDF" mat-raised-button (click)="downloadPDF()" color="accent">PDF</button>
+</div>
+<svg #svg [attr.width]="options.width" [attr.height]="options.height" (mousedown)="graphDirty()">
+    <style type="text/css">
+        svg {
+            font-family: Roboto, "Helvetica Neue", sans-serif;
+            font-size: 14px;
+            background-color: white;
+        }
+
+        .node {
+            cursor: pointer;
+            transition: stroke-width 0.1s ease-out,
+            fill 0.1s ease-out,
+            stroke 0.1s ease-out;
+
+            stroke: white;
+            stroke-width: 0.25;
+        }
+
+        .node-name {
+            text-anchor: middle;
+            alignment-baseline: central;
+            font-weight: 300;
+            fill: white;
+        }
+
+        .link1 {
+            stroke-width: 4;
+            stroke: rgb(52, 112, 171);
+            background-color: rgb(52, 112, 171) !important;
+            color: white !important;
+            fill: transparent;
+        }
+
+        .link2 {
+            stroke-width: 4;
+            stroke: rgb(59, 80, 61);
+            background-color: rgb(59, 80, 61) !important;
+            color: white !important;
+            fill: transparent;
+        }
+
+        .link3 {
+            stroke-width: 4;
+            stroke: rgb(186, 9, 0);
+            background-color: rgb(186, 9, 0) !important;
+            color: white !important;
+            fill: transparent;
+        }
+
+        .link4 {
+            stroke-width: 4;
+            stroke: rgb(141, 69, 137);
+            background-color: rgb(141, 69, 137) !important;
+            color: white !important;
+            fill: transparent;
+        }
+
+        .node1 {
+            fill: grey;
+            background-color: grey !important;
+        }
+
+        .node2 {
+            fill: green;
+            background-color: green !important;
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
+    <svg:g [appZoomableOf]="svg">
+        <svg:g *ngFor="let link of links">
+            <svg:line *ngIf="link && link.source !== link.target"
+                      ngClass="{{'link' + link.type}}"
+                      [attr.x1]="link.source.x"
+                      [attr.y1]="link.source.y"
+                      [attr.x2]="link.target.x"
+                      [attr.y2]="link.target.y"></svg:line>
+            <svg:path *ngIf="link && link.source === link.target"
+                      [attr.d]="selfLink(link)"
+                      ngClass="{{'link' + link.type}}">
+            </svg:path>
+        </svg:g>
+        <svg:g *ngFor="let node of nodes" appDraggable="node" (click)="onNodeClick(node)"
+               [draggableNode]="node" [draggableInGraph]="graph"
+               [attr.transform]="'translate(' + node.x + ',' + node.y + ')'">
+            <svg:circle
+                    ngClass="{{'node' + node.type}}"
+                    cx="0"
+                    cy="0"
+                    [attr.r]="node.r">
+            </svg:circle>
+            <svg:text
+                    class="node-name"
+                    [attr.font-size]="node.fontSize">
+                <tspan x="0" dy="-0.2em">{{node.label}}</tspan>
+                <tspan x="0" dy="1em">{{node.description}}</tspan>
+            </svg:text>
+        </svg:g>
+
+    </svg:g>
+</svg>
+<canvas #canvas [attr.width]="options.width" [attr.height]="options.height">
+</canvas>

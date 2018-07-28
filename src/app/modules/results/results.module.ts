@@ -39,6 +39,11 @@ import {GeneInfoComponent} from './gene-info/gene-info.component';
 import {BlastResultComponent} from './blast-result/blast-result.component';
 import {AfterViewInitDirective} from './directives/after-view-init.directive';
 import {OnInitDirective} from './directives/on-init.directive';
+import {LegendSameSpeciesComponent} from './legend-same-species/legend-same-species.component';
+import {GraphComponent} from './graph/graph.component';
+import {DraggableDirective} from './directives/draggable.directive';
+import {ZoomableDirective} from './directives/zoomable.directive';
+import {D3Service} from './services/d3.service';
 
 @NgModule({
     imports: [
@@ -56,8 +61,12 @@ import {OnInitDirective} from './directives/on-init.directive';
         LegendTableComponent,
         GeneInfoComponent,
         BlastResultComponent,
+        LegendSameSpeciesComponent,
+        GraphComponent,
         AfterViewInitDirective,
-        OnInitDirective
+        OnInitDirective,
+        DraggableDirective,
+        ZoomableDirective
     ],
     providers: [
         DistinctResultsService,
@@ -66,7 +75,8 @@ import {OnInitDirective} from './directives/on-init.directive';
             provide: HTTP_INTERCEPTORS,
             useClass: AuthenticationInterceptor,
             multi: true
-        }
+        },
+        D3Service
     ],
     exports: [
         ResultsComponent,
@@ -77,8 +87,12 @@ import {OnInitDirective} from './directives/on-init.directive';
         LegendTableComponent,
         GeneInfoComponent,
         BlastResultComponent,
+        LegendSameSpeciesComponent,
+        GraphComponent,
         AfterViewInitDirective,
-        OnInitDirective
+        OnInitDirective,
+        DraggableDirective,
+        ZoomableDirective
     ],
     entryComponents: [
         GeneInfoComponent,
