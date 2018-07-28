@@ -1,0 +1,101 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~ Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
+  ~ Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
+  ~ Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
+  ~ .
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<mat-card>
+    <mat-card-header>
+        <div matCardAvatar>
+            <mat-icon>photo</mat-icon>
+        </div>
+        <mat-card-title>Legend</mat-card-title>
+        <mat-card-subtitle>Click in each node to obtain additional information</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <svg #legend [attr.width]="options.width-10" [attr.height]="200">
+            <svg:g [attr.transform]="'translate(25,25)'">
+                <svg:circle
+                        class="node1"
+                        cx="0"
+                        cy="0"
+                        [attr.r]="24">
+                </svg:circle>
+                <svg:text
+                        class="node-name"
+                        [attr.font-size]="15">
+                    Gene
+                </svg:text>
+                <svg:text x="40" y="5">
+                    Gene without ortholog
+                </svg:text>
+            </svg:g>
+            <svg:g [attr.transform]="'translate(25,80)'">
+                <svg:circle
+                        class="node2"
+                        cx="0"
+                        cy="0"
+                        [attr.r]="24">
+                </svg:circle>
+                <svg:text
+                        class="node-name"
+                        [attr.font-size]="15">
+                    Gene
+                </svg:text>
+                <svg:text x="40" y="5">
+                    Gene with ortholog
+                </svg:text>
+            </svg:g>
+            <svg:g [attr.transform]="'translate(1,125)'">
+                <svg:line class="link1"
+                          [attr.x1]="0"
+                          [attr.y1]="0"
+                          [attr.x2]="48"
+                          [attr.y2]="0"
+                ></svg:line>
+                <svg:text x="64" y="3">
+                    Interaction only in reference interactome
+                </svg:text>
+            </svg:g>
+            <svg:g [attr.transform]="'translate(1,150)'">
+                <svg:line class="link2"
+                          [attr.x1]="0"
+                          [attr.y1]="0"
+                          [attr.x2]="48"
+                          [attr.y2]="0"
+                ></svg:line>
+                <svg:text x="64" y="3">
+                    Interaction only in target interactome
+                </svg:text>
+            </svg:g>
+            <svg:g [attr.transform]="'translate(1,175)'">
+                <svg:line class="link3"
+                          [attr.x1]="0"
+                          [attr.y1]="0"
+                          [attr.x2]="48"
+                          [attr.y2]="0"
+                ></svg:line>
+                <svg:text x="64" y="3">
+                    Interaction in both interactomes
+                </svg:text>
+            </svg:g>
+        </svg>
+    </mat-card-content>
+</mat-card>

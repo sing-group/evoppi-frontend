@@ -21,28 +21,45 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ChartDistinctSpeciesComponent } from './chart-distinct-species.component';
+import {ChartDistinctSpeciesComponent} from './chart-distinct-species.component';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {ZoomableDirective} from '../directives/zoomable.directive';
+import {SpeciesService} from '../services/species.service';
+import {MaterialDesignModule} from '../../material-design/material-design.module';
+import {GraphComponent} from '../graph/graph.component';
+import {InteractionService} from '../services/interaction.service';
+import {GeneService} from '../services/gene.service';
+import {ActivatedRoute, convertToParamMap} from '@angular/router';
+import {InteractomeService} from '../services/interactome.service';
+import {DraggableDirective} from '../directives/draggable.directive';
+import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
+import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
 
 describe('ChartDistinctSpeciesComponent', () => {
-  let component: ChartDistinctSpeciesComponent;
-  let fixture: ComponentFixture<ChartDistinctSpeciesComponent>;
+    let component: ChartDistinctSpeciesComponent;
+    let fixture: ComponentFixture<ChartDistinctSpeciesComponent>;
+    const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
+    activatedRoute.snapshot.paramMap = convertToParamMap({id: '04e077f9-ef95-484b-b28a-8798bca1767b'});
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ChartDistinctSpeciesComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [MaterialDesignModule, HttpClientTestingModule],
+            declarations: [ChartDistinctSpeciesComponent, GraphComponent, LegendDistinctSpeciesComponent, ZoomableDirective, DraggableDirective],
+            providers: [InteractionService, GeneService, InteractomeService, SpeciesService,
+                {provide: ActivatedRoute, useValue: activatedRoute}
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ChartDistinctSpeciesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ChartDistinctSpeciesComponent);
+        component = fixture.componentInstance;
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

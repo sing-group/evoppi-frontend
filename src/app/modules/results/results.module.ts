@@ -44,6 +44,7 @@ import {GraphComponent} from './graph/graph.component';
 import {DraggableDirective} from './directives/draggable.directive';
 import {ZoomableDirective} from './directives/zoomable.directive';
 import {D3Service} from './services/d3.service';
+import {LegendDistinctSpeciesComponent} from './legend-distinct-species/legend-distinct-species.component';
 
 @NgModule({
     imports: [
@@ -62,6 +63,7 @@ import {D3Service} from './services/d3.service';
         GeneInfoComponent,
         BlastResultComponent,
         LegendSameSpeciesComponent,
+        LegendDistinctSpeciesComponent,
         GraphComponent,
         AfterViewInitDirective,
         OnInitDirective,
@@ -88,6 +90,7 @@ import {D3Service} from './services/d3.service';
         GeneInfoComponent,
         BlastResultComponent,
         LegendSameSpeciesComponent,
+        LegendDistinctSpeciesComponent,
         GraphComponent,
         AfterViewInitDirective,
         OnInitDirective,
