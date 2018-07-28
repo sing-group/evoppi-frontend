@@ -1,6 +1,6 @@
 {
   "name": "@evoppi/frontend",
-  "version": "1.0.0-alpha.44",
+  "version": "1.0.0-alpha.45",
   "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
   "author": {
@@ -64,7 +64,8 @@
     "rxjs": "5.5.10",
     "web-animations-js": "2.3.1",
     "zone.js": "0.8.26",
-    "d3": "4.13.0"
+    "d3": "4.13.0",
+    "jspdf": "^1.4.1"
   },
   "devDependencies": {
     "@angular/compiler-cli": "5.2.9",
