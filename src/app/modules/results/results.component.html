@@ -84,13 +84,13 @@
                                         {{result.status}}
                                     </td>
                                     <td>
-                                        <button mat-icon-button color="primary" routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}">
+                                        <button mat-icon-button color="primary" routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="secondary" routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}">
+                                        <button mat-icon-button color="secondary" routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="warn">
+                                        <button mat-icon-button color="warn" [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Delete">delete</mat-icon>
                                         </button>
                                     </td>
@@ -151,13 +151,13 @@
                                         {{result.status}}
                                     </td>
                                     <td>
-                                        <button mat-icon-button color="primary" routerLink="{{getSameSpeciesTablePath(result.uuid)}}">
+                                        <button mat-icon-button color="primary" routerLink="{{getSameSpeciesTablePath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="secondary" routerLink="{{getSameSpeciesChartPath(result.uuid)}}">
+                                        <button mat-icon-button color="secondary" routerLink="{{getSameSpeciesChartPath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="warn">
+                                        <button mat-icon-button color="warn" [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Delete">delete</mat-icon>
                                         </button>
                                     </td>
