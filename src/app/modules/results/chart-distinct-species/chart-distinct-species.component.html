@@ -35,10 +35,14 @@
                              [@slideInOut]>
                             <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
                         </div>
-                        <app-graph *ngIf="fullResultAvailable" [nodes]="nodes" [links]="links" [graphWidth]="graphWidth"
-                                   [graphHeight]="graphHeight"></app-graph>
-                        <app-legend-distinct-species *ngIf="fullResultAvailable" [graphWidth]="graphWidth"
-                                                     [graphHeight]="graphHeight"></app-legend-distinct-species>
+                        <div #graphContainer>
+                            <app-graph *ngIf="fullResultAvailable" [nodes]="nodes" [links]="links"
+                                       [graphWidth]="graphContainer.offsetWidth"
+                                       [graphHeight]="graphHeight"></app-graph>
+                            <app-legend-distinct-species *ngIf="fullResultAvailable"
+                                                         [graphWidth]="graphContainer.offsetWidth"
+                                                         [graphHeight]="graphHeight"></app-legend-distinct-species>
+                        </div>
                     </div>
                 </div>
             </div>
