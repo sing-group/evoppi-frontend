@@ -72,6 +72,9 @@ export class ResultsComponent implements OnInit {
         ).subscribe(result => {
             this.distinctResults = result[0];
             this.sameResults = result[1];
+        }, error => {
+            console.log("Error retrieving results", error);
+        }, () => {
             this.loading = false;
             const subscriptionInterval: Subscription = interval(5000).subscribe(() => {
                 subscriptionInterval.unsubscribe();
