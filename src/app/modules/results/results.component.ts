@@ -48,8 +48,8 @@ import {animate, style, transition, trigger} from '@angular/animations';
     ]
 })
 export class ResultsComponent implements OnInit {
-    private sameResults: SameResult[];
-    private distinctResults: DistinctResult[];
+    private sameResults: SameResult[] = [];
+    private distinctResults: DistinctResult[] = [];
 
     loading = false;
 
@@ -66,22 +66,23 @@ export class ResultsComponent implements OnInit {
 
     refresh() {
         this.loading = true;
-        zip(
-            this.distinctResultsService.getResults(),
-            this.sameResultsService.getResults(),
-        ).subscribe(result => {
-            this.distinctResults = result[0];
-            this.sameResults = result[1];
-        }, error => {
-            console.log("Error retrieving results", error);
-        }, () => {
-            this.loading = false;
-            const subscriptionInterval: Subscription = interval(5000).subscribe(() => {
-                subscriptionInterval.unsubscribe();
-                this.refresh();
+        this.distinctResultsService.getResults()
+            .subscribe(resultDistinct => {
+                this.distinctResults = resultDistinct;
+            }, error => {
+            }, () => {
+                this.sameResultsService.getResults()
+                    .subscribe(resultSame => {
+                        this.sameResults = resultSame;
+                    }, error => {
+                    }, () => {
+                        this.loading = false;
+                        const subscriptionInterval: Subscription = interval(5000).subscribe(() => {
+                            subscriptionInterval.unsubscribe();
+                            this.refresh();
+                        });
+                    });
             });
-        });
-
     }
 
     get sameSpeciesResults(): SameResult[] {
