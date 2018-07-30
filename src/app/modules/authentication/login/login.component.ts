@@ -26,6 +26,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
+import {BrowserService} from "../services/browser.service";
 
 @Component({
     selector: 'app-login',
@@ -50,12 +51,13 @@ export class LoginComponent implements OnInit {
     };
 
     constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService, private router: Router,
-                private matDialog: MatDialog, private route: ActivatedRoute) {
+                private matDialog: MatDialog, private route: ActivatedRoute, private browserService: BrowserService) {
     }
 
     ngOnInit() {
         if (this.route.routeConfig.data.state === 'logout') {
             this.authenticationService.logOut();
+            this.browserService.assign('/dashboard');
         }
 
         this.formLogin = this.formBuilder.group({
@@ -92,7 +94,7 @@ export class LoginComponent implements OnInit {
                     this.formLogin.setErrors({'invalidForm': 'Error: User or password incorrect. Please try again.'});
                 } else {
                     this.authenticationService.logIn(formModel.username, formModel.password, role);
-                    this.router.navigate(['/query']);
+                    this.browserService.assign('/dashboard');
                 }
             });
     }
