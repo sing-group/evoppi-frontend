@@ -24,7 +24,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-import {catchError} from 'rxjs/operators';
+import {catchError, concat, mergeMap, reduce} from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/concatMap';
@@ -111,46 +111,63 @@ export class InteractionService {
 
     public retrieveWorkInteractomes(workResult: WorkResult): Observable<WorkResult> {
         if (workResult.interactomes) {
-            return forkJoin(
-                from(workResult.interactomes)
-                    .mergeMap(
-                        interactome => this.interactomeService.getInteractome(interactome.id, true)
-                    )
-                    .combineLatest(interactome => {
-                        const index = workResult.interactomes.findIndex(it => it.id === interactome.id);
+            return from(workResult.interactomes)
+                .pipe(
+                    mergeMap(
+                        interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true),
+                        (interactomeUri, interactome) => {
+                            const index = workResult.interactomes.findIndex(it => it.id === interactome.id);
 
-                        workResult.interactomes[index] = interactome;
+                            if (index !== -1) {
+                                workResult.interactomes[index] = interactome;
+                            } else {
+                                throw TypeError('Interactome not found: ' + interactome.id);
+                            }
 
-                        return workResult;
-                    })
-            ).map(workResults => workResults[0]);
+                            return workResult;
+                        }
+                    ),
+                    reduce((acc, cur) => cur)
+                );
         } else if (workResult.referenceInteractomes && workResult.targetInteractomes) {
-            return forkJoin(
-                from(workResult.referenceInteractomes)
-                    .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
-                    .combineLatest(interactome => {
-                        const index = workResult.referenceInteractomes.findIndex(x => x.id === interactome.id);
-                        if (index !== -1) {
-                            workResult.referenceInteractomes[index] = interactome;
-                        } else {
-                            throw TypeError('Reference interactome not found: ' + interactome.id);
-                        }
+            return from(workResult.referenceInteractomes)
+                .pipe(
+                    mergeMap(
+                        interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true),
+                        (interactomeUri, interactome) => {
+                            const index = workResult.referenceInteractomes.findIndex(it => it.id === interactome.id);
 
-                        return workResult;
-                    }),
-                from(workResult.targetInteractomes)
-                    .mergeMap(interactome => this.interactomeService.getInteractome(interactome.id, true))
-                    .combineLatest(interactome => {
-                        const index = workResult.targetInteractomes.findIndex(x => x.id === interactome.id);
-                        if (index !== -1) {
-                            workResult.targetInteractomes[index] = interactome;
-                        } else {
-                            throw TypeError('Target interactome not found: ' + interactome.id);
-                        }
+                            if (index !== -1) {
+                                workResult.referenceInteractomes[index] = interactome;
+                            } else {
+                                throw TypeError('Reference interactome not found: ' + interactome.id);
+                            }
 
-                        return workResult;
-                    })
-            ).map(workResults => workResults[0]);
+                            return workResult;
+                        }
+                    ),
+                    concat(
+                        from(workResult.targetInteractomes)
+                            .pipe(
+                                mergeMap(
+                                    interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true),
+                                    (interactomeUri, interactome) => {
+                                        const index = workResult.targetInteractomes.findIndex(it => it.id === interactome.id);
+
+                                        if (index !== -1) {
+                                            workResult.targetInteractomes[index] = interactome;
+                                        } else {
+                                            throw TypeError('Target interactome not found: ' + interactome.id);
+                                        }
+
+                                        return workResult;
+                                    }
+                                ),
+                                reduce((acc, cur) => cur)
+                            )
+                    ),
+                    reduce((acc, cur) => cur)
+                );
         } else {
             throw TypeError('Invalid work result. Missing interactomes.');
         }

@@ -27,10 +27,9 @@ import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {ErrorHelper} from '../../../helpers/error.helper';
-import {catchError, map, mergeMap, reduce} from 'rxjs/operators';
+import {catchError, mergeMap, reduce} from 'rxjs/operators';
 import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
-import {zipStatic} from 'rxjs/operators/zip';
 import {WorkStatusService} from './work-status.service';
 
 
@@ -50,11 +49,10 @@ export class SameResultsService {
         return this.http.get<WorkResult[]>(this.endpoint)
             .pipe(
                 mergeMap(results => results),
-                mergeMap(result => zipStatic(
-                    this.interactionService.retrieveWorkInteractomes(result),
-                    this.workStatusService.getWork(result.id)
-                )),
-                map(result => this.mapWorkResultToSameResult(result[0], result[1])),
+                mergeMap(
+                    result => this.workStatusService.getWork(result.id),
+                    (workResult, workStatus) => this.mapWorkResultToSameResult(workResult, workStatus)
+                ),
                 reduce((acc: SameResult[], val: SameResult) => { acc.push(val); return acc; }, []),
                 catchError(ErrorHelper.handleError('SameResultService.getResults', []))
             );
@@ -63,11 +61,10 @@ export class SameResultsService {
     public getResult(uuid: string): Observable<SameResult> {
         return this.http.get<WorkResult>(this.endpointSingle.replace('UUID', uuid))
             .pipe(
-                mergeMap(result => zipStatic(
-                    this.interactionService.retrieveWorkInteractomes(result),
-                    this.workStatusService.getWork(result.id)
-                )),
-                map(result => this.mapWorkResultToSameResult(result[0], result[1])),
+                mergeMap(
+                    result => this.workStatusService.getWork(result.id),
+                    (workResult, workStatus) => this.mapWorkResultToSameResult(workResult, workStatus)
+                ),
                 catchError(ErrorHelper.handleError('SameResultsService.getResult', null))
             );
     }
@@ -75,7 +72,7 @@ export class SameResultsService {
     private mapWorkResultToSameResult(workResult: WorkResult, work: Work): SameResult {
         return {
             uuid: workResult.id,
-            species: workResult.interactomes[0].species.name,
+            species: workResult.species.name,
             interactomes: workResult.interactomes.map(interactome => interactome.name),
             progress: work.steps.map(step => step.progress).reduce((prev, curr) => Math.max(prev, curr), 0),
             status: work.status

@@ -30,8 +30,7 @@ import {HttpClient} from '@angular/common/http';
 import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
 import {WorkStatusService} from './work-status.service';
-import {zipStatic} from 'rxjs/operators/zip';
-import {catchError, map, mergeMap, reduce} from 'rxjs/operators';
+import {catchError, mergeMap, reduce} from 'rxjs/operators';
 
 
 @Injectable()
@@ -51,11 +50,10 @@ export class DistinctResultsService {
         return this.http.get<WorkResult[]>(this.endpoint)
             .pipe(
                 mergeMap(results => results),
-                mergeMap(result => zipStatic(
-                    this.interactionService.retrieveWorkInteractomes(result),
-                    this.workStatusService.getWork(result.id)
-                )),
-                map(result => this.mapWorkResultToDistinctResult(result[0], result[1])),
+                mergeMap(
+                    workResult => this.workStatusService.getWork(workResult.id),
+                    (workResult, workStatus) => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                ),
                 reduce((acc: DistinctResult[], val: DistinctResult) => { acc.push(val); return acc; }, []),
                 catchError(ErrorHelper.handleError('DistinctResultsService.getResults', []))
             );
@@ -64,11 +62,10 @@ export class DistinctResultsService {
     public getResult(uuid: string): Observable<DistinctResult> {
         return this.http.get<WorkResult>(this.endpointSingle.replace('UUID', uuid))
             .pipe(
-                mergeMap(result => zipStatic(
-                    this.interactionService.retrieveWorkInteractomes(result),
-                    this.workStatusService.getWork(result.id)
-                )),
-                map(result => this.mapWorkResultToDistinctResult(result[0], result[1])),
+                mergeMap(
+                    workResult => this.workStatusService.getWork(workResult.id),
+                    (workResult, workStatus) => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                ),
                 catchError(ErrorHelper.handleError('DistinctResultsService.getResults', null))
             );
     }
@@ -76,8 +73,8 @@ export class DistinctResultsService {
     private mapWorkResultToDistinctResult(workResult: WorkResult, work: Work): DistinctResult {
         return {
             uuid: workResult.id,
-            referenceSpecies: workResult.referenceInteractomes[0].species.name,
-            targetSpecies: workResult.targetInteractomes[0].species.name,
+            referenceSpecies: workResult.referenceSpecies.name,
+            targetSpecies: workResult.targetSpecies.name,
             referenceInteractomes: workResult.referenceInteractomes.map(interactome => interactome.name),
             targetInteractomes: workResult.targetInteractomes.map(interactome => interactome.name),
             progress: work.steps.map(step => step.progress).reduce((prev, curr) => Math.max(prev, curr), 0),
