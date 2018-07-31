@@ -1,4 +1,4 @@
-/*!
+/*
  *  EvoPPI Frontend
  *
  * Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
@@ -21,11 +21,18 @@
  *
  */
 
-.interactome-count {
-  cursor: default;
-}
+import { TestBed, inject } from '@angular/core/testing';
 
-.app-table-spinner {
-  position: absolute;
-  top: 20px;
-}
+import { WorkStatusService } from './work-status.service';
+
+describe('WorkStatusService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [WorkStatusService]
+    });
+  });
+
+  it('should be created', inject([WorkStatusService], (service: WorkStatusService) => {
+    expect(service).toBeTruthy();
+  }));
+});

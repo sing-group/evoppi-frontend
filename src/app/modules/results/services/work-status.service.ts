@@ -1,4 +1,4 @@
-/*!
+/*
  *  EvoPPI Frontend
  *
  * Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
@@ -21,11 +21,26 @@
  *
  */
 
-.interactome-count {
-  cursor: default;
-}
+import {Injectable} from '@angular/core';
+import {environment} from '../../../../environments/environment';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
+import {Work} from '../../../entities/execution';
+import {catchError} from 'rxjs/operators';
+import {ErrorHelper} from '../../../helpers/error.helper';
 
-.app-table-spinner {
-  position: absolute;
-  top: 20px;
+@Injectable()
+export class WorkStatusService {
+
+    private endpoint = environment.evoppiUrl + 'api/work';
+
+    constructor(private http: HttpClient) {
+    }
+
+    public getWork(uuid: string): Observable<Work> {
+        return this.http.get<Work>(this.endpoint + '/' + uuid)
+            .pipe(
+                catchError(ErrorHelper.handleError('WorkStatusService.getWork', null))
+            );
+    }
 }

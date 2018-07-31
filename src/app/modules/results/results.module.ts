@@ -45,6 +45,7 @@ import {DraggableDirective} from './directives/draggable.directive';
 import {ZoomableDirective} from './directives/zoomable.directive';
 import {D3Service} from './services/d3.service';
 import {LegendDistinctSpeciesComponent} from './legend-distinct-species/legend-distinct-species.component';
+import {WorkStatusService} from './services/work-status.service';
 
 @NgModule({
     imports: [
@@ -73,6 +74,7 @@ import {LegendDistinctSpeciesComponent} from './legend-distinct-species/legend-d
     providers: [
         DistinctResultsService,
         SameResultsService,
+        WorkStatusService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthenticationInterceptor,

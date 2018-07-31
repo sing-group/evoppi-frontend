@@ -26,10 +26,9 @@ import {ActivatedRoute} from '@angular/router';
 import {DistinctResult, SameResult} from '../../entities';
 import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
-import {zip} from 'rxjs/observable/zip';
-import {interval} from 'rxjs/observable/interval';
-import {Subscription} from 'rxjs/Subscription';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {async} from 'rxjs/scheduler/async';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'app-results',
@@ -51,7 +50,8 @@ export class ResultsComponent implements OnInit {
     private sameResults: SameResult[] = [];
     private distinctResults: DistinctResult[] = [];
 
-    loading = false;
+    public loadingDistinct = false;
+    public loadingSame = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -61,28 +61,45 @@ export class ResultsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.refresh();
+        this.loadingDistinct = true;
+        this.distinctResultsService.getResults()
+            .subscribe(
+                resultsDistinct => {
+                    this.distinctResults = resultsDistinct;
+                    this.distinctResults.filter(result => result.progress < 1)
+                        .forEach(result => this.scheduleResultUpdate(result, uuid => this.distinctResultsService.getResult(uuid)));
+                },
+                () => {},
+                () => this.loadingDistinct = false
+            );
+
+        this.loadingSame = true;
+        this.sameResultsService.getResults()
+            .subscribe(
+                resultsSame => {
+                    this.sameResults = resultsSame;
+                    this.sameResults.filter(result => result.progress < 1)
+                        .forEach(result => this.scheduleResultUpdate(result, uuid => this.sameResultsService.getResult(uuid)));
+                },
+                () => {},
+                () => this.loadingSame = false
+            );
     }
 
-    refresh() {
-        this.loading = true;
-        this.distinctResultsService.getResults()
-            .subscribe(resultDistinct => {
-                this.distinctResults = resultDistinct;
-            }, error => {
-            }, () => {
-                this.sameResultsService.getResults()
-                    .subscribe(resultSame => {
-                        this.sameResults = resultSame;
-                    }, error => {
-                    }, () => {
-                        this.loading = false;
-                        const subscriptionInterval: Subscription = interval(5000).subscribe(() => {
-                            subscriptionInterval.unsubscribe();
-                            this.refresh();
-                        });
-                    });
-            });
+    private scheduleResultUpdate<R extends DistinctResult | SameResult, S extends (string) => Observable<R>>(result: R, resultGetter: S) {
+        async.schedule(() => {
+            resultGetter(result.uuid)
+                .subscribe(
+                    resultSame => {
+                        result.progress = resultSame.progress;
+                        result.status = resultSame.status;
+
+                        if (result.status !== 'COMPLETED') {
+                            this.scheduleResultUpdate(result, resultGetter);
+                        }
+                    }
+                )
+        }, 5000);
     }
 
     get sameSpeciesResults(): SameResult[] {

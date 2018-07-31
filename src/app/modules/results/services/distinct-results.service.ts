@@ -26,52 +26,63 @@ import {DistinctResult} from '../../../entities';
 import {Observable} from 'rxjs/Observable';
 import {ErrorHelper} from '../../../helpers/error.helper';
 import {environment} from '../../../../environments/environment';
-import {catchError} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import {WorkResult} from '../../../entities/execution';
+import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
-
+import {WorkStatusService} from './work-status.service';
+import {zipStatic} from 'rxjs/operators/zip';
+import {catchError, map, mergeMap, reduce} from 'rxjs/operators';
 
 
 @Injectable()
 export class DistinctResultsService {
 
     private endpoint = environment.evoppiUrl + 'api/user/interaction/result/different';
+    private endpointSingle = environment.evoppiUrl + 'api/interaction/result/UUID?summarize=true';
 
-    constructor(private http: HttpClient, private interactionService: InteractionService) {
+    constructor(
+        private http: HttpClient,
+        private interactionService: InteractionService,
+        private workStatusService: WorkStatusService
+    ) {
     }
 
     public getResults(): Observable<DistinctResult[]> {
         return this.http.get<WorkResult[]>(this.endpoint)
-            .mergeMap (
-                workResults => {
-                    const observables: Observable<WorkResult>[] = [];
-                    workResults.forEach(workResult => {
-                        observables.push(this.interactionService.retrieveWorkInteractomes(workResult));
-                    });
-                    return forkJoin(observables);
-                }
-
-            )
-            .map( workResults => {
-                const distinctResult: DistinctResult[] = [];
-                workResults.forEach(workResult => {
-                    distinctResult.push({
-                        uuid: workResult.id,
-                        referenceSpecies: workResult.referenceInteractomes[0].species.name,
-                        targetSpecies: workResult.targetInteractomes[0].species.name,
-                        referenceInteractomes: workResult.referenceInteractomes.map(interactome => interactome.name),
-                        targetInteractomes: workResult.targetInteractomes.map(interactome => interactome.name),
-                        progress: workResult.status === 'COMPLETED' ? 1 : 0.5, // TODO
-                        status: workResult.status
-                    });
-                });
-                return distinctResult;
-            })
             .pipe(
+                mergeMap(results => results),
+                mergeMap(result => zipStatic(
+                    this.interactionService.retrieveWorkInteractomes(result),
+                    this.workStatusService.getWork(result.id)
+                )),
+                map(result => this.mapWorkResultToDistinctResult(result[0], result[1])),
+                reduce((acc: DistinctResult[], val: DistinctResult) => { acc.push(val); return acc; }, []),
                 catchError(ErrorHelper.handleError('DistinctResultsService.getResults', []))
             );
+    }
+
+    public getResult(uuid: string): Observable<DistinctResult> {
+        return this.http.get<WorkResult>(this.endpointSingle.replace('UUID', uuid))
+            .pipe(
+                mergeMap(result => zipStatic(
+                    this.interactionService.retrieveWorkInteractomes(result),
+                    this.workStatusService.getWork(result.id)
+                )),
+                map(result => this.mapWorkResultToDistinctResult(result[0], result[1])),
+                catchError(ErrorHelper.handleError('DistinctResultsService.getResults', null))
+            );
+    }
+
+    private mapWorkResultToDistinctResult(workResult: WorkResult, work: Work): DistinctResult {
+        return {
+            uuid: workResult.id,
+            referenceSpecies: workResult.referenceInteractomes[0].species.name,
+            targetSpecies: workResult.targetInteractomes[0].species.name,
+            referenceInteractomes: workResult.referenceInteractomes.map(interactome => interactome.name),
+            targetInteractomes: workResult.targetInteractomes.map(interactome => interactome.name),
+            progress: work.steps.map(step => step.progress).reduce((prev, curr) => Math.max(prev, curr), 0),
+            status: work.status
+        };
     }
 
 }

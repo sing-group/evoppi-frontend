@@ -29,14 +29,19 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title ">Distinct species</h4>
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
+                        <div class="offset-10 col-2 app-table-spinner" *ngIf="loadingDistinct"
+                             [@slideInOut]>
+                            <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div *ngIf="distinctSpeciesResults.length === 0">
-                            There are no results available, query at least one analysis to check it here.
-                        </div>
-                        <div class="offset-10 col-2 app-table-spinner" *ngIf="loading"
-                             [@slideInOut]>
-                            <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
+                            <span *ngIf="loadingDistinct">
+                                Loading distinct species interaction results. Please, wait...
+                            </span>
+                            <span *ngIf="!loadingDistinct">
+                                There are no results available, query at least one analysis to check it here.
+                            </span>
                         </div>
                         <div class="table-responsive" *ngIf="distinctSpeciesResults.length > 0">
                             <table class="table">
@@ -109,14 +114,19 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title ">Same species</h4>
                         <p class="card-category">Analysis done with interactomes coming from the same species</p>
+                        <div class="offset-10 col-2 app-table-spinner" *ngIf="loadingSame"
+                             [@slideInOut]>
+                            <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div *ngIf="sameSpeciesResults.length === 0">
-                            There are no results available, query at least one analysis to check it here.
-                        </div>
-                        <div class="offset-10 col-2 app-table-spinner" *ngIf="loading"
-                             [@slideInOut]>
-                            <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
+                            <span *ngIf="loadingSame">
+                                Loading same species interaction results. Please, wait...
+                            </span>
+                            <span *ngIf="!loadingSame">
+                                There are no results available, query at least one analysis to check it here.
+                            </span>
                         </div>
                         <div class="table-responsive" *ngIf="sameSpeciesResults.length > 0">
                             <table class="table">

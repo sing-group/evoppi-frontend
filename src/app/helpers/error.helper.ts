@@ -30,6 +30,8 @@ export class ErrorHelper {
 
       console.log(`${operation} failed: ${error.message}`);
 
+      console.log(error.stack);
+
       return of(result as T);
     };
   }
