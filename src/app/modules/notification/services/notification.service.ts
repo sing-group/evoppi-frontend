@@ -39,7 +39,7 @@ export class NotificationService {
 
     public success(detail: string, summary: string): void {
         this.messageEmitter.emit({
-            severity: ErrorSeverity.ERROR, summary: summary, detail: detail
+            severity: ErrorSeverity.SUCCESS, summary: summary, detail: detail
         });
     }
 

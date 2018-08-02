@@ -28,6 +28,9 @@ import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {asyncScheduler, Observable} from 'rxjs';
+import {NotificationService} from '../notification/services/notification.service';
+import {ConfirmSheetComponent} from '../material-design/confirm-sheet/confirm-sheet.component';
+import {MatBottomSheet} from '@angular/material';
 
 @Component({
     selector: 'app-results',
@@ -52,10 +55,20 @@ export class ResultsComponent implements OnInit {
     public loadingDistinct = false;
     public loadingSame = false;
 
+    private static readonly resultComparator = (a: DistinctResult | SameResult, b: DistinctResult | SameResult) => {
+        if (a.creation === b.creation) {
+            return a.uuid < b.uuid ? -1 : 1;
+        } else {
+            return a.creation < b.creation ? -1 : 1;
+        }
+    };
+
     constructor(
         private route: ActivatedRoute,
         private distinctResultsService: DistinctResultsService,
-        private sameResultsService: SameResultsService
+        private sameResultsService: SameResultsService,
+        private notificationService: NotificationService,
+        private bottomSheet: MatBottomSheet
     ) {
     }
 
@@ -64,7 +77,7 @@ export class ResultsComponent implements OnInit {
         this.distinctResultsService.getResults()
             .subscribe(
                 resultsDistinct => {
-                    this.distinctResults = resultsDistinct;
+                    this.distinctResults = resultsDistinct.sort(ResultsComponent.resultComparator);
                     this.distinctResults.filter(result => result.progress < 1)
                         .forEach(result => this.scheduleResultUpdate(result, uuid => this.distinctResultsService.getResult(uuid)));
                 },
@@ -76,7 +89,7 @@ export class ResultsComponent implements OnInit {
         this.sameResultsService.getResults()
             .subscribe(
                 resultsSame => {
-                    this.sameResults = resultsSame;
+                    this.sameResults = resultsSame.sort(ResultsComponent.resultComparator);
                     this.sameResults.filter(result => result.progress < 1)
                         .forEach(result => this.scheduleResultUpdate(result, uuid => this.sameResultsService.getResult(uuid)));
                 },
@@ -101,27 +114,81 @@ export class ResultsComponent implements OnInit {
         }, 5000);
     }
 
-    get sameSpeciesResults(): SameResult[] {
+    public get sameSpeciesResults(): SameResult[] {
         return this.sameResults;
     }
 
-    get distinctSpeciesResults(): DistinctResult[] {
+    public get distinctSpeciesResults(): DistinctResult[] {
         return this.distinctResults;
     }
 
-    getDistinctSpeciesChartPath(uuid: string): string {
+    public getDistinctSpeciesChartPath(uuid: string): string {
         return this.route.routeConfig.data.chartDistinctSpeciesPath.replace(/\{0\}/, uuid);
     }
 
-    getSameSpeciesChartPath(uuid: string): string {
+    public getSameSpeciesChartPath(uuid: string): string {
         return this.route.routeConfig.data.chartSameSpeciesPath.replace(/\{0\}/, uuid);
     }
 
-    getDistinctSpeciesTablePath(uuid: string): string {
+    public getDistinctSpeciesTablePath(uuid: string): string {
         return this.route.routeConfig.data.tableDistinctSpeciesPath.replace(/\{0\}/, uuid);
     }
 
-    getSameSpeciesTablePath(uuid: string): string {
+    public getSameSpeciesTablePath(uuid: string): string {
         return this.route.routeConfig.data.tableSameSpeciesPath.replace(/\{0\}/, uuid);
+    }
+
+    public deleteDistinctResult(uuid: string): void {
+        this.askToConfirmResultDeletion('distinct', () => this.requestDeleteDistinct(uuid));
+    }
+
+    public deleteSameResult(uuid: string): void {
+        this.askToConfirmResultDeletion('same', () => this.requestDeleteSame(uuid));
+    }
+
+    private askToConfirmResultDeletion(type: string, deleteResult: () => void): void {
+        this.bottomSheet.open(
+            ConfirmSheetComponent,
+            {
+                data: {
+                    title: 'Delete result',
+                    message: `You are about to delete a ${type.toLowerCase()} species interactions result. Do you want to continue?`
+                }
+            }
+        ).afterDismissed().subscribe(confirmed => {
+            if (confirmed) {
+                deleteResult();
+            }
+        });
+    }
+
+    private requestDeleteDistinct(uuid: string) {
+        const resultToDelete = this.distinctResults.find(result => result.uuid === uuid);
+        const resultToDeleteIndex = this.distinctResults.indexOf(resultToDelete);
+        this.distinctResults.splice(resultToDeleteIndex, 1);
+
+        this.distinctResultsService.deleteResult(uuid)
+            .subscribe(
+                () => this.notificationService.success('Result deleted', `Distinct species result '${uuid}' deleted.`),
+                () => {
+                    this.distinctResults.push(resultToDelete);
+                    this.distinctResults.sort(ResultsComponent.resultComparator);
+                }
+            );
+    }
+
+    private requestDeleteSame(uuid: string) {
+        const resultToDelete = this.sameResults.find(result => result.uuid === uuid);
+        const resultToDeleteIndex = this.sameResults.indexOf(resultToDelete);
+        this.sameResults.splice(resultToDeleteIndex, 1);
+
+        this.sameResultsService.deleteResult(uuid)
+            .subscribe(
+                () => this.notificationService.success('Result deleted', `Same species result '${uuid}' deleted.`),
+                () => {
+                    this.sameResults.push(resultToDelete);
+                    this.sameResults.sort(ResultsComponent.resultComparator);
+                }
+            );
     }
 }

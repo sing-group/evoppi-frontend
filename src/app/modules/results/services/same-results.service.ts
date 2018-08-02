@@ -36,6 +36,7 @@ import {EvoppiError} from '../../../entities/notification';
 @Injectable()
 export class SameResultsService {
     private endpoint = environment.evoppiUrl + 'api/user/interaction/result/same';
+    private endpointDelete = environment.evoppiUrl + 'api/interaction/result/UUID';
     private endpointSingle = environment.evoppiUrl + 'api/interaction/result/UUID?summarize=true';
 
     constructor(
@@ -69,7 +70,10 @@ export class SameResultsService {
                             workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
                         ))
                 ),
-                EvoppiError.throwOnError('Error retrieving same result', `The result with the id '${uuid}' could not be retrieved.`)
+                EvoppiError.throwOnError(
+                    'Error retrieving same result',
+                    `The result with the id '${uuid}' could not be retrieved from the backend.`
+                )
             );
     }
 
@@ -79,7 +83,15 @@ export class SameResultsService {
             species: workResult.species.name,
             interactomes: workResult.interactomes.map(interactome => interactome.name),
             progress: work.steps.map(step => step.progress).reduce((prev, curr) => Math.max(prev, curr), 0),
-            status: work.status
+            status: work.status,
+            creation: work.creationDateTime
         };
+    }
+
+    public deleteResult(uuid: string): Observable<void> {
+        return this.http.delete(this.endpointDelete.replace('UUID', uuid))
+            .pipe(
+                EvoppiError.throwOnError('Error deleting same result', `The result with the id '${uuid}' could not be deleted.`)
+            );
     }
 }

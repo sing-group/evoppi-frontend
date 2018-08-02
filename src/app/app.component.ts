@@ -24,6 +24,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NotificationService} from './modules/notification/services/notification.service';
 import {ToastrService} from 'ngx-toastr';
+import {ErrorSeverity} from './entities/notification';
 
 @Component({
     selector: 'app-root',
@@ -34,13 +35,26 @@ export class AppComponent implements OnInit {
     constructor(
         private notification: NotificationService,
         private toastr: ToastrService
-    ) {}
+    ) {
+    }
 
     ngOnInit(): void {
         this.notification.getMessages().subscribe(
-            error => {
-                console.log(error);
-                this.toastr.error(error.summary, error.detail);
+            message => {
+                switch (message.severity) {
+                    case ErrorSeverity.ERROR:
+                        this.toastr.error(message.summary, message.detail);
+                        break;
+                    case ErrorSeverity.SUCCESS:
+                        this.toastr.success(message.summary, message.detail);
+                        break;
+                    case ErrorSeverity.INFO:
+                        this.toastr.info(message.summary, message.detail);
+                        break;
+                    case ErrorSeverity.WARNING:
+                        this.toastr.warning(message.summary, message.detail);
+                        break;
+                }
             }
         );
     }

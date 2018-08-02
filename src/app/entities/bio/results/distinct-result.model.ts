@@ -28,5 +28,6 @@ export interface DistinctResult {
     referenceInteractomes: string[],
     targetInteractomes: string[],
     progress: number,
-    status: string
+    status: string,
+    creation: Date
 }

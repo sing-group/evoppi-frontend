@@ -35,8 +35,8 @@ import {EvoppiError} from '../../../entities/notification';
 
 @Injectable()
 export class DistinctResultsService {
-
     private endpoint = environment.evoppiUrl + 'api/user/interaction/result/different';
+    private endpointDelete = environment.evoppiUrl + 'api/interaction/result/UUID';
     private endpointSingle = environment.evoppiUrl + 'api/interaction/result/UUID?summarize=true';
 
     constructor(
@@ -82,8 +82,16 @@ export class DistinctResultsService {
             referenceInteractomes: workResult.referenceInteractomes.map(interactome => interactome.name),
             targetInteractomes: workResult.targetInteractomes.map(interactome => interactome.name),
             progress: work.steps.map(step => step.progress).reduce((prev, curr) => Math.max(prev, curr), 0),
-            status: work.status
+            status: work.status,
+            creation: work.creationDateTime
         };
+    }
+
+    public deleteResult(uuid: string): Observable<void> {
+        return this.http.delete(this.endpointDelete.replace('UUID', uuid))
+            .pipe(
+                EvoppiError.throwOnError('Error deleting same result', `The result with the id '${uuid}' could not be deleted.`)
+            );
     }
 
 }

@@ -99,7 +99,7 @@
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn" [disabled]="result.status !== 'COMPLETED'">
-                                            <mat-icon aria-label="Delete">delete</mat-icon>
+                                            <mat-icon aria-label="Delete" (click)="deleteDistinctResult(result.uuid)">delete</mat-icon>
                                         </button>
                                     </td>
                                 </tr>
@@ -174,7 +174,7 @@
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn" [disabled]="result.status !== 'COMPLETED'">
-                                            <mat-icon aria-label="Delete">delete</mat-icon>
+                                            <mat-icon aria-label="Delete" (click)="deleteSameResult(result.uuid)">delete</mat-icon>
                                         </button>
                                     </td>
                                 </tr>

@@ -26,5 +26,6 @@ export interface SameResult {
     species: string,
     interactomes: string[],
     progress: number,
-    status: string
+    status: string,
+    creation: Date
 }
