@@ -21,28 +21,24 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {AuthenticationService} from './authentication.service';
-
+import {ErrorHandler, Inject, Injectable} from '@angular/core';
+import {NotificationService} from '../services/notification.service';
+import {EvoppiError} from '../../../entities/notification';
 
 @Injectable()
-export class AuthenticationInterceptor implements HttpInterceptor {
+export class ErrorNotificationHandler implements ErrorHandler {
+    constructor(private notificationService: NotificationService) {}
 
-    constructor(public authenticationService: AuthenticationService) {}
-
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-        if (request.url.endsWith('/user/role') || this.authenticationService.isGuest()) {
-            return next.handle(request);
-        }
-        request = request.clone({
-            setHeaders: {
-                Authorization: this.authenticationService.getAuthorizationHeader()
+    public handleError(error: any): void {
+        if (console) {
+            console.log(error);
+            if (error.cause) {
+                console.log(error.cause);
             }
-        });
+        }
 
-        return next.handle(request);
+        if (error.summary && error.detail) {
+            this.notificationService.error(error.summary, error.detail);
+        }
     }
 }

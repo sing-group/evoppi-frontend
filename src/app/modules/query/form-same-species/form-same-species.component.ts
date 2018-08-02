@@ -29,8 +29,9 @@ import {GeneInfo, Interaction, Interactome, Species} from '../../../entities/bio
 import {SpeciesService} from '../../results/services/species.service';
 import {GeneService} from '../../results/services/gene.service';
 import {InteractionService} from '../../results/services/interaction.service';
-import {map} from 'rxjs/operators';
+import {debounceTime, map} from 'rxjs/operators';
 import {InteractomeService} from '../../results/services/interactome.service';
+import {AbstractControl} from '@angular/forms/src/model';
 
 @Component({
     selector: 'app-form-same-species',
@@ -38,40 +39,128 @@ import {InteractomeService} from '../../results/services/interactome.service';
     styleUrls: ['./form-same-species.component.scss']
 })
 export class FormSameSpeciesComponent implements OnInit {
+    public species: Species[];
+    public interactomes: Interactome[] = [];
+    public genes: GeneInfo[];
 
-    formSameSpecies: FormGroup;
-    species: Species[];
-    interactomes: Interactome[] = [];
-    interaction: Interaction[] = [];
-    genes: GeneInfo[];
-    level: number;
-    genesInput: string;
-    searchingGenes = false;
+    public searchingGenes: boolean;
+    public processing: boolean;
 
-    processing = false;
+    public formSameSpecies: FormGroup;
 
+    private controlInteractomes: AbstractControl;
 
-    constructor(private snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
-                private speciesService: SpeciesService, private geneService: GeneService, private interactionService: InteractionService,
-                private interactomeService: InteractomeService) {
-    }
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private speciesService: SpeciesService,
+        private interactomeService: InteractomeService,
+        private geneService: GeneService,
+        private interactionService: InteractionService,
+        private formBuilder: FormBuilder,
+        private snackBar: MatSnackBar,
+    ) {}
 
-    ngOnInit() {
-        this.level = 1;
-        this.genesInput = '';
+    ngOnInit(): void {
+        this.processing = false;
+        this.searchingGenes = false;
+
+        this.species = [];
+        this.interactomes = [];
+        this.genes = [];
+
         this.formSameSpecies = this.formBuilder.group({
             'species': ['', Validators.required],
             'interactomes': ['', Validators.required],
             'gene': ['', Validators.required],
             'level': ['1', [Validators.required, Validators.min(1), Validators.max(3)]],
         });
-        this.getSpecies();
-        this.formSameSpecies.controls.gene.valueChanges.debounceTime(500).subscribe((res) => {
-            this.onSearchGenes(res);
+
+        this.controlInteractomes = this.formSameSpecies.controls['interactomes'];
+
+        this.updateSpecies();
+
+        this.formSameSpecies.get('species').valueChanges.subscribe(species => {
+            this.updateInteractomes(species);
         });
+
+        this.formSameSpecies.get('gene').valueChanges
+            .pipe(debounceTime(500))
+        .subscribe(res => this.updateGenes(res));
     }
 
-    showNotification() {
+    public selectAllInteractomes(): void {
+        this.controlInteractomes.setValue(this.interactomes);
+    }
+
+    public deselectAllInteractomes(): void {
+        this.controlInteractomes.setValue([]);
+    }
+
+    public onGeneSelected(value): void {
+        this.formSameSpecies.patchValue({gene: value}, {emitEvent: false});
+        this.genes = [];
+    }
+
+    public onRequestCompare(): void {
+        if (this.processing || this.formSameSpecies.status === 'INVALID') {
+            return;
+        }
+
+        this.processing = true;
+
+        const formModel = this.formSameSpecies.value;
+        this.interactionService.getSameSpeciesInteraction(
+            formModel.gene,
+            formModel.interactomes.map((item) => item.id),
+            formModel.level
+        )
+            .subscribe(
+                work => this.showNotification(),
+                error => this.formSameSpecies.setErrors({'invalidForm': 'Error: ' + error.error}),
+                () => this.processing = false
+            );
+    }
+
+    private updateSpecies(): void {
+        this.speciesService.getSpecies()
+            .pipe(map(species => species.filter(specie => specie.interactomes.length > 1)))
+        .subscribe(species => this.species = species);
+    }
+
+    private updateInteractomes(value: Species): void {
+        this.interactomes = [];
+
+        for (const interactome of value.interactomes) {
+            this.interactomeService.getInteractome(interactome.id)
+                .subscribe(
+                    res => this.interactomes.push(res),
+                    err => {},
+                    () => this.interactomes.sort((a, b) => a.name < b.name ? -1 : 1)
+                );
+        }
+    }
+
+    private updateGenes(value: string): void {
+        if (value === '') {
+            this.genes = [];
+            return;
+        }
+        this.searchingGenes = true;
+
+        let interactomes = [];
+        if (this.interactomes.length > 0) {
+            interactomes = this.interactomes.map((interactome) => interactome.id);
+        }
+        this.geneService.getGeneName(value, interactomes)
+            .subscribe(
+                res => this.genes = res,
+                error => {},
+                () => this.searchingGenes = false
+            );
+    }
+
+    private showNotification() {
         const snackBar = this.snackBar.open('Same species interactions requested', 'Go to results', {
             duration: 5000
         });
@@ -79,84 +168,4 @@ export class FormSameSpeciesComponent implements OnInit {
             this.route.routeConfig.data.resultsResource
         ]));
     }
-
-    getSpecies(): void {
-        this.speciesService.getSpecies()
-            .pipe(
-                map( species => {
-                    return species.filter( (specie: Species) => specie.interactomes.length > 1);
-                })
-            )
-            .subscribe(species => this.species = species);
-    }
-
-    onChangeForm(): void {
-    }
-
-    selectAllInteractomes(control: string, values) {
-        this.formSameSpecies.controls[control].setValue(values);
-    }
-
-    deselectAllInteractomes(control: string) {
-        this.formSameSpecies.controls[control].setValue([]);
-    }
-
-    onChangeSpecies(value: Species): void {
-        this.interactomes = [];
-
-        for (const interactome of value.interactomes) {
-            this.interactomeService.getInteractome(interactome.id)
-                .subscribe(res => {
-                        this.interactomes.push(res);
-                    },
-                    err => {},
-                    () => {
-                        this.interactomes.sort((a, b) => a.name < b.name ? -1 : 1);
-                    });
-        }
-    }
-
-    onSearchGenes(value: string): void {
-        let interactomes = [];
-        if (value === '') {
-            this.genes = [];
-            return;
-        }
-        this.searchingGenes = true;
-        if (this.interactomes.length > 0) {
-            interactomes = this.interactomes.map((interactome) => interactome.id);
-        }
-        this.geneService.getGeneName(value, interactomes)
-            .subscribe(res => {
-                this.genes = res;
-                this.searchingGenes = false;
-            });
-
-    }
-    onCompare(): void {
-        if (this.processing) {
-            return;
-        }
-        this.processing = true;
-        if (this.formSameSpecies.status === 'INVALID') {
-            console.log('INVALID');
-            return;
-        }
-        const formModel = this.formSameSpecies.value;
-        this.interactionService.getSameSpeciesInteraction(formModel.gene, formModel.interactomes.map((item) => item.id),
-            formModel.level)
-            .subscribe((work) => {
-                this.showNotification();
-            }, (error) => {
-                this.formSameSpecies.setErrors({'invalidForm': 'Error: ' + error.error});
-                this.processing = false;
-            });
-    }
-
-    public onGeneSelected(value) {
-        this.genesInput = value;
-        this.formSameSpecies.patchValue({gene: value}, {emitEvent: false});
-        this.genes = [];
-    }
-
 }

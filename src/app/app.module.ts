@@ -22,7 +22,7 @@
  */
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
 import {AppRoutingModule} from './app.routing';
@@ -31,6 +31,9 @@ import {AppComponent} from './app.component';
 import {AuthenticationModule} from './modules/authentication/authentication.module';
 import {BrowserModule} from '@angular/platform-browser';
 import {MainModule} from './modules/main/main.module';
+import {ToastrModule} from 'ngx-toastr';
+import {NotificationModule} from './modules/notification/notification.module';
+import {ErrorNotificationHandler} from './modules/notification/handlers/error-notification.handler';
 
 @NgModule({
     imports: [
@@ -39,12 +42,22 @@ import {MainModule} from './modules/main/main.module';
         BrowserModule,
         BrowserAnimationsModule,
         MainModule,
-        RouterModule
+        NotificationModule.forRoot(),
+        RouterModule,
+        ToastrModule.forRoot({
+            positionClass: 'toast-bottom-right',
+            preventDuplicates: true
+        })
     ],
     declarations: [
         AppComponent
     ],
-    providers: [],
+    providers: [
+        {
+            provide: ErrorHandler,
+            useClass: ErrorNotificationHandler
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

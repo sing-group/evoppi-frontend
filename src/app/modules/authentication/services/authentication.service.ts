@@ -26,9 +26,8 @@ import {Role} from '../../../entities/data';
 import {User} from '../../../entities/user';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {catchError} from 'rxjs/operators';
-import {ErrorHelper} from '../../../helpers/error.helper';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import {EvoppiError} from '../../../entities/notification';
 
 @Injectable()
 export class AuthenticationService {
@@ -42,30 +41,24 @@ export class AuthenticationService {
     }
 
     public getUserName(): string {
-        // return null;
-        // return 'Administrator';
-        // return 'Researcher';
         return this.user.name;
     }
 
     public getUserRole(): Role {
-        // return 'GUEST';
-        // return 'ADMIN';
-        // return 'RESEARCHER';
         return this.user.role;
     }
 
     public isGuest(): boolean {
-        // return true;
         return !this.user.authenticated;
     }
 
     public checkCredentials (username: string, password: string): Observable<Role> {
         return this.http.get<Role>(this.endpoint + '/role',
-            {responseType: 'text' as 'json', params: {login: username, password: password}})
-            .pipe(
-                catchError(ErrorHelper.handleError('getRole', Role.INVALID))
-            );
+            {responseType: 'text' as 'json', params: {login: username, password: password}}
+        )
+        .pipe(
+            EvoppiError.throwOnError('Error retrieving user role', `The role of the user '${username}' could not be retrieved.`)
+        );
     }
 
     public logIn(username: string, password: string, role: Role) {

@@ -21,28 +21,27 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {AuthenticationService} from './authentication.service';
+import {catchError} from 'rxjs/operators';
+import {MonoTypeOperatorFunction} from 'rxjs/internal/types';
 
+export class EvoppiError extends Error {
+    public readonly summary: string;
+    public readonly detail: string;
+    public readonly cause?: any;
 
-@Injectable()
-export class AuthenticationInterceptor implements HttpInterceptor {
-
-    constructor(public authenticationService: AuthenticationService) {}
-
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-        if (request.url.endsWith('/user/role') || this.authenticationService.isGuest()) {
-            return next.handle(request);
-        }
-        request = request.clone({
-            setHeaders: {
-                Authorization: this.authenticationService.getAuthorizationHeader()
+    static throwOnError(summary: string, detail: string): MonoTypeOperatorFunction<any> {
+        return catchError(
+            (error: any) => {
+                throw new EvoppiError(summary, detail, error);
             }
-        });
+        );
+    }
 
-        return next.handle(request);
+    constructor(summary: string, detail: string, cause?: any) {
+        super(detail);
+
+        this.summary = summary;
+        this.detail = detail;
+        this.cause = cause;
     }
 }

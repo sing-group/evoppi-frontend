@@ -23,14 +23,14 @@
 
 import {Injectable} from '@angular/core';
 import {DistinctResult} from '../../../entities';
-import {Observable} from 'rxjs/Observable';
-import {ErrorHelper} from '../../../helpers/error.helper';
+import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
 import {WorkStatusService} from './work-status.service';
-import {catchError, mergeMap, reduce} from 'rxjs/operators';
+import {map, mergeMap, reduce} from 'rxjs/operators';
+import {EvoppiError} from '../../../entities/notification';
 
 
 @Injectable()
@@ -51,11 +51,13 @@ export class DistinctResultsService {
             .pipe(
                 mergeMap(results => results),
                 mergeMap(
-                    workResult => this.workStatusService.getWork(workResult.id),
-                    (workResult, workStatus) => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                    workResult => this.workStatusService.getWork(workResult.id)
+                        .pipe(map(
+                            workStatus => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                        ))
                 ),
                 reduce((acc: DistinctResult[], val: DistinctResult) => { acc.push(val); return acc; }, []),
-                catchError(ErrorHelper.handleError('DistinctResultsService.getResults', []))
+                EvoppiError.throwOnError('Error distinct result', 'The list of results could not be retrieved from the backend.')
             );
     }
 
@@ -63,10 +65,12 @@ export class DistinctResultsService {
         return this.http.get<WorkResult>(this.endpointSingle.replace('UUID', uuid))
             .pipe(
                 mergeMap(
-                    workResult => this.workStatusService.getWork(workResult.id),
-                    (workResult, workStatus) => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                    workResult => this.workStatusService.getWork(workResult.id)
+                        .pipe(map(
+                            workStatus => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                        ))
                 ),
-                catchError(ErrorHelper.handleError('DistinctResultsService.getResults', null))
+                EvoppiError.throwOnError('Error retrieving distinct result', `The result with the id '${uuid}' could not be retrieved.`)
             );
     }
 

@@ -46,13 +46,15 @@ import {ZoomableDirective} from './directives/zoomable.directive';
 import {D3Service} from './services/d3.service';
 import {LegendDistinctSpeciesComponent} from './legend-distinct-species/legend-distinct-species.component';
 import {WorkStatusService} from './services/work-status.service';
+import {NotificationModule} from '../notification/notification.module';
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
+        HttpClientModule,
         MaterialDesignModule,
-        HttpClientModule
+        NotificationModule,
+        RouterModule
     ],
     declarations: [
         ResultsComponent,

@@ -22,14 +22,14 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
+import {concatMap, map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {SpeciesService} from './species.service';
 import {Interactome} from '../../../entities/bio';
-import {ErrorHelper} from '../../../helpers/error.helper';
 import {saveAs} from 'file-saver/FileSaver';
+import {EvoppiError} from '../../../entities/notification';
 
 @Injectable()
 export class InteractomeService {
@@ -43,31 +43,47 @@ export class InteractomeService {
         let request = this.http.get<Interactome>(this.endpoint + '/' + id);
 
         if (retrieveSpecies) {
-            request = request.concatMap(
-                interactome => this.speciesService.getSpeciesById(interactome.species.id),
-                (interactome, species) => {
-                    interactome.species = species;
+            request = request.pipe(
+                concatMap(
+                    interactome => this.speciesService.getSpeciesById(interactome.species.id)
+                    .pipe(
+                        map(species => {
+                            interactome.species = species;
 
-                    return interactome;
-                }
+                            return interactome;
+                        })
+                    )
+                )
             );
         }
 
         return request
             .pipe(
-                catchError(ErrorHelper.handleError('getInteractome', null))
+                EvoppiError.throwOnError(
+                    'Error requesting interactome',
+                    `The interactome '${id}' could not be retrieved from the backend.`
+                )
             );
     }
 
     getInteractomes(): Observable<Interactome[]> {
         return this.http.get<Interactome[]>(this.endpoint)
             .pipe(
-                catchError(ErrorHelper.handleError('getInteractomes', []))
+                EvoppiError.throwOnError(
+                    'Error requesting interactomes',
+                    'The interactomes could not be retrieved from the backend.'
+                )
             );
     }
 
     downloadSingleFasta(resultUrl: string, suffix: string) {
         this.http.get(resultUrl + '/interactome/fasta', {responseType: 'blob'})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting single FASTA',
+                    'Single FASTA could not be retrieved from the backend.'
+                )
+            )
             .subscribe(res => {
                 const blob = new Blob([res], {type: 'text/x-fasta'});
                 saveAs(blob, 'SingleFasta_' + suffix + '.fasta');
@@ -76,6 +92,12 @@ export class InteractomeService {
 
     downloadFasta(resultUrl: string, suffix: string, id: number ) {
         this.http.get(resultUrl + '/interactome/' + id + '/fasta', {responseType: 'blob'})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting FASTA',
+                    `FASTA for interactome '${id}' could not be retrieved from the backend.`
+                )
+            )
             .subscribe(res => {
                 const blob = new Blob([res], {type: 'text/x-fasta'});
                 saveAs(blob, 'Fasta_' + suffix + '.fasta');

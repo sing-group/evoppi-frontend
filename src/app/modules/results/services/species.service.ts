@@ -23,32 +23,33 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {catchError, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {Species} from '../../../entities/bio';
-import {ErrorHelper} from '../../../helpers/error.helper';
+import {NotificationService} from '../../notification/services/notification.service';
+import {EvoppiError} from '../../../entities/notification';
 
 @Injectable()
 export class SpeciesService {
 
     private endpoint = environment.evoppiUrl + 'api/species';
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private notification: NotificationService) {
     }
 
     getSpecies(): Observable<Species[]> {
         return this.http.get<Species[]>(this.endpoint)
             .pipe(
                 map(res => res.sort((a, b) => a.name < b.name ? -1 : 1)),
-                catchError(ErrorHelper.handleError('getSpecies', []))
+                EvoppiError.throwOnError('Error retrieving species', 'The list of species could not be retrieved from the backend.')
             );
     }
 
     getSpeciesById(id: number): Observable<Species> {
         return this.http.get<Species>(this.endpoint + '/' + id)
             .pipe(
-                catchError(ErrorHelper.handleError('getSpeciesById', null))
+                EvoppiError.throwOnError('Error retrieving single species', `The species with the id '${id}' could not be retrieved.`)
             );
     }
 

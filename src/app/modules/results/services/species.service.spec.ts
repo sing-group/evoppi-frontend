@@ -55,7 +55,7 @@ describe('SpeciesService', () => {
         expect(service instanceof SpeciesService).toBe(true, 'new service should be ok');
     }));
 
-    it('can call getSpecies', inject([SpeciesService], (service: SpeciesService) => {
+    it('can call updateSpecies', inject([SpeciesService], (service: SpeciesService) => {
         spyOn(service, 'getSpecies').and.returnValue(of(SPECIES));
         service.getSpecies().subscribe((species) => {
             expect(species instanceof Array).toBeTruthy();

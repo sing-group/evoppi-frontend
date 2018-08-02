@@ -21,7 +21,7 @@
  *
  */
 
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {convertToParamMap, ParamMap, Route} from '@angular/router';
 import {Injectable} from '@angular/core';
 import {MAIN_ROUTES} from '../app/modules/main/main.routing';

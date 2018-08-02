@@ -24,3 +24,4 @@
 export * from './bio';
 export * from './navigation';
 export * from './user';
+export * from './notification';

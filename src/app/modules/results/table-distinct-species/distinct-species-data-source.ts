@@ -22,10 +22,8 @@
  */
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {finalize, mergeMap} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
 import {WorkResultManager} from '../../query/form-distinct-species/work-result-manager';
 import {InteractionService} from '../services/interaction.service';
 import {Interaction} from '../../../entities/bio';

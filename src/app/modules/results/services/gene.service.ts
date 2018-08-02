@@ -23,13 +23,10 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {catchError} from 'rxjs/operators';
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import {of} from 'rxjs/observable/of';
+import {forkJoin, Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {Gene, GeneInfo} from '../../../entities/bio';
-import {ErrorHelper} from '../../../helpers/error.helper';
+import {EvoppiError} from '../../../entities/notification';
 
 @Injectable()
 export class GeneService {
@@ -53,23 +50,33 @@ export class GeneService {
 
         return this.http.get<GeneInfo[]>(this.endpoint + '/name', {params: params})
             .pipe(
-                catchError(ErrorHelper.handleError('getGeneName', []))
+                EvoppiError.throwOnError(
+                    'Error retrieving gene information',
+                    `Genes with a name or identifier starting with '${prefix} could not be retrieved from the backend.`
+                )
             );
     }
 
     getGeneNames(genes: Gene[]): Observable<GeneInfo[]> {
-        const observables: Observable<GeneInfo>[] = [];
-        for (const gene of genes) {
-            observables.push(<Observable<GeneInfo>> this.http.get(this.endpoint + '/' + gene.geneId + '/name'));
-        }
-        return forkJoin(observables);
+        return forkJoin(
+            genes.map(gene => this.http.get<GeneInfo>(`${this.endpoint}/${gene.geneId}/name`))
+        )
+        .pipe(
+            EvoppiError.throwOnError(
+                'Error retrieving genes information',
+                'Genes information could not be retrieved from the backend.'
+            )
+        );
     }
 
     getGene(id: number): Observable<Gene> {
 
         return this.http.get<Gene>(this.endpoint + '/' + id)
             .pipe(
-                catchError(ErrorHelper.handleError('getGene', null))
+                EvoppiError.throwOnError(
+                    'Error retrieving gene information',
+                    `Gene information for gene '${id}' could not be retrieved from the backend.`
+                )
             );
     }
 
@@ -79,7 +86,10 @@ export class GeneService {
         } else {
             return this.http.get<Gene>(this.endpoint + '?ids=' + ids.join(','))
                 .pipe(
-                    catchError(ErrorHelper.handleError('getGene', null))
+                    EvoppiError.throwOnError(
+                        'Error retrieving genes data',
+                        `Gene data for genes '${ids.join(',')}' could not be retrieved from the backend.`
+                    )
                 );
         }
     }

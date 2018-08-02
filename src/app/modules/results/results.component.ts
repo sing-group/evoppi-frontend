@@ -27,8 +27,7 @@ import {DistinctResult, SameResult} from '../../entities';
 import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
 import {animate, style, transition, trigger} from '@angular/animations';
-import {async} from 'rxjs/scheduler/async';
-import {Observable} from 'rxjs/Observable';
+import {asyncScheduler, Observable} from 'rxjs';
 
 @Component({
     selector: 'app-results',
@@ -87,7 +86,7 @@ export class ResultsComponent implements OnInit {
     }
 
     private scheduleResultUpdate<R extends DistinctResult | SameResult, S extends (string) => Observable<R>>(result: R, resultGetter: S) {
-        async.schedule(() => {
+        asyncScheduler.schedule(() => {
             resultGetter(result.uuid)
                 .subscribe(
                     resultSame => {

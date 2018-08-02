@@ -24,10 +24,9 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Work} from '../../../entities/execution';
-import {catchError} from 'rxjs/operators';
-import {ErrorHelper} from '../../../helpers/error.helper';
+import {EvoppiError} from '../../../entities/notification';
 
 @Injectable()
 export class WorkStatusService {
@@ -40,7 +39,10 @@ export class WorkStatusService {
     public getWork(uuid: string): Observable<Work> {
         return this.http.get<Work>(this.endpoint + '/' + uuid)
             .pipe(
-                catchError(ErrorHelper.handleError('WorkStatusService.getWork', null))
+                EvoppiError.throwOnError(
+                    'Error retrieving work information',
+                    `Information for work '${uuid}' could not be retrieved.`
+                )
             );
     }
 }

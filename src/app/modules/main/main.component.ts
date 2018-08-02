@@ -23,14 +23,14 @@
 
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Location, PopStateEvent} from '@angular/common';
-import 'rxjs/add/operator/filter';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import PerfectScrollbar from 'perfect-scrollbar';
 import {routerTransition} from './main.animations';
 import {MAIN_NAVIGATION_INFO} from './main.navigation';
 import {AuthenticationService} from '../authentication/services/authentication.service';
 import {NavigationInfo} from '../../entities';
+import {filter} from 'rxjs/operators';
 
 @Component({
     selector: 'app-admin-layout',
@@ -74,7 +74,10 @@ export class MainComponent implements OnInit, AfterViewInit {
                 }
             }
         });
-        this._router = this.router.events.filter(event => event instanceof NavigationEnd)
+        this._router = this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd)
+            )
             .subscribe((event: NavigationEnd) => {
                 elemMainPanel.scrollTop = 0;
                 elemSidebar.scrollTop = 0;

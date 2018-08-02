@@ -21,13 +21,27 @@
  *
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NotificationService} from './modules/notification/services/notification.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+    constructor(
+        private notification: NotificationService,
+        private toastr: ToastrService
+    ) {}
 
+    ngOnInit(): void {
+        this.notification.getMessages().subscribe(
+            error => {
+                console.log(error);
+                this.toastr.error(error.summary, error.detail);
+            }
+        );
+    }
 }

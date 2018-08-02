@@ -23,14 +23,14 @@
 
 import { Injectable } from '@angular/core';
 import {SameResult} from '../../../entities';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {ErrorHelper} from '../../../helpers/error.helper';
-import {catchError, mergeMap, reduce} from 'rxjs/operators';
+import {map, mergeMap, reduce} from 'rxjs/operators';
 import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
 import {WorkStatusService} from './work-status.service';
+import {EvoppiError} from '../../../entities/notification';
 
 
 @Injectable()
@@ -50,11 +50,13 @@ export class SameResultsService {
             .pipe(
                 mergeMap(results => results),
                 mergeMap(
-                    result => this.workStatusService.getWork(result.id),
-                    (workResult, workStatus) => this.mapWorkResultToSameResult(workResult, workStatus)
+                    workResult => this.workStatusService.getWork(workResult.id)
+                        .pipe(map(
+                            workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
+                        ))
                 ),
                 reduce((acc: SameResult[], val: SameResult) => { acc.push(val); return acc; }, []),
-                catchError(ErrorHelper.handleError('SameResultService.getResults', []))
+                EvoppiError.throwOnError('Error same result', 'The list of results could not be retrieved from the backend.')
             );
     }
 
@@ -62,10 +64,12 @@ export class SameResultsService {
         return this.http.get<WorkResult>(this.endpointSingle.replace('UUID', uuid))
             .pipe(
                 mergeMap(
-                    result => this.workStatusService.getWork(result.id),
-                    (workResult, workStatus) => this.mapWorkResultToSameResult(workResult, workStatus)
+                    workResult => this.workStatusService.getWork(workResult.id)
+                        .pipe(map(
+                            workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
+                        ))
                 ),
-                catchError(ErrorHelper.handleError('SameResultsService.getResult', null))
+                EvoppiError.throwOnError('Error retrieving same result', `The result with the id '${uuid}' could not be retrieved.`)
             );
     }
 

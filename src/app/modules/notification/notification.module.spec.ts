@@ -21,28 +21,16 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {AuthenticationService} from './authentication.service';
+import { NotificationModule } from './notification.module';
 
+describe('NotificationModule', () => {
+  let notificationModule: NotificationModule;
 
-@Injectable()
-export class AuthenticationInterceptor implements HttpInterceptor {
+  beforeEach(() => {
+    notificationModule = new NotificationModule();
+  });
 
-    constructor(public authenticationService: AuthenticationService) {}
-
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-        if (request.url.endsWith('/user/role') || this.authenticationService.isGuest()) {
-            return next.handle(request);
-        }
-        request = request.clone({
-            setHeaders: {
-                Authorization: this.authenticationService.getAuthorizationHeader()
-            }
-        });
-
-        return next.handle(request);
-    }
-}
+  it('should create an instance', () => {
+    expect(notificationModule).toBeTruthy();
+  });
+});

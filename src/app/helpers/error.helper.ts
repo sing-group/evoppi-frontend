@@ -21,11 +21,11 @@
  *
  */
 
-import {Observable} from 'rxjs/Observable';
-import {of} from 'rxjs/observable/of';
+import {Observable} from 'rxjs';
+import {of} from 'rxjs';
 
 export class ErrorHelper {
-  public static handleError<T> (operation = 'operation', result?: T) {
+  public static handleError<T> (operation = 'operation', result?: T): (any) => Observable<T> {
     return (error: any): Observable<T> => {
 
       console.log(`${operation} failed: ${error.message}`);

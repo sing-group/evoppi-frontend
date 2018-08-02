@@ -23,25 +23,14 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {catchError, concat, mergeMap, reduce} from 'rxjs/operators';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/concatMap';
-import 'rxjs/add/operator/combineAll';
-import {from} from 'rxjs/observable/from';
-import 'rxjs/add/operator/merge';
-import 'rxjs/add/operator/mergeAll';
-import 'rxjs/add/operator/concatAll';
-import 'rxjs/add/operator/combineAll';
-import 'rxjs/add/operator/combineLatest';
-import {forkJoin} from 'rxjs/observable/forkJoin';
+import {concat, from, Observable} from 'rxjs';
+import {map, mergeMap, reduce} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {GeneService} from './gene.service';
 import {InteractomeService} from './interactome.service';
-import {ErrorHelper} from '../../../helpers/error.helper';
 import {OrderField, SortDirection} from '../../../entities/data';
 import {SummarizedWorkResult, Work, WorkResult} from '../../../entities/execution';
+import {EvoppiError} from '../../../entities/notification';
 
 
 @Injectable()
@@ -54,10 +43,15 @@ export class InteractionService {
 
 
     getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
-
         const params: any = {gene: gene, interactome: interactomes, maxDegree: interactionLevel};
 
-        return this.http.get<Work>(this.endpoint, {params: params});
+        return this.http.get<Work>(this.endpoint, {params: params})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting same species interactions',
+                    'An error happened while requesting the interactions from same species.'
+                )
+            );
     }
 
     getDistinctSpeciesInteraction(gene: number, referenceInteractome: number[], targetInteractome: number[],
@@ -74,22 +68,34 @@ export class InteractionService {
             minAlignmentLength: minAlignmentLenght
         };
 
-        return this.http.get<Work>(this.endpoint, {params: params});
+        return this.http.get<Work>(this.endpoint, {params: params})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting distinct species interactions',
+                    'An error happened while requesting the interactions from distinct species.'
+                )
+            );
     }
 
     getInteractionResultSummarized(uri: string): Observable<SummarizedWorkResult> {
         return this.http.get<WorkResult>(uri + '?summarize=true')
-            .mergeMap(this.retrieveWorkInteractomes.bind(this))
             .pipe(
-                catchError(ErrorHelper.handleError('getInteractionResultSummarized', null))
+                mergeMap(this.retrieveWorkInteractomes.bind(this)),
+                EvoppiError.throwOnError(
+                    'Error requesting interaction results summary',
+                    'The results summary for an interaction analysis could not be retrieved from the backend.'
+                )
             );
     }
 
     getInteractionResult(uri: string): Observable<WorkResult> {
         return this.http.get<WorkResult>(uri)
-            .mergeMap(this.retrieveWorkInteractomes.bind(this))
             .pipe(
-                catchError(ErrorHelper.handleError('getInteractionResult', null))
+                mergeMap(this.retrieveWorkInteractomes.bind(this)),
+                EvoppiError.throwOnError(
+                    'Error requesting interaction results',
+                    'The results for an interaction analysis could not be retrieved from the backend.'
+                )
             );
     }
 
@@ -105,7 +111,10 @@ export class InteractionService {
             }
         })
             .pipe(
-                catchError(ErrorHelper.handleError('getInteractions', null))
+                EvoppiError.throwOnError(
+                    'Error requesting interaction',
+                    'The interactions for an interaction analysis could not be retrieved from the backend.'
+                )
             );
     }
 
@@ -114,44 +123,54 @@ export class InteractionService {
             return from(workResult.interactomes)
                 .pipe(
                     mergeMap(
-                        interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true),
-                        (interactomeUri, interactome) => {
-                            const index = workResult.interactomes.findIndex(it => it.id === interactome.id);
+                        interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true)
+                            .pipe(map(
+                                interactome => {
+                                    const index = workResult.interactomes.findIndex(it => it.id === interactome.id);
 
-                            if (index !== -1) {
-                                workResult.interactomes[index] = interactome;
-                            } else {
-                                throw TypeError('Interactome not found: ' + interactome.id);
-                            }
+                                    if (index !== -1) {
+                                        workResult.interactomes[index] = interactome;
+                                    } else {
+                                        throw TypeError('Interactome not found: ' + interactome.id);
+                                    }
 
-                            return workResult;
-                        }
+                                    return workResult;
+                                }
+                            ))
                     ),
-                    reduce((acc, cur) => cur)
+                    reduce((acc, cur) => cur),
+                    EvoppiError.throwOnError(
+                        'Error requesting interactomes',
+                        `The interactomes of the analysis '${workResult.id}' could not be retrieved from the backend.`
+                    )
                 );
         } else if (workResult.referenceInteractomes && workResult.targetInteractomes) {
-            return from(workResult.referenceInteractomes)
-                .pipe(
-                    mergeMap(
-                        interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true),
-                        (interactomeUri, interactome) => {
-                            const index = workResult.referenceInteractomes.findIndex(it => it.id === interactome.id);
+            return concat(
+                from(workResult.referenceInteractomes)
+                    .pipe(
+                        mergeMap(
+                            interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true)
+                                .pipe(
+                                    map(interactome => {
+                                        const index = workResult.referenceInteractomes.findIndex(it => it.id === interactome.id);
 
-                            if (index !== -1) {
-                                workResult.referenceInteractomes[index] = interactome;
-                            } else {
-                                throw TypeError('Reference interactome not found: ' + interactome.id);
-                            }
+                                        if (index !== -1) {
+                                            workResult.referenceInteractomes[index] = interactome;
+                                        } else {
+                                            throw TypeError('Reference interactome not found: ' + interactome.id);
+                                        }
 
-                            return workResult;
-                        }
+                                        return workResult;
+                                    })
+                                )
+                        )
                     ),
-                    concat(
-                        from(workResult.targetInteractomes)
-                            .pipe(
-                                mergeMap(
-                                    interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true),
-                                    (interactomeUri, interactome) => {
+                from(workResult.targetInteractomes)
+                    .pipe(
+                        mergeMap(
+                            interactomeUri => this.interactomeService.getInteractome(interactomeUri.id, true)
+                                .pipe(
+                                    map(interactome => {
                                         const index = workResult.targetInteractomes.findIndex(it => it.id === interactome.id);
 
                                         if (index !== -1) {
@@ -161,13 +180,17 @@ export class InteractionService {
                                         }
 
                                         return workResult;
-                                    }
-                                ),
-                                reduce((acc, cur) => cur)
-                            )
-                    ),
-                    reduce((acc, cur) => cur)
-                );
+                                    })
+                                )
+                        )
+                    )
+            ).pipe(
+                reduce((acc, cur) => cur),
+                EvoppiError.throwOnError(
+                    'Error requesting interactomes',
+                    `The interactomes of the analysis '${workResult.id}' could not be retrieved from the backend.`
+                )
+            );
         } else {
             throw TypeError('Invalid work result. Missing interactomes.');
         }

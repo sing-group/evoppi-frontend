@@ -28,7 +28,7 @@ import {ModuleWithProviders} from '@angular/compiler/src/core';
 import {LoginComponent} from './login/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialDesignModule} from '../material-design/material-design.module';
-import {BrowserService} from "./services/browser.service";
+import {BrowserService} from './services/browser.service';
 
 @NgModule({
     imports: [
