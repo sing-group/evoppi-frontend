@@ -32,6 +32,7 @@ import {NotificationService} from '../notification/services/notification.service
 import {ConfirmSheetComponent} from '../material-design/confirm-sheet/confirm-sheet.component';
 import {MatBottomSheet} from '@angular/material';
 import {AuthenticationService} from '../authentication/services/authentication.service';
+import {WorkStatusService} from './services/work-status.service';
 
 @Component({
     selector: 'app-results',
@@ -70,7 +71,8 @@ export class ResultsComponent implements OnInit {
         private sameResultsService: SameResultsService,
         private notificationService: NotificationService,
         private bottomSheet: MatBottomSheet,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private workStatusService: WorkStatusService
     ) {
     }
 
@@ -186,14 +188,18 @@ export class ResultsComponent implements OnInit {
         const resultToDeleteIndex = this.distinctResults.indexOf(resultToDelete);
         this.distinctResults.splice(resultToDeleteIndex, 1);
 
-        this.distinctResultsService.deleteResult(uuid)
-            .subscribe(
-                () => this.notificationService.success('Result deleted', `Distinct species result '${uuid}' deleted.`),
-                () => {
-                    this.distinctResults.push(resultToDelete);
-                    this.distinctResults.sort(ResultsComponent.RESULT_COMPARATOR);
-                }
-            );
+        if ( this.authenticationService.isGuest() ) {
+            this.workStatusService.removeLocalWork('distinctWorks', uuid);
+        } else {
+            this.distinctResultsService.deleteResult(uuid)
+                .subscribe(
+                    () => this.notificationService.success('Result deleted', `Distinct species result '${uuid}' deleted.`),
+                    () => {
+                        this.distinctResults.push(resultToDelete);
+                        this.distinctResults.sort(ResultsComponent.RESULT_COMPARATOR);
+                    }
+                );
+        }
     }
 
     private requestDeleteSame(uuid: string) {
@@ -201,13 +207,17 @@ export class ResultsComponent implements OnInit {
         const resultToDeleteIndex = this.sameResults.indexOf(resultToDelete);
         this.sameResults.splice(resultToDeleteIndex, 1);
 
-        this.sameResultsService.deleteResult(uuid)
-            .subscribe(
-                () => this.notificationService.success('Result deleted', `Same species result '${uuid}' deleted.`),
-                () => {
-                    this.sameResults.push(resultToDelete);
-                    this.sameResults.sort(ResultsComponent.RESULT_COMPARATOR);
-                }
-            );
+        if ( this.authenticationService.isGuest() ) {
+            this.workStatusService.removeLocalWork('sameWorks', uuid);
+        } else {
+            this.sameResultsService.deleteResult(uuid)
+                .subscribe(
+                    () => this.notificationService.success('Result deleted', `Same species result '${uuid}' deleted.`),
+                    () => {
+                        this.sameResults.push(resultToDelete);
+                        this.sameResults.sort(ResultsComponent.RESULT_COMPARATOR);
+                    }
+                );
+        }
     }
 }
