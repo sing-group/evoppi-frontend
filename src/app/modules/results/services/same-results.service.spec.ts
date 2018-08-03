@@ -40,7 +40,10 @@ const SAME_RESULTS: SameResult[] = [
         interactomes: ['A', 'B', 'C'],
         progress: 0.6,
         status: 'Calculating interactome A interactions',
-        creation: new Date()
+        creation: new Date(),
+        queryGene: '{id: 87, name: "CCDS45130.1", uri: "http://192.168.76.128:8080/evoppi-backend/rest/api/gene/87"}',
+        queryGeneId: 87,
+        lastAction: ''
     },
     {
         uuid: '42676d45-dbb5-4392-9c2d-b04b74e26c37',
@@ -48,7 +51,10 @@ const SAME_RESULTS: SameResult[] = [
         interactomes: ['W', 'X', 'Y', 'Z'],
         progress: 1,
         status: '1,234 interactions found',
-        creation: new Date()
+        creation: new Date(),
+        queryGene: '{id: 87, name: "CCDS45130.1", uri: "http://192.168.76.128:8080/evoppi-backend/rest/api/gene/87"}',
+        queryGeneId: 87,
+        lastAction: ''
     }
 ];
 
