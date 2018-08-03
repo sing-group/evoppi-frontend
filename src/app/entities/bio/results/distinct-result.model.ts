@@ -23,11 +23,14 @@
 
 export interface DistinctResult {
     uuid: string,
+    queryGene: string,
+    queryGeneId: number,
     referenceSpecies: string,
     targetSpecies: string,
     referenceInteractomes: string[],
     targetInteractomes: string[],
     progress: number,
     status: string,
+    lastAction: string,
     creation: Date
 }

@@ -23,9 +23,12 @@
 
 export interface SameResult {
     uuid: string,
+    queryGene: string,
+    queryGeneId: number,
     species: string,
     interactomes: string[],
     progress: number,
     status: string,
+    lastAction: string,
     creation: Date
 }

@@ -47,6 +47,9 @@
                             <table class="table">
                                 <thead class=" text-primary">
                                 <th>
+                                    Query Gene
+                                </th>
+                                <th>
                                     Reference Species
                                 </th>
                                 <th>
@@ -54,9 +57,6 @@
                                 </th>
                                 <th>
                                     #Interactomes
-                                </th>
-                                <th>
-                                    Completion
                                 </th>
                                 <th>
                                     Status
@@ -68,38 +68,49 @@
                                 <tbody>
                                 <tr *ngFor="let result of distinctSpeciesResults">
                                     <td>
+                                        {{result.queryGene}} [{{result.queryGeneId}}]
+                                    </td>
+                                    <td>
                                         {{result.referenceSpecies}}
                                     </td>
                                     <td>
                                         {{result.targetSpecies}}
                                     </td>
                                     <td>
-                                        <span class="interactome-count" matTooltip="{{'Reference: ' + result.referenceInteractomes.join(', ')}}">
+                                        <span class="interactome-count"
+                                              matTooltip="{{'Reference: ' + result.referenceInteractomes.join(', ')}}">
                                             {{result.referenceInteractomes.length}}
                                         </span>
                                         /
-                                        <span class="interactome-count" matTooltip="{{'Target: ' + result.targetInteractomes.join(', ')}}">
+                                        <span class="interactome-count"
+                                              matTooltip="{{'Target: ' + result.targetInteractomes.join(', ')}}">
                                             {{result.targetInteractomes.length}}
                                         </span>
                                     </td>
-                                    <td *ngIf="result.progress < 1">
-                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100" [bufferValue]="result.progress * 100"></mat-progress-bar>
+                                    <td *ngIf="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
+                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100"
+                                                          [bufferValue]="result.progress * 100"
+                                                          matTooltip="{{result.lastAction}}"></mat-progress-bar>
                                     </td>
-                                    <td *ngIf="result.progress === 1">
-                                        Completed
-                                    </td>
-                                    <td>
+                                    <td *ngIf="result.status === 'COMPLETED' || result.status === 'FAILED'">
                                         {{result.status}}
                                     </td>
                                     <td>
-                                        <button mat-icon-button color="primary" routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
+                                        <button mat-icon-button color="primary"
+                                                routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}"
+                                                [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="secondary" routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
+                                        <button mat-icon-button color="secondary"
+                                                routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}"
+                                                [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="warn" [disabled]="result.status !== 'COMPLETED'">
-                                            <mat-icon aria-label="Delete" (click)="deleteDistinctResult(result.uuid)">delete</mat-icon>
+                                        <button mat-icon-button color="warn"
+                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
+                                            <mat-icon aria-label="Delete" (click)="deleteDistinctResult(result.uuid)">
+                                                delete
+                                            </mat-icon>
                                         </button>
                                     </td>
                                 </tr>
@@ -132,13 +143,13 @@
                             <table class="table">
                                 <thead class=" text-primary">
                                 <th>
+                                    Query Gene
+                                </th>
+                                <th>
                                     Species
                                 </th>
                                 <th>
                                     #Interactomes
-                                </th>
-                                <th>
-                                    Completion
                                 </th>
                                 <th>
                                     Status
@@ -150,6 +161,9 @@
                                 <tbody>
                                 <tr *ngFor="let result of sameSpeciesResults">
                                     <td>
+                                        {{result.queryGene}} [{{result.queryGeneId}}]
+                                    </td>
+                                    <td>
                                         {{result.species}}
                                     </td>
                                     <td>
@@ -157,24 +171,30 @@
                                             {{result.interactomes.length}}
                                         </span>
                                     </td>
-                                    <td *ngIf="result.progress < 1">
-                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100" [bufferValue]="result.progress * 100"></mat-progress-bar>
+                                    <td *ngIf="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
+                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100"
+                                                          [bufferValue]="result.progress * 100"
+                                                          matTooltip="{{result.lastAction}}"></mat-progress-bar>
                                     </td>
-                                    <td *ngIf="result.progress === 1">
-                                        Completed
-                                    </td>
-                                    <td>
+                                    <td *ngIf="result.status === 'COMPLETED' || result.status === 'FAILED'">
                                         {{result.status}}
                                     </td>
                                     <td>
-                                        <button mat-icon-button color="primary" routerLink="{{getSameSpeciesTablePath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
+                                        <button mat-icon-button color="primary"
+                                                routerLink="{{getSameSpeciesTablePath(result.uuid)}}"
+                                                [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="secondary" routerLink="{{getSameSpeciesChartPath(result.uuid)}}" [disabled]="result.status !== 'COMPLETED'">
+                                        <button mat-icon-button color="secondary"
+                                                routerLink="{{getSameSpeciesChartPath(result.uuid)}}"
+                                                [disabled]="result.status !== 'COMPLETED'">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="warn" [disabled]="result.status !== 'COMPLETED'">
-                                            <mat-icon aria-label="Delete" (click)="deleteSameResult(result.uuid)">delete</mat-icon>
+                                        <button mat-icon-button color="warn"
+                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
+                                            <mat-icon aria-label="Delete" (click)="deleteSameResult(result.uuid)">
+                                                delete
+                                            </mat-icon>
                                         </button>
                                     </td>
                                 </tr>

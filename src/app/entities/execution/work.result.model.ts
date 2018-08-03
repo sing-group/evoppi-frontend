@@ -26,7 +26,7 @@ import {BlastResult} from '../bio/results';
 
 export interface WorkResult {
     id: string;
-    queryGene: number;
+    queryGene: { id: number, name: string, uri: string };
     queryMaxDegree: number;
     status: string;
     interactions: {

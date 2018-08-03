@@ -107,11 +107,16 @@ export class SameResultsService {
     }
 
     private mapWorkResultToSameResult(workResult: WorkResult, work: Work): SameResult {
+        const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? curr : prev);
+
         return {
             uuid: workResult.id,
+            queryGene: workResult.queryGene.name,
+            queryGeneId: workResult.queryGene.id,
             species: workResult.species.name,
             interactomes: workResult.interactomes.map(interactome => interactome.name),
-            progress: work.steps.map(step => step.progress).reduce((prev, curr) => Math.max(prev, curr), 0),
+            progress: lastStep.progress,
+            lastAction: lastStep.description,
             status: work.status,
             creation: work.creationDateTime
         };
