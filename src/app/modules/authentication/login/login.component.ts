@@ -148,6 +148,10 @@ export class LoginComponent implements OnInit {
                     } else {
                         distinctClaimed = true;
                     }
+
+                    if ( sameClaimed && distinctClaimed ) {
+                        this.browserService.assign('/dashboard');
+                    }
                 }
             });
     }
