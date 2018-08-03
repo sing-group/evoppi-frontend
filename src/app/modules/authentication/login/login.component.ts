@@ -28,6 +28,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BrowserService} from '../services/browser.service';
 import {NotificationService} from '../../notification/services/notification.service';
+import {WorkStatusService} from '../../results/services/work-status.service';
+import {AnalysisType} from '../../../entities/data/analysis-type.enum';
 
 @Component({
     selector: 'app-login',
@@ -53,7 +55,7 @@ export class LoginComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService, private router: Router,
                 private matDialog: MatDialog, private route: ActivatedRoute, private browserService: BrowserService,
-                private notificationService: NotificationService) {
+                private notificationService: NotificationService, private workStatusService: WorkStatusService) {
     }
 
     ngOnInit() {
@@ -105,7 +107,47 @@ export class LoginComponent implements OnInit {
                     this.formLogin.setErrors({'invalidForm': 'Error: User or password incorrect. Please try again.'});
                 } else {
                     this.authenticationService.logIn(formModel.username, formModel.password, role);
-                    this.browserService.assign('/dashboard');
+
+                    let sameClaimed = false;
+                    let distinctClaimed = false;
+                    const sameUUIDs: string[] = this.workStatusService.getLocalWork('sameWorks').map(
+                        result => result.id.id);
+                    const distinctUUIDs: string[] = this.workStatusService.getLocalWork('distinctWorks').map(
+                        result => result.id.id);
+
+                    if (sameUUIDs.length > 0) {
+                        this.authenticationService.claimResults(AnalysisType.SAME, sameUUIDs)
+                            .subscribe(res => {
+                                    sameClaimed = true;
+                                    this.workStatusService.removeLocalWorks('sameWorks');
+                                    if ( sameClaimed && distinctClaimed ) {
+                                        this.browserService.assign('/dashboard');
+                                    }
+                                },
+                                error => {
+                                    console.error(error);
+                                });
+                    } else {
+                        sameClaimed = true;
+                    }
+
+                    if (distinctUUIDs.length > 0) {
+                        this.authenticationService.claimResults(AnalysisType.DIFFERENT, distinctUUIDs)
+                            .subscribe(res => {
+                                    distinctClaimed = true;
+                                    this.workStatusService.removeLocalWorks('distinctWorks');
+                                    console.log(res);
+                                    if ( sameClaimed && distinctClaimed ) {
+                                        this.browserService.assign('/dashboard');
+                                    }
+                                },
+                                error => {
+                                    console.error(error);
+                                });
+
+                    } else {
+                        distinctClaimed = true;
+                    }
                 }
             });
     }

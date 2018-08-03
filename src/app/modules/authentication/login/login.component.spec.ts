@@ -33,6 +33,7 @@ import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserService} from '../services/browser.service';
 import {NotificationService} from '../../notification/services/notification.service';
+import {WorkStatusService} from '../../results/services/work-status.service';
 
 
 describe('LoginComponent', () => {
@@ -44,7 +45,7 @@ describe('LoginComponent', () => {
         TestBed.configureTestingModule({
             declarations: [LoginComponent],
             imports: [BrowserAnimationsModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule, MaterialDesignModule],
-            providers: [AuthenticationService, BrowserService, NotificationService,
+            providers: [AuthenticationService, BrowserService, NotificationService, WorkStatusService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]

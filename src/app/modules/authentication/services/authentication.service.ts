@@ -28,6 +28,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {Observable} from 'rxjs';
 import {EvoppiError} from '../../../entities/notification';
+import {AnalysisType} from '../../../entities/data/analysis-type.enum';
 
 @Injectable()
 export class AuthenticationService {
@@ -74,6 +75,17 @@ export class AuthenticationService {
         return this.http.post<string>(this.endpoint + '/registration/' + uuid, {})
             .pipe(
                 EvoppiError.throwOnError('Error confirming user registration', `The uuid '${uuid}' could not be confirmed.`)
+            );
+    }
+
+    public claimResults(type: AnalysisType, uuids: string[]) {
+        return this.http.put<string>(this.endpoint + '/interaction/result/' + type,
+            {
+                uuids: uuids
+            })
+            .pipe(
+                EvoppiError.throwOnError('Error claiming user results',
+                    `The uuids '${uuids.join(',')}' of type '${type}' could not be claimed.`)
             );
     }
 

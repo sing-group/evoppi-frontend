@@ -64,4 +64,20 @@ export class WorkStatusService {
         works.push(value);
         localStorage.setItem(key, JSON.stringify(works));
     }
+
+    public removeLocalWorks(key: string) {
+        localStorage.removeItem(key);
+    }
+
+    public removeLocalWork(key: string, uuid: string) {
+        const works: Work[] = JSON.parse(localStorage.getItem(key));
+
+        const result: Work[] = [];
+        works.forEach(item => {
+            if (item.id.id !== uuid) {
+                result.push(item);
+            }
+        });
+        localStorage.setItem(key, JSON.stringify(result));
+    }
 }
