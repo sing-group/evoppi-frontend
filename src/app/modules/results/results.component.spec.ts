@@ -24,11 +24,9 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ResultsComponent} from './results.component';
-import {MatIconModule, MatProgressBarModule, MatSliderModule, MatTooltipModule} from '@angular/material';
 import {RouterTestingModule} from '@angular/router/testing';
 import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
-import {of} from 'rxjs/observable/of';
 import {ActivatedRouteStub} from '../../../testing/activated-route-stub';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterStub} from '../../../testing/router-stub';
@@ -39,6 +37,10 @@ import {SpeciesService} from './services/species.service';
 import {GeneService} from './services/gene.service';
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {of} from 'rxjs/index';
+import {NotificationService} from '../notification/services/notification.service';
+import {WorkStatusService} from './services/work-status.service';
+import {AuthenticationService} from '../authentication/services/authentication.service';
 
 describe('ResultsComponent', () => {
     let component: ResultsComponent;
@@ -50,6 +52,7 @@ describe('ResultsComponent', () => {
             declarations: [ResultsComponent],
             imports: [NoopAnimationsModule, RouterTestingModule, MaterialDesignModule, HttpClientTestingModule],
             providers: [DistinctResultsService, SameResultsService, InteractionService, SpeciesService, GeneService, InteractomeService,
+                NotificationService, WorkStatusService, AuthenticationService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]

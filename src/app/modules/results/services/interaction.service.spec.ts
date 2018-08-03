@@ -28,11 +28,12 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {GeneService} from './gene.service';
 import {InteractomeService} from './interactome.service';
 import {SpeciesService} from './species.service';
+import {NotificationService} from '../../notification/services/notification.service';
 
 describe('InteractionService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [InteractionService, GeneService, InteractomeService, SpeciesService],
+            providers: [InteractionService, GeneService, InteractomeService, SpeciesService, NotificationService],
             imports: [HttpClientTestingModule],
         });
     });

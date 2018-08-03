@@ -26,11 +26,12 @@ import {TestBed, inject} from '@angular/core/testing';
 import {InteractomeService} from './interactome.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {SpeciesService} from './species.service';
+import {NotificationService} from '../../notification/services/notification.service';
 
 describe('InteractomeService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [InteractomeService, SpeciesService],
+            providers: [InteractomeService, SpeciesService, NotificationService],
             imports: [HttpClientTestingModule],
         });
     });

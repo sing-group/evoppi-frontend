@@ -30,6 +30,8 @@ import {InteractionService} from './interaction.service';
 import {GeneService} from './gene.service';
 import {InteractomeService} from './interactome.service';
 import {SpeciesService} from './species.service';
+import {NotificationService} from '../../notification/services/notification.service';
+import {WorkStatusService} from './work-status.service';
 
 const SAME_RESULTS: SameResult[] = [
     {
@@ -37,21 +39,24 @@ const SAME_RESULTS: SameResult[] = [
         species: 'Homo sapiens',
         interactomes: ['A', 'B', 'C'],
         progress: 0.6,
-        status: 'Calculating interactome A interactions'
+        status: 'Calculating interactome A interactions',
+        creation: new Date()
     },
     {
         uuid: '42676d45-dbb5-4392-9c2d-b04b74e26c37',
         species: 'Drosophila Melanogaster',
         interactomes: ['W', 'X', 'Y', 'Z'],
         progress: 1,
-        status: '1,234 interactions found'
+        status: '1,234 interactions found',
+        creation: new Date()
     }
 ];
 
 describe('SameResultsService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [SameResultsService, InteractionService, GeneService, InteractionService, InteractomeService, SpeciesService],
+            providers: [SameResultsService, InteractionService, GeneService, InteractionService, InteractomeService, SpeciesService,
+                NotificationService, WorkStatusService],
             imports: [HttpClientTestingModule]
         });
     });

@@ -21,28 +21,33 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ConfirmSheetComponent } from './confirm-sheet.component';
+import {ConfirmSheetComponent} from './confirm-sheet.component';
+import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material';
 
 describe('ConfirmSheetComponent', () => {
-  let component: ConfirmSheetComponent;
-  let fixture: ComponentFixture<ConfirmSheetComponent>;
+    let component: ConfirmSheetComponent;
+    let fixture: ComponentFixture<ConfirmSheetComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ConfirmSheetComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ConfirmSheetComponent],
+            providers: [
+                { provide: MatBottomSheetRef, useValue: {} },
+                { provide: MAT_BOTTOM_SHEET_DATA, useValue: {} }
+            ]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ConfirmSheetComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ConfirmSheetComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

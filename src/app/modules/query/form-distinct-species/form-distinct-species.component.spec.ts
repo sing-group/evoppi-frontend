@@ -36,6 +36,8 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {InteractomeService} from '../../results/services/interactome.service';
 import {InteractionService} from '../../results/services/interaction.service';
 import {GeneService} from '../../results/services/gene.service';
+import {NotificationService} from '../../notification/services/notification.service';
+import {WorkStatusService} from '../../results/services/work-status.service';
 
 describe('FormDistinctSpeciesComponent', () => {
     let component: FormDistinctSpeciesComponent;
@@ -47,7 +49,7 @@ describe('FormDistinctSpeciesComponent', () => {
             declarations: [FormDistinctSpeciesComponent, AutocompleteComponent],
             imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientTestingModule],
             providers: [
-                SpeciesService, InteractomeService, InteractionService, GeneService,
+                SpeciesService, InteractomeService, InteractionService, GeneService, NotificationService, WorkStatusService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]

@@ -31,6 +31,8 @@ import {InteractionService} from './interaction.service';
 import {GeneService} from './gene.service';
 import {InteractomeService} from './interactome.service';
 import {SpeciesService} from './species.service';
+import {NotificationService} from '../../notification/services/notification.service';
+import {WorkStatusService} from './work-status.service';
 
 const DISTINCT_RESULTS: DistinctResult[] = [
     {
@@ -40,7 +42,8 @@ const DISTINCT_RESULTS: DistinctResult[] = [
         referenceInteractomes: ['A', 'B', 'C'],
         targetInteractomes: ['X', 'Y', 'Z'],
         progress: 0.6,
-        status: 'Calculating interactome X interactions'
+        status: 'Calculating interactome X interactions',
+        creation: new Date()
     },
     {
         uuid: '564163b7-d299-4a6b-9cbf-abf363d8906d',
@@ -49,14 +52,16 @@ const DISTINCT_RESULTS: DistinctResult[] = [
         referenceInteractomes: ['A'],
         targetInteractomes: ['W', 'X', 'Y', 'Z'],
         progress: 1,
-        status: '12,000 interactions found'
+        status: '12,000 interactions found',
+        creation: new Date()
     }
 ];
 
 describe('DistinctResultsService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [DistinctResultsService, InteractionService, GeneService, InteractionService, InteractomeService, SpeciesService],
+            providers: [DistinctResultsService, InteractionService, GeneService, InteractionService, InteractomeService, SpeciesService,
+                NotificationService, WorkStatusService],
             imports: [HttpClientTestingModule]
         });
     });

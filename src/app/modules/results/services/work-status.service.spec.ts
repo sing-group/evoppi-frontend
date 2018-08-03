@@ -21,18 +21,20 @@
  *
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 
-import { WorkStatusService } from './work-status.service';
+import {WorkStatusService} from './work-status.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('WorkStatusService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [WorkStatusService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [WorkStatusService],
+            imports: [HttpClientTestingModule]
+        });
     });
-  });
 
-  it('should be created', inject([WorkStatusService], (service: WorkStatusService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', inject([WorkStatusService], (service: WorkStatusService) => {
+        expect(service).toBeTruthy();
+    }));
 });

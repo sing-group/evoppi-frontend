@@ -38,6 +38,8 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {InteractomeService} from '../results/services/interactome.service';
 import {InteractionService} from '../results/services/interaction.service';
 import {GeneService} from '../results/services/gene.service';
+import {NotificationService} from '../notification/services/notification.service';
+import {WorkStatusService} from '../results/services/work-status.service';
 
 describe('QueryComponent', () => {
     let component: QueryComponent;
@@ -49,7 +51,7 @@ describe('QueryComponent', () => {
             declarations: [QueryComponent, FormDistinctSpeciesComponent, FormSameSpeciesComponent, AutocompleteComponent],
             imports: [NoopAnimationsModule, MaterialDesignModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
             providers: [
-                SpeciesService, InteractomeService, InteractionService, GeneService,
+                SpeciesService, InteractomeService, InteractionService, GeneService, NotificationService, WorkStatusService,
                 { provide: Router, useClass: RouterStub},
                 { provide: ActivatedRoute, useValue: activatedRoute }
             ]

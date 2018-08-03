@@ -36,6 +36,7 @@ import {InteractomeService} from '../services/interactome.service';
 import {DraggableDirective} from '../directives/draggable.directive';
 import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
+import {NotificationService} from '../../notification/services/notification.service';
 
 describe('ChartDistinctSpeciesComponent', () => {
     let component: ChartDistinctSpeciesComponent;
@@ -47,7 +48,7 @@ describe('ChartDistinctSpeciesComponent', () => {
         TestBed.configureTestingModule({
             imports: [MaterialDesignModule, HttpClientTestingModule],
             declarations: [ChartDistinctSpeciesComponent, GraphComponent, LegendDistinctSpeciesComponent, ZoomableDirective, DraggableDirective],
-            providers: [InteractionService, GeneService, InteractomeService, SpeciesService,
+            providers: [InteractionService, GeneService, InteractomeService, SpeciesService, NotificationService,
                 {provide: ActivatedRoute, useValue: activatedRoute}
             ]
         })

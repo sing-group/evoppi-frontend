@@ -26,8 +26,8 @@ import {TestBed, inject} from '@angular/core/testing';
 import {SpeciesService} from './species.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {Species} from '../../../entities/bio';
-import {of} from 'rxjs/observable/of';
-import {HttpClient} from '@angular/common/http';
+import {of} from 'rxjs/index';
+import {NotificationService} from '../../notification/services/notification.service';
 
 export const SPECIES: Species[] = [
     {id: 1, name: 'Homo Sapiens', uri: '', interactomes: []}
@@ -36,7 +36,7 @@ export const SPECIES: Species[] = [
 describe('SpeciesService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [SpeciesService],
+            providers: [SpeciesService, NotificationService,],
             imports: [HttpClientTestingModule],
         });
     });
@@ -47,12 +47,6 @@ describe('SpeciesService', () => {
 
     it('should be instance of SpeciesService', inject([SpeciesService], (service: SpeciesService) => {
         expect(service instanceof SpeciesService).toBeTruthy();
-    }));
-
-    it('can instantiate service with "new"', inject([HttpClient], (http: HttpClient) => {
-        expect(http).not.toBeNull('http should be provided');
-        const service = new SpeciesService(http);
-        expect(service instanceof SpeciesService).toBe(true, 'new service should be ok');
     }));
 
     it('can call updateSpecies', inject([SpeciesService], (service: SpeciesService) => {
