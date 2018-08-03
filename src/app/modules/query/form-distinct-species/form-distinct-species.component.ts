@@ -33,6 +33,7 @@ import {debounceTime, map} from 'rxjs/operators';
 import {AbstractControl} from '@angular/forms/src/model';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 import {MatBottomSheet} from '@angular/material';
+import {WorkStatusService} from '../../results/services/work-status.service';
 
 @Component({
     selector: 'app-form-distinct-species',
@@ -75,8 +76,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
         private interactionService: InteractionService,
         private geneService: GeneService,
         private formBuilder: FormBuilder,
-        private bottomSheet: MatBottomSheet
-    ) {}
+        private bottomSheet: MatBottomSheet,
+        private workStatusService: WorkStatusService) {
+    }
 
     ngOnInit(): void {
         this.formDistinctSpecies = this.formBuilder.group({
@@ -201,8 +203,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
             formModel.minAlignLength
         )
             .subscribe(
-                () => {
+                (work) => {
                     this.formDistinctSpecies.reset(FormDistinctSpeciesComponent.DEFAULT_VALUES);
+                    this.workStatusService.setLocalWork('distinctWorks', work);
                     this.showNotification();
                 },
                 error => {

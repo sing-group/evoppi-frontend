@@ -31,6 +31,7 @@ import {asyncScheduler, Observable} from 'rxjs';
 import {NotificationService} from '../notification/services/notification.service';
 import {ConfirmSheetComponent} from '../material-design/confirm-sheet/confirm-sheet.component';
 import {MatBottomSheet} from '@angular/material';
+import {AuthenticationService} from '../authentication/services/authentication.service';
 
 @Component({
     selector: 'app-results',
@@ -68,13 +69,26 @@ export class ResultsComponent implements OnInit {
         private distinctResultsService: DistinctResultsService,
         private sameResultsService: SameResultsService,
         private notificationService: NotificationService,
-        private bottomSheet: MatBottomSheet
+        private bottomSheet: MatBottomSheet,
+        private authenticationService: AuthenticationService
     ) {
     }
 
     ngOnInit() {
         this.loadingDistinct = true;
-        this.distinctResultsService.getResults()
+        this.loadingSame = true;
+
+        let distinctObservable: Observable<DistinctResult[]>;
+        let sameObservable: Observable<SameResult[]>;
+        if (this.authenticationService.isGuest()) {
+            distinctObservable = this.distinctResultsService.getResultsGuest();
+            sameObservable = this.sameResultsService.getResultsGuest();
+        } else {
+            distinctObservable = this.distinctResultsService.getResults();
+            sameObservable = this.sameResultsService.getResults();
+        }
+
+        distinctObservable
             .subscribe(
                 resultsDistinct => {
                     this.distinctResults = resultsDistinct.sort(ResultsComponent.resultComparator);
@@ -85,8 +99,7 @@ export class ResultsComponent implements OnInit {
                 () => this.loadingDistinct = false
             );
 
-        this.loadingSame = true;
-        this.sameResultsService.getResults()
+        sameObservable
             .subscribe(
                 resultsSame => {
                     this.sameResults = resultsSame.sort(ResultsComponent.resultComparator);

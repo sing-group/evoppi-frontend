@@ -45,4 +45,23 @@ export class WorkStatusService {
                 )
             );
     }
+
+    public getLocalWork(key: string): Work[] {
+        const works: Work[] = JSON.parse(localStorage.getItem(key));
+        if (works) {
+            return works;
+        } else {
+            return [];
+        }
+    }
+
+    public setLocalWork(key: string, value: Work): void {
+        let works: Work[] = JSON.parse(localStorage.getItem(key));
+        if (!works) {
+            works = [];
+        }
+
+        works.push(value);
+        localStorage.setItem(key, JSON.stringify(works));
+    }
 }

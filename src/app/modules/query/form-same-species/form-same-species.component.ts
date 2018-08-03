@@ -33,6 +33,7 @@ import {debounceTime, map} from 'rxjs/operators';
 import {InteractomeService} from '../../results/services/interactome.service';
 import {AbstractControl} from '@angular/forms/src/model';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
+import {WorkStatusService} from '../../results/services/work-status.service';
 
 @Component({
     selector: 'app-form-same-species',
@@ -65,9 +66,9 @@ export class FormSameSpeciesComponent implements OnInit {
         private geneService: GeneService,
         private interactionService: InteractionService,
         private formBuilder: FormBuilder,
-        private bottomSheet: MatBottomSheet
-    ) {
-    }
+        private bottomSheet: MatBottomSheet,
+        private workStatusService: WorkStatusService
+    ) {}
 
     ngOnInit(): void {
         this.processing = false;
@@ -138,8 +139,9 @@ export class FormSameSpeciesComponent implements OnInit {
             formModel.level
         )
             .subscribe(
-                () => {
+                (work) => {
                     this.formSameSpecies.reset(FormSameSpeciesComponent.DEFAULT_VALUES.level);
+                    this.workStatusService.setLocalWork('sameWorks', work);
                     this.showNotification();
                 },
                 error => {

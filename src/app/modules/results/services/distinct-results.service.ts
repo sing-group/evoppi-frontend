@@ -23,7 +23,7 @@
 
 import {Injectable} from '@angular/core';
 import {DistinctResult} from '../../../entities';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Work, WorkResult} from '../../../entities/execution';
@@ -38,6 +38,7 @@ export class DistinctResultsService {
     private endpoint = environment.evoppiUrl + 'api/user/interaction/result/different';
     private endpointDelete = environment.evoppiUrl + 'api/interaction/result/UUID';
     private endpointSingle = environment.evoppiUrl + 'api/interaction/result/UUID?summarize=true';
+    private endpointGuest = environment.evoppiUrl + 'api/interaction/result/different';
 
     constructor(
         private http: HttpClient,
@@ -74,6 +75,26 @@ export class DistinctResultsService {
             );
     }
 
+    public getResultsGuest(): Observable<DistinctResult[]> {
+        const uuids: string[] = this.workStatusService.getLocalWork('distinctWorks').map(result => result.id.id);
+        if (uuids.length === 0) {
+            return of([]);
+        }
+
+        return this.http.get<WorkResult[]>(this.endpointGuest + '?ids=' + uuids.join(','))
+            .pipe(
+                mergeMap(results => results),
+                mergeMap(
+                    workResult => this.workStatusService.getWork(workResult.id)
+                        .pipe(map(
+                            workStatus => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                        ))
+                ),
+                reduce((acc: DistinctResult[], val: DistinctResult) => { acc.push(val); return acc; }, []),
+                EvoppiError.throwOnError('Error distinct result by UUIS', 'The list of results using UUIDs could not be retrieved from the backend.')
+            );
+    }
+
     private mapWorkResultToDistinctResult(workResult: WorkResult, work: Work): DistinctResult {
         return {
             uuid: workResult.id,
@@ -93,5 +114,7 @@ export class DistinctResultsService {
                 EvoppiError.throwOnError('Error deleting same result', `The result with the id '${uuid}' could not be deleted.`)
             );
     }
+
+
 
 }

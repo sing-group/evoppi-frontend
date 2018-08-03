@@ -23,7 +23,7 @@
 
 import { Injectable } from '@angular/core';
 import {SameResult} from '../../../entities';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {map, mergeMap, reduce} from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class SameResultsService {
     private endpoint = environment.evoppiUrl + 'api/user/interaction/result/same';
     private endpointDelete = environment.evoppiUrl + 'api/interaction/result/UUID';
     private endpointSingle = environment.evoppiUrl + 'api/interaction/result/UUID?summarize=true';
+    private endpointGuest = environment.evoppiUrl + 'api/interaction/result/same';
 
     constructor(
         private http: HttpClient,
@@ -74,6 +75,26 @@ export class SameResultsService {
                     'Error retrieving same result',
                     `The result with the id '${uuid}' could not be retrieved from the backend.`
                 )
+            );
+    }
+
+    public getResultsGuest(): Observable<SameResult[]> {
+        const uuids: string[] = this.workStatusService.getLocalWork('sameWorks').map(result => result.id.id);
+        if (uuids.length === 0) {
+            return of([]);
+        }
+
+        return this.http.get<WorkResult[]>(this.endpointGuest + '?ids=' + uuids.join(','))
+            .pipe(
+                mergeMap(results => results),
+                mergeMap(
+                    workResult => this.workStatusService.getWork(workResult.id)
+                        .pipe(map(
+                            workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
+                        ))
+                ),
+                reduce((acc: SameResult[], val: SameResult) => { acc.push(val); return acc; }, []),
+                EvoppiError.throwOnError('Error same result by UUIS', 'The list of results using UUIDs could not be retrieved from the backend.')
             );
     }
 
