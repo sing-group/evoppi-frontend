@@ -190,6 +190,7 @@ export class ResultsComponent implements OnInit {
 
         if ( this.authenticationService.isGuest() ) {
             this.workStatusService.removeLocalWork('distinctWorks', uuid);
+            this.notificationService.success('Local result deleted', `Distinct species result '${uuid}' deleted.`);
         } else {
             this.distinctResultsService.deleteResult(uuid)
                 .subscribe(
@@ -209,6 +210,7 @@ export class ResultsComponent implements OnInit {
 
         if ( this.authenticationService.isGuest() ) {
             this.workStatusService.removeLocalWork('sameWorks', uuid);
+            this.notificationService.success('Local result deleted', `Same species result '${uuid}' deleted.`);
         } else {
             this.sameResultsService.deleteResult(uuid)
                 .subscribe(
