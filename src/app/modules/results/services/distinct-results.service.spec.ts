@@ -43,7 +43,10 @@ const DISTINCT_RESULTS: DistinctResult[] = [
         targetInteractomes: ['X', 'Y', 'Z'],
         progress: 0.6,
         status: 'Calculating interactome X interactions',
-        creation: new Date()
+        creation: new Date(),
+        queryGene: '{id: 87, name: "CCDS45130.1", uri: "http://192.168.76.128:8080/evoppi-backend/rest/api/gene/87"}',
+        queryGeneId: 87,
+        lastAction: ''
     },
     {
         uuid: '564163b7-d299-4a6b-9cbf-abf363d8906d',
@@ -53,7 +56,10 @@ const DISTINCT_RESULTS: DistinctResult[] = [
         targetInteractomes: ['W', 'X', 'Y', 'Z'],
         progress: 1,
         status: '12,000 interactions found',
-        creation: new Date()
+        creation: new Date(),
+        queryGene: '{id: 87, name: "CCDS45130.1", uri: "http://192.168.76.128:8080/evoppi-backend/rest/api/gene/87"}',
+        queryGeneId: 87,
+        lastAction: ''
     }
 ];
 
