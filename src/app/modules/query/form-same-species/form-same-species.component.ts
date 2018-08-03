@@ -22,16 +22,17 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {MatSnackBar} from '@angular/material';
+import {MatBottomSheet} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {GeneInfo, Interaction, Interactome, Species} from '../../../entities/bio';
+import {GeneInfo, Interactome, Species} from '../../../entities/bio';
 import {SpeciesService} from '../../results/services/species.service';
 import {GeneService} from '../../results/services/gene.service';
 import {InteractionService} from '../../results/services/interaction.service';
 import {debounceTime, map} from 'rxjs/operators';
 import {InteractomeService} from '../../results/services/interactome.service';
 import {AbstractControl} from '@angular/forms/src/model';
+import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 
 @Component({
     selector: 'app-form-same-species',
@@ -39,6 +40,10 @@ import {AbstractControl} from '@angular/forms/src/model';
     styleUrls: ['./form-same-species.component.scss']
 })
 export class FormSameSpeciesComponent implements OnInit {
+    private static readonly DEFAULT_VALUES = {
+        level: 1
+    };
+
     public species: Species[];
     public interactomes: Interactome[] = [];
     public genes: GeneInfo[];
@@ -48,7 +53,9 @@ export class FormSameSpeciesComponent implements OnInit {
 
     public formSameSpecies: FormGroup;
 
+    private controlSpecies: AbstractControl;
     private controlInteractomes: AbstractControl;
+    private controlGene: AbstractControl;
 
     constructor(
         private router: Router,
@@ -58,8 +65,9 @@ export class FormSameSpeciesComponent implements OnInit {
         private geneService: GeneService,
         private interactionService: InteractionService,
         private formBuilder: FormBuilder,
-        private snackBar: MatSnackBar,
-    ) {}
+        private bottomSheet: MatBottomSheet
+    ) {
+    }
 
     ngOnInit(): void {
         this.processing = false;
@@ -70,23 +78,37 @@ export class FormSameSpeciesComponent implements OnInit {
         this.genes = [];
 
         this.formSameSpecies = this.formBuilder.group({
-            'species': ['', Validators.required],
-            'interactomes': ['', Validators.required],
-            'gene': ['', Validators.required],
-            'level': ['1', [Validators.required, Validators.min(1), Validators.max(3)]],
+            'species': [null, Validators.required],
+            'interactomes': [{value: null, disabled: true}, [Validators.required]],
+            'gene': [{value: null, disabled: true}, [Validators.required]],
+            'level': [FormSameSpeciesComponent.DEFAULT_VALUES.level, [Validators.required, Validators.min(1), Validators.max(3)]]
         });
 
-        this.controlInteractomes = this.formSameSpecies.controls['interactomes'];
+        this.controlSpecies = this.formSameSpecies.get('species');
+        this.controlInteractomes = this.formSameSpecies.get('interactomes');
+        this.controlGene = this.formSameSpecies.get('gene');
 
         this.updateSpecies();
 
-        this.formSameSpecies.get('species').valueChanges.subscribe(species => {
+        this.controlSpecies.valueChanges.subscribe(species => {
             this.updateInteractomes(species);
+
+            this.controlInteractomes.reset();
+            this.controlInteractomes.enable();
         });
 
-        this.formSameSpecies.get('gene').valueChanges
+        this.controlInteractomes.statusChanges.subscribe(status => {
+            if (status === 'VALID') {
+                this.controlGene.enable();
+            } else {
+                this.controlGene.reset();
+                this.controlGene.disable();
+            }
+        });
+
+        this.controlGene.valueChanges
             .pipe(debounceTime(500))
-        .subscribe(res => this.updateGenes(res));
+        .subscribe(genes => this.updateGenes(genes));
     }
 
     public selectAllInteractomes(): void {
@@ -94,16 +116,16 @@ export class FormSameSpeciesComponent implements OnInit {
     }
 
     public deselectAllInteractomes(): void {
-        this.controlInteractomes.setValue([]);
+        this.controlInteractomes.reset();
     }
 
     public onGeneSelected(value): void {
-        this.formSameSpecies.patchValue({gene: value}, {emitEvent: false});
+        this.controlGene.patchValue(value, {emitEvent: false});
         this.genes = [];
     }
 
     public onRequestCompare(): void {
-        if (this.processing || this.formSameSpecies.status === 'INVALID') {
+        if (!this.isValidForm()) {
             return;
         }
 
@@ -112,14 +134,26 @@ export class FormSameSpeciesComponent implements OnInit {
         const formModel = this.formSameSpecies.value;
         this.interactionService.getSameSpeciesInteraction(
             formModel.gene,
-            formModel.interactomes.map((item) => item.id),
+            formModel.interactomes.map(interactome => interactome.id),
             formModel.level
         )
             .subscribe(
-                work => this.showNotification(),
-                error => this.formSameSpecies.setErrors({'invalidForm': 'Error: ' + error.error}),
+                () => {
+                    this.formSameSpecies.reset(FormSameSpeciesComponent.DEFAULT_VALUES.level);
+                    this.showNotification();
+                },
+                error => {
+                    this.formSameSpecies.controls['gene'].setErrors({'incorrect': 'Unknown gene'});
+                    throw error;
+                },
                 () => this.processing = false
             );
+    }
+
+    public isValidForm(): boolean {
+        return this.formSameSpecies.valid
+            && Number.parseInt(this.controlGene.value, 10) >= 0
+            && !this.processing;
     }
 
     private updateSpecies(): void {
@@ -128,24 +162,27 @@ export class FormSameSpeciesComponent implements OnInit {
         .subscribe(species => this.species = species);
     }
 
-    private updateInteractomes(value: Species): void {
+    private updateInteractomes(species: Species): void {
         this.interactomes = [];
 
-        for (const interactome of value.interactomes) {
-            this.interactomeService.getInteractome(interactome.id)
-                .subscribe(
-                    res => this.interactomes.push(res),
-                    err => {},
-                    () => this.interactomes.sort((a, b) => a.name < b.name ? -1 : 1)
-                );
-        }
+        const interactomeIds = species.interactomes.map(interactome => interactome.id);
+        this.interactomeService.getInteractomesByIds(interactomeIds)
+            .subscribe(
+                interactomes => this.interactomes = interactomes,
+                error => { throw error; },
+                () => this.interactomes.sort((a, b) => a.name < b.name ? -1 : 1)
+            );
     }
 
     private updateGenes(value: string): void {
-        if (value === '') {
+        if (this.searchingGenes) {
+            return;
+        }
+        if (!value) {
             this.genes = [];
             return;
         }
+
         this.searchingGenes = true;
 
         let interactomes = [];
@@ -154,18 +191,31 @@ export class FormSameSpeciesComponent implements OnInit {
         }
         this.geneService.getGeneName(value, interactomes)
             .subscribe(
-                res => this.genes = res,
-                error => {},
+                genes => this.genes = genes,
+                error => { throw error; },
                 () => this.searchingGenes = false
             );
     }
 
     private showNotification() {
-        const snackBar = this.snackBar.open('Same species interactions requested', 'Go to results', {
-            duration: 5000
+        this.bottomSheet.open(
+            ConfirmSheetComponent,
+            {
+                data: {
+                    title: 'Interactions requested',
+                    message: 'Same species interactions correctly requested. The analysis may take some time, but you can track its ' +
+                        'status in the Results section.',
+                    confirmLabel: 'Go to results',
+                    cancelLabel: 'Close',
+                    headerClass: 'card-header-success'
+                }
+            }
+        ).afterDismissed().subscribe(goToResults => {
+            if (goToResults) {
+                this.router.navigate([
+                    this.route.routeConfig.data.resultsResource
+                ]);
+            }
         });
-        snackBar.onAction().subscribe(() => this.router.navigate([
-            this.route.routeConfig.data.resultsResource
-        ]));
     }
 }

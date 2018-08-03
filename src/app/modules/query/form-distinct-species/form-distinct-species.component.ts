@@ -21,8 +21,7 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {MatSnackBar} from '@angular/material';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {GeneInfo, Interactome, Species} from '../../../entities/bio';
@@ -30,7 +29,10 @@ import {SpeciesService} from '../../results/services/species.service';
 import {InteractomeService} from '../../results/services/interactome.service';
 import {InteractionService} from '../../results/services/interaction.service';
 import {GeneService} from '../../results/services/gene.service';
-import {debounceTime} from 'rxjs/operators';
+import {debounceTime, map} from 'rxjs/operators';
+import {AbstractControl} from '@angular/forms/src/model';
+import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
+import {MatBottomSheet} from '@angular/material';
 
 @Component({
     selector: 'app-form-distinct-species',
@@ -38,11 +40,20 @@ import {debounceTime} from 'rxjs/operators';
     styleUrls: ['./form-distinct-species.component.scss']
 })
 export class FormDistinctSpeciesComponent implements OnInit {
-    private species: Species[];
-    public interactomes: Interactome[][] = [];
+    private static readonly DEFAULT_VALUES = {
+        eValue: 0.05,
+        minAlignLength: 18,
+        numDescriptions: 1,
+        minIdentity: 95,
+        level: 1
+    };
 
-    public targetSpecies: Species[];
     public referenceSpecies: Species[];
+    public targetSpecies: Species[];
+
+    public referenceInteractomes: Interactome[];
+    public targetInteractomes: Interactome[];
+
     public genes: GeneInfo[];
 
     public searchingGenes = false;
@@ -50,96 +61,129 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     public formDistinctSpecies: FormGroup;
 
-    constructor(private snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
-                private speciesService: SpeciesService, private interactomeService: InteractomeService,
-                private interactionService: InteractionService, private geneService: GeneService) {
-    }
+    private controlReferenceSpecies: AbstractControl;
+    private controlReferenceInteractomes: AbstractControl;
+    private controlTargetSpecies: AbstractControl;
+    private controlTargetInteractomes: AbstractControl;
+    private controlGene: AbstractControl;
+
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private speciesService: SpeciesService,
+        private interactomeService: InteractomeService,
+        private interactionService: InteractionService,
+        private geneService: GeneService,
+        private formBuilder: FormBuilder,
+        private bottomSheet: MatBottomSheet
+    ) {}
 
     ngOnInit(): void {
         this.formDistinctSpecies = this.formBuilder.group({
-            'referenceSpecies': ['', Validators.required],
-            'targetSpecies': ['', Validators.required],
-            'referenceInteractome': ['', Validators.required],
-            'targetInteractome': ['', Validators.required],
-            'gene': ['', Validators.required],
-            'eValue': ['0.05', [Validators.required, Validators.min(0)]],
-            'minAlignLength': ['18', [Validators.required, Validators.min(0)]],
-            'numDescriptions': ['1', [Validators.required, Validators.min(1), Validators.max(100)]],
-            'minIdentity': ['95', [Validators.required, Validators.min(0), Validators.max(100)]],
-            'level': ['1', [Validators.required, Validators.min(1), Validators.max(3)]],
+            'referenceSpecies': [null, Validators.required],
+            'targetSpecies': [{value: null, disabled: true}, Validators.required],
+            'referenceInteractome': [{value: null, disabled: true}, Validators.required],
+            'targetInteractome': [{value: null, disabled: true}, Validators.required],
+            'gene': [{value: null, disabled: true}, Validators.required],
+            'eValue': [FormDistinctSpeciesComponent.DEFAULT_VALUES.eValue, [Validators.required, Validators.min(0)]],
+            'minAlignLength': [FormDistinctSpeciesComponent.DEFAULT_VALUES.minAlignLength, [Validators.required, Validators.min(0)]],
+            'numDescriptions': [
+                FormDistinctSpeciesComponent.DEFAULT_VALUES.numDescriptions,
+                [Validators.required, Validators.min(1), Validators.max(100)]
+            ],
+            'minIdentity': [
+                FormDistinctSpeciesComponent.DEFAULT_VALUES.minIdentity,
+                [Validators.required, Validators.min(0), Validators.max(100)]
+            ],
+            'level': [FormDistinctSpeciesComponent.DEFAULT_VALUES.level, [Validators.required, Validators.min(1), Validators.max(3)]],
         });
 
-        this.updateSpecies();
+        this.controlReferenceSpecies = this.formDistinctSpecies.get('referenceSpecies');
+        this.controlReferenceInteractomes = this.formDistinctSpecies.get('referenceInteractome');
+        this.controlTargetSpecies = this.formDistinctSpecies.get('targetSpecies');
+        this.controlTargetInteractomes = this.formDistinctSpecies.get('targetInteractome');
+        this.controlGene = this.formDistinctSpecies.get('gene');
 
-        this.formDistinctSpecies.get('referenceSpecies').valueChanges.subscribe(value => {
-            this.onChangeSpecies(value, 1);
-        });
-        this.formDistinctSpecies.get('targetSpecies').valueChanges.subscribe(value => {
-            this.onChangeSpecies(value, 2);
+        this.updateReferenceSpecies();
+
+        this.controlReferenceSpecies.valueChanges.subscribe(species => {
+            this.onReferenceSpeciesChange(species);
+
+            if (this.controlTargetSpecies.value === species) {
+                this.controlTargetSpecies.reset();
+            }
         });
 
-        this.formDistinctSpecies.controls.gene.valueChanges
+        this.controlTargetSpecies.valueChanges.subscribe(species => {
+            if (species !== null) {
+                this.onTargetSpeciesChange(species);
+            }
+        });
+
+        this.controlReferenceSpecies.statusChanges.subscribe(status => {
+            if (status === 'VALID') {
+                this.controlTargetSpecies.enable();
+                this.controlReferenceInteractomes.enable();
+            } else {
+                this.controlTargetSpecies.reset();
+                this.controlTargetSpecies.disable();
+                this.controlReferenceInteractomes.reset();
+                this.controlReferenceInteractomes.disable();
+            }
+        });
+
+        this.controlTargetSpecies.statusChanges.subscribe(status => {
+            if (status === 'VALID') {
+                this.controlTargetInteractomes.enable();
+            } else {
+                this.controlTargetInteractomes.reset();
+                this.controlTargetInteractomes.disable();
+            }
+        });
+
+        this.controlReferenceInteractomes.statusChanges.subscribe(status => {
+            if (status === 'VALID') {
+                this.controlGene.enable();
+            } else {
+                this.controlGene.reset();
+                this.controlGene.disable();
+            }
+        });
+
+        this.controlGene.valueChanges
             .pipe(debounceTime(500))
-        .subscribe(res => this.updateGenes(res));
+        .subscribe(genes => this.updateGenes(genes));
     }
 
-    public selectAllInteractomes(control: string, values) {
-        this.formDistinctSpecies.controls[control].setValue(values);
+    public selectAllReferenceInteractomes(): void {
+        this.controlReferenceInteractomes.setValue(this.referenceInteractomes);
     }
 
-    public deselectAllInteractomes(control: string) {
-        this.formDistinctSpecies.controls[control].setValue([]);
+    public deselectAllReferenceInteractomes(): void {
+        this.controlReferenceInteractomes.reset();
+    }
+
+    public selectAllTargetInteractomes(): void {
+        this.controlTargetInteractomes.setValue(this.targetInteractomes);
+    }
+
+    public deselectAllTargetInteractomes(): void {
+        this.controlTargetInteractomes.reset();
     }
 
     public onGeneSelected(value): void {
-        this.formDistinctSpecies.patchValue({gene: value}, {emitEvent: false});
+        this.controlGene.patchValue(value, {emitEvent: false});
         this.genes = [];
     }
 
-    private onChangeSpecies(value: Species, index: number): void {
-        this.interactomes[index] = [];
-        if (index === 1) {
-            this.targetSpecies = this.species.slice();
-            const i: number = this.targetSpecies.indexOf(value);
-            this.targetSpecies.splice(i, 1);
-        } else {
-            this.referenceSpecies = this.species.slice();
-            const i: number = this.referenceSpecies.indexOf(value);
-            this.referenceSpecies.splice(i, 1);
-        }
-
-        for (const interactome of value.interactomes) {
-            this.interactomeService.getInteractome(interactome.id)
-                .subscribe(
-                    res => this.interactomes[index].push(res),
-                    err => {},
-                    () => this.interactomes[index].sort((a, b) => a.name < b.name ? -1 : 1)
-                );
-        }
-    }
-
-    private updateGenes(value: string): void {
-        if (!this.formDistinctSpecies.get('referenceInteractome').valid) {
-            alert('First, select Reference Interactome');
-            return;
-        } else if (value === '') {
-            this.genes = [];
-            return;
-        }
-
-        this.searchingGenes = true;
-
-        const interactomes = this.formDistinctSpecies.value.referenceInteractome.map((item) => item.id);
-        this.geneService.getGeneName(value, interactomes)
-            .subscribe(
-                res => this.genes = res,
-                error => {},
-                () => this.searchingGenes = false
-            );
+    public isValidForm(): boolean {
+        return this.formDistinctSpecies.valid
+            && Number.parseInt(this.controlGene.value, 10) >= 0
+            && !this.processing;
     }
 
     public onRequestCompare(): void {
-        if (this.processing || this.formDistinctSpecies.status === 'INVALID') {
+        if (!this.isValidForm()) {
             return;
         }
 
@@ -148,8 +192,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
         const formModel = this.formDistinctSpecies.value;
         this.interactionService.getDistinctSpeciesInteraction(
             formModel.gene,
-            formModel.referenceInteractome.map(item => item.id),
-            formModel.targetInteractome.map(item => item.id),
+            formModel.referenceInteractome.map(interactome => interactome.id),
+            formModel.targetInteractome.map(interactome => interactome.id),
             formModel.level,
             formModel.eValue,
             formModel.numDescriptions,
@@ -157,25 +201,89 @@ export class FormDistinctSpeciesComponent implements OnInit {
             formModel.minAlignLength
         )
             .subscribe(
-                work => this.showNotification(),
-                error => this.formDistinctSpecies.setErrors({'invalidForm': 'Error: ' + error.error}),
+                () => {
+                    this.formDistinctSpecies.reset(FormDistinctSpeciesComponent.DEFAULT_VALUES);
+                    this.showNotification();
+                },
+                error => {
+                    this.formDistinctSpecies.setErrors({'invalidForm': 'Error: ' + error.error});
+                    throw error;
+                },
                 () => this.processing = false
             );
     }
 
-    private updateSpecies(): void {
+    private updateReferenceSpecies(): void {
         this.speciesService.getSpecies()
-            .subscribe(species => {
-                this.species = this.referenceSpecies = this.targetSpecies = species;
-            });
+            .pipe(map(species => species.filter(specie => specie.interactomes.length > 1)))
+        .subscribe(species => this.referenceSpecies = species);
+    }
+
+    private onReferenceSpeciesChange(species: Species) {
+        this.referenceInteractomes = [];
+        this.targetSpecies = this.referenceSpecies.filter(s => s !== species);
+
+        const interactomeIds = species.interactomes.map(interactome => interactome.id);
+        this.interactomeService.getInteractomesByIds(interactomeIds)
+            .subscribe(
+                interactomes => this.referenceInteractomes = interactomes,
+                error => { throw error; },
+                () => this.referenceInteractomes.sort((a, b) => a.name < b.name ? -1 : 1)
+            );
+    }
+
+    private onTargetSpeciesChange(species: Species) {
+        this.targetInteractomes = [];
+
+        const interactomeIds = species.interactomes.map(interactome => interactome.id);
+        this.interactomeService.getInteractomesByIds(interactomeIds)
+            .subscribe(
+                interactomes => this.targetInteractomes = interactomes,
+                error => { throw error; },
+                () => this.targetInteractomes.sort((a, b) => a.name < b.name ? -1 : 1)
+            );
+    }
+
+    private updateGenes(value: string): void {
+        if (this.searchingGenes) {
+            return;
+        }
+        if (!value) {
+            this.genes = [];
+            return;
+        }
+
+        this.searchingGenes = true;
+
+        const interactomes = this.formDistinctSpecies.value.referenceInteractome.map(interactome => interactome.id);
+
+        this.geneService.getGeneName(value, interactomes)
+            .subscribe(
+                genes => this.genes = genes,
+                error => { throw error; },
+                () => this.searchingGenes = false
+            );
     }
 
     private showNotification(): void {
-        const snackBar = this.snackBar.open('Different species interactions requested', 'Go to results', {
-            duration: 5000
+        this.bottomSheet.open(
+            ConfirmSheetComponent,
+            {
+                data: {
+                    title: 'Interactions requested',
+                    message: 'Different species interactions correctly requested. The analysis may take some time, but you can track its ' +
+                        'status in the Results section.',
+                    confirmLabel: 'Go to results',
+                    cancelLabel: 'Close',
+                    headerClass: 'card-header-success'
+                }
+            }
+        ).afterDismissed().subscribe(goToResults => {
+            if (goToResults) {
+                this.router.navigate([
+                    this.route.routeConfig.data.resultsResource
+                ]);
+            }
         });
-        snackBar.onAction().subscribe(() => this.router.navigate([
-            this.route.routeConfig.data.resultsResource
-        ]));
     }
 }

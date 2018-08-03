@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-md-6">
                 <mat-form-field>
-                    <mat-select placeholder="Species" [value]="formSameSpecies.value.species" formControlName="species">
+                    <mat-select placeholder="Species" formControlName="species">
                         <mat-option *ngFor="let specie of species" [value]="specie">
                             {{ specie.name }}
                         </mat-option>
@@ -35,15 +35,12 @@
             </div>
             <div class="col-md-6">
                 <mat-form-field>
-                    <mat-select placeholder="Interactomes" formControlName="interactomes"
-                                [value]="formSameSpecies.value.interactomes" [multiple]="true">
+                    <mat-select placeholder="Interactomes" formControlName="interactomes" [multiple]="true">
                         <mat-option disabled="disabled" *ngIf="interactomes" class="filter-option">
-                            <button mat-raised-button color="primary"
-                                    (click)="selectAllInteractomes('interactomes', interactomes)">
+                            <button mat-raised-button color="primary" (click)="selectAllInteractomes()">
                                 Select All
                             </button>
-                            <button mat-raised-button color="accent"
-                                    (click)="deselectAllInteractomes('interactomes')">
+                            <button mat-raised-button color="accent" (click)="deselectAllInteractomes()">
                                 Deselect All
                             </button>
                         </mat-option>
@@ -60,7 +57,7 @@
                 <mat-form-field>
                     <mat-label>Gene</mat-label>
                     <input #searchInput type="search" matInput placeholder="Start typing something to search genes"
-                           formControlName="gene" autocomplete="off" />
+                           formControlName="gene" autocomplete="off"/>
                 </mat-form-field>
                 <div class="div-autocomplete">
                     <mat-progress-bar mode="indeterminate" *ngIf="searchingGenes"></mat-progress-bar>
@@ -77,18 +74,20 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <input type="number" matInput placeholder="Interaction level"
-                           [min]="1" [max]="3" [step]="1" [value]="formSameSpecies.value.level" formControlName="level">
+                           [min]="1" [max]="3" [step]="1"
+                           formControlName="level" [value]="formSameSpecies.value.level">
                 </mat-form-field>
             </div>
             <div class="col-md-9">
-                <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3" [value]="formSameSpecies.value.level" formControlName="level" >
+                <mat-slider thumbLabel tickInterval="1" [min]="1" [max]="3"
+                            formControlName="level" [value]="formSameSpecies.value.level">
                 </mat-slider>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <button mat-raised-button class="btn btn-primary" (click)="onRequestCompare()"
-                        [disabled]="formSameSpecies.status === 'INVALID' || processing">
+                        [disabled]="!isValidForm()">
                     Compare
                 </button>
             </div>

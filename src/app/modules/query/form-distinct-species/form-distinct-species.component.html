@@ -27,8 +27,8 @@
             <div class="col-md-6">
                 <mat-form-field class="width-50">
                     <mat-select placeholder="Reference Species" formControlName="referenceSpecies">
-                        <mat-option *ngFor="let specie of referenceSpecies" [value]="specie">
-                            {{ specie.name }}
+                        <mat-option *ngFor="let species of referenceSpecies" [value]="species">
+                            {{ species.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -38,17 +38,17 @@
                 <mat-form-field class="width-50 right">
                     <mat-select placeholder="Reference Interactomes" [multiple]="true"
                                 formControlName="referenceInteractome">
-                        <mat-option disabled="disabled" *ngIf="interactomes[1]" class="filter-option">
+                        <mat-option disabled="disabled" *ngIf="referenceInteractomes" class="filter-option">
                             <button mat-raised-button color="primary"
-                                    (click)="selectAllInteractomes('referenceInteractome', interactomes[1])">
+                                    (click)="selectAllReferenceInteractomes()">
                                 Select All
                             </button>
                             <button mat-raised-button color="accent"
-                                    (click)="deselectAllInteractomes('referenceInteractome')">
+                                    (click)="deselectAllReferenceInteractomes()">
                                 Deselect All
                             </button>
                         </mat-option>
-                        <mat-option *ngFor="let interactome of interactomes[1]" [value]="interactome">
+                        <mat-option *ngFor="let interactome of referenceInteractomes" [value]="interactome">
                             {{ interactome.name }}
                         </mat-option>
                     </mat-select>
@@ -59,8 +59,8 @@
             <div class="col-md-6">
                 <mat-form-field class="width-50">
                     <mat-select placeholder="Target Species" formControlName="targetSpecies">
-                        <mat-option *ngFor="let specie of targetSpecies" [value]="specie">
-                            {{ specie.name }}
+                        <mat-option *ngFor="let species of targetSpecies" [value]="species">
+                            {{ species.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -69,17 +69,17 @@
             <div class="col-md-6">
                 <mat-form-field class="width-50 right">
                     <mat-select placeholder="Target Interactomes" formControlName="targetInteractome" [multiple]="true">
-                        <mat-option disabled="disabled" *ngIf="interactomes[2]" class="filter-option">
+                        <mat-option disabled="disabled" *ngIf="targetInteractomes" class="filter-option">
                             <button mat-raised-button color="primary"
-                                    (click)="selectAllInteractomes('targetInteractome', interactomes[2])">
+                                    (click)="selectAllTargetInteractomes()">
                                 Select All
                             </button>
                             <button mat-raised-button color="accent"
-                                    (click)="deselectAllInteractomes('targetInteractome')">
+                                    (click)="deselectAllTargetInteractomes()">
                                 Deselect All
                             </button>
                         </mat-option>
-                        <mat-option *ngFor="let interactome of interactomes[2]" [value]="interactome">
+                        <mat-option *ngFor="let interactome of targetInteractomes" [value]="interactome">
                             {{ interactome.name }}
                         </mat-option>
                     </mat-select>
@@ -187,7 +187,7 @@
                 {{formDistinctSpecies.getError('invalidForm')}}
             </mat-error>
             <button mat-raised-button class="btn btn-primary" (click)="onRequestCompare()"
-                    [disabled]="formDistinctSpecies.status === 'INVALID' || processing">
+                    [disabled]="!isValidForm()">
                 Compare
             </button>
         </div>

@@ -21,9 +21,9 @@
  *
  */
 
-import {ErrorHandler, Inject, Injectable} from '@angular/core';
+import {ErrorHandler, Injectable} from '@angular/core';
 import {NotificationService} from '../services/notification.service';
-import {EvoppiError} from '../../../entities/notification';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable()
 export class ErrorNotificationHandler implements ErrorHandler {
@@ -39,6 +39,8 @@ export class ErrorNotificationHandler implements ErrorHandler {
 
         if (error.summary && error.detail) {
             this.notificationService.error(error.summary, error.detail);
+        } else if (error instanceof HttpErrorResponse) {
+            this.notificationService.error(error.statusText, error.message);
         }
     }
 }

@@ -21,11 +21,10 @@
  *
  */
 
-import {ErrorHandler, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ModuleWithProviders} from '@angular/compiler/src/core';
 import {NotificationService} from './services/notification.service';
-import {ErrorNotificationHandler} from './handlers/error-notification.handler';
 
 @NgModule({
     imports: [

@@ -26,7 +26,6 @@ import {HttpClient} from '@angular/common/http';
 import {concat, from, Observable} from 'rxjs';
 import {map, mergeMap, reduce} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
-import {GeneService} from './gene.service';
 import {InteractomeService} from './interactome.service';
 import {OrderField, SortDirection} from '../../../entities/data';
 import {SummarizedWorkResult, Work, WorkResult} from '../../../entities/execution';
@@ -38,7 +37,7 @@ export class InteractionService {
 
     private endpoint = environment.evoppiUrl + 'api/interaction';
 
-    constructor(protected http: HttpClient, protected geneService: GeneService, protected interactomeService: InteractomeService) {
+    constructor(protected http: HttpClient, protected interactomeService: InteractomeService) {
     }
 
 

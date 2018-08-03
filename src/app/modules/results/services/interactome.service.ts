@@ -30,6 +30,7 @@ import {SpeciesService} from './species.service';
 import {Interactome} from '../../../entities/bio';
 import {saveAs} from 'file-saver/FileSaver';
 import {EvoppiError} from '../../../entities/notification';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Injectable()
 export class InteractomeService {
@@ -64,6 +65,12 @@ export class InteractomeService {
                     `The interactome '${id}' could not be retrieved from the backend.`
                 )
             );
+    }
+
+    getInteractomesByIds(ids: number[], retrieveSpecies: boolean = false): Observable<Interactome[]> {
+        return forkJoin(
+            ids.map(id => this.getInteractome(id, retrieveSpecies))
+        );
     }
 
     getInteractomes(): Observable<Interactome[]> {
