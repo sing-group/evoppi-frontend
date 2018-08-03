@@ -26,7 +26,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
-import {BrowserService} from "../services/browser.service";
+import {BrowserService} from '../services/browser.service';
 
 @Component({
     selector: 'app-login',

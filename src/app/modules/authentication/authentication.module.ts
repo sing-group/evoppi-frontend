@@ -29,12 +29,14 @@ import {LoginComponent} from './login/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {BrowserService} from './services/browser.service';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
     imports: [
         CommonModule,
         MaterialDesignModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RouterModule
     ],
     declarations: [
         LoginComponent
