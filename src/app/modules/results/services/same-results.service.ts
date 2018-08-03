@@ -23,7 +23,7 @@
 
 import { Injectable } from '@angular/core';
 import {SameResult} from '../../../entities';
-import {Observable, of} from 'rxjs';
+import {Observable, of, OperatorFunction} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {map, mergeMap, reduce} from 'rxjs/operators';
@@ -51,26 +51,19 @@ export class SameResultsService {
         return this.http.get<WorkResult[]>(this.endpoint)
             .pipe(
                 mergeMap(results => results),
-                mergeMap(
-                    workResult => this.workStatusService.getWork(workResult.id)
-                        .pipe(map(
-                            workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
-                        ))
-                ),
+                this.completeAndMapWorkResultToSameResult(),
                 reduce((acc: SameResult[], val: SameResult) => { acc.push(val); return acc; }, []),
-                EvoppiError.throwOnError('Error same result', 'The list of results could not be retrieved from the backend.')
+                EvoppiError.throwOnError(
+                    'Error same species result',
+                    'The list of same species results could not be retrieved from the backend.'
+                )
             );
     }
 
     public getResult(uuid: string): Observable<SameResult> {
         return this.http.get<WorkResult>(this.endpointSingle.replace('UUID', uuid))
             .pipe(
-                mergeMap(
-                    workResult => this.workStatusService.getWork(workResult.id)
-                        .pipe(map(
-                            workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
-                        ))
-                ),
+                this.completeAndMapWorkResultToSameResult(),
                 EvoppiError.throwOnError(
                     'Error retrieving same result',
                     `The result with the id '${uuid}' could not be retrieved from the backend.`
@@ -93,9 +86,24 @@ export class SameResultsService {
                             workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
                         ))
                 ),
-                reduce((acc: SameResult[], val: SameResult) => { acc.push(val); return acc; }, []),
-                EvoppiError.throwOnError('Error same result by UUIS', 'The list of results using UUIDs could not be retrieved from the backend.')
+                reduce((acc: SameResult[], val: SameResult) => {
+                    acc.push(val);
+                    return acc;
+                }, []),
+                EvoppiError.throwOnError(
+                    'Error same result by UUIS',
+                    'The list of results using UUIDs could not be retrieved from the backend.'
+                )
             );
+    }
+
+    private completeAndMapWorkResultToSameResult(): OperatorFunction<WorkResult, SameResult> {
+        return mergeMap(
+            workResult => this.workStatusService.getWork(workResult.id)
+                .pipe(map(
+                    workStatus => this.mapWorkResultToSameResult(workResult, workStatus)
+                ))
+        );
     }
 
     private mapWorkResultToSameResult(workResult: WorkResult, work: Work): SameResult {

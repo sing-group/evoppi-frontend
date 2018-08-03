@@ -23,7 +23,7 @@
 
 import {Injectable} from '@angular/core';
 import {DistinctResult} from '../../../entities';
-import {Observable, of} from 'rxjs';
+import {Observable, of, OperatorFunction} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Work, WorkResult} from '../../../entities/execution';
@@ -51,26 +51,19 @@ export class DistinctResultsService {
         return this.http.get<WorkResult[]>(this.endpoint)
             .pipe(
                 mergeMap(results => results),
-                mergeMap(
-                    workResult => this.workStatusService.getWork(workResult.id)
-                        .pipe(map(
-                            workStatus => this.mapWorkResultToDistinctResult(workResult, workStatus)
-                        ))
-                ),
+                this.completeAndMapWorkResultToDistinctResult(),
                 reduce((acc: DistinctResult[], val: DistinctResult) => { acc.push(val); return acc; }, []),
-                EvoppiError.throwOnError('Error distinct result', 'The list of results could not be retrieved from the backend.')
+                EvoppiError.throwOnError(
+                    'Error distinct species result',
+                    'The list of distinct species results could not be retrieved from the backend.'
+                )
             );
     }
 
     public getResult(uuid: string): Observable<DistinctResult> {
         return this.http.get<WorkResult>(this.endpointSingle.replace('UUID', uuid))
             .pipe(
-                mergeMap(
-                    workResult => this.workStatusService.getWork(workResult.id)
-                        .pipe(map(
-                            workStatus => this.mapWorkResultToDistinctResult(workResult, workStatus)
-                        ))
-                ),
+                this.completeAndMapWorkResultToDistinctResult(),
                 EvoppiError.throwOnError('Error retrieving distinct result', `The result with the id '${uuid}' could not be retrieved.`)
             );
     }
@@ -90,9 +83,24 @@ export class DistinctResultsService {
                             workStatus => this.mapWorkResultToDistinctResult(workResult, workStatus)
                         ))
                 ),
-                reduce((acc: DistinctResult[], val: DistinctResult) => { acc.push(val); return acc; }, []),
-                EvoppiError.throwOnError('Error distinct result by UUIS', 'The list of results using UUIDs could not be retrieved from the backend.')
+                reduce((acc: DistinctResult[], val: DistinctResult) => {
+                    acc.push(val);
+                    return acc;
+                }, []),
+                EvoppiError.throwOnError(
+                    'Error distinct result by UUIS',
+                    'The list of results using UUIDs could not be retrieved from the backend.'
+                )
             );
+    }
+
+    private completeAndMapWorkResultToDistinctResult(): OperatorFunction<WorkResult, DistinctResult> {
+        return mergeMap(
+            workResult => this.workStatusService.getWork(workResult.id)
+                .pipe(map(
+                    workStatus => this.mapWorkResultToDistinctResult(workResult, workStatus)
+                ))
+        );
     }
 
     private mapWorkResultToDistinctResult(workResult: WorkResult, work: Work): DistinctResult {

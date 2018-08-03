@@ -56,7 +56,7 @@ export class ResultsComponent implements OnInit {
     public loadingDistinct = false;
     public loadingSame = false;
 
-    private static readonly resultComparator = (a: DistinctResult | SameResult, b: DistinctResult | SameResult) => {
+    private static readonly RESULT_COMPARATOR = (a: DistinctResult | SameResult, b: DistinctResult | SameResult) => {
         if (a.creation === b.creation) {
             return a.uuid < b.uuid ? -1 : 1;
         } else {
@@ -91,23 +91,29 @@ export class ResultsComponent implements OnInit {
         distinctObservable
             .subscribe(
                 resultsDistinct => {
-                    this.distinctResults = resultsDistinct.sort(ResultsComponent.resultComparator);
+                    this.distinctResults = resultsDistinct.sort(ResultsComponent.RESULT_COMPARATOR);
                     this.distinctResults.filter(result => result.progress < 1)
                         .forEach(result => this.scheduleResultUpdate(result, uuid => this.distinctResultsService.getResult(uuid)));
+                    this.loadingDistinct = false;
                 },
-                () => {},
-                () => this.loadingDistinct = false
+                error => {
+                    this.loadingDistinct = false;
+                    throw error;
+                }
             );
 
         sameObservable
             .subscribe(
                 resultsSame => {
-                    this.sameResults = resultsSame.sort(ResultsComponent.resultComparator);
+                    this.sameResults = resultsSame.sort(ResultsComponent.RESULT_COMPARATOR);
                     this.sameResults.filter(result => result.progress < 1)
                         .forEach(result => this.scheduleResultUpdate(result, uuid => this.sameResultsService.getResult(uuid)));
+                    this.loadingSame = false;
                 },
-                () => {},
-                () => this.loadingSame = false
+                error => {
+                    this.loadingSame = false;
+                    throw error;
+                }
             );
     }
 
@@ -185,7 +191,7 @@ export class ResultsComponent implements OnInit {
                 () => this.notificationService.success('Result deleted', `Distinct species result '${uuid}' deleted.`),
                 () => {
                     this.distinctResults.push(resultToDelete);
-                    this.distinctResults.sort(ResultsComponent.resultComparator);
+                    this.distinctResults.sort(ResultsComponent.RESULT_COMPARATOR);
                 }
             );
     }
@@ -200,7 +206,7 @@ export class ResultsComponent implements OnInit {
                 () => this.notificationService.success('Result deleted', `Same species result '${uuid}' deleted.`),
                 () => {
                     this.sameResults.push(resultToDelete);
-                    this.sameResults.sort(ResultsComponent.resultComparator);
+                    this.sameResults.sort(ResultsComponent.RESULT_COMPARATOR);
                 }
             );
     }
