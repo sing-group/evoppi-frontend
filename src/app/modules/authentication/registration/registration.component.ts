@@ -24,23 +24,21 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../services/authentication.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
-import {BrowserService} from '../services/browser.service';
 import {NotificationService} from '../../notification/services/notification.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    selector: 'app-registration',
+    templateUrl: './registration.component.html',
+    styleUrls: ['./registration.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class RegistrationComponent implements OnInit {
 
-    formLogin: FormGroup;
+    formRegister: FormGroup;
 
     formErrors = {
         'username': '',
-        'password': ''
+        'password': '',
+        'email': ''
     };
     validationMessages = {
         'username': {
@@ -48,43 +46,34 @@ export class LoginComponent implements OnInit {
         },
         'password': {
             'required': 'Password is required.'
+        },
+        'email' : {
+            'required': 'Email is required.',
+            'email': 'Email is incorrect.'
         }
     };
 
-    constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService, private router: Router,
-                private matDialog: MatDialog, private route: ActivatedRoute, private browserService: BrowserService,
+    constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService,
                 private notificationService: NotificationService) {
     }
 
     ngOnInit() {
-        if (this.route.routeConfig.data.state === 'logout') {
-            this.authenticationService.logOut();
-            this.browserService.assign('/dashboard');
-        } else if (this.route.routeConfig.data.state === 'confirmation' && this.route.snapshot.queryParams.uuid ) {
-            this.authenticationService.confirmRegistration(this.route.snapshot.queryParams.uuid)
-                .subscribe( () => {
-                        this.notificationService.success('Validation complete',
-                            'You can use your name and password to log in');
-                    },
-                    (error) => {
-                        this.notificationService.error('Validation error', 'User validation failed. ' + error);
-                    });
-        }
 
-        this.formLogin = this.formBuilder.group({
+        this.formRegister = this.formBuilder.group({
             'username': ['', Validators.required],
+            'email': ['', Validators.email],
             'password': ['', Validators.required],
         });
-        this.formLogin.valueChanges
+        this.formRegister.valueChanges
             .subscribe(data => this.onValueChanged(data));
     }
 
     onValueChanged(data?: any) {
-        if (!this.formLogin) { return; }
+        if (!this.formRegister) { return; }
         for (const field of Object.keys(this.formErrors)) {
             // clear previous error message (if any)
             this.formErrors[field] = '';
-            const control = this.formLogin.get(field);
+            const control = this.formRegister.get(field);
             if (control && control.dirty && !control.valid) {
                 const messages = this.validationMessages[field];
                 for (const key of Object.keys(control.errors)) {
@@ -94,25 +83,26 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    onLogin() {
-        if (this.formLogin.status === 'INVALID') {
+    onRegister() {
+        if (this.formRegister.status === 'INVALID') {
             return;
         }
-        const formModel = this.formLogin.value;
-        this.authenticationService.checkCredentials(formModel.username, formModel.password)
-            .subscribe((role) => {
-                if (role === 'INVALID') {
-                    this.formLogin.setErrors({'invalidForm': 'Error: User or password incorrect. Please try again.'});
-                } else {
-                    this.authenticationService.logIn(formModel.username, formModel.password, role);
-                    this.browserService.assign('/dashboard');
+        const formModel = this.formRegister.value;
+        this.authenticationService.register(formModel.username, formModel.email, formModel.password)
+            .subscribe(() => {
+                this.notificationService.success('User registered successfully',
+                    'Please check your email to validate your account.');
+                },
+                (error) => {
+                    this.formRegister.setErrors({'invalidForm': 'Error: ' + error});
+                    this.notificationService.error('There was an error creating a new accout', error);
                 }
-            });
+            );
     }
 
     onKeyDownForm(event: KeyboardEvent) {
         if (event.keyCode === 13) {
-           this.onLogin();
+           this.onRegister();
         }
     }
 

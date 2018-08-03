@@ -22,7 +22,7 @@
  */
 
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {LoginComponent} from './login.component';
+import {RegistrationComponent} from './registration.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {MaterialDesignModule} from '../../material-design/material-design.module';
@@ -35,14 +35,14 @@ import {BrowserService} from '../services/browser.service';
 import {NotificationService} from '../../notification/services/notification.service';
 
 
-describe('LoginComponent', () => {
-    let component: LoginComponent;
-    let fixture: ComponentFixture<LoginComponent>;
+describe('RegistrationComponent', () => {
+    let component: RegistrationComponent;
+    let fixture: ComponentFixture<RegistrationComponent>;
     const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [LoginComponent],
+            declarations: [RegistrationComponent],
             imports: [BrowserAnimationsModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule, MaterialDesignModule],
             providers: [AuthenticationService, BrowserService, NotificationService,
                 { provide: Router, useClass: RouterStub},
@@ -53,7 +53,7 @@ describe('LoginComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(LoginComponent);
+        fixture = TestBed.createComponent(RegistrationComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

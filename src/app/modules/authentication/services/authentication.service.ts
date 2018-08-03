@@ -61,6 +61,22 @@ export class AuthenticationService {
         );
     }
 
+    public register (username: string, email: string, password: string): Observable<string> {
+        return this.http.post<string>(this.endpoint + '/registration',
+            {login: username, email: email, password: password}
+        )
+            .pipe(
+                EvoppiError.throwOnError('Error registering user', `The user '${username}' could not be registered.`)
+            );
+    }
+
+    public confirmRegistration (uuid: string): Observable<string> {
+        return this.http.post<string>(this.endpoint + '/registration/' + uuid, {})
+            .pipe(
+                EvoppiError.throwOnError('Error confirming user registration', `The uuid '${uuid}' could not be confirmed.`)
+            );
+    }
+
     public logIn(username: string, password: string, role: Role) {
         this.user.name = username;
         this.user.role = role;

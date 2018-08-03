@@ -30,6 +30,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {BrowserService} from './services/browser.service';
 import {RouterModule} from '@angular/router';
+import {RegistrationComponent} from './registration/registration.component';
 
 @NgModule({
     imports: [
@@ -39,10 +40,12 @@ import {RouterModule} from '@angular/router';
         RouterModule
     ],
     declarations: [
-        LoginComponent
+        LoginComponent,
+        RegistrationComponent
     ],
     exports: [
-        LoginComponent
+        LoginComponent,
+        RegistrationComponent
     ]
 })
 export class AuthenticationModule {

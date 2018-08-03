@@ -38,6 +38,7 @@ import {SpeciesListComponent} from '../data/species-list/species-list.component'
 import {ResearcherGuard} from './security/researcher.guard';
 import {InteractomeListComponent} from '../data/interactome-list/interactome-list.component';
 import {LoginComponent} from '../authentication/login/login.component';
+import {RegistrationComponent} from '../authentication/registration/registration.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -112,5 +113,17 @@ export const MAIN_ROUTES: Routes = [
         component: LoginComponent,
         canActivateChild: [AdminGuard],
         data: {state: 'logout'}
+    },
+    {
+        path: 'registration',
+        component: RegistrationComponent,
+        data: {state: 'registration'}
+    },
+    {
+        path: 'registration/confirmation',
+        component: LoginComponent,
+        data: {
+            state: 'confirmation'
+        }
     }
 ];

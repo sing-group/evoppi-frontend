@@ -112,5 +112,21 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         backRoute: '/dashboard',
         icon: 'lock_close',
         allowedRoles: [ Role.GUEST ]
+    },
+    {
+        path: '/registration',
+        title: 'Registration',
+        showInMenu: false,
+        backRoute: '/dashboard',
+        icon: 'lock_open',
+        allowedRoles: [ Role.GUEST ]
+    },
+    {
+        path: '/registration/confirmation',
+        title: 'Login',
+        showInMenu: false,
+        backRoute: '/dashboard',
+        icon: 'lock_open',
+        allowedRoles: [ Role.GUEST ]
     }
 ];
