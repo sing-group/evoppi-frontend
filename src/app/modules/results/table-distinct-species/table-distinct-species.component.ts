@@ -228,7 +228,7 @@ export class TableDistinctSpeciesComponent implements OnInit {
                 this.paginatedDataSource.load(this.paginatedResultUrl);
                 this.paginatedDataSource.loading$.subscribe((res) => {
                     if (res === false) {
-                        //this.showTable = true;
+                        // this.showTable = true;
                     }
                 });
                 this.processing = false;

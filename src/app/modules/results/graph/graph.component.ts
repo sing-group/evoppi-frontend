@@ -62,7 +62,8 @@ export class GraphComponent implements OnChanges {
         this.graph.initSimulation(this.options);
     }
 
-    constructor(private d3Service: D3Service, private ref: ChangeDetectorRef, public dialog: MatDialog, private domSanitizer: DomSanitizer) {
+    constructor(private d3Service: D3Service, private ref: ChangeDetectorRef, public dialog: MatDialog,
+                private domSanitizer: DomSanitizer) {
     }
 
     ngOnChanges(changes: SimpleChanges) {

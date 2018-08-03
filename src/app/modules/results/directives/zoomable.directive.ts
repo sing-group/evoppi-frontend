@@ -28,7 +28,7 @@ import {D3Service} from '../services/d3.service';
     selector: '[appZoomableOf]'
 })
 export class ZoomableDirective implements OnInit {
-    @Input('appZoomableOf') appZoomableOf: ElementRef;
+    @Input() appZoomableOf: ElementRef;
 
     constructor(private d3Service: D3Service, private _element: ElementRef) {}
 

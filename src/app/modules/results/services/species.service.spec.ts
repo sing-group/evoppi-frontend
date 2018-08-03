@@ -36,7 +36,7 @@ export const SPECIES: Species[] = [
 describe('SpeciesService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [SpeciesService, NotificationService,],
+            providers: [SpeciesService, NotificationService],
             imports: [HttpClientTestingModule],
         });
     });

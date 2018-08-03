@@ -119,7 +119,8 @@ export class ChartSameSpeciesComponent implements OnInit {
                     } else if (interaction.interactomeDegrees.length === 1) {
                         link = new Link(fromIndex, toIndex, 1);
                         links.push(link);
-                    } else if (interaction.interactomeDegrees.length > 1 && interaction.interactomeDegrees.length < res.interactomes.length) {
+                    } else if (interaction.interactomeDegrees.length > 1
+                        && interaction.interactomeDegrees.length < res.interactomes.length) {
                         link = new Link(fromIndex, toIndex, 2);
                         links.push(link);
                     } else {

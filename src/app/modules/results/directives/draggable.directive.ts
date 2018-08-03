@@ -30,8 +30,8 @@ import {ForceDirectedGraph} from '../../../entities/bio/results/force-directed-g
     selector: '[appDraggable]'
 })
 export class DraggableDirective implements OnInit {
-    @Input('draggableNode') draggableNode: Node;
-    @Input('draggableInGraph') draggableInGraph: ForceDirectedGraph;
+    @Input() draggableNode: Node;
+    @Input() draggableInGraph: ForceDirectedGraph;
 
     constructor(private d3Service: D3Service, private _element: ElementRef) { }
 

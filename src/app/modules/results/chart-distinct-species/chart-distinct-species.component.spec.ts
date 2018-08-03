@@ -47,7 +47,8 @@ describe('ChartDistinctSpeciesComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [MaterialDesignModule, HttpClientTestingModule],
-            declarations: [ChartDistinctSpeciesComponent, GraphComponent, LegendDistinctSpeciesComponent, ZoomableDirective, DraggableDirective],
+            declarations: [ChartDistinctSpeciesComponent, GraphComponent, LegendDistinctSpeciesComponent, ZoomableDirective,
+                DraggableDirective],
             providers: [InteractionService, GeneService, InteractomeService, SpeciesService, NotificationService,
                 {provide: ActivatedRoute, useValue: activatedRoute}
             ]
