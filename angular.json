@@ -30,11 +30,7 @@
               "node_modules/jquery/dist/jquery.js",
               "node_modules/popper.js/dist/umd/popper.js",
               "node_modules/bootstrap-material-design/dist/js/bootstrap-material-design.min.js",
-              "node_modules/arrive/src/arrive.js",
-              "node_modules/moment/moment.js",
-              "node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js",
-              "node_modules/bootstrap-notify/bootstrap-notify.js",
-              "node_modules/chartist/dist/chartist.js"
+              "node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"
             ]
           },
           "configurations": {
@@ -44,10 +40,10 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
+              "aot": false,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -85,11 +81,7 @@
               "node_modules/jquery/dist/jquery.js",
               "node_modules/popper.js/dist/umd/popper.js",
               "node_modules/bootstrap-material-design/dist/js/bootstrap-material-design.min.js",
-              "node_modules/arrive/src/arrive.js",
-              "node_modules/moment/moment.js",
-              "node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js",
-              "node_modules/bootstrap-notify/bootstrap-notify.js",
-              "node_modules/chartist/dist/chartist.js"
+              "node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"
             ],
             "styles": [
               "node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
@@ -109,7 +101,9 @@
               "src/tsconfig.app.json",
               "src/tsconfig.spec.json"
             ],
-            "exclude": []
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -132,7 +126,9 @@
             "tsConfig": [
               "e2e/tsconfig.e2e.json"
             ],
-            "exclude": []
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
