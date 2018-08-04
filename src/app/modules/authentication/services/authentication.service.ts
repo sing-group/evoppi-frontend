@@ -29,6 +29,7 @@ import {environment} from '../../../../environments/environment';
 import {Observable} from 'rxjs';
 import {EvoppiError} from '../../../entities/notification';
 import {AnalysisType} from '../../../entities/data/analysis-type.enum';
+import {InteractionResultLinkage} from '../../../entities/user/interaction-result-linkage.model';
 
 @Injectable()
 export class AuthenticationService {
@@ -78,7 +79,7 @@ export class AuthenticationService {
             );
     }
 
-    public claimResults(type: AnalysisType, uuids: string[]) {
+    public claimResults(type: AnalysisType, uuids: string[]): Observable<InteractionResultLinkage> {
         return this.http.put<string>(this.endpoint + '/interaction/result/' + type,
             {
                 uuids: uuids

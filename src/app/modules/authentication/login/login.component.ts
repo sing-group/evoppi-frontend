@@ -62,9 +62,9 @@ export class LoginComponent implements OnInit {
         if (this.route.routeConfig.data.state === 'logout') {
             this.authenticationService.logOut();
             this.browserService.assign('/dashboard');
-        } else if (this.route.routeConfig.data.state === 'confirmation' && this.route.snapshot.queryParams.uuid ) {
+        } else if (this.route.routeConfig.data.state === 'confirmation' && this.route.snapshot.queryParams.uuid) {
             this.authenticationService.confirmRegistration(this.route.snapshot.queryParams.uuid)
-                .subscribe( () => {
+                .subscribe(() => {
                         this.notificationService.success('Validation complete',
                             'You can use your name and password to log in');
                     },
@@ -82,7 +82,9 @@ export class LoginComponent implements OnInit {
     }
 
     onValueChanged(data?: any) {
-        if (!this.formLogin) { return; }
+        if (!this.formLogin) {
+            return;
+        }
         for (const field of Object.keys(this.formErrors)) {
             // clear previous error message (if any)
             this.formErrors[field] = '';
@@ -117,39 +119,34 @@ export class LoginComponent implements OnInit {
 
                     if (sameUUIDs.length > 0) {
                         this.authenticationService.claimResults(AnalysisType.SAME, sameUUIDs)
-                            .subscribe(res => {
-                                    sameClaimed = true;
-                                    this.workStatusService.removeLocalWorks('sameWorks');
-                                    if ( sameClaimed && distinctClaimed ) {
-                                        this.browserService.assign('/dashboard');
-                                    }
-                                },
-                                error => {
-                                    console.error(error);
-                                });
+                            .subscribe(() => {
+                                this.workStatusService.removeLocalWorks('sameWorks');
+
+                                sameClaimed = true;
+                                if (sameClaimed && distinctClaimed) {
+                                    this.browserService.assign('/dashboard');
+                                }
+                            });
                     } else {
                         sameClaimed = true;
                     }
 
                     if (distinctUUIDs.length > 0) {
                         this.authenticationService.claimResults(AnalysisType.DIFFERENT, distinctUUIDs)
-                            .subscribe(res => {
-                                    distinctClaimed = true;
-                                    this.workStatusService.removeLocalWorks('distinctWorks');
-                                    console.log(res);
-                                    if ( sameClaimed && distinctClaimed ) {
-                                        this.browserService.assign('/dashboard');
-                                    }
-                                },
-                                error => {
-                                    console.error(error);
-                                });
+                            .subscribe(() => {
+                                this.workStatusService.removeLocalWorks('distinctWorks');
+
+                                distinctClaimed = true;
+                                if (sameClaimed && distinctClaimed) {
+                                    this.browserService.assign('/dashboard');
+                                }
+                            });
 
                     } else {
                         distinctClaimed = true;
                     }
 
-                    if ( sameClaimed && distinctClaimed ) {
+                    if (sameClaimed && distinctClaimed) {
                         this.browserService.assign('/dashboard');
                     }
                 }
@@ -158,7 +155,7 @@ export class LoginComponent implements OnInit {
 
     onKeyDownForm(event: KeyboardEvent) {
         if (event.keyCode === 13) {
-           this.onLogin();
+            this.onLogin();
         }
     }
 
