@@ -29,8 +29,8 @@ export interface Work {
   name: string;
   description: string;
   creationDateTime: Date;
-  startDateTime: Date;
-  endDateTime: Date;
+  startDateTime?: Date;
+  endDateTime?: Date;
   resultReference: string;
   status: Status;
   steps: Array<Step>;

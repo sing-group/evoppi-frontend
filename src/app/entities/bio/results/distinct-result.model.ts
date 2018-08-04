@@ -25,6 +25,7 @@ export interface DistinctResult {
     uuid: string,
     queryGene: string,
     queryGeneId: number,
+    maxDegree: number,
     referenceSpecies: string,
     targetSpecies: string,
     referenceInteractomes: string[],

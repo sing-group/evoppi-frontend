@@ -26,7 +26,7 @@ import {SameResult} from '../../../entities';
 import {Observable, of, OperatorFunction} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {map, mergeMap, reduce} from 'rxjs/operators';
+import {map, mergeMap, reduce, tap} from 'rxjs/operators';
 import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
 import {WorkStatusService} from './work-status.service';
@@ -107,12 +107,13 @@ export class SameResultsService {
     }
 
     private mapWorkResultToSameResult(workResult: WorkResult, work: Work): SameResult {
-        const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? curr : prev);
+        const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? prev : curr);
 
         return {
             uuid: workResult.id,
             queryGene: workResult.queryGene.name,
             queryGeneId: workResult.queryGene.id,
+            maxDegree: workResult.queryMaxDegree,
             species: workResult.species.name,
             interactomes: workResult.interactomes.map(interactome => interactome.name),
             progress: lastStep.progress,

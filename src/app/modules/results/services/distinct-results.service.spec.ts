@@ -46,6 +46,7 @@ const DISTINCT_RESULTS: DistinctResult[] = [
         creation: new Date(),
         queryGene: '{id: 87, name: "CCDS45130.1", uri: "http://192.168.76.128:8080/evoppi-backend/rest/api/gene/87"}',
         queryGeneId: 87,
+        maxDegree: 1,
         lastAction: ''
     },
     {
@@ -59,6 +60,7 @@ const DISTINCT_RESULTS: DistinctResult[] = [
         creation: new Date(),
         queryGene: '{id: 87, name: "CCDS45130.1", uri: "http://192.168.76.128:8080/evoppi-backend/rest/api/gene/87"}',
         queryGeneId: 87,
+        maxDegree: 1,
         lastAction: ''
     }
 ];

@@ -104,12 +104,13 @@ export class DistinctResultsService {
     }
 
     private mapWorkResultToDistinctResult(workResult: WorkResult, work: Work): DistinctResult {
-        const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? curr : prev);
+        const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? prev : curr);
 
         return {
             uuid: workResult.id,
             queryGene: workResult.queryGene.name,
             queryGeneId: workResult.queryGene.id,
+            maxDegree: workResult.queryMaxDegree,
             referenceSpecies: workResult.referenceSpecies.name,
             targetSpecies: workResult.targetSpecies.name,
             referenceInteractomes: workResult.referenceInteractomes.map(interactome => interactome.name),

@@ -27,11 +27,20 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Work} from '../../../entities/execution';
 import {EvoppiError} from '../../../entities/notification';
+import {tap} from 'rxjs/operators';
 
 @Injectable()
 export class WorkStatusService {
 
     private endpoint = environment.evoppiUrl + 'api/work';
+
+    private static convertDateTime(dateTime: Date): Date {
+        if (dateTime) {
+            return new Date(Date.parse(dateTime.toString()));
+        } else {
+            return null;
+        }
+    }
 
     constructor(private http: HttpClient) {
     }
@@ -39,6 +48,11 @@ export class WorkStatusService {
     public getWork(uuid: string): Observable<Work> {
         return this.http.get<Work>(this.endpoint + '/' + uuid)
             .pipe(
+                tap(workStatus => {
+                    workStatus.creationDateTime = WorkStatusService.convertDateTime(workStatus.creationDateTime);
+                    workStatus.startDateTime = WorkStatusService.convertDateTime(workStatus.startDateTime);
+                    workStatus.endDateTime = WorkStatusService.convertDateTime(workStatus.endDateTime);
+                }),
                 EvoppiError.throwOnError(
                     'Error retrieving work information',
                     `Information for work '${uuid}' could not be retrieved.`

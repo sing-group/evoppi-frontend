@@ -47,7 +47,13 @@
                             <table class="table">
                                 <thead class=" text-primary">
                                 <th>
+                                    Scheduled On
+                                </th>
+                                <th>
                                     Query Gene
+                                </th>
+                                <th>
+                                    Max. Degree
                                 </th>
                                 <th>
                                     Reference Species
@@ -68,7 +74,13 @@
                                 <tbody>
                                 <tr *ngFor="let result of distinctSpeciesResults">
                                     <td>
+                                        {{result.creation.toLocaleString()}}
+                                    </td>
+                                    <td>
                                         {{result.queryGene}} [{{result.queryGeneId}}]
+                                    </td>
+                                    <td>
+                                        {{result.maxDegree}}
                                     </td>
                                     <td>
                                         {{result.referenceSpecies}}
@@ -143,7 +155,13 @@
                             <table class="table">
                                 <thead class=" text-primary">
                                 <th>
+                                    Scheduled On
+                                </th>
+                                <th>
                                     Query Gene
+                                </th>
+                                <th>
+                                    Max. Degree
                                 </th>
                                 <th>
                                     Species
@@ -161,7 +179,13 @@
                                 <tbody>
                                 <tr *ngFor="let result of sameSpeciesResults">
                                     <td>
+                                        {{result.creation.toLocaleString()}}
+                                    </td>
+                                    <td>
                                         {{result.queryGene}} [{{result.queryGeneId}}]
+                                    </td>
+                                    <td>
+                                        {{result.maxDegree}}
                                     </td>
                                     <td>
                                         {{result.species}}
