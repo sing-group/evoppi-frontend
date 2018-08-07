@@ -65,14 +65,14 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
     {
         path: '/species',
         title: 'Species',
-        showInMenu: true,
+        showInMenu: false,
         icon: 'pets',
         allowedRoles: [ Role.RESEARCHER ]
     },
     {
         path: '/interactomes',
         title: 'Interactomes',
-        showInMenu: true,
+        showInMenu: false,
         icon: 'repeat',
         allowedRoles: [ Role.RESEARCHER ]
     },
@@ -86,14 +86,14 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
     {
         path: '/management/species',
         title: 'Species',
-        showInMenu: true,
+        showInMenu: false,
         icon: 'pets',
         allowedRoles: [ Role.ADMIN ]
     },
     {
         path: '/management/interactomes',
         title: 'Interactomes',
-        showInMenu: true,
+        showInMenu: false,
         icon: 'repeat',
         allowedRoles: [ Role.ADMIN ]
     },
