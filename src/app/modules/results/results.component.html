@@ -110,16 +110,19 @@
                                     <td>
                                         <button mat-icon-button color="primary"
                                                 routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'">
+                                                [disabled]="result.status !== 'COMPLETED'"
+                                                matTooltip="Show interactons">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
                                         <button mat-icon-button color="secondary"
                                                 routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'">
+                                                [disabled]="result.status !== 'COMPLETED'"
+                                                matTooltip="Show chart">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn"
-                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
+                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'"
+                                                matTooltip="Delete result">
                                             <mat-icon aria-label="Delete" (click)="deleteDistinctResult(result.uuid)">
                                                 delete
                                             </mat-icon>
