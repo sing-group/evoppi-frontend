@@ -34,6 +34,7 @@ import {InteractomeService} from '../../results/services/interactome.service';
 import {AbstractControl} from '@angular/forms/src/model';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 import {WorkStatusService} from '../../results/services/work-status.service';
+import {Subscription} from 'rxjs/index';
 
 @Component({
     selector: 'app-form-same-species',
@@ -57,6 +58,8 @@ export class FormSameSpeciesComponent implements OnInit {
     private controlSpecies: AbstractControl;
     private controlInteractomes: AbstractControl;
     private controlGene: AbstractControl;
+
+    private lastGeneSearchSubscription: Subscription;
 
     constructor(
         private router: Router,
@@ -178,6 +181,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
     private updateGenes(value: string): void {
         if (this.searchingGenes) {
+            this.lastGeneSearchSubscription.unsubscribe();
             return;
         }
         if (!value) {
@@ -191,11 +195,14 @@ export class FormSameSpeciesComponent implements OnInit {
         if (this.interactomes.length > 0) {
             interactomes = this.interactomes.map((interactome) => interactome.id);
         }
-        this.geneService.getGeneName(value, interactomes)
+        this.lastGeneSearchSubscription = this.geneService.getGeneName(value, interactomes)
             .subscribe(
                 genes => this.genes = genes,
                 error => { throw error; },
-                () => this.searchingGenes = false
+                () => {
+                    this.searchingGenes = false;
+                    this.lastGeneSearchSubscription.unsubscribe();
+                }
             );
     }
 
