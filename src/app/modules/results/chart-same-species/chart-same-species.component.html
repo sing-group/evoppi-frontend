@@ -29,6 +29,8 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title ">Same species chart</h4>
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
+                        <a class="mat-raised-button mat-primary app-action-right"
+                           [routerLink]="'/results/table/same/' + uuid">Show interactions</a>
                     </div>
                     <div class="card-body">
                         <div *ngIf="nodes.length <= 100 || lastQueryMaxDegree <= 1">
