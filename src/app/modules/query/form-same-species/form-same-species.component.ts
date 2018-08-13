@@ -34,7 +34,7 @@ import {InteractomeService} from '../../results/services/interactome.service';
 import {AbstractControl} from '@angular/forms/src/model';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 import {WorkStatusService} from '../../results/services/work-status.service';
-import {Subscription} from 'rxjs/index';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-form-same-species',
@@ -182,8 +182,8 @@ export class FormSameSpeciesComponent implements OnInit {
     private updateGenes(value: string): void {
         if (this.searchingGenes) {
             this.lastGeneSearchSubscription.unsubscribe();
-            return;
         }
+
         if (!value) {
             this.genes = [];
             return;
