@@ -218,7 +218,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     private updateReferenceSpecies(): void {
         this.speciesService.getSpecies()
-            .pipe(map(species => species.filter(specie => specie.interactomes.length > 1)))
+            .pipe(map(species => species.filter(specie => specie.interactomes.length >= 1)))
         .subscribe(species => this.referenceSpecies = species);
     }
 
