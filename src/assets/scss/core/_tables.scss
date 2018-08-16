@@ -4,7 +4,6 @@
  * Copyright (C) 2017-2018 - Noé Vázquez, Miguel Reboiro-Jato,
  * Jorge Vieria, Sara Rocha, Hugo López-Fernández, André Torres,
  * Rui Camacho, Florentino Fdez-Riverola, and Cristina P. Vieira.
- * .
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
