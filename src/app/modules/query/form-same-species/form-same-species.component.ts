@@ -168,6 +168,9 @@ export class FormSameSpeciesComponent implements OnInit {
 
     private updateInteractomes(species: Species): void {
         this.interactomes = [];
+        if (species === null) {
+            return;
+        }
 
         const interactomeIds = species.interactomes.map(interactome => interactome.id);
         this.interactomeService.getInteractomesByIds(interactomeIds)

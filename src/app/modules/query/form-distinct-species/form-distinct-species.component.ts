@@ -226,6 +226,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     private onReferenceSpeciesChange(species: Species) {
         this.referenceInteractomes = [];
+        if (species === null) {
+            return;
+        }
         this.targetSpecies = this.referenceSpecies.filter(s => s !== species);
 
         const interactomeIds = species.interactomes.map(interactome => interactome.id);
