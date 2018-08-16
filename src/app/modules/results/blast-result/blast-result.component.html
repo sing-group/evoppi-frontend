@@ -20,40 +20,43 @@
   ~
   -->
 
-<mat-card>
-    <mat-form-field>
+
+<div class="row">
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Query sequence id (qseqid)" [value]="blastResult.qseqid" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Subject sequence id (sseqid)" [value]="blastResult.sseqid" readonly/>
     </mat-form-field>
     <mat-form-field>
         <input matInput placeholder="Alignment length (length)" [value]="blastResult.length" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Number of mismatches (mismatch)" [value]="blastResult.mismatch" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Number of gap openings (gapopen)" [value]="blastResult.gapopen" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Start of alignment in query (qstart)" [value]="blastResult.qstart" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="End of alignment in query (qend)" [value]="blastResult.qend" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Start of alignment in subject (sstart)" [value]="blastResult.sstart" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="End of alignment in subject (send)" [value]="blastResult.send" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Expect value (evalue)" [value]="blastResult.evalue" readonly/>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="col-md-2">
         <input matInput placeholder="Bit score (bitscore)" [value]="blastResult.bitscore" readonly/>
     </mat-form-field>
+</div>
+<div class="alignment">
     <mat-accordion>
         <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -61,7 +64,7 @@
                     Alignment
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{blastResult.qseqid}} - {{blastResult.sseqid}}
+                    {{query.defaultName}} ({{query.id}}) - {{subject.defaultName}} ({{subject.id}})
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <div class="sequence" *ngIf="query">
@@ -74,4 +77,5 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
-</mat-card>
+</div>
+
