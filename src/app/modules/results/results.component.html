@@ -120,9 +120,10 @@
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn"
+                                                (click)="deleteDistinctResult(result.uuid)"
                                                 [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'"
                                                 matTooltip="Delete result">
-                                            <mat-icon aria-label="Delete" (click)="deleteDistinctResult(result.uuid)">
+                                            <mat-icon aria-label="Delete">
                                                 delete
                                             </mat-icon>
                                         </button>
@@ -219,9 +220,10 @@
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn"
+                                                (click)="deleteSameResult(result.uuid)"
                                                 [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'"
                                                 matTooltip="Delete result">
-                                            <mat-icon aria-label="Delete" (click)="deleteSameResult(result.uuid)">
+                                            <mat-icon aria-label="Delete">
                                                 delete
                                             </mat-icon>
                                         </button>
