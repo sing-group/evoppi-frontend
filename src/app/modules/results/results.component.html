@@ -110,7 +110,7 @@
                                         <button mat-icon-button color="primary"
                                                 routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}"
                                                 [disabled]="result.status !== 'COMPLETED'"
-                                                matTooltip="Show interactons">
+                                                matTooltip="Show interactions table">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
                                         <button mat-icon-button color="secondary"
@@ -208,16 +208,19 @@
                                     <td>
                                         <button mat-icon-button color="primary"
                                                 routerLink="{{getSameSpeciesTablePath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'">
+                                                [disabled]="result.status !== 'COMPLETED'"
+                                                matTooltip="Show interactions table">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
                                         <button mat-icon-button color="secondary"
                                                 routerLink="{{getSameSpeciesChartPath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'">
+                                                [disabled]="result.status !== 'COMPLETED'"
+                                                matTooltip="Show chart">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn"
-                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
+                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'"
+                                                matTooltip="Delete result">
                                             <mat-icon aria-label="Delete" (click)="deleteSameResult(result.uuid)">
                                                 delete
                                             </mat-icon>
