@@ -39,6 +39,7 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {CsvHelper} from '../../../helpers/csv.helper';
 import {Node} from '../../../entities/bio/results/node.model';
 import {Location} from '@angular/common';
+import {Status} from '../../../entities/execution';
 
 @Component({
     selector: 'app-table-distinct-species',
@@ -233,7 +234,9 @@ export class TableDistinctSpeciesComponent implements OnInit {
                     }
                 });
                 this.processing = false;
-                this.resultAvailable = true;
+                if (workRes.status === Status.COMPLETED) {
+                    this.resultAvailable = true;
+                }
             }, (error) => {
                 this.processing = false;
                 this.resultAvailable = false;

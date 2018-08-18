@@ -35,6 +35,7 @@ import {ActivatedRoute} from '@angular/router';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {Location} from '@angular/common';
 import {InteractomeService} from '../services/interactome.service';
+import {Status} from '../../../entities/execution';
 
 @Component({
     selector: 'app-table-same-species',
@@ -252,7 +253,9 @@ export class TableSameSpeciesComponent implements OnInit {
                     }
                 });
                 this.processing = false;
-                this.resultAvailable = true;
+                if (workRes.status === Status.COMPLETED) {
+                    this.resultAvailable = true;
+                }
             }, (error) => {
                 this.processing = false;
                 this.resultAvailable = false;

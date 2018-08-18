@@ -29,6 +29,7 @@ import {environment} from '../../../../environments/environment';
 import {InteractionService} from '../services/interaction.service';
 import {ActivatedRoute} from '@angular/router';
 import {WorkResultManager} from '../../query/form-distinct-species/work-result-manager';
+import {Status} from '../../../entities/execution';
 
 @Component({
     selector: 'app-chart-distinct-species',
@@ -154,7 +155,9 @@ export class ChartDistinctSpeciesComponent implements OnInit {
                 this.fullResultAvailable = true;
 
                 this.processing = false;
-                this.resultAvailable = true;
+                if (res.status === Status.COMPLETED) {
+                    this.resultAvailable = true;
+                }
             }, (error) => {
                 this.processing = false;
                 this.resultAvailable = false;

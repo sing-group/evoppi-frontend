@@ -28,6 +28,7 @@ import {InteractionService} from '../services/interaction.service';
 import {environment} from '../../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {Status} from '../../../entities/execution';
 
 @Component({
     selector: 'app-chart-same-species',
@@ -136,7 +137,9 @@ export class ChartSameSpeciesComponent implements OnInit {
                 this.fullResultAvailable = true;
 
                 this.processing = false;
-                this.resultAvailable = true;
+                if (res.status === Status.COMPLETED) {
+                    this.resultAvailable = true;
+                }
             }, (error) => {
                 this.processing = false;
                 this.resultAvailable = false;
