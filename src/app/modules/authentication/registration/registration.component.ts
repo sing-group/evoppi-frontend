@@ -44,7 +44,8 @@ export class RegistrationComponent implements OnInit {
             'required': 'Username is required.'
         },
         'password': {
-            'required': 'Password is required.'
+            'required': 'Password is required.',
+            'minlength': 'Password can\'t be shorter than 6.'
         },
         'email' : {
             'required': 'Email is required.',
@@ -61,7 +62,7 @@ export class RegistrationComponent implements OnInit {
         this.formRegister = this.formBuilder.group({
             'username': ['', Validators.required],
             'email': ['', Validators.email],
-            'password': ['', Validators.required],
+            'password': ['', [Validators.required, Validators.minLength(6)]],
         });
         this.formRegister.valueChanges
             .subscribe(data => this.onValueChanged(data));

@@ -38,6 +38,7 @@ import {ResearcherGuard} from './security/researcher.guard';
 import {InteractomeListComponent} from '../data/interactome-list/interactome-list.component';
 import {LoginComponent} from '../authentication/login/login.component';
 import {RegistrationComponent} from '../authentication/registration/registration.component';
+import {RecoveryComponent} from '../authentication/recovery/recovery.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -123,6 +124,18 @@ export const MAIN_ROUTES: Routes = [
         component: LoginComponent,
         data: {
             state: 'confirmation'
+        }
+    },
+    {
+        path: 'recovery',
+        component: RecoveryComponent,
+        data: {state: 'recovery'}
+    },
+    {
+        path: 'password/recovery',
+        component: RecoveryComponent,
+        data: {
+            state: 'recoveryConfirmation'
         }
     }
 ];

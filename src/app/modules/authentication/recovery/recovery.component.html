@@ -26,11 +26,11 @@
             <div class="col-md-6 col-md-offset-3">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h3 class="card-title">Login</h3>
+                        <h3 class="card-title">Recovery</h3>
                     </div>
                     <div class="card-body">
-                        <form [formGroup]="formLogin" (keydown)="onKeyDownForm($event)">
-                            <mat-form-field class="width-100">
+                        <form [formGroup]="formRecovery" (keydown)="onKeyDownForm($event)">
+                            <mat-form-field class="width-100" *ngIf="!recoveryConfirmation">
                                 <mat-label>Username</mat-label>
                                 <input type="text" matInput placeholder="Your username"
                                        formControlName="username" required/>
@@ -38,22 +38,32 @@
                                     {{ formErrors.username }}
                                 </mat-error>
                             </mat-form-field>
-                            <mat-form-field class="width-100">
-                                <mat-label>Password</mat-label>
-                                <input type="password" matInput placeholder="Your password"
+                            <mat-form-field class="width-100" *ngIf="recoveryConfirmation">
+                                <mat-label>New password</mat-label>
+                                <input type="password" matInput placeholder="Your new password"
                                        formControlName="password" required/>
                                 <mat-error>
                                     {{ formErrors.password }}
                                 </mat-error>
                             </mat-form-field>
+                            <mat-form-field class="width-100" *ngIf="recoveryConfirmation">
+                                <mat-label>Confirmation Password</mat-label>
+                                <input type="password" matInput placeholder="Write the same password to confirm it"
+                                       formControlName="confirmPassword" required/>
+                                <mat-error>
+                                    {{ formErrors.confirmPassword }}
+                                </mat-error>
+                            </mat-form-field>
                         </form>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-warning" routerLink="/dashboard">Cancel</button>
-                        <button class="btn btn-success" routerLink="/registration">I am a new user</button>
-                        <button class="btn btn-outline-primary" routerLink="/recovery">I forgot my password</button>
-                        <button class="btn btn-primary" [disabled]="!formLogin.valid"
-                                (click)="onLogin()">Login</button>
+                        <button class="btn btn-warning" routerLink="/login">Cancel</button>
+                        <button class="btn btn-primary" [disabled]="!formRecovery.valid" *ngIf="!recoveryConfirmation"
+                                (click)="onRecovery()">Send password recovery link
+                        </button>
+                        <button class="btn btn-primary" [disabled]="!formRecovery.valid" *ngIf="recoveryConfirmation"
+                                (click)="onConfirm()">Send password recovery link
+                        </button>
                     </div>
                 </div>
             </div>

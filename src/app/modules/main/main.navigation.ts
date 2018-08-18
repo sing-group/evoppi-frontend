@@ -127,5 +127,21 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         backRoute: '/dashboard',
         icon: 'lock_open',
         allowedRoles: [ Role.GUEST ]
+    },
+    {
+        path: '/recovery',
+        title: 'Recovery',
+        showInMenu: false,
+        backRoute: '/login',
+        icon: 'lock_open',
+        allowedRoles: [ Role.GUEST ]
+    },
+    {
+        path: '/password/recovery',
+        title: 'Login',
+        showInMenu: false,
+        backRoute: '/dashboard',
+        icon: 'lock_open',
+        allowedRoles: [ Role.GUEST ]
     }
 ];

@@ -30,6 +30,7 @@ import {MaterialDesignModule} from '../material-design/material-design.module';
 import {BrowserService} from './services/browser.service';
 import {RouterModule} from '@angular/router';
 import {RegistrationComponent} from './registration/registration.component';
+import {RecoveryComponent} from './recovery/recovery.component';
 
 @NgModule({
     imports: [
@@ -40,11 +41,13 @@ import {RegistrationComponent} from './registration/registration.component';
     ],
     declarations: [
         LoginComponent,
-        RegistrationComponent
+        RegistrationComponent,
+        RecoveryComponent
     ],
     exports: [
         LoginComponent,
-        RegistrationComponent
+        RegistrationComponent,
+        RecoveryComponent
     ]
 })
 export class AuthenticationModule {

@@ -23,7 +23,7 @@
 import {Injectable} from '@angular/core';
 import {Role} from '../../../entities/data';
 import {User} from '../../../entities/user';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {Observable} from 'rxjs';
 import {EvoppiError} from '../../../entities/notification';
@@ -58,7 +58,7 @@ export class AuthenticationService {
             {responseType: 'text' as 'json', params: {login: username, password: password}}
         )
         .pipe(
-            EvoppiError.throwOnError('Error retrieving user role', `The role of the user '${username}' could not be retrieved.`)
+            EvoppiError.throwOnError('Error checking credentials', `Error checking user '${username}'.`)
         );
     }
 
@@ -75,6 +75,26 @@ export class AuthenticationService {
         return this.http.post<string>(this.endpoint + '/registration/' + uuid, {})
             .pipe(
                 EvoppiError.throwOnError('Error confirming user registration', `The uuid '${uuid}' could not be confirmed.`)
+            );
+    }
+
+    public recovery (login: string): Observable<string> {
+        return this.http.post<string>(this.endpoint + '/' + login + '/password/recovery',
+            {}
+        )
+            .pipe(
+                EvoppiError.throwOnError('Error recovering password',
+                    `The password of the username '${login}' could not be recovered.`)
+            );
+    }
+
+    public confirmRecovery (uuid: string, password: string): Observable<string> {
+        return this.http.post<string>(this.endpoint + '/password/recovery/' + uuid,
+            password, {headers: new HttpHeaders({'Content-Type': 'text/plain'})}
+        )
+            .pipe(
+                EvoppiError.throwOnError('Error changing password',
+                    `The password could not be changed.`)
             );
     }
 
