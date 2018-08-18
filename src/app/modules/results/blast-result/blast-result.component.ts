@@ -59,7 +59,7 @@ export class BlastResultComponent implements OnInit {
         });
         this.geneService.getGene(this.blastResult.sseqid).subscribe((subject) => {
             this.subject = subject;
-            if (this.blastResult.qseqversion > subject.sequences.length) {
+            if (this.blastResult.sseqversion > subject.sequences.length) {
                 console.error('Error loading subject sequence');
             } else {
                 this.sAlignment = subject.sequences[this.blastResult.sseqversion - 1];
