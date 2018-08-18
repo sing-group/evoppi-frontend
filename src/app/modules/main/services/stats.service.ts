@@ -20,8 +20,30 @@
  *
  */
 
-export * from './bio';
-export * from './navigation';
-export * from './user';
-export * from './notification';
-export * from './info';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {environment} from '../../../../environments/environment';
+import {EvoppiError} from '../../../entities/notification';
+import {Stats} from '../../../entities/info';
+
+@Injectable()
+export class StatsService {
+
+    private endpoint = environment.evoppiUrl + 'api/stats';
+
+    constructor(private http: HttpClient) {
+    }
+
+    getStats(): Observable<Stats> {
+
+        return this.http.get<Stats>(this.endpoint)
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error retrieving stats',
+                    `Database stats could not be retrieved from the backend.`
+                )
+            );
+    }
+
+}

@@ -24,6 +24,10 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DashboardComponent} from './dashboard.component';
 import {RouterTestingModule} from '@angular/router/testing';
+import {StatsService} from '../services/stats.service';
+import {HttpClientTestingModule} from '../../../../../node_modules/@angular/common/http/testing';
+import {SpeciesService} from '../../results/services/species.service';
+import {NotificationService} from '../../notification/services/notification.service';
 
 describe('DashboardComponent', () => {
     let component: DashboardComponent;
@@ -32,7 +36,8 @@ describe('DashboardComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DashboardComponent],
-            imports: [RouterTestingModule]
+            imports: [RouterTestingModule, HttpClientTestingModule],
+            providers: [StatsService, SpeciesService, NotificationService]
         })
             .compileComponents();
     }));

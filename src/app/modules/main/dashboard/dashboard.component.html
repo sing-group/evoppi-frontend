@@ -29,11 +29,24 @@
                         <h2 class="card-title">Welcome to EvoPPI!</h2>
                     </div>
                     <div class="card-body">
-                        EvoPPI allows the easy comparison of publicly available data from the main
-                        Protein-Protein Interaction (PPI) databases for distinct species. EvoPPI allows two
-                        types of queries: (i) same species comparisons, for those queries involving two or
-                        more interactomes from a single species, and (ii) distinct species comparisons, for
-                        those queries involving two or more interactomes from two distinct species.
+                        <p>
+                            EvoPPI allows the easy comparison of publicly available data from the main
+                            Protein-Protein Interaction (PPI) databases for distinct species. EvoPPI allows two
+                            types of queries: (i) same species comparisons, for those queries involving two or
+                            more interactomes from a single species, and (ii) distinct species comparisons, for
+                            those queries involving two or more interactomes from two distinct species.
+                        </p>
+                        <p *ngIf="stats">
+                            Currently, EvoPPI provides <span class="font-weight-bold">{{stats.genesCount}} genes</span>,
+                            <span class="font-weight-bold">{{stats.interactionsCount}} interactions</span> and
+                            <span class="font-weight-bold">{{stats.interactomesCount}} interactomes</span> for the
+                            following <span class="font-weight-bold">{{stats.speciesCount}} species</span>:
+                        </p>
+                        <ul *ngIf="listSpecies">
+                            <li *ngFor="let species of listSpecies">
+                                {{species.name}}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

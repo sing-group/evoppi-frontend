@@ -37,6 +37,7 @@ import {DataModule} from '../data/data.module';
 import {NavigationModule} from '../navigation/navigation.module';
 import {MainComponent} from './main.component';
 import {ResearcherGuard} from './security/researcher.guard';
+import {StatsService} from './services/stats.service';
 
 @NgModule({
     imports: [
@@ -51,7 +52,8 @@ import {ResearcherGuard} from './security/researcher.guard';
     ],
     providers: [
         AdminGuard,
-        ResearcherGuard
+        ResearcherGuard,
+        StatsService
     ],
     declarations: [
         DashboardComponent,

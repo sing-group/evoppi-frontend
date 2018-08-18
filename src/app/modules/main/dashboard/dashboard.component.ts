@@ -22,7 +22,10 @@
 
 import {Component, OnInit} from '@angular/core';
 import {QUERY_NAVIGATION_INFO, RESULTS_NAVIGATION_INFO} from '../main.navigation';
-import {NavigationInfo} from '../../../entities';
+import {NavigationInfo, Species} from '../../../entities';
+import {StatsService} from '../services/stats.service';
+import {Stats} from '../../../entities/info';
+import {SpeciesService} from '../../results/services/species.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -31,11 +34,15 @@ import {NavigationInfo} from '../../../entities';
 })
 export class DashboardComponent implements OnInit {
 
-    constructor() {
+    stats: Stats;
+    listSpecies: Species[];
+
+    constructor(private statsService: StatsService, private speciesService: SpeciesService) {
     }
 
     ngOnInit() {
-
+        this.statsService.getStats().subscribe(res => this.stats = res);
+        this.speciesService.getSpecies().subscribe(res => this.listSpecies = res);
     }
 
     get resultsNavigationInfo(): NavigationInfo {

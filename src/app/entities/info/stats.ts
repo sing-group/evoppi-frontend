@@ -20,8 +20,9 @@
  *
  */
 
-export * from './bio';
-export * from './navigation';
-export * from './user';
-export * from './notification';
-export * from './info';
+export interface Stats {
+    speciesCount: number;
+    interactomesCount: number;
+    genesCount: number;
+    interactionsCount: number;
+}
