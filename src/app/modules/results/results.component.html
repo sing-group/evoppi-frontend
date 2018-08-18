@@ -119,6 +119,13 @@
                                                 matTooltip="Show chart">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
+                                        <button mat-icon-button color="primary"
+                                                routerLink="{{location.normalize('/results/table/distinct/' + result.uuid)}}"
+                                                matTooltip="Permanent link to result">
+                                            <mat-icon aria-label="Permalink">
+                                                link
+                                            </mat-icon>
+                                        </button>
                                         <button mat-icon-button color="warn"
                                                 (click)="deleteDistinctResult(result.uuid)"
                                                 [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'"
@@ -218,6 +225,13 @@
                                                 [disabled]="result.status !== 'COMPLETED'"
                                                 matTooltip="Show chart">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="primary"
+                                                routerLink="{{location.normalize('/results/table/same/' + result.uuid)}}"
+                                                matTooltip="Permanent link to result">
+                                            <mat-icon aria-label="Permalink">
+                                                link
+                                            </mat-icon>
                                         </button>
                                         <button mat-icon-button color="warn"
                                                 (click)="deleteSameResult(result.uuid)"

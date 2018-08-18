@@ -32,6 +32,7 @@ import {ConfirmSheetComponent} from '../material-design/confirm-sheet/confirm-sh
 import {MatBottomSheet} from '@angular/material';
 import {AuthenticationService} from '../authentication/services/authentication.service';
 import {WorkStatusService} from './services/work-status.service';
+import {Location} from '@angular/common';
 
 @Component({
     selector: 'app-results',
@@ -71,7 +72,8 @@ export class ResultsComponent implements OnInit {
         private notificationService: NotificationService,
         private bottomSheet: MatBottomSheet,
         private authenticationService: AuthenticationService,
-        private workStatusService: WorkStatusService
+        private workStatusService: WorkStatusService,
+        public location: Location
     ) {
     }
 
