@@ -40,6 +40,9 @@ export class BlastResultComponent implements OnInit {
     public qAlignment: string;
     public sAlignment: string;
 
+    public loadingQseqid = true;
+    public loadingSseqid = true;
+
     constructor(private geneService: GeneService) {
     }
 
@@ -52,6 +55,7 @@ export class BlastResultComponent implements OnInit {
                 this.qAlignment = query.sequences[this.blastResult.qseqversion - 1];
                 // this.qAlignment = seq.substring(this.blastResult.qstart, this.blastResult.qend);
             }
+            this.loadingQseqid = false;
         });
         this.geneService.getGene(this.blastResult.sseqid).subscribe((subject) => {
             this.subject = subject;
@@ -61,6 +65,7 @@ export class BlastResultComponent implements OnInit {
                 this.sAlignment = subject.sequences[this.blastResult.sseqversion - 1];
                 // this.sAlignment = seq.substring(this.blastResult.sstart, this.blastResult.send);
             }
+            this.loadingSseqid = false;
         });
 
 
