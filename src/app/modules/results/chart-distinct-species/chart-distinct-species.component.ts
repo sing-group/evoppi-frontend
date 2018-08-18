@@ -65,6 +65,8 @@ export class ChartDistinctSpeciesComponent implements OnInit {
 
     uuid = '';
 
+    resultAvailable = false;
+
     constructor(private interactionService: InteractionService, private route: ActivatedRoute) {
     }
 
@@ -152,6 +154,10 @@ export class ChartDistinctSpeciesComponent implements OnInit {
                 this.fullResultAvailable = true;
 
                 this.processing = false;
+                this.resultAvailable = true;
+            }, (error) => {
+                this.processing = false;
+                this.resultAvailable = false;
             });
     }
 

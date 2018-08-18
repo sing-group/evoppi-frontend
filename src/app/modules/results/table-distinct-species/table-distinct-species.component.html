@@ -32,7 +32,7 @@
                            [routerLink]="'/results/chart/distinct/' + uuid">Show chart</a>
                     </div>
                     <div class="card-body">
-                        <div>
+                        <div *ngIf="resultAvailable">
                             <span *ngIf="referenceInteractomes">
                                 <mat-menu #exportMenu="matMenu">
                                     <button mat-menu-item (click)="downloadSingleFasta()">
@@ -68,7 +68,7 @@
                                 Permalink to result</a>
                         </div>
                         <mat-table matSort [dataSource]="paginatedDataSource" class="table-distinct-species"
-                                   appAfterViewInit (afterViewInit)="initTable()">
+                                   appAfterViewInit (afterViewInit)="initTable()" *ngIf="resultAvailable">
                             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                             <ng-container matColumnDef="GeneA">
@@ -125,9 +125,16 @@
                         <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
                                        [pageSize]="10"
                                        [pageSizeOptions]="[5, 10, 20, 50]"
-                                       [length]="paginatorLength">
+                                       [length]="paginatorLength"
+                                       *ngIf="resultAvailable">
                         </mat-paginator>
-                        <app-legend-table></app-legend-table>
+                        <app-legend-table *ngIf="resultAvailable"></app-legend-table>
+                        <div *ngIf="!resultAvailable">
+                            <p>
+                                This result is not available at the moment. Please go to the results list to check work status.
+                            </p>
+                            <button class="btn btn-primary" routerLink="/results">Go to results</button>
+                        </div>
                         <div class="offset-5 col-6 app-table-spinner" *ngIf="paginatedDataSource.loading$ | async"
                              [@slideInOut]>
                             <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>

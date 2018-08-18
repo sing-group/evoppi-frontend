@@ -32,7 +32,7 @@
                            [routerLink]="'/results/table/same/' + uuid">Show interactions</a>
                     </div>
                     <div class="card-body">
-                        <div *ngIf="nodes.length <= 100 || lastQueryMaxDegree <= 1">
+                        <div *ngIf="resultAvailable && (nodes.length <= 100 || lastQueryMaxDegree <= 1)">
                             <div class="offset-5 col-6 app-table-spinner" *ngIf="processing && !fullResultAvailable" [@slideInOut]>
                                 <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
                             </div>
@@ -44,6 +44,12 @@
                                                          [graphWidth]="graphContainer.offsetWidth"
                                                          [graphHeight]="graphHeight"></app-legend-same-species>
                             </div>
+                        </div>
+                        <div *ngIf="!resultAvailable">
+                            <p>
+                                This result is not available at the moment. Please go to the results list to check work status.
+                            </p>
+                            <button class="btn btn-primary" routerLink="/results">Go to results</button>
                         </div>
                         <div *ngIf="nodes.length > 100 && lastQueryMaxDegree > 1">
                             <mat-card>

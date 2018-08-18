@@ -76,6 +76,8 @@ export class TableSameSpeciesComponent implements OnInit {
 
     uuid = '';
 
+    resultAvailable = false;
+
     constructor(private interactionService: InteractionService, private interactomeService: InteractomeService, private dialog: MatDialog,
                 private domSanitizer: DomSanitizer, private route: ActivatedRoute, private location: Location) {
     }
@@ -250,6 +252,10 @@ export class TableSameSpeciesComponent implements OnInit {
                     }
                 });
                 this.processing = false;
+                this.resultAvailable = true;
+            }, (error) => {
+                this.processing = false;
+                this.resultAvailable = false;
             });
     }
 
