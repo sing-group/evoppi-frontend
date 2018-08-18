@@ -36,6 +36,7 @@ import {DraggableDirective} from '../directives/draggable.directive';
 import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {LegendDistinctSpeciesComponent} from '../legend-distinct-species/legend-distinct-species.component';
 import {NotificationService} from '../../notification/services/notification.service';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('ChartDistinctSpeciesComponent', () => {
     let component: ChartDistinctSpeciesComponent;
@@ -45,7 +46,7 @@ describe('ChartDistinctSpeciesComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialDesignModule, HttpClientTestingModule],
+            imports: [MaterialDesignModule, HttpClientTestingModule, RouterTestingModule],
             declarations: [ChartDistinctSpeciesComponent, GraphComponent, LegendDistinctSpeciesComponent, ZoomableDirective,
                 DraggableDirective],
             providers: [InteractionService, GeneService, InteractomeService, SpeciesService, NotificationService,

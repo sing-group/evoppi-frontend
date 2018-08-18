@@ -36,6 +36,7 @@ import {SpeciesService} from '../services/species.service';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {ActivatedRouteStub} from '../../../../testing/activated-route-stub';
 import {NotificationService} from '../../notification/services/notification.service';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('ChartSameSpeciesComponent', () => {
     let component: ChartSameSpeciesComponent;
@@ -45,7 +46,7 @@ describe('ChartSameSpeciesComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialDesignModule, HttpClientTestingModule],
+            imports: [MaterialDesignModule, HttpClientTestingModule, RouterTestingModule],
             declarations: [ChartSameSpeciesComponent, GraphComponent, LegendSameSpeciesComponent, ZoomableDirective, DraggableDirective],
             providers: [InteractionService, GeneService, InteractomeService, SpeciesService, NotificationService,
                 { provide: ActivatedRoute, useValue: activatedRoute }
