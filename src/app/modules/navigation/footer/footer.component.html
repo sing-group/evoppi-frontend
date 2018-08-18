@@ -25,24 +25,34 @@
         <nav class="pull-left">
             <ul>
                 <li>
-                    <a href="https://www.sing-group.org">
+                   <a>&copy; {{test | date: 'yyyy'}}</a>
+                </li>
+                <li>
+                    <a href="https://www.sing-group.org" target="_blank">
                         SING Group
                     </a>
                 </li>
                 <li>
-                    <a href="https://www.i3s.up.pt/phenotypic-evolution">
+                    <a href="https://www.i3s.up.pt/phenotypic-evolution" target="_blank">
                         Phenotypic Evolution
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">
+                        License
                     </a>
                 </li>
             </ul>
         </nav>
-        <div class="copyright pull-right">
-            &copy;
-            {{test | date: 'yyyy'}}
-            -
-            <a href="https://github.com/creativetimofficial/material-dashboard-angular2">
-                Based on Material Dashboard Angular
-            </a>
-        </div>
+        <nav class="pull-right">
+            <ul>
+                <li>
+                    <a href="https://github.com/creativetimofficial/material-dashboard-angular2" target="_blank">
+                        Based on Material Dashboard Angular
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
     </div>
 </footer>
