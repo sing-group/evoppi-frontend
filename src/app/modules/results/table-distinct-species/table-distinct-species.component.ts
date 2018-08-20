@@ -81,6 +81,9 @@ export class TableDistinctSpeciesComponent implements OnInit {
 
     resultAvailable = false;
 
+    targetTitle = '';
+    referenceTitle = '';
+
     constructor(private interactionService: InteractionService, private interactomeService: InteractomeService, private dialog: MatDialog,
                 private domSanitizer: DomSanitizer, private route: ActivatedRoute, private location: Location) {
     }
@@ -144,7 +147,7 @@ export class TableDistinctSpeciesComponent implements OnInit {
     public getResult(uri: string) {
         this.processing = true;
         this.interactionService.getInteractionResult(uri)
-            .subscribe((res) => {
+            .subscribe(res => {
                 const workManager = new WorkResultManager(res);
 
                 this.referenceInteractomes = res.referenceInteractomes;
@@ -205,12 +208,8 @@ export class TableDistinctSpeciesComponent implements OnInit {
                     }
                 }
 
-                const referenceTitle = res.referenceInteractomes[0].species.name + ': '
-                    + res.referenceInteractomes.map(resInteractome => resInteractome.name).join(', ');
-                const targetTitle = res.targetInteractomes[0].species.name + ': '
-                    + res.targetInteractomes.map(targetInteractome => targetInteractome.name).join(', ');
                 this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
-                    CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B', referenceTitle, targetTitle], csvData)
+                    CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B', this.referenceTitle, this.targetTitle], csvData)
                 );
                 this.csvName = 'interaction_' + res.queryGene + '_' + res.referenceInteractomes.map(x => x.id) + '_'
                     + res.targetInteractomes.map(x => x.id) + '.csv';
@@ -226,6 +225,10 @@ export class TableDistinctSpeciesComponent implements OnInit {
             .subscribe((workRes) => {
                 this.referenceInteractomes = workRes.referenceInteractomes;
                 this.targetInteractomes = workRes.targetInteractomes;
+                this.referenceTitle = workRes.referenceInteractomes[0].species.name + ': '
+                    + workRes.referenceInteractomes.map(resInteractome => resInteractome.name).join(', ');
+                this.targetTitle = workRes.targetInteractomes[0].species.name + ': '
+                    + workRes.targetInteractomes.map(targetInteractome => targetInteractome.name).join(', ');
                 this.paginatorLength = workRes.totalInteractions;
                 this.paginatedDataSource.load(this.paginatedResultUrl);
                 this.paginatedDataSource.loading$.subscribe((res) => {
