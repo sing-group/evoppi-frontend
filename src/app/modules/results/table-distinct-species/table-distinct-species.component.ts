@@ -211,7 +211,7 @@ export class TableDistinctSpeciesComponent implements OnInit {
                 this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
                     CsvHelper.getCSV(['Gene A', 'Name A', 'Gene B', 'Name B', this.referenceTitle, this.targetTitle], csvData)
                 );
-                this.csvName = 'interaction_' + res.queryGene + '_' + res.referenceInteractomes.map(x => x.id) + '_'
+                this.csvName = 'interaction_' + res.queryGene.name + '_' + res.referenceInteractomes.map(x => x.id) + '_'
                     + res.targetInteractomes.map(x => x.id) + '.csv';
 
                 this.processing = false;

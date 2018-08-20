@@ -219,7 +219,7 @@ export class TableSameSpeciesComponent implements OnInit {
 
                 const interactomeIds = res.interactomes.map(interactome => interactome.id).join('_');
                 const geneData = getGene(res.queryGene);
-                let name: string = res.queryGene.toString();
+                let name: string = res.queryGene.name;
                 if (geneData && geneData.names && geneData.names.length > 0
                     && geneData.names[0].names && geneData.names[0].names.length > 0) {
                     name = geneData.names[0].names[0];
