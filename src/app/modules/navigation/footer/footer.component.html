@@ -24,7 +24,7 @@
         <nav class="pull-left">
             <ul>
                 <li>
-                   <a>&copy; {{test | date: 'yyyy'}}</a>
+                   <a>&copy; 2017-{{currentDate | date: 'yyyy'}}</a>
                 </li>
                 <li>
                     <a href="https://www.sing-group.org" target="_blank">
@@ -39,6 +39,11 @@
                 <li>
                     <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">
                         License
+                    </a>
+                </li>
+                <li>
+                    <a (click)="openFeedbackDialog()">
+                        Contact us
                     </a>
                 </li>
             </ul>

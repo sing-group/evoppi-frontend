@@ -19,20 +19,43 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+import {MatDialog} from '@angular/material';
+import {FeedbackDialogComponent} from './feedback-dialog.component';
+import {Feedback} from '../../../entities/notification';
+import {FeedbackService} from '../services/feedback.service';
+import {NotificationService} from '../../notification/services/notification.service';
 
 @Component({
     selector: 'app-footer',
     templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.css']
+    styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
-    test: Date = new Date();
+export class FooterComponent {
+    public readonly currentDate: Date;
 
-    constructor() {
+    constructor(
+        private readonly dialog: MatDialog,
+        private readonly feedbackService: FeedbackService,
+        private readonly notificationService: NotificationService
+    ) {
+        this.currentDate = new Date();
     }
 
-    ngOnInit() {
-    }
+    public openFeedbackDialog(): void {
+        const dialogRef = this.dialog.open(FeedbackDialogComponent, {
+            width: '600px'
+        });
 
+        dialogRef.afterClosed().subscribe(result => {
+            if (result instanceof Feedback) {
+                this.feedbackService.sendFeedback(result)
+                    .subscribe(
+                        () => this.notificationService.success(
+                            'Feedback', 'Feedback has been successfully sent'
+                        )
+                    );
+            }
+        });
+    }
 }

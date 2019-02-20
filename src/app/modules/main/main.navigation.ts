@@ -109,7 +109,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/dashboard',
         icon: 'lock_close',
-        allowedRoles: [ Role.GUEST ]
+        allowedRoles: [ Role.ADMIN, Role.RESEARCHER ]
     },
     {
         path: '/registration',

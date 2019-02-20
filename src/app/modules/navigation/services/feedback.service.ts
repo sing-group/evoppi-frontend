@@ -19,6 +19,27 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './error-message.model';
-export * from './evoppi-error.model';
-export * from './feedback.model';
+import { Injectable } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {EvoppiError, Feedback} from '../../../entities/notification';
+import {environment} from '../../../../environments/environment';
+import {Observable} from 'rxjs/internal/Observable';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FeedbackService {
+
+  constructor(private http: HttpClient) { }
+
+  public sendFeedback(feedback: Feedback): Observable<void> {
+    return this.http.post<void>(`${environment.evoppiUrl}api/feedback`, feedback)
+        .pipe(
+            EvoppiError.throwOnError(
+                'Error sending feedback',
+                `An unexpected error has happen while trying to send feedback. Please, try again later.`
+            )
+        );
+  }
+
+}

@@ -19,6 +19,15 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './error-message.model';
-export * from './evoppi-error.model';
-export * from './feedback.model';
+import { TestBed } from '@angular/core/testing';
+
+import { FeedbackService } from './feedback.service';
+
+describe('FeedbackService', () => {
+  beforeEach(() => TestBed.configureTestingModule({}));
+
+  it('should be created', () => {
+    const service: FeedbackService = TestBed.get(FeedbackService);
+    expect(service).toBeTruthy();
+  });
+});

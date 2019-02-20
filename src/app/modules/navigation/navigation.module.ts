@@ -26,16 +26,30 @@ import {RouterModule} from '@angular/router';
 import {FooterComponent} from './footer/footer.component';
 import {NavbarComponent} from './navbar/navbar.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
+import {MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
+import {FeedbackDialogComponent} from './footer/feedback-dialog.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
     imports: [
         CommonModule,
+        HttpClientModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
         RouterModule
     ],
     declarations: [
         FooterComponent,
         NavbarComponent,
-        SidebarComponent
+        SidebarComponent,
+        FeedbackDialogComponent
+    ],
+    entryComponents: [
+        FeedbackDialogComponent
     ],
     exports: [
         FooterComponent,

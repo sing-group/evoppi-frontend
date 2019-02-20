@@ -19,6 +19,46 @@
   ~  along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
 
+<!--div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title><h3 class="card-title">Login</h3></mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <form [formGroup]="formLogin" (keydown)="onKeyDownForm($event)">
+                            <mat-form-field class="width-100">
+                                <mat-label>Username</mat-label>
+                                <input type="text" matInput placeholder="Your username"
+                                       formControlName="username" required/>
+                                <mat-error>
+                                    {{ formErrors.username }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="width-100">
+                                <mat-label>Password</mat-label>
+                                <input type="password" matInput placeholder="Your password"
+                                       formControlName="password" required/>
+                                <mat-error>
+                                    {{ formErrors.password }}
+                                </mat-error>
+                            </mat-form-field>
+                        </form>
+                    </mat-card-content>
+                    <mat-card-footer>
+                        <button mat-button color="warn" routerLink="/dashboard">Cancel</button>
+                        <button mat-button color="success" routerLink="/registration">I am a new user</button>
+                        <button mat-stroked-button routerLink="/recovery">I forgot my password</button>
+                        <button mat-button color="primary" [disabled]="!formLogin.valid"
+                                (click)="onLogin()">Login</button>
+                    </mat-card-footer>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div-->
 <div class="main-content">
     <div class="container-fluid">
         <div class="row">

@@ -19,6 +19,16 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './error-message.model';
-export * from './evoppi-error.model';
-export * from './feedback.model';
+export class Feedback {
+    public email: string;
+    public subject: string;
+    public message: string;
+
+    public constructor(
+        email: string, subject: string, message: string
+    ) {
+        this.email = email;
+        this.subject = subject;
+        this.message = message;
+    }
+}
