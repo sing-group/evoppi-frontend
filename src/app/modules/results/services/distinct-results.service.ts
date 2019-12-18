@@ -102,7 +102,8 @@ export class DistinctResultsService {
     }
 
     private mapWorkResultToDistinctResult(workResult: WorkResult, work: Work): DistinctResult {
-        const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? prev : curr);
+        const noStep = { progress: 0, description: 'Pending' };
+        const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? prev : curr, noStep);
 
         return {
             uuid: workResult.id,
