@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AutocompleteComponent } from './autocomplete.component';
 import {MaterialDesignModule} from '../../material-design/material-design.module';
@@ -28,7 +28,7 @@ describe('AutocompleteComponent', () => {
   let component: AutocompleteComponent;
   let fixture: ComponentFixture<AutocompleteComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AutocompleteComponent ],
       imports: [MaterialDesignModule],

@@ -23,7 +23,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {BrowserService} from '../services/browser.service';
 import {NotificationService} from '../../notification/services/notification.service';
 import {WorkStatusService} from '../../results/services/work-status.service';

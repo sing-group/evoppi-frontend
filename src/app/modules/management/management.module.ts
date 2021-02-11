@@ -24,7 +24,7 @@ import {CommonModule} from '@angular/common';
 import {UserManagementComponent} from './user-management/user-management.component';
 import {SpeciesManagementComponent} from './species-management/species-management.component';
 import {InteractomeManagementComponent} from './interactome-management/interactome-management.component';
-import {MatButtonModule} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     imports: [

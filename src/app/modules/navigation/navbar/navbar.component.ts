@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
 
     @Input() public routes: NavigationInfo[];
 
-    @ViewChild('navbarToggler') private buttonToggleMenuReference: ElementRef;
+    @ViewChild('navbarToggler', { static: true }) private buttonToggleMenuReference: ElementRef;
     private layerHideBodyElement: HTMLElement;
 
     constructor(
@@ -85,7 +85,9 @@ export class NavbarComponent implements OnInit {
 
     private setButtonToggleMenuAsClosed(ms = 0) {
         if (ms <= 0) {
+          if (this.buttonToggleMenu !== undefined) {
             this.buttonToggleMenu.classList.remove('toggled');
+          }
         } else {
             setTimeout(() => this.buttonToggleMenu.classList.remove('toggled'), ms);
         }

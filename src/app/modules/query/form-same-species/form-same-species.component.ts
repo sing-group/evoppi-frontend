@@ -20,16 +20,15 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {MatBottomSheet} from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {GeneInfo, Interactome, Species} from '../../../entities/bio';
 import {SpeciesService} from '../../results/services/species.service';
 import {GeneService} from '../../results/services/gene.service';
 import {InteractionService} from '../../results/services/interaction.service';
 import {debounceTime, map} from 'rxjs/operators';
 import {InteractomeService} from '../../results/services/interactome.service';
-import {AbstractControl} from '@angular/forms/src/model';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';

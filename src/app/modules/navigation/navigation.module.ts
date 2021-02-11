@@ -26,7 +26,10 @@ import {RouterModule} from '@angular/router';
 import {FooterComponent} from './footer/footer.component';
 import {NavbarComponent} from './navbar/navbar.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
-import {MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FeedbackDialogComponent} from './footer/feedback-dialog.component';
 import {HttpClientModule} from '@angular/common/http';
@@ -46,9 +49,6 @@ import {HttpClientModule} from '@angular/common/http';
         FooterComponent,
         NavbarComponent,
         SidebarComponent,
-        FeedbackDialogComponent
-    ],
-    entryComponents: [
         FeedbackDialogComponent
     ],
     exports: [

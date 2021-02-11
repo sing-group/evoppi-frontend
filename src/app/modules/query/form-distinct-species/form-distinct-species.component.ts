@@ -21,16 +21,15 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {GeneInfo, Interactome, Species} from '../../../entities/bio';
 import {SpeciesService} from '../../results/services/species.service';
 import {InteractomeService} from '../../results/services/interactome.service';
 import {InteractionService} from '../../results/services/interaction.service';
 import {GeneService} from '../../results/services/gene.service';
 import {debounceTime, map} from 'rxjs/operators';
-import {AbstractControl} from '@angular/forms/src/model';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
-import {MatBottomSheet} from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';
 

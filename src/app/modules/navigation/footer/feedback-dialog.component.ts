@@ -20,7 +20,7 @@
  */
 
 import {Component} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import {Feedback} from '../../../entities/notification';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 

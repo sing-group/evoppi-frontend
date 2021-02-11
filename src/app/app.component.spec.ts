@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {async, TestBed} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import {AppComponent} from './app.component';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -27,7 +27,7 @@ import {NotificationService} from './modules/notification/services/notification.
 import {ToastrModule} from 'ngx-toastr';
 
 describe('AppComponent', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 AppComponent
@@ -37,7 +37,7 @@ describe('AppComponent', () => {
         }).compileComponents();
     }));
 
-    it('should create the app', async(() => {
+    it('should create the app', waitForAsync(() => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.debugElement.componentInstance;
         expect(app).toBeTruthy();

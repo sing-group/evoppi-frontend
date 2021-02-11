@@ -96,9 +96,6 @@ import {WorkStatusService} from './services/work-status.service';
         OnInitDirective,
         DraggableDirective,
         ZoomableDirective
-    ],
-    entryComponents: [
-        GeneInfoComponent,
     ]
 })
 export class ResultsModule {

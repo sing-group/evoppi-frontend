@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {ResultsComponent} from './results.component';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -45,7 +45,7 @@ describe('ResultsComponent', () => {
     let fixture: ComponentFixture<ResultsComponent>;
     const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [ResultsComponent],
             imports: [NoopAnimationsModule, RouterTestingModule, MaterialDesignModule, HttpClientTestingModule],
@@ -64,7 +64,7 @@ describe('ResultsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', async(() => {
+    it('should create', waitForAsync(() => {
         spyOn((<any>component).distinctResultsService, 'getResults').and.returnValue(of([]));
         spyOn((<any>component).sameResultsService, 'getResults').and.returnValue(of([]));
         expect(component).toBeTruthy();

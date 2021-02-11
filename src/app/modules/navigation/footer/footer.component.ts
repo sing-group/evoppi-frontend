@@ -20,7 +20,7 @@
  */
 
 import {Component} from '@angular/core';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {FeedbackDialogComponent} from './feedback-dialog.component';
 import {Feedback} from '../../../entities/notification';
 import {FeedbackService} from '../services/feedback.service';

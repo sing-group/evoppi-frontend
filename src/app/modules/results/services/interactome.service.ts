@@ -20,15 +20,14 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {concatMap, map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {SpeciesService} from './species.service';
 import {Interactome} from '../../../entities/bio';
-import {saveAs} from 'file-saver/FileSaver';
+import {saveAs} from 'file-saver';
 import {EvoppiError} from '../../../entities/notification';
-import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Injectable()
 export class InteractomeService {

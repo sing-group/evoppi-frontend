@@ -23,7 +23,7 @@ import {
     Component, Input, ChangeDetectorRef, HostListener, ChangeDetectionStrategy, SimpleChanges, OnChanges, ViewChild,
     ElementRef
 } from '@angular/core';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {GeneInfoComponent} from '../gene-info/gene-info.component';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import * as jsPDF from 'jspdf';
@@ -38,8 +38,8 @@ import {D3Service} from '../services/d3.service';
     styleUrls: ['./graph.component.scss']
 })
 export class GraphComponent implements OnChanges {
-    @ViewChild('svg') svg: ElementRef;
-    @ViewChild('canvas') canvas: ElementRef;
+    @ViewChild('svg', { static: true }) svg: ElementRef;
+    @ViewChild('canvas', { static: true }) canvas: ElementRef;
 
     @Input() nodes;
     @Input() links;

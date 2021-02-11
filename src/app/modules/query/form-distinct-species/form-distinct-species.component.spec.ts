@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {FormDistinctSpeciesComponent} from './form-distinct-species.component';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -42,7 +42,7 @@ describe('FormDistinctSpeciesComponent', () => {
     let fixture: ComponentFixture<FormDistinctSpeciesComponent>;
     const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub();
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [FormDistinctSpeciesComponent, AutocompleteComponent],
             imports: [NoopAnimationsModule, MaterialDesignModule, ReactiveFormsModule, HttpClientTestingModule],

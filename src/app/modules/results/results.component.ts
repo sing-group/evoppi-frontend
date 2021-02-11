@@ -28,7 +28,7 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {asyncScheduler, Observable} from 'rxjs';
 import {NotificationService} from '../notification/services/notification.service';
 import {ConfirmSheetComponent} from '../material-design/confirm-sheet/confirm-sheet.component';
-import {MatBottomSheet} from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {AuthenticationService} from '../authentication/services/authentication.service';
 import {WorkStatusService} from './services/work-status.service';
 import {Location} from '@angular/common';

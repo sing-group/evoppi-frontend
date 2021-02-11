@@ -20,9 +20,8 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material';
-import {SafeResourceUrl} from '@angular/platform-browser/src/security/dom_sanitization_service';
-import {DomSanitizer} from '@angular/platform-browser';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {Gene} from '../../../entities/bio';
 import {BlastResult} from '../../../entities/bio/results';
 import {GeneService} from '../services/gene.service';
