@@ -26,6 +26,7 @@ import {map, mergeMap, reduce} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {InteractomeService} from './interactome.service';
 import {OrderField, SortDirection} from '../../../entities/data';
+import {saveAs} from 'file-saver';
 import {SummarizedWorkResult, Work, WorkResult} from '../../../entities/execution';
 import {EvoppiError} from '../../../entities/notification';
 
@@ -191,5 +192,33 @@ export class InteractionService {
         } else {
             throw TypeError('Invalid work result. Missing interactomes.');
         }
+    }
+
+    downloadSingleFasta(resultUrl: string, suffix: string) {
+        this.http.get(resultUrl + '/interactome/fasta', {responseType: 'blob'})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting single FASTA',
+                    'Single FASTA could not be retrieved from the backend.'
+                )
+            )
+            .subscribe(res => {
+                const blob = new Blob([res], {type: 'text/x-fasta'});
+                saveAs(blob, 'SingleFasta_' + suffix + '.fasta');
+            });
+    }
+
+    downloadFasta(resultUrl: string, suffix: string, id: number ) {
+        this.http.get(resultUrl + '/interactome/' + id + '/fasta', {responseType: 'blob'})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting FASTA',
+                    `FASTA for interactome '${id}' could not be retrieved from the backend.`
+                )
+            )
+            .subscribe(res => {
+                const blob = new Blob([res], {type: 'text/x-fasta'});
+                saveAs(blob, 'Fasta_' + suffix + '.fasta');
+            });
     }
 }

@@ -268,11 +268,10 @@ export class TableDistinctSpeciesComponent implements OnInit {
     }
 
     downloadSingleFasta() {
-        this.interactomeService.downloadSingleFasta(this.paginatedResultUrl, this.uuid);
+        this.interactionService.downloadSingleFasta(this.paginatedResultUrl, this.uuid);
     }
 
     downloadFasta(suffix: string, id: number) {
-        this.interactomeService.downloadFasta(this.paginatedResultUrl, suffix, id);
+        this.interactionService.downloadFasta(this.paginatedResultUrl, suffix, id);
     }
-
 }
