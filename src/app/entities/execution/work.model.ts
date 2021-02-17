@@ -1,7 +1,7 @@
 /*
  *  EvoPPI Frontend
  *
- *  Copyright (C) 2017-2019 - Noé Vázquez González,
+ *  Copyright (C) 2017-2021 - Noé Vázquez González,
  *  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
  *  and Cristina Vieira.
  *
@@ -20,16 +20,17 @@
  */
 
 import {Status} from './status.model';
-import {Step} from './step.model';
+import {WorkStep} from './work-step.model';
 
 export interface Work {
   id: {id: string, uri: string};
   name: string;
   description: string;
   creationDateTime: Date;
-  startDateTime?: Date;
-  endDateTime?: Date;
-  resultReference: string;
+  schedulingDateTime?: Date;
+  startingDateTime?: Date;
+  finishingDateTime?: Date;
+  resultReference?: string;
   status: Status;
-  steps: Array<Step>;
+  steps: WorkStep[];
 }

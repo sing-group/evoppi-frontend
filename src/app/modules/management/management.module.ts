@@ -24,17 +24,25 @@ import {CommonModule} from '@angular/common';
 import {UserManagementComponent} from './user-management/user-management.component';
 import {SpeciesManagementComponent} from './species-management/species-management.component';
 import {InteractomeManagementComponent} from './interactome-management/interactome-management.component';
-import { MatButtonModule } from '@angular/material/button';
+import {MatButtonModule} from '@angular/material/button';
+import {WorksManagementComponent} from './works-management/works-management.component';
+import {MaterialDesignModule} from '../material-design/material-design.module';
+import {HttpClientModule} from '@angular/common/http';
+import {ResultsModule} from '../results/results.module';
 
 @NgModule({
     imports: [
         CommonModule,
-        MatButtonModule
+        HttpClientModule,
+        MatButtonModule,
+        MaterialDesignModule,
+        ResultsModule
     ],
     declarations: [
         InteractomeManagementComponent,
         SpeciesManagementComponent,
-        UserManagementComponent
+        UserManagementComponent,
+        WorksManagementComponent
     ],
     exports: [
         InteractomeManagementComponent,

@@ -95,6 +95,13 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         allowedRoles: [ Role.ADMIN ]
     },
     {
+        path: '/management/works',
+        title: 'Works',
+        showInMenu: true,
+        icon: 'settings',
+        allowedRoles: [ Role.ADMIN ]
+    },
+    {
         path: '/login',
         title: 'Login',
         showInMenu: false,

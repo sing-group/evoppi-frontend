@@ -19,18 +19,38 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Pagination {
+import {SortDirection} from './sort-direction.enum';
+import {HttpParams} from '@angular/common/http';
+
+export class ListingOptions {
     public constructor(
-        public readonly page: number,
-        public readonly pageSize: number
+        public readonly pageIndex: number,
+        public readonly pageSize: number,
+        public readonly sortFields?: { field: string, order: SortDirection }[],
+        public readonly filters?: { [key: string]: string }
     ) {
     }
 
     public get initialIndex(): number {
-        return this.page * this.pageSize;
+        return this.pageIndex * this.pageSize;
     }
 
     public get finalIndex(): number {
-        return (this.page + 1) * this.pageSize - 1;
+        return (this.pageIndex + 1) * this.pageSize - 1;
+    }
+
+    public hasOrder(): boolean {
+        return this.sortFields !== undefined && this.sortFields.length > 0;
+    }
+
+    public hasFilters(): boolean {
+        return this.filters !== undefined && Object.keys(this.filters).length > 0;
+    }
+
+    public toHttpParams(): HttpParams {
+        // TODO: complete
+        return new HttpParams()
+            .append('start', String(this.initialIndex))
+            .append('end', String(this.finalIndex));
     }
 }

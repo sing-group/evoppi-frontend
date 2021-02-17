@@ -21,18 +21,20 @@
 
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {concatMap, map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {SpeciesService} from './species.service';
 import {Interactome} from '../../../entities/bio';
 import {EvoppiError} from '../../../entities/notification';
-import {InteractomeQueryParams} from '../../../entities/bio/interactome-query-params';
 import {saveAs} from 'file-saver';
-import {toPlainObject} from '../../../utils/types';
+import {PaginatedDataProvider} from '../../../entities/data-source/paginated-data-provider';
+import {PageData} from '../../../entities/data-source/page-data';
+import {ListingOptions} from '../../../entities/data-source/listing-options';
+import {QueryHelper} from '../../../helpers/query.helper';
 
 @Injectable()
-export class InteractomeService {
+export class InteractomeService implements PaginatedDataProvider<Interactome> {
 
     private endpoint = environment.evoppiUrl + 'api/interactome';
 
@@ -72,23 +74,16 @@ export class InteractomeService {
         );
     }
 
-    getInteractomes(queryParams: InteractomeQueryParams, retrieveSpecies: boolean = false): Observable<Interactome[]> {
-        const options = {
-            params: new HttpParams({
-                fromObject: toPlainObject(queryParams)
-            }),
-            headers: new HttpHeaders({
-                'Accept': 'application/json'
-            })
-        };
+    list(options: ListingOptions, retrieveSpecies: boolean = false): Observable<PageData<Interactome>> {
+        const params = QueryHelper.listingOptionsToHttpParams(options);
 
-        let request = this.http.get<Interactome[]>(this.endpoint, options);
+        let request = this.http.get<Interactome[]>(this.endpoint, {params, 'observe': 'response'});
 
         if (retrieveSpecies) {
             request = request.pipe(
                 concatMap(
-                    interactomes => forkJoin(
-                        interactomes.map(interactome => interactome.species.id)
+                    response => forkJoin(
+                        response.body.map(interactome => interactome.species.id)
                             .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
                             .map(speciesId => this.speciesService.getSpeciesById(speciesId))
                     )
@@ -99,11 +94,11 @@ export class InteractomeService {
                                     return reduced;
                                 }, {});
 
-                                for (const interactome of interactomes) {
+                                for (const interactome of response.body) {
                                     interactome.species = speciesById[interactome.species.id];
                                 }
 
-                                return interactomes;
+                                return response;
                             })
                         )
                 )
@@ -112,6 +107,7 @@ export class InteractomeService {
 
         return request
             .pipe(
+                map(response => new PageData(Number(response.headers.get('X-Total-Count')), response.body)),
                 EvoppiError.throwOnError(
                     'Error requesting interactomes',
                     'The interactomes could not be retrieved from the backend.'

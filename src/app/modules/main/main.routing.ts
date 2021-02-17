@@ -38,6 +38,7 @@ import {InteractomeListComponent} from '../data/interactome-list/interactome-lis
 import {LoginComponent} from '../authentication/login/login.component';
 import {RegistrationComponent} from '../authentication/registration/registration.component';
 import {RecoveryComponent} from '../authentication/recovery/recovery.component';
+import {WorksManagementComponent} from '../management/works-management/works-management.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -98,6 +99,10 @@ export const MAIN_ROUTES: Routes = [
             {
                 path: 'interactomes',
                 component: InteractomeManagementComponent
+            },
+            {
+                path: 'works',
+                component: WorksManagementComponent
             }
         ]
     },

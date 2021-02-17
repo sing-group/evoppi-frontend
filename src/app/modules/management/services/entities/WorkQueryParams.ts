@@ -1,8 +1,7 @@
-
 /*
  *  EvoPPI Frontend
  *
- *  Copyright (C) 2017-2019 - Noé Vázquez González,
+ *  Copyright (C) 2017-2021 - Noé Vázquez González,
  *  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
  *  and Cristina Vieira.
  *
@@ -20,8 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Step {
-  order: number;
-  description: string;
-  progress: number;
+export interface WorkQueryParams {
+  start: number;
+  end: number;
 }

@@ -19,8 +19,10 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './status.model';
-export * from './work-step.model';
-export * from './sumarized-work-result.model';
-export * from './work.model';
-export * from './work.result.model';
+import {Observable} from 'rxjs';
+import {ListingOptions} from './listing-options';
+import {PageData} from './page-data';
+
+export interface PaginatedDataProvider<T> {
+    list(options: ListingOptions): Observable<PageData<T>>;
+}

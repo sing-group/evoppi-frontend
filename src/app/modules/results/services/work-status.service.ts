@@ -48,8 +48,8 @@ export class WorkStatusService {
             .pipe(
                 tap(workStatus => {
                     workStatus.creationDateTime = WorkStatusService.convertDateTime(workStatus.creationDateTime);
-                    workStatus.startDateTime = WorkStatusService.convertDateTime(workStatus.startDateTime);
-                    workStatus.endDateTime = WorkStatusService.convertDateTime(workStatus.endDateTime);
+                    workStatus.staringtDateTime = WorkStatusService.convertDateTime(workStatus.staringtDateTime);
+                    workStatus.finishingDateTime = WorkStatusService.convertDateTime(workStatus.finishingDateTime);
                 }),
                 EvoppiError.throwOnError(
                     'Error retrieving work information',

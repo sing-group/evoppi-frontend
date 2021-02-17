@@ -19,8 +19,26 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './status.model';
-export * from './work-step.model';
-export * from './sumarized-work-result.model';
-export * from './work.model';
-export * from './work.result.model';
+export enum SortDirection {
+    ASCENDING = 'ASCENDING',
+    DESCENDING = 'DESCENDING',
+    NONE = 'NONE'
+}
+
+export namespace SortDirection {
+    export function from(sort: string): SortDirection {
+        if (sort.trim().length === 0) {
+            return SortDirection.NONE;
+        }
+
+        const sortRegExp = new RegExp('^' + sort, 'i');
+
+        for (const value of Object.keys(SortDirection)) {
+            if (sortRegExp.test(value)) {
+                return SortDirection[value];
+            }
+        }
+
+        return SortDirection.NONE;
+    }
+}

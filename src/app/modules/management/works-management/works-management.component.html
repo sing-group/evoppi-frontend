@@ -1,0 +1,82 @@
+<!--
+  ~  EvoPPI Frontend
+  ~
+  ~  Copyright (C) 2017-2021 - Noé Vázquez González,
+  ~  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
+  ~  and Cristina Vieira.
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program. If not, see <http://www.gnu.org/licenses/>. 
+  -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h4 class="card-title">Works</h4>
+                        <p class="card-category">List of user works.</p>
+                    </div>
+                    <div class="card-body">
+                        <mat-table [dataSource]="dataSource" matSort matSortActive="status.creationDateTime"
+                                   matSortDirection="desc">
+                            <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+                            <mat-row *matRowDef="let work; columns: columns;"></mat-row>
+
+                            <ng-container matColumnDef="name">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                                <mat-cell *matCellDef="let work">
+                                    {{work.name}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="status.creationDateTime">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Creation</mat-header-cell>
+                                <mat-cell *matCellDef="let work">
+                                    {{work.creationDateTime | date : 'short'}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="status.schedulingDateTime">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Scheduling</mat-header-cell>
+                                <mat-cell *matCellDef="let work">
+                                    {{work.schedulingDateTime ? (work.schedulingDateTime | date : 'short') : '-'}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="status.startDateTime">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Start</mat-header-cell>
+                                <mat-cell *matCellDef="let work">
+                                    {{work.startingDateTime ? (work.startingDateTime | date : 'short') : '-'}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="status.finishingDateTime">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>End</mat-header-cell>
+                                <mat-cell *matCellDef="let work">
+                                    {{work.finishingDateTime ? (work.finishingDateTime | date : 'short') : '-'}}
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="status.status">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                <mat-cell *matCellDef="let work">
+                                    {{work.status}}
+                                </mat-cell>
+                            </ng-container>
+                        </mat-table>
+                        <mat-paginator #paginator
+                                       [pageSize]="10"
+                                       [pageSizeOptions]="[5, 10, 20, 50]"
+                                       [length]="dataSource.count$ | async">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

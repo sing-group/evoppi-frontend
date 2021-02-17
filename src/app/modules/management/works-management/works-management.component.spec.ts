@@ -19,8 +19,28 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './status.model';
-export * from './work-step.model';
-export * from './sumarized-work-result.model';
-export * from './work.model';
-export * from './work.result.model';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+
+import {WorksManagementComponent} from './works-management.component';
+
+describe('WorksManagementComponent', () => {
+    let component: WorksManagementComponent;
+    let fixture: ComponentFixture<WorksManagementComponent>;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [WorksManagementComponent]
+        })
+            .compileComponents();
+    });
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(WorksManagementComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

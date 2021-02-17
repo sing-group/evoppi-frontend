@@ -19,8 +19,27 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './status.model';
-export * from './work-step.model';
-export * from './sumarized-work-result.model';
-export * from './work.model';
-export * from './work.result.model';
+import {ListingOptions} from '../entities/data-source/listing-options';
+import {HttpParams} from '@angular/common/http';
+
+export class QueryHelper {
+    public static listingOptionsToHttpParams(options: ListingOptions): HttpParams {
+        let params = new HttpParams()
+            .append('start', String(options.initialIndex))
+            .append('end', String(options.finalIndex));
+
+        if (options.hasOrder()) {
+            const sortField = options.sortFields[0];
+            params = params.append('order', sortField.field)
+                .append('sort', sortField.order);
+        }
+
+        if (options.hasFilters()) {
+            for (const key of Object.keys(options.filters)) {
+                params = params.append(key, options[key]);
+            }
+        }
+
+        return params;
+    }
+}
