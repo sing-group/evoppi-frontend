@@ -28,42 +28,42 @@
                         <p class="card-category">List of user works.</p>
                     </div>
                     <div class="card-body">
-                        <mat-table [dataSource]="dataSource" matSort matSortActive="status.creationDateTime"
+                        <mat-table [dataSource]="dataSource" matSort matSortActive="CREATION_DATE_TIME"
                                    matSortDirection="desc">
                             <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
                             <mat-row *matRowDef="let work; columns: columns;"></mat-row>
 
-                            <ng-container matColumnDef="name">
+                            <ng-container matColumnDef="NAME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.name}}
                                 </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="status.creationDateTime">
+                            <ng-container matColumnDef="CREATION_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Creation</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.creationDateTime | date : 'short'}}
                                 </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="status.schedulingDateTime">
+                            <ng-container matColumnDef="SCHEDULING_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Scheduling</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.schedulingDateTime ? (work.schedulingDateTime | date : 'short') : '-'}}
                                 </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="status.startDateTime">
+                            <ng-container matColumnDef="STARTING_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Start</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.startingDateTime ? (work.startingDateTime | date : 'short') : '-'}}
                                 </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="status.finishingDateTime">
+                            <ng-container matColumnDef="FINISHING_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>End</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.finishingDateTime ? (work.finishingDateTime | date : 'short') : '-'}}
                                 </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="status.status">
+                            <ng-container matColumnDef="STATUS">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.status}}

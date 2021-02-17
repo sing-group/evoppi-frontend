@@ -46,11 +46,4 @@ export class ListingOptions {
     public hasFilters(): boolean {
         return this.filters !== undefined && Object.keys(this.filters).length > 0;
     }
-
-    public toHttpParams(): HttpParams {
-        // TODO: complete
-        return new HttpParams()
-            .append('start', String(this.initialIndex))
-            .append('end', String(this.finalIndex));
-    }
 }

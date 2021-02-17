@@ -37,7 +37,7 @@ export class WorksManagementComponent implements OnInit, AfterViewInit {
 
     dataSource: MatPaginatedDataSource<Work>;
 
-    columns = ['name', 'status.creationDateTime', 'status.schedulingDateTime', 'status.startDateTime', 'status.finishingDateTime', 'status.status'];
+    columns = ['NAME', 'CREATION_DATE_TIME', 'SCHEDULING_DATE_TIME', 'STARTING_DATE_TIME', 'FINISHING_DATE_TIME', 'STATUS'];
 
     constructor(private readonly workService: WorkService) {
     }
