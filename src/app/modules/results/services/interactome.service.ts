@@ -21,12 +21,15 @@
 
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {concatMap, map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {SpeciesService} from './species.service';
 import {Interactome} from '../../../entities/bio';
 import {EvoppiError} from '../../../entities/notification';
+import {InteractomeQueryParams} from '../../../entities/bio/interactome-query-params';
+import {saveAs} from 'file-saver';
+import {toPlainObject} from '../../../utils/types';
 
 @Injectable()
 export class InteractomeService {
@@ -43,13 +46,13 @@ export class InteractomeService {
             request = request.pipe(
                 concatMap(
                     interactome => this.speciesService.getSpeciesById(interactome.species.id)
-                    .pipe(
-                        map(species => {
-                            interactome.species = species;
+                        .pipe(
+                            map(species => {
+                                interactome.species = species;
 
-                            return interactome;
-                        })
-                    )
+                                return interactome;
+                            })
+                        )
                 )
             );
         }
@@ -69,13 +72,70 @@ export class InteractomeService {
         );
     }
 
-    getInteractomes(): Observable<Interactome[]> {
-        return this.http.get<Interactome[]>(this.endpoint)
+    getInteractomes(queryParams: InteractomeQueryParams, retrieveSpecies: boolean = false): Observable<Interactome[]> {
+        const options = {
+            params: new HttpParams({
+                fromObject: toPlainObject(queryParams)
+            }),
+            headers: new HttpHeaders({
+                'Accept': 'application/json'
+            })
+        };
+
+        let request = this.http.get<Interactome[]>(this.endpoint, options);
+
+        if (retrieveSpecies) {
+            request = request.pipe(
+                concatMap(
+                    interactomes => forkJoin(
+                        interactomes.map(interactome => interactome.species.id)
+                            .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
+                            .map(speciesId => this.speciesService.getSpeciesById(speciesId))
+                    )
+                        .pipe(
+                            map(species => {
+                                const speciesById = species.reduce((reduced, spec) => {
+                                    reduced[spec.id] = spec;
+                                    return reduced;
+                                }, {});
+
+                                for (const interactome of interactomes) {
+                                    interactome.species = speciesById[interactome.species.id];
+                                }
+
+                                return interactomes;
+                            })
+                        )
+                )
+            );
+        }
+
+        return request
             .pipe(
                 EvoppiError.throwOnError(
                     'Error requesting interactomes',
                     'The interactomes could not be retrieved from the backend.'
                 )
             );
+    }
+
+    downloadInteractomeTsv(interactome: Interactome) {
+        const options = {
+            headers: new HttpHeaders({
+                'Accept': 'text/plain'
+            })
+        };
+
+        this.http.get(this.endpoint + '/' + interactome.id + '/interactions', {responseType: 'blob'})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting interactions TSV',
+                    `Interactions for interactome '${interactome.id}' could not be retrieved from the backend.`
+                )
+            )
+            .subscribe(res => {
+                const blob = new Blob([res], {type: 'text/plain'});
+                saveAs(blob, interactome.name + '_' + interactome.dbSourceIdType + '_' + interactome.species.name + '.tsv');
+            });
     }
 }

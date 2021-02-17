@@ -70,9 +70,8 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
     {
         path: '/interactomes',
         title: 'Interactomes',
-        showInMenu: false,
-        icon: 'repeat',
-        allowedRoles: [ Role.RESEARCHER ]
+        showInMenu: true,
+        icon: 'list'
     },
     {
         path: '/management/users',

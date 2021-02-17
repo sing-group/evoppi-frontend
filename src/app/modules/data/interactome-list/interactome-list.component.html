@@ -25,10 +25,59 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h4 class="card-title ">Interactome List</h4>
+                        <h4 class="card-title ">Interactomes List</h4>
                     </div>
                     <div class="card-body">
-                        interactome-list works!
+                        <table mat-table [dataSource]="dataSource" matSort class="interactome-list">
+                            <ng-container matColumnDef="Name">
+                                <th mat-header-cell *matHeaderCellDef
+                                    matTooltip="Indicates the user geneset being tested.">
+                                    <span mat-sort-header="NAME">Name</span>
+                                </th>
+                                <td mat-cell *matCellDef="let interactome">
+                                    {{interactome.name}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="DBSource">
+                                <th mat-header-cell *matHeaderCellDef
+                                    matTooltip="Indicates the DREIMT database geneset being tested.">
+                                    <span mat-sort-header="SOURCE_DB">Source Database</span>
+                                </th>
+                                <td mat-cell *matCellDef="let interactome">
+                                    {{interactome.dbSourceIdType}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Species">
+                                <th mat-header-cell *matHeaderCellDef
+                                    matTooltip="Indicates the DREIMT database geneset being tested.">
+                                    <span mat-sort-header="SPECIES">Species</span>
+                                </th>
+                                <td mat-cell *matCellDef="let interactome">
+                                    {{interactome.species.name}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Actions">
+                                <th mat-header-cell *matHeaderCellDef><span>Actions</span></th>
+                                <td mat-cell *matCellDef="let interactome">
+                                    <button mat-icon-button color="primary"
+                                            matTooltip="Download interactions in TSV"
+                                            (click)="downloadInteractionsTsv(interactome)">
+                                        <mat-icon aria-label="Download interactions in TSV">download</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                            <tr mat-row *matRowDef="let row; let even = even; columns: columns;"
+                                [ngClass]="{gray: even}"></tr>
+                        </table>
+                        <mat-paginator id="paginator" [length]="totalResultsSize" [pageSize]="20"
+                                       [pageSizeOptions]="[10, 20, 50, 100]"
+                                       showFirstLastButtons="true">
+                        </mat-paginator>
                     </div>
                 </div>
             </div>

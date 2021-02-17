@@ -19,3 +19,12 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.interactome-list {
+  width: 100%;
+}
+
+#paginator {
+  grid-area: paginator;
+  justify-self: end;
+  background-color: transparent;
+}

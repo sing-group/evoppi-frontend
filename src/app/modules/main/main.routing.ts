@@ -81,8 +81,7 @@ export const MAIN_ROUTES: Routes = [
     },
     {
         path: 'interactomes',
-        component: InteractomeListComponent,
-        canActivate: [ResearcherGuard]
+        component: InteractomeListComponent
     },
     {
         path: 'management',
