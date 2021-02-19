@@ -19,15 +19,9 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SameResult {
-    uuid: string,
-    queryGene: string,
-    queryGeneId: number,
-    maxDegree: number,
+import {Result} from './result.model';
+
+export interface SameResult extends Result {
     species: string,
     interactomes: string[],
-    progress: number,
-    status: string,
-    lastAction: string,
-    creation: Date
 }

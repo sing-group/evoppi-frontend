@@ -30,14 +30,16 @@ import {SortDirection} from './sort-direction.enum';
 
 export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
     public static readonly DEFAULT_PAGE_SIZE = 10;
-    private paginatorSubscription?: Subscription;
-    private sortSubscription?: Subscription;
+
     private pageIndex: number;
     private pageSize: number;
     private sortFields: { field: string, order: SortDirection }[];
 
     private _paginator?: MatPaginator;
     private _sort?: MatSort;
+
+    private paginatorSubscription?: Subscription;
+    private sortSubscription?: Subscription;
 
     public constructor(
         dataProvider: PaginatedDataProvider<T>,
@@ -159,6 +161,10 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
             }];
         }
 
+        this.update(this.buildListingOptions());
+    }
+
+    public updatePage() {
         this.update(this.buildListingOptions());
     }
 

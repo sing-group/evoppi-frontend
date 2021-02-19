@@ -27,66 +27,61 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title ">Distinct species</h4>
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
-                        <div class="offset-10 col-2 app-table-spinner" *ngIf="loadingDistinct"
+                        <div class="offset-10 col-2 app-table-spinner" *ngIf="distinctDataSource.loading$ | async"
                              [@slideInOut]>
                             <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div *ngIf="distinctSpeciesResults.length === 0">
-                            <span *ngIf="loadingDistinct">
+                        <div *ngIf="!(distinctDataSource.hasData$ | async)">
+                            <ng-template *ngIf="(distinctDataSource.loading$ | async); else isLoadingDistinct">
                                 Loading distinct species interaction results. Please, wait...
-                            </span>
-                            <span *ngIf="!loadingDistinct">
+                            </ng-template>
+                            <ng-template #isLoadingDistinct>
                                 There are no results available, query at least one analysis to check it here.
-                            </span>
+                            </ng-template>
                         </div>
-                        <div class="table-responsive" *ngIf="distinctSpeciesResults.length > 0">
-                            <table class="table">
-                                <thead class=" text-primary">
-                                <th>
-                                    Scheduled On
-                                </th>
-                                <th>
-                                    Query Gene
-                                </th>
-                                <th>
-                                    Max. Degree
-                                </th>
-                                <th>
-                                    Reference Species
-                                </th>
-                                <th>
-                                    Target Species
-                                </th>
-                                <th>
-                                    #Interactomes
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Actions
-                                </th>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let result of distinctSpeciesResults">
-                                    <td>
-                                        {{result.creation.toLocaleString()}}
-                                    </td>
-                                    <td>
+                        <div class="table-responsive" [hidden]="!(distinctDataSource.hasData$ | async)">
+                            <mat-table #distinctSort="matSort" [dataSource]="distinctDataSource" matSort
+                                       matSortActive="SCHEDULING_DATE_TIME"
+                                       matSortDirection="desc">
+                                <mat-header-row *matHeaderRowDef="distinctColumns"></mat-header-row>
+                                <mat-row *matRowDef="let result; columns: distinctColumns;"></mat-row>
+
+                                <ng-container matColumnDef="SCHEDULING_DATE_TIME">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Scheduled On</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
+                                        {{result.creation | date : 'short'}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="QUERY_GENE">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Query Gene</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         {{result.queryGene}} [{{result.queryGeneId}}]
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="MAX_DEGREE">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Max. Degree</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         {{result.maxDegree}}
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="REFERENCE_SPECIES">
+                                    <mat-header-cell *matHeaderCellDef>Reference Species
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         {{result.referenceSpecies}}
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="TARGET_SPECIES">
+                                    <mat-header-cell *matHeaderCellDef>Target Species</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         {{result.targetSpecies}}
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="INTERACTOMES_COUNT">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         <span class="interactome-count"
                                               matTooltip="{{'Reference: ' + result.referenceInteractomes.join(', ')}}">
                                             {{result.referenceInteractomes.length}}
@@ -96,30 +91,38 @@
                                               matTooltip="{{'Target: ' + result.targetInteractomes.join(', ')}}">
                                             {{result.targetInteractomes.length}}
                                         </span>
-                                    </td>
-                                    <td *ngIf="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
-                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100"
-                                                          [bufferValue]="result.progress * 100"
-                                                          matTooltip="{{result.lastAction}}"></mat-progress-bar>
-                                    </td>
-                                    <td *ngIf="result.status === 'COMPLETED' || result.status === 'FAILED'">
-                                        {{result.status}}
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="STATUS">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
+                                        <mat-progress-bar *ngIf="isAlive(result); else distinctStatus"
+                                                      mode="buffer" [value]="result.progress * 100"
+                                                      [bufferValue]="result.progress * 100"
+                                                      matTooltip="{{result.lastAction}}"></mat-progress-bar>
+                                        <ng-template #distinctStatus>
+                                            {{result.status}}
+                                        </ng-template>
+                                </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="ACTIONS">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         <button mat-icon-button color="primary"
                                                 routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'"
+                                                [disabled]="!isCompleted(result)"
                                                 matTooltip="Show interactions table">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
                                         <button mat-icon-button color="secondary"
                                                 routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'"
+                                                [disabled]="!isCompleted(result)"
                                                 matTooltip="Show chart">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="primary"
-                                                routerLink="{{location.normalize('/results/table/distinct/' + result.uuid)}}"
+                                                routerLink="{{buildDistinctPermalink(result)}}"
+                                                [disabled]="!isCompleted(result)"
                                                 matTooltip="Permanent link to result">
                                             <mat-icon aria-label="Permalink">
                                                 link
@@ -127,16 +130,20 @@
                                         </button>
                                         <button mat-icon-button color="warn"
                                                 (click)="deleteDistinctResult(result.uuid)"
-                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'"
+                                                [disabled]="isAlive(result)"
                                                 matTooltip="Delete result">
                                             <mat-icon aria-label="Delete">
                                                 delete
                                             </mat-icon>
                                         </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    </mat-cell>
+                                </ng-container>
+                            </mat-table>
+                            <mat-paginator #distinctPaginator
+                                           [pageSize]="5"
+                                           [pageSizeOptions]="[5, 10, 20, 50]"
+                                           [length]="distinctDataSource.count$ | async">
+                            </mat-paginator>
                         </div>
                     </div>
                 </div>
@@ -146,87 +153,89 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title ">Same species</h4>
                         <p class="card-category">Analysis done with interactomes coming from the same species</p>
-                        <div class="offset-10 col-2 app-table-spinner" *ngIf="loadingSame"
+                        <div class="offset-10 col-2 app-table-spinner" *ngIf="sameDataSource.loading$ | async"
                              [@slideInOut]>
                             <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div *ngIf="sameSpeciesResults.length === 0">
-                            <span *ngIf="loadingSame">
+                        <div *ngIf="!(sameDataSource.hasData$ | async)">
+                            <ng-template *ngIf="(sameDataSource.loading$ | async); else isLoadingSame">
                                 Loading same species interaction results. Please, wait...
-                            </span>
-                            <span *ngIf="!loadingSame">
+                            </ng-template>
+                            <ng-template #isLoadingSame>
                                 There are no results available, query at least one analysis to check it here.
-                            </span>
+                            </ng-template>
                         </div>
-                        <div class="table-responsive" *ngIf="sameSpeciesResults.length > 0">
-                            <table class="table">
-                                <thead class=" text-primary">
-                                <th>
-                                    Scheduled On
-                                </th>
-                                <th>
-                                    Query Gene
-                                </th>
-                                <th>
-                                    Max. Degree
-                                </th>
-                                <th>
-                                    Species
-                                </th>
-                                <th>
-                                    #Interactomes
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Actions
-                                </th>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let result of sameSpeciesResults">
-                                    <td>
-                                        {{result.creation.toLocaleString()}}
-                                    </td>
-                                    <td>
+                        <div class="table-responsive" [hidden]="!(sameDataSource.hasData$ | async)">
+                            <mat-table #sameSort="matSort" [dataSource]="sameDataSource" matSort
+                                       matSortActive="SCHEDULING_DATE_TIME"
+                                       matSortDirection="desc">
+                                <mat-header-row *matHeaderRowDef="sameColumns"></mat-header-row>
+                                <mat-row *matRowDef="let result; columns: sameColumns;"></mat-row>
+
+                                <ng-container matColumnDef="SCHEDULING_DATE_TIME">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Scheduled On</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
+                                        {{result.creation | date : 'short'}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="QUERY_GENE">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Query Gene</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         {{result.queryGene}} [{{result.queryGeneId}}]
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="MAX_DEGREE">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Max. Degree</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         {{result.maxDegree}}
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="SPECIES">
+                                    <mat-header-cell *matHeaderCellDef>Species</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         {{result.species}}
-                                    </td>
-                                    <td>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="INTERACTOMES_COUNT">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         <span class="interactome-count" matTooltip="{{result.interactomes.join(', ')}}">
                                             {{result.interactomes.length}}
                                         </span>
-                                    </td>
-                                    <td *ngIf="result.status !== 'COMPLETED' && result.status !== 'FAILED'">
-                                        <mat-progress-bar mode="buffer" [value]="result.progress * 100"
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="STATUS">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
+                                        <mat-progress-bar *ngIf="isAlive(result); else sameStatus"
+                                                          mode="buffer" [value]="result.progress * 100"
                                                           [bufferValue]="result.progress * 100"
                                                           matTooltip="{{result.lastAction}}"></mat-progress-bar>
-                                    </td>
-                                    <td *ngIf="result.status === 'COMPLETED' || result.status === 'FAILED'">
-                                        {{result.status}}
-                                    </td>
-                                    <td>
+                                        <ng-template #sameStatus>
+                                            {{result.status}}
+                                        </ng-template>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="ACTIONS">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
+                                    <mat-cell *matCellDef="let result">
                                         <button mat-icon-button color="primary"
                                                 routerLink="{{getSameSpeciesTablePath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'"
+                                                [disabled]="!isCompleted(result)"
                                                 matTooltip="Show interactions table">
                                             <mat-icon aria-label="Show interacions">list</mat-icon>
                                         </button>
                                         <button mat-icon-button color="secondary"
                                                 routerLink="{{getSameSpeciesChartPath(result.uuid)}}"
-                                                [disabled]="result.status !== 'COMPLETED'"
+                                                [disabled]="!isCompleted(result)"
                                                 matTooltip="Show chart">
                                             <mat-icon aria-label="Show chart">timeline</mat-icon>
                                         </button>
                                         <button mat-icon-button color="primary"
-                                                routerLink="{{location.normalize('/results/table/same/' + result.uuid)}}"
+                                                routerLink="{{buildSamePermalink(result)}}"
+                                                [disabled]="!isCompleted(result)"
                                                 matTooltip="Permanent link to result">
                                             <mat-icon aria-label="Permalink">
                                                 link
@@ -234,16 +243,20 @@
                                         </button>
                                         <button mat-icon-button color="warn"
                                                 (click)="deleteSameResult(result.uuid)"
-                                                [disabled]="result.status !== 'COMPLETED' && result.status !== 'FAILED'"
+                                                [disabled]="isAlive(result)"
                                                 matTooltip="Delete result">
                                             <mat-icon aria-label="Delete">
                                                 delete
                                             </mat-icon>
                                         </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    </mat-cell>
+                                </ng-container>
+                            </mat-table>
+                            <mat-paginator #samePaginator
+                                           [pageSize]="5"
+                                           [pageSizeOptions]="[5, 10, 20, 50]"
+                                           [length]="sameDataSource.count$ | async">
+                            </mat-paginator>
                         </div>
                     </div>
                 </div>

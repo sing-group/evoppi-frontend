@@ -1,7 +1,7 @@
 /*
  *  EvoPPI Frontend
  *
- *  Copyright (C) 2017-2019 - Noé Vázquez González,
+ *  Copyright (C) 2017-2021 - Noé Vázquez González,
  *  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
  *  and Cristina Vieira.
  *
@@ -19,11 +19,15 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Result} from './result.model';
+import {Status} from '../../execution';
 
-export interface DistinctResult extends Result {
-    referenceSpecies: string,
-    targetSpecies: string,
-    referenceInteractomes: string[],
-    targetInteractomes: string[]
+export interface Result {
+    uuid: string,
+    queryGene: string,
+    queryGeneId: number,
+    maxDegree: number,
+    progress: number,
+    status: Status,
+    lastAction: string,
+    creation: Date
 }

@@ -19,6 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export * from './result.model';
 export * from './distinct-result.model';
 export * from './same-result.model';
 export * from './blast-result.model';

@@ -19,19 +19,25 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {DistinctResult, SameResult} from '../../entities';
+import {DistinctResult, Result, SameResult} from '../../entities';
 import {DistinctResultsService} from './services/distinct-results.service';
 import {SameResultsService} from './services/same-results.service';
 import {animate, style, transition, trigger} from '@angular/animations';
-import {asyncScheduler, Observable} from 'rxjs';
 import {NotificationService} from '../notification/services/notification.service';
 import {ConfirmSheetComponent} from '../material-design/confirm-sheet/confirm-sheet.component';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import {AuthenticationService} from '../authentication/services/authentication.service';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {WorkStatusService} from './services/work-status.service';
 import {Location} from '@angular/common';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginatedDataSource} from '../../entities/data-source/mat-paginated-data-source';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
+import {forkJoin, interval} from 'rxjs';
+import {ObservableInput} from 'rxjs/internal/types';
+import {Status, Work} from '../../entities/execution';
+import {AuthenticationService} from '../authentication/services/authentication.service';
 
 @Component({
     selector: 'app-results',
@@ -49,20 +55,23 @@ import {Location} from '@angular/common';
         ])
     ]
 })
-export class ResultsComponent implements OnInit {
-    private sameResults: SameResult[] = [];
-    private distinctResults: DistinctResult[] = [];
+export class ResultsComponent implements OnInit, AfterViewInit {
+    @ViewChild('samePaginator') samePaginator: MatPaginator;
+    @ViewChild('sameSort') sameSort: MatSort;
 
-    public loadingDistinct = false;
-    public loadingSame = false;
+    sameColumns = [
+        'SCHEDULING_DATE_TIME', 'QUERY_GENE', 'MAX_DEGREE', 'SPECIES', 'INTERACTOMES_COUNT', 'STATUS', 'ACTIONS'
+    ];
 
-    private static readonly RESULT_COMPARATOR = (a: DistinctResult | SameResult, b: DistinctResult | SameResult) => {
-        if (a.creation === b.creation) {
-            return a.uuid < b.uuid ? -1 : 1;
-        } else {
-            return a.creation < b.creation ? -1 : 1;
-        }
-    };
+    @ViewChild('distinctPaginator') distinctPaginator: MatPaginator;
+    @ViewChild('distinctSort') distinctSort: MatSort;
+
+    distinctColumns = [
+        'SCHEDULING_DATE_TIME', 'QUERY_GENE', 'MAX_DEGREE', 'REFERENCE_SPECIES', 'TARGET_SPECIES', 'INTERACTOMES_COUNT', 'STATUS', 'ACTIONS'
+    ];
+
+    sameDataSource: MatPaginatedDataSource<SameResult>;
+    distinctDataSource: MatPaginatedDataSource<DistinctResult>;
 
     constructor(
         private route: ActivatedRoute,
@@ -70,77 +79,69 @@ export class ResultsComponent implements OnInit {
         private sameResultsService: SameResultsService,
         private notificationService: NotificationService,
         private bottomSheet: MatBottomSheet,
-        private authenticationService: AuthenticationService,
         private workStatusService: WorkStatusService,
+        private readonly authenticationService: AuthenticationService,
         public location: Location
     ) {
     }
 
     ngOnInit() {
-        this.loadingDistinct = true;
-        this.loadingSame = true;
-
-        let distinctObservable: Observable<DistinctResult[]>;
-        let sameObservable: Observable<SameResult[]>;
-        if (this.authenticationService.isGuest()) {
-            distinctObservable = this.distinctResultsService.getResultsGuest();
-            sameObservable = this.sameResultsService.getResultsGuest();
-        } else {
-            distinctObservable = this.distinctResultsService.getResults();
-            sameObservable = this.sameResultsService.getResults();
-        }
-
-        distinctObservable
-            .subscribe(
-                resultsDistinct => {
-                    this.distinctResults = resultsDistinct.sort(ResultsComponent.RESULT_COMPARATOR);
-                    this.distinctResults.filter(result => result.progress < 1)
-                        .forEach(result => this.scheduleResultUpdate(result, uuid => this.distinctResultsService.getResult(uuid)));
-                    this.loadingDistinct = false;
-                },
-                error => {
-                    this.loadingDistinct = false;
-                    throw error;
-                }
-            );
-
-        sameObservable
-            .subscribe(
-                resultsSame => {
-                    this.sameResults = resultsSame.sort(ResultsComponent.RESULT_COMPARATOR);
-                    this.sameResults.filter(result => result.progress < 1)
-                        .forEach(result => this.scheduleResultUpdate(result, uuid => this.sameResultsService.getResult(uuid)));
-                    this.loadingSame = false;
-                },
-                error => {
-                    this.loadingSame = false;
-                    throw error;
-                }
-            );
+        this.sameDataSource = new MatPaginatedDataSource<SameResult>(this.sameResultsService);
+        this.distinctDataSource = new MatPaginatedDataSource<DistinctResult>(this.distinctResultsService);
     }
 
-    private scheduleResultUpdate<R extends DistinctResult | SameResult, S extends (string) => Observable<R>>(result: R, resultGetter: S) {
-        asyncScheduler.schedule(() => {
-            resultGetter(result.uuid)
-                .subscribe(
-                    resultSame => {
-                        result.progress = resultSame.progress;
-                        result.status = resultSame.status;
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.sameDataSource.setControls(this.samePaginator, this.sameSort);
+            this.distinctDataSource.setControls(this.distinctPaginator, this.distinctSort);
 
-                        if (result.status !== 'COMPLETED') {
-                            this.scheduleResultUpdate(result, resultGetter);
-                        }
-                    }
+            this.checkForStatusChanges(this.sameDataSource);
+            this.checkForStatusChanges(this.distinctDataSource);
+        });
+    }
+
+    private checkForStatusChanges(dataSource: MatPaginatedDataSource<Result>) {
+        dataSource.data$
+            .pipe(
+                switchMap(results => interval(5000).pipe(
+                    map(() => results.filter(result => this.isAlive(result)))
+                )),
+                mergeMap(results =>
+                    forkJoin(<ObservableInput<Work>[]>results.map(result => this.workStatusService.getWork(result.uuid)))
+                        .pipe(
+                            map(works => works.map((work, index) => ({result: results[index], work})))
+                        )
                 )
-        }, 5000);
+            )
+            .subscribe(resultsAndWorks => {
+                for (const resultAndWork of resultsAndWorks) {
+                    const result = resultAndWork.result;
+                    const work = resultAndWork.work;
+
+                    const noStep = {progress: 0, description: 'Pending'};
+                    const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? prev : curr, noStep);
+
+                    result.status = work.status;
+                    result.progress = lastStep.progress;
+                    result.lastAction = lastStep.description;
+                }
+            });
     }
 
-    public get sameSpeciesResults(): SameResult[] {
-        return this.sameResults;
+    public isAlive(result: Result): boolean {
+        return result.status !== Status.COMPLETED && result.status !== Status.FAILED;
     }
 
-    public get distinctSpeciesResults(): DistinctResult[] {
-        return this.distinctResults;
+    public isCompleted(result: Result): boolean {
+        return result.status === Status.COMPLETED;
+    }
+
+    public buildSamePermalink(result: SameResult): string {
+        return this.location.normalize('/result/table/same/' + result.uuid);
+    }
+
+    public buildDistinctPermalink(result: DistinctResult): string {
+        return this.location.normalize('/result/table/distinct/' + result.uuid);
     }
 
     public getDistinctSpeciesChartPath(uuid: string): string {
@@ -184,40 +185,32 @@ export class ResultsComponent implements OnInit {
     }
 
     private requestDeleteDistinct(uuid: string) {
-        const resultToDelete = this.distinctResults.find(result => result.uuid === uuid);
-        const resultToDeleteIndex = this.distinctResults.indexOf(resultToDelete);
-        this.distinctResults.splice(resultToDeleteIndex, 1);
-
-        if ( this.authenticationService.isGuest() ) {
+        if (this.authenticationService.isGuest()) {
             this.workStatusService.removeLocalWork('distinctWorks', uuid);
+            this.distinctDataSource.updatePage();
             this.notificationService.success('Local result deleted', `Distinct species result '${uuid}' deleted.`);
         } else {
             this.distinctResultsService.deleteResult(uuid)
                 .subscribe(
-                    () => this.notificationService.success('Result deleted', `Distinct species result '${uuid}' deleted.`),
                     () => {
-                        this.distinctResults.push(resultToDelete);
-                        this.distinctResults.sort(ResultsComponent.RESULT_COMPARATOR);
+                        this.distinctDataSource.updatePage();
+                        this.notificationService.success('Result deleted', `Distinct species result '${uuid}' deleted.`);
                     }
                 );
         }
     }
 
     private requestDeleteSame(uuid: string) {
-        const resultToDelete = this.sameResults.find(result => result.uuid === uuid);
-        const resultToDeleteIndex = this.sameResults.indexOf(resultToDelete);
-        this.sameResults.splice(resultToDeleteIndex, 1);
-
-        if ( this.authenticationService.isGuest() ) {
+        if (this.authenticationService.isGuest()) {
             this.workStatusService.removeLocalWork('sameWorks', uuid);
+            this.sameDataSource.updatePage();
             this.notificationService.success('Local result deleted', `Same species result '${uuid}' deleted.`);
         } else {
             this.sameResultsService.deleteResult(uuid)
                 .subscribe(
-                    () => this.notificationService.success('Result deleted', `Same species result '${uuid}' deleted.`),
                     () => {
-                        this.sameResults.push(resultToDelete);
-                        this.sameResults.sort(ResultsComponent.RESULT_COMPARATOR);
+                        this.sameDataSource.updatePage();
+                        this.notificationService.success('Result deleted', `Same species result '${uuid}' deleted.`);
                     }
                 );
         }

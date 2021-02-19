@@ -27,12 +27,15 @@ import {ListingOptions} from './listing-options';
 
 export class PaginatedDataSource<T> extends DataSource<T> {
     public readonly data$: Observable<T[]>;
+    public readonly hasData$: Observable<boolean>;
     public readonly count$: Observable<number>;
     public readonly loading$: Observable<boolean>;
 
     private readonly dataSubject: BehaviorSubject<T[]>;
+    private readonly hasDataSubject: BehaviorSubject<boolean>;
     private readonly countSubject: BehaviorSubject<number>;
     private readonly loadingSubject: BehaviorSubject<boolean>;
+
     private readonly dataProvider: PaginatedDataProvider<T>;
 
     public constructor(dataProvider: PaginatedDataProvider<T>) {
@@ -41,10 +44,12 @@ export class PaginatedDataSource<T> extends DataSource<T> {
         this.dataProvider = dataProvider;
 
         this.dataSubject = new BehaviorSubject<T[]>([]);
+        this.hasDataSubject = new BehaviorSubject<boolean>(false);
         this.countSubject = new BehaviorSubject<number>(0);
         this.loadingSubject = new BehaviorSubject<boolean>(false);
 
         this.data$ = this.dataSubject.asObservable();
+        this.hasData$ = this.hasDataSubject.asObservable();
         this.count$ = this.countSubject.asObservable();
         this.loading$ = this.loadingSubject.asObservable();
     }
@@ -55,6 +60,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
 
     public disconnect(collectionViewer: CollectionViewer): void {
         this.dataSubject.complete();
+        this.hasDataSubject.complete();
         this.countSubject.complete();
         this.loadingSubject.complete();
     }
@@ -76,6 +82,11 @@ export class PaginatedDataSource<T> extends DataSource<T> {
             .subscribe((partial: PageData<T>) => {
                 this.dataSubject.next(partial.result);
                 this.countSubject.next(partial.count);
+
+                const hasData = partial.result.length > 0;
+                if (hasData !== this.hasDataSubject.getValue()) {
+                    this.hasDataSubject.next(hasData);
+                }
             });
     }
 }
