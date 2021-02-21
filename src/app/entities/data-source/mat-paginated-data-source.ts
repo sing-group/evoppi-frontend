@@ -27,6 +27,7 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {Subscription} from 'rxjs/internal/Subscription';
 import {ListingOptions} from './listing-options';
 import {SortDirection} from './sort-direction.enum';
+import {Observable} from 'rxjs/internal/Observable';
 
 export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
     public static readonly DEFAULT_PAGE_SIZE = 10;
@@ -34,12 +35,15 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
     private pageIndex: number;
     private pageSize: number;
     private sortFields: { field: string, order: SortDirection }[];
+    private filters: { [key: string]: string };
 
     private _paginator?: MatPaginator;
     private _sort?: MatSort;
+    private _filterFields: { [key: string]: Observable<string> };
 
     private paginatorSubscription?: Subscription;
     private sortSubscription?: Subscription;
+    private filterFieldsSubscriptions: { [key: string]: Subscription };
 
     public constructor(
         dataProvider: PaginatedDataProvider<T>,
@@ -49,6 +53,9 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
         this.pageIndex = 0;
         this.pageSize = defaultPageSize;
         this.sortFields = undefined;
+        this.filters = {};
+        this._filterFields = {};
+        this.filterFieldsSubscriptions = {};
     }
 
     public get paginator(): MatPaginator | undefined {
@@ -56,7 +63,7 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
     }
 
     public set paginator(paginator: MatPaginator | undefined) {
-        this.setControls(paginator, this._sort);
+        this.setControls(paginator, this._sort, this._filterFields);
     }
 
     public get sort(): MatSort | undefined {
@@ -64,16 +71,24 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
     }
 
     public set sort(sort: MatSort | undefined) {
-        this.setControls(this._paginator, sort);
+        this.setControls(this._paginator, sort, this._filterFields);
     }
 
-    public loadInitialPage() {
-        this.update(this.buildListingOptions());
+    public set filterFields(
+        filterFields: { [key: string]: Observable<string> } | undefined
+    ) {
+        this.setControls(this._paginator, this._sort, filterFields, undefined);
+    }
+
+    public get filterFields(): { [key: string]: Observable<string> } {
+        return this._filterFields;
     }
 
     public setControls(
-        paginator: MatPaginator | undefined,
-        sort: MatSort | undefined
+        paginator: MatPaginator | undefined = undefined,
+        sort: MatSort | undefined = undefined,
+        filterFields: { [key: string]: Observable<string> } | undefined = undefined,
+        filterValues: { [key: string]: string } | undefined = undefined
     ) {
         let triggerUpdate = false;
 
@@ -125,6 +140,27 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
             }
         }
 
+        filterFields = filterFields === undefined ? {} : filterFields;
+        if (this._filterFields !== filterFields) {
+            triggerUpdate = true;
+            if (this.hasFilters()) {
+                for (const filterName of Object.keys(this.filterFieldsSubscriptions)) {
+                    this.filterFieldsSubscriptions[filterName].unsubscribe();
+                }
+                this.filterFieldsSubscriptions = {};
+            }
+
+            this._filterFields = filterFields;
+            this.filters = filterValues === undefined ? {} : filterValues;
+            if (this.hasFilters()) {
+                for (const filterName of Object.keys(this._filterFields)) {
+                    this.filterFieldsSubscriptions[filterName] = this._filterFields[filterName].subscribe(
+                        value => this.onFilterChange(filterName, value)
+                    );
+                }
+            }
+        }
+
         if (triggerUpdate) {
             this.update(this.buildListingOptions());
         }
@@ -136,6 +172,10 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
 
     public hasSort(): boolean {
         return this._sort !== undefined;
+    }
+
+    private hasFilters() {
+        return Object.keys(this._filterFields).length > 0;
     }
 
     private onPageEvent(event: PageEvent) {
@@ -164,6 +204,21 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
         this.update(this.buildListingOptions());
     }
 
+    private onFilterChange(filterName: string, value: string) {
+        if (this.hasPaginator()) {
+            this.pageIndex = 0;
+            this._paginator.pageIndex = 0;
+        }
+
+        if (value === '') {
+            delete this.filters[filterName];
+        } else {
+            this.filters[filterName] = value;
+        }
+
+        this.update(this.buildListingOptions());
+    }
+
     public updatePage() {
         this.update(this.buildListingOptions());
     }
@@ -172,7 +227,8 @@ export class MatPaginatedDataSource<T> extends PaginatedDataSource<T> {
         return new ListingOptions(
             this.pageIndex,
             this.pageSize,
-            this.sortFields
+            this.sortFields,
+            this.filters
         );
     }
 }

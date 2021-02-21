@@ -21,13 +21,13 @@
 
 import {Injectable} from '@angular/core';
 import {DistinctResult} from '../../../entities';
-import {forkJoin, Observable, of, OperatorFunction} from 'rxjs';
+import {forkJoin, iif, Observable, of, OperatorFunction} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
 import {WorkStatusService} from './work-status.service';
-import {concatMap, map, mergeMap} from 'rxjs/operators';
+import {concatMap, map, mapTo, mergeMap} from 'rxjs/operators';
 import {EvoppiError} from '../../../entities/notification';
 import {PaginatedDataProvider} from '../../../entities/data-source/paginated-data-provider';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
@@ -64,7 +64,10 @@ export class DistinctResultsService implements PaginatedDataProvider<DistinctRes
 
         return this.http.get<WorkResult[]>(this.endpoint, {params, observe: 'response'})
             .pipe(
-                this.completeAndMapWorkResultToDistinctResults(),
+                mergeMap(response => iif(() => response.body.length > 0,
+                    of(response).pipe(this.completeAndMapWorkResultToDistinctResults()),
+                    of(response).pipe(mapTo(PageData.EMPTY_PAGE))
+                )),
                 EvoppiError.throwOnError(
                     'Error distinct species result',
                     'The list of distinct species results could not be retrieved from the backend.'
@@ -101,12 +104,10 @@ export class DistinctResultsService implements PaginatedDataProvider<DistinctRes
                 )
             )
                 .pipe(
-                    map(distinctResults => {
-                        return new PageData(
-                            Number(response.headers.get('X-Total-Count')),
-                            distinctResults
-                        );
-                    })
+                    map(distinctResults => new PageData(
+                        Number(response.headers.get('X-Total-Count')),
+                        distinctResults
+                    ))
                 )
         );
     }

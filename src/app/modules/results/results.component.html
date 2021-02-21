@@ -33,51 +33,53 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div *ngIf="!(distinctDataSource.hasData$ | async)">
-                            <ng-template *ngIf="(distinctDataSource.loading$ | async); else isLoadingDistinct">
-                                Loading distinct species interaction results. Please, wait...
-                            </ng-template>
-                            <ng-template #isLoadingDistinct>
-                                There are no results available, query at least one analysis to check it here.
-                            </ng-template>
+                        <div *ngIf="!(distinctDataSource.initialized$ | async)">
+                            Loading distinct species interaction results. Please, wait...
                         </div>
-                        <div class="table-responsive" [hidden]="!(distinctDataSource.hasData$ | async)">
+                        <div class="table-responsive" [hidden]="!(distinctDataSource.initialized$ | async)">
                             <mat-table #distinctSort="matSort" [dataSource]="distinctDataSource" matSort
                                        matSortActive="SCHEDULING_DATE_TIME"
                                        matSortDirection="desc">
                                 <mat-header-row *matHeaderRowDef="distinctColumns"></mat-header-row>
                                 <mat-row *matRowDef="let result; columns: distinctColumns;"></mat-row>
+                                <mat-footer-row *matFooterRowDef="distinctColumns"></mat-footer-row>
 
                                 <ng-container matColumnDef="SCHEDULING_DATE_TIME">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Scheduled On</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.creation | date : 'short'}}
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="QUERY_GENE">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Query Gene</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.queryGene}} [{{result.queryGeneId}}]
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef>
+                                        <app-table-input #distinctQueryGeneFilter label="Query gene filter"></app-table-input>
+                                    </mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="MAX_DEGREE">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Max. Degree</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.maxDegree}}
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="REFERENCE_SPECIES">
-                                    <mat-header-cell *matHeaderCellDef>Reference Species
-                                    </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef>Reference Species</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.referenceSpecies}}
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="TARGET_SPECIES">
                                     <mat-header-cell *matHeaderCellDef>Target Species</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.targetSpecies}}
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="INTERACTOMES_COUNT">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes</mat-header-cell>
@@ -92,6 +94,7 @@
                                             {{result.targetInteractomes.length}}
                                         </span>
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="STATUS">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
@@ -103,7 +106,10 @@
                                         <ng-template #distinctStatus>
                                             {{result.status}}
                                         </ng-template>
-                                </mat-cell>
+                                    </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef>
+                                        <app-table-select #distinctStatusFilter label="Status filter" [options]="statusValues"></app-table-select>
+                                    </mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="ACTIONS">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
@@ -137,6 +143,16 @@
                                             </mat-icon>
                                         </button>
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef>
+                                        <button mat-icon-button
+                                                (click)="clearDistinctFilters()"
+                                                [disabled]="!hasDistinctFilters()"
+                                                matTooltip="Clear filters">
+                                            <mat-icon aria-label="Clear">
+                                                clear
+                                            </mat-icon>
+                                        </button>
+                                    </mat-footer-cell>
                                 </ng-container>
                             </mat-table>
                             <mat-paginator #distinctPaginator
@@ -159,44 +175,46 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div *ngIf="!(sameDataSource.hasData$ | async)">
-                            <ng-template *ngIf="(sameDataSource.loading$ | async); else isLoadingSame">
-                                Loading same species interaction results. Please, wait...
-                            </ng-template>
-                            <ng-template #isLoadingSame>
-                                There are no results available, query at least one analysis to check it here.
-                            </ng-template>
+                        <div *ngIf="!(distinctDataSource.initialized$ | async)">
+                            Loading same species interaction results. Please, wait...
                         </div>
-                        <div class="table-responsive" [hidden]="!(sameDataSource.hasData$ | async)">
+                        <div class="table-responsive" [hidden]="!(sameDataSource.initialized$ | async)">
                             <mat-table #sameSort="matSort" [dataSource]="sameDataSource" matSort
                                        matSortActive="SCHEDULING_DATE_TIME"
                                        matSortDirection="desc">
                                 <mat-header-row *matHeaderRowDef="sameColumns"></mat-header-row>
                                 <mat-row *matRowDef="let result; columns: sameColumns;"></mat-row>
+                                <mat-footer-row *matFooterRowDef="sameColumns"></mat-footer-row>
 
                                 <ng-container matColumnDef="SCHEDULING_DATE_TIME">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Scheduled On</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.creation | date : 'short'}}
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="QUERY_GENE">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Query Gene</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.queryGene}} [{{result.queryGeneId}}]
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef>
+                                        <app-table-input #sameQueryGeneFilter label="Query gene filter"></app-table-input>
+                                    </mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="MAX_DEGREE">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Max. Degree</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.maxDegree}}
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="SPECIES">
                                     <mat-header-cell *matHeaderCellDef>Species</mat-header-cell>
                                     <mat-cell *matCellDef="let result">
                                         {{result.species}}
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="INTERACTOMES_COUNT">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes</mat-header-cell>
@@ -205,6 +223,7 @@
                                             {{result.interactomes.length}}
                                         </span>
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="STATUS">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
@@ -217,6 +236,9 @@
                                             {{result.status}}
                                         </ng-template>
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef>
+                                        <app-table-select #sameStatusFilter label="Status filter" [options]="statusValues"></app-table-select>
+                                    </mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="ACTIONS">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
@@ -250,6 +272,16 @@
                                             </mat-icon>
                                         </button>
                                     </mat-cell>
+                                    <mat-footer-cell *matFooterCellDef>
+                                        <button mat-icon-button
+                                                (click)="clearSameFilters()"
+                                                [disabled]="!hasSameFilters()"
+                                                matTooltip="Clear filters">
+                                            <mat-icon aria-label="Clear">
+                                                clear
+                                            </mat-icon>
+                                        </button>
+                                    </mat-footer-cell>
                                 </ng-container>
                             </mat-table>
                             <mat-paginator #samePaginator

@@ -26,11 +26,15 @@ import {PageData} from './page-data';
 import {ListingOptions} from './listing-options';
 
 export class PaginatedDataSource<T> extends DataSource<T> {
+    private static readonly EMPTY_DATA = [];
+
+    public readonly initialized$: Observable<boolean>;
     public readonly data$: Observable<T[]>;
     public readonly hasData$: Observable<boolean>;
     public readonly count$: Observable<number>;
     public readonly loading$: Observable<boolean>;
 
+    private readonly initializedSubject: BehaviorSubject<boolean>;
     private readonly dataSubject: BehaviorSubject<T[]>;
     private readonly hasDataSubject: BehaviorSubject<boolean>;
     private readonly countSubject: BehaviorSubject<number>;
@@ -43,15 +47,24 @@ export class PaginatedDataSource<T> extends DataSource<T> {
 
         this.dataProvider = dataProvider;
 
-        this.dataSubject = new BehaviorSubject<T[]>([]);
+        this.initializedSubject = new BehaviorSubject<boolean>(false);
+        this.dataSubject = new BehaviorSubject<T[]>(PaginatedDataSource.EMPTY_DATA);
         this.hasDataSubject = new BehaviorSubject<boolean>(false);
         this.countSubject = new BehaviorSubject<number>(0);
         this.loadingSubject = new BehaviorSubject<boolean>(false);
 
+        this.initialized$ = this.initializedSubject.asObservable();
         this.data$ = this.dataSubject.asObservable();
         this.hasData$ = this.hasDataSubject.asObservable();
         this.count$ = this.countSubject.asObservable();
         this.loading$ = this.loadingSubject.asObservable();
+
+        const initializationSubscription = this.dataSubject.subscribe(value => {
+            if (value !== PaginatedDataSource.EMPTY_DATA) {
+                this.initializedSubject.next(true);
+                initializationSubscription.unsubscribe();
+            }
+        });
     }
 
     public connect(collectionViewer: CollectionViewer): Observable<T[]> {
@@ -59,6 +72,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
     }
 
     public disconnect(collectionViewer: CollectionViewer): void {
+        this.initializedSubject.complete();
         this.dataSubject.complete();
         this.hasDataSubject.complete();
         this.countSubject.complete();
@@ -70,10 +84,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
 
         const subscription = this.dataProvider.list(listingOptions)
             .pipe(
-                catchError(() => of({
-                    count: 0,
-                    result: []
-                })),
+                catchError(() => of(PageData.EMPTY_PAGE)),
                 finalize(() => {
                     this.loadingSubject.next(false);
                     subscription.unsubscribe();

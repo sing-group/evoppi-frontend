@@ -34,10 +34,11 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginatedDataSource} from '../../entities/data-source/mat-paginated-data-source';
 import {map, mergeMap, switchMap} from 'rxjs/operators';
-import {forkJoin, interval} from 'rxjs';
-import {ObservableInput} from 'rxjs/internal/types';
+import {forkJoin, interval, ObservableInput} from 'rxjs';
 import {Status, Work} from '../../entities/execution';
 import {AuthenticationService} from '../authentication/services/authentication.service';
+import {TableInputComponent} from '../shared/components/table-input/table-input.component';
+import {TableSelectComponent} from '../shared/components/table-select/table-select.component';
 
 @Component({
     selector: 'app-results',
@@ -70,8 +71,14 @@ export class ResultsComponent implements OnInit, AfterViewInit {
         'SCHEDULING_DATE_TIME', 'QUERY_GENE', 'MAX_DEGREE', 'REFERENCE_SPECIES', 'TARGET_SPECIES', 'INTERACTOMES_COUNT', 'STATUS', 'ACTIONS'
     ];
 
+    @ViewChild('sameQueryGeneFilter') sameQueryGeneFilter: TableInputComponent;
+    @ViewChild('sameStatusFilter') sameStatusFilter: TableSelectComponent;
+    @ViewChild('distinctQueryGeneFilter') distinctQueryGeneFilter: TableInputComponent;
+    @ViewChild('distinctStatusFilter') distinctStatusFilter: TableSelectComponent;
+
     sameDataSource: MatPaginatedDataSource<SameResult>;
     distinctDataSource: MatPaginatedDataSource<DistinctResult>;
+    readonly statusValues = Object.keys(Status);
 
     constructor(
         private route: ActivatedRoute,
@@ -92,8 +99,17 @@ export class ResultsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.sameDataSource.setControls(this.samePaginator, this.sameSort);
-            this.distinctDataSource.setControls(this.distinctPaginator, this.distinctSort);
+            const sameFilters = {
+                QUERY_GENE: this.sameQueryGeneFilter.valueChange.asObservable(),
+                STATUS: this.sameStatusFilter.valueChange.asObservable()
+            };
+            const distinctFilters = {
+                QUERY_GENE: this.distinctQueryGeneFilter.valueChange.asObservable(),
+                STATUS: this.distinctStatusFilter.valueChange.asObservable()
+            };
+
+            this.sameDataSource.setControls(this.samePaginator, this.sameSort, sameFilters);
+            this.distinctDataSource.setControls(this.distinctPaginator, this.distinctSort, distinctFilters);
 
             this.checkForStatusChanges(this.sameDataSource);
             this.checkForStatusChanges(this.distinctDataSource);
@@ -166,6 +182,32 @@ export class ResultsComponent implements OnInit, AfterViewInit {
 
     public deleteSameResult(uuid: string): void {
         this.askToConfirmResultDeletion('same', () => this.requestDeleteSame(uuid));
+    }
+
+    public hasDistinctFilters() {
+        if (this.distinctQueryGeneFilter === undefined || this.distinctStatusFilter === undefined) {
+            return false;
+        } else {
+            return this.distinctQueryGeneFilter.hasValue() || this.distinctStatusFilter.hasValue();
+        }
+    }
+
+    public clearDistinctFilters() {
+        this.distinctQueryGeneFilter.clearValue();
+        this.distinctStatusFilter.clearValue();
+    }
+
+    public hasSameFilters(): boolean {
+        if (this.sameQueryGeneFilter === undefined || this.sameStatusFilter === undefined) {
+            return false;
+        } else {
+            return this.sameQueryGeneFilter.hasValue() || this.sameStatusFilter.hasValue();
+        }
+    }
+
+    public clearSameFilters() {
+        this.sameQueryGeneFilter.clearValue();
+        this.sameStatusFilter.clearValue();
     }
 
     private askToConfirmResultDeletion(type: string, deleteResult: () => void): void {

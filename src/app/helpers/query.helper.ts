@@ -36,7 +36,7 @@ export class QueryHelper {
 
         if (options.hasFilters()) {
             for (const key of Object.keys(options.filters)) {
-                params = params.append(key, options[key]);
+                params = params.append(key, options.filters[key]);
             }
         }
 

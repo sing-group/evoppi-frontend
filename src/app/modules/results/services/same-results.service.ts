@@ -21,10 +21,10 @@
 
 import {Injectable} from '@angular/core';
 import {SameResult} from '../../../entities';
-import {Observable, of, OperatorFunction} from 'rxjs';
+import {forkJoin, iif, Observable, of, OperatorFunction} from 'rxjs';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {concatMap, map} from 'rxjs/operators';
+import {concatMap, map, mapTo, mergeMap} from 'rxjs/operators';
 import {Work, WorkResult} from '../../../entities/execution';
 import {InteractionService} from './interaction.service';
 import {WorkStatusService} from './work-status.service';
@@ -33,7 +33,6 @@ import {PaginatedDataProvider} from '../../../entities/data-source/paginated-dat
 import {PageData} from '../../../entities/data-source/page-data';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {QueryHelper} from '../../../helpers/query.helper';
-import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
 
 
@@ -65,7 +64,10 @@ export class SameResultsService implements PaginatedDataProvider<SameResult> {
 
         return this.http.get<WorkResult[]>(this.endpoint, {params, observe: 'response'})
             .pipe(
-                this.completeAndMapWorkResultToSameResults(),
+                mergeMap(response => iif(() => response.body.length > 0,
+                    of(response).pipe(this.completeAndMapWorkResultToSameResults()),
+                    of(response).pipe(mapTo(PageData.EMPTY_PAGE))
+                )),
                 EvoppiError.throwOnError(
                     'Error same species result',
                     'The list of same species results could not be retrieved from the backend.'
@@ -133,7 +135,7 @@ export class SameResultsService implements PaginatedDataProvider<SameResult> {
     }
 
     private mapWorkResultToSameResult(workResult: WorkResult, work: Work): SameResult {
-        const noStep = { progress: 0, description: 'Pending' };
+        const noStep = {progress: 0, description: 'Pending'};
         const lastStep = work.steps.reduce((prev, curr) => prev.progress > curr.progress ? prev : curr, noStep);
 
         return {
