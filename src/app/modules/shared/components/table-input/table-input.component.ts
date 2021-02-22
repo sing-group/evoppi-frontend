@@ -30,6 +30,7 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 })
 export class TableInputComponent implements OnInit {
     @Input() public label: string;
+    @Input() public options: string[];
     @Input() public debounceTime = 500;
     @Input() public clearable = true;
 
@@ -70,5 +71,10 @@ export class TableInputComponent implements OnInit {
 
     public clearValue() {
         this.value = '';
+    }
+
+    public onClearValue($event: MouseEvent) {
+        $event.stopPropagation();
+        this.clearValue();
     }
 }

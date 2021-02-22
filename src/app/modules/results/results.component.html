@@ -108,7 +108,7 @@
                                         </ng-template>
                                     </mat-cell>
                                     <mat-footer-cell *matFooterCellDef>
-                                        <app-table-select #distinctStatusFilter label="Status filter" [options]="statusValues"></app-table-select>
+                                        <app-table-input #distinctStatusFilter label="Status filter" [options]="statusValues"></app-table-input>
                                     </mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="ACTIONS">
@@ -147,7 +147,7 @@
                                         <button mat-icon-button
                                                 (click)="clearDistinctFilters()"
                                                 [disabled]="!hasDistinctFilters()"
-                                                matTooltip="Clear filters">
+                                                matTooltip="Clear all filters">
                                             <mat-icon aria-label="Clear">
                                                 clear
                                             </mat-icon>
@@ -237,7 +237,7 @@
                                         </ng-template>
                                     </mat-cell>
                                     <mat-footer-cell *matFooterCellDef>
-                                        <app-table-select #sameStatusFilter label="Status filter" [options]="statusValues"></app-table-select>
+                                        <app-table-input #sameStatusFilter label="Status filter" [options]="statusValues"></app-table-input>
                                     </mat-footer-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="ACTIONS">
@@ -276,7 +276,7 @@
                                         <button mat-icon-button
                                                 (click)="clearSameFilters()"
                                                 [disabled]="!hasSameFilters()"
-                                                matTooltip="Clear filters">
+                                                matTooltip="Clear all filters">
                                             <mat-icon aria-label="Clear">
                                                 clear
                                             </mat-icon>

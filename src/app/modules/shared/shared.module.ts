@@ -3,13 +3,11 @@ import {CommonModule} from '@angular/common';
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableInputComponent} from './components/table-input/table-input.component';
-import { TableSelectComponent } from './components/table-select/table-select.component';
 
 
 @NgModule({
     declarations: [
-        TableInputComponent,
-        TableSelectComponent
+        TableInputComponent
     ],
     imports: [
         CommonModule,
@@ -18,8 +16,7 @@ import { TableSelectComponent } from './components/table-select/table-select.com
         MaterialDesignModule
     ],
     exports: [
-        TableInputComponent,
-        TableSelectComponent
+        TableInputComponent
     ]
 })
 export class SharedModule {

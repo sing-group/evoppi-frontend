@@ -22,8 +22,15 @@
 <mat-form-field class="field-filter-component">
     <mat-label>{{label}}</mat-label>
 
-    <input [formControl]="formControl" matInput>
-    <button (click)="clearValue()" [disabled]="!hasValue()" aria-label="Clear" mat-button mat-icon-button matSuffix>
+    <mat-select [formControl]="formControl" *ngIf="options; else inputField">
+        <mat-option *ngFor="let option of options" [value]="option">
+            {{option}}
+        </mat-option>
+    </mat-select>
+    <ng-template #inputField>
+        <input [formControl]="formControl" matInput>
+    </ng-template>
+    <button (click)="onClearValue($event)" [disabled]="!hasValue()" aria-label="Clear" mat-button mat-icon-button matSuffix>
         <mat-icon>close</mat-icon>
     </button>
 </mat-form-field>

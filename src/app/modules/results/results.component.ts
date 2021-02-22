@@ -38,7 +38,6 @@ import {forkJoin, interval, ObservableInput} from 'rxjs';
 import {Status, Work} from '../../entities/execution';
 import {AuthenticationService} from '../authentication/services/authentication.service';
 import {TableInputComponent} from '../shared/components/table-input/table-input.component';
-import {TableSelectComponent} from '../shared/components/table-select/table-select.component';
 
 @Component({
     selector: 'app-results',
@@ -72,9 +71,9 @@ export class ResultsComponent implements OnInit, AfterViewInit {
     ];
 
     @ViewChild('sameQueryGeneFilter') sameQueryGeneFilter: TableInputComponent;
-    @ViewChild('sameStatusFilter') sameStatusFilter: TableSelectComponent;
+    @ViewChild('sameStatusFilter') sameStatusFilter: TableInputComponent;
     @ViewChild('distinctQueryGeneFilter') distinctQueryGeneFilter: TableInputComponent;
-    @ViewChild('distinctStatusFilter') distinctStatusFilter: TableSelectComponent;
+    @ViewChild('distinctStatusFilter') distinctStatusFilter: TableInputComponent;
 
     sameDataSource: MatPaginatedDataSource<SameResult>;
     distinctDataSource: MatPaginatedDataSource<DistinctResult>;
