@@ -19,12 +19,13 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatPaginatedDataSource} from '../../../entities/data-source/mat-paginated-data-source';
-import {Work} from '../../../entities/execution';
+import {Status, Work} from '../../../entities/execution';
 import {WorkService} from '../services/work.service';
+import {TableInputComponent} from '../../shared/components/table-input/table-input.component';
 
 @Component({
     selector: 'app-works-management',
@@ -37,7 +38,11 @@ export class WorksManagementComponent implements OnInit, AfterViewInit {
 
     dataSource: MatPaginatedDataSource<Work>;
 
-    columns = ['NAME', 'CREATION_DATE_TIME', 'SCHEDULING_DATE_TIME', 'STARTING_DATE_TIME', 'FINISHING_DATE_TIME', 'STATUS'];
+    columns = ['NAME', 'CREATION_DATE_TIME', 'SCHEDULING_DATE_TIME', 'STARTING_DATE_TIME', 'FINISHING_DATE_TIME', 'STATUS', 'ACTIONS'];
+
+    @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
+
+    executionStatus = Object.keys(Status);
 
     constructor(private readonly workService: WorkService) {
     }
@@ -47,7 +52,16 @@ export class WorksManagementComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.dataSource.setControls(this.paginator, this.sort);
+        const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
+
+        this.dataSource.setControls(this.paginator, this.sort, filterFields);
     }
 
+    public hasFilters(): boolean {
+        return TableInputComponent.haveValue(this.inputComponents);
+    }
+
+    public clearFilters() {
+        TableInputComponent.clear(this.inputComponents)
+    }
 }

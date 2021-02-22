@@ -29,6 +29,7 @@ import {WorksManagementComponent} from './works-management/works-management.comp
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {HttpClientModule} from '@angular/common/http';
 import {ResultsModule} from '../results/results.module';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import {ResultsModule} from '../results/results.module';
         HttpClientModule,
         MatButtonModule,
         MaterialDesignModule,
-        ResultsModule
+        ResultsModule,
+        SharedModule
     ],
     declarations: [
         InteractomeManagementComponent,
