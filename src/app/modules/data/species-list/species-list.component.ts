@@ -19,19 +19,43 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginatedDataSource} from '../../../entities/data-source/mat-paginated-data-source';
+import {Status, Work} from '../../../entities/execution';
+import {TableInputComponent} from '../../shared/components/table-input/table-input.component';
+import {WorkService} from '../../management/services/work.service';
+import {SpeciesService} from '../../results/services/species.service';
+import {Species} from '../../../entities/bio';
 
 @Component({
     selector: 'app-species-list',
     templateUrl: './species-list.component.html',
     styleUrls: ['./species-list.component.scss']
 })
-export class SpeciesListComponent implements OnInit {
+export class SpeciesListComponent implements OnInit, AfterViewInit {
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
-    constructor() {
+    dataSource: MatPaginatedDataSource<Species>;
+
+    columns = ['NAME', 'INTERACTOMES_COUNT', 'ACTIONS'];
+
+    @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
+
+    executionStatus = Object.keys(Status);
+
+    constructor(private readonly speciesService: SpeciesService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
+        this.dataSource = new MatPaginatedDataSource<Species>(this.speciesService);
     }
 
+    ngAfterViewInit() {
+        const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
+
+        this.dataSource.setControls(this.paginator, this.sort, filterFields);
+    }
 }

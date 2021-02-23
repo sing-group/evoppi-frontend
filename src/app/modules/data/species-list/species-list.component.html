@@ -25,67 +25,45 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h4 class="card-title ">Species List</h4>
+                        <h4 class="card-title">Works</h4>
+                        <p class="card-category">List of user works.</p>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead class=" text-primary">
-                                <th>
-                                    Species
-                                </th>
-                                <th>
-                                    #Interactomes
-                                </th>
-                                <th>
-                                    Actions
-                                </th>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let result of []">
-                                    <td>
-                                        {{result.referenceSpecies}}
-                                    </td>
-                                    <td>
-                                        {{result.targetSpecies}}
-                                    </td>
-                                    <td>
-                                        <span class="interactome-count">
-                                            {{result.referenceInteractomes.length}}
-                                        </span>
-                                        /
-                                        <span class="interactome-count">
-                                            {{result.targetInteractomes.length}}
-                                        </span>
-                                    </td>
-                                    <td *ngIf="result.progress < 1">
-                                    </td>
-                                    <td *ngIf="result.progress === 1">
-                                        Completed
-                                    </td>
-                                    <td>
-                                        {{result.status}}
-                                    </td>
-                                    <td>
-                                        <!--button mat-icon-button color="primary"
-                                                routerLink="{{getDistinctSpeciesTablePath(result.uuid)}}">
-                                            <mat-icon aria-label="Show interacions">list</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="secondary"
-                                                routerLink="{{getDistinctSpeciesChartPath(result.uuid)}}">
-                                            <mat-icon aria-label="Show chart">timeline</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="warn">
-                                            <mat-icon aria-label="Delete">delete</mat-icon>
-                                        </button-->
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <mat-table [dataSource]="dataSource" matSort>
+                            <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+                            <mat-row *matRowDef="let species; columns: columns;"></mat-row>
+                            <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+
+                            <ng-container matColumnDef="NAME">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                                <mat-cell *matCellDef="let species">
+                                    {{species.name}}
+                                </mat-cell>
+                                <mat-footer-cell *matFooterCellDef>
+                                    <app-table-input label="Name"></app-table-input>
+                                </mat-footer-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="INTERACTOMES_COUNT">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes#</mat-header-cell>
+                                <mat-cell *matCellDef="let species">
+                                    {{species.interactomes.length}}
+                                </mat-cell>
+                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="ACTIONS">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
+                                <mat-cell *matCellDef="let work"></mat-cell>
+                                <mat-footer-cell *matFooterCellDef>
+                                </mat-footer-cell>
+                            </ng-container>
+                        </mat-table>
+                        <mat-paginator #paginator
+                                       [pageSize]="10"
+                                       [pageSizeOptions]="[5, 10, 20, 50]"
+                                       [length]="dataSource.count$ | async">
+                        </mat-paginator>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

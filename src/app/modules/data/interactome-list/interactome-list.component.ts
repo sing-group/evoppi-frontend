@@ -19,7 +19,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {InteractomeService} from '../../results/services/interactome.service';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
@@ -29,6 +29,7 @@ import {PaginatedDataProvider} from '../../../entities/data-source/paginated-dat
 import {PageData} from '../../../entities/data-source/page-data';
 import {Observable} from 'rxjs/internal/Observable';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
+import {TableInputComponent} from '../../shared/components/table-input/table-input.component';
 
 class InteractomeServiceWrapper implements PaginatedDataProvider<Interactome> {
     constructor(private readonly service: InteractomeService) {
@@ -47,6 +48,7 @@ class InteractomeServiceWrapper implements PaginatedDataProvider<Interactome> {
 export class InteractomeListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
 
     columns = ['NAME', 'SOURCE_DB', 'SPECIES', 'ACTIONS'];
     dataSource: MatPaginatedDataSource<Interactome>;
@@ -59,7 +61,9 @@ export class InteractomeListComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.dataSource.setControls(this.paginator, this.sort);
+        const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
+
+        this.dataSource.setControls(this.paginator, this.sort, filterFields);
     }
 
     public downloadInteractionsTsv(interactome: Interactome) {

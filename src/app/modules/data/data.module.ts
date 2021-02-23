@@ -25,11 +25,13 @@ import {InteractomeListComponent} from './interactome-list/interactome-list.comp
 import {SpeciesListComponent} from './species-list/species-list.component';
 import {AutocompleteComponent} from './autocomplete/autocomplete.component';
 import {MaterialDesignModule} from '../material-design/material-design.module';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
     imports: [
         CommonModule,
-        MaterialDesignModule
+        MaterialDesignModule,
+        SharedModule
     ],
     declarations: [
         InteractomeListComponent,

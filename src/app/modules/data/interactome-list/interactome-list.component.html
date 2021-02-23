@@ -16,7 +16,7 @@
   ~  GNU General Public License for more details.
   ~
   ~  You should have received a copy of the GNU General Public License
-  ~  along with this program. If not, see <http://www.gnu.org/licenses/>. 
+  ~  along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <div class="main-content">
@@ -32,7 +32,8 @@
                             <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
                             <mat-row *matRowDef="let interactome; let even = even; columns: columns;"
                                      [ngClass]="{gray: even}"></mat-row>
-                            
+                            <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+
                             <ng-container matColumnDef="NAME">
                                 <mat-header-cell *matHeaderCellDef
                                                  matTooltip="The name of the interactome." mat-sort-header>
@@ -41,6 +42,7 @@
                                 <mat-cell *matCellDef="let interactome">
                                     {{interactome.name}}
                                 </mat-cell>
+                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="SOURCE_DB">
@@ -52,6 +54,7 @@
                                 <mat-cell *matCellDef="let interactome">
                                     {{interactome.dbSourceIdType}}
                                 </mat-cell>
+                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="SPECIES">
@@ -62,6 +65,9 @@
                                 <mat-cell *matCellDef="let interactome">
                                     {{interactome.species.name}}
                                 </mat-cell>
+                                <mat-footer-cell *matFooterCellDef>
+                                    <app-table-input label="Species filter"></app-table-input>
+                                </mat-footer-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="ACTIONS">
@@ -73,6 +79,7 @@
                                         <mat-icon aria-label="Download interactions in TSV">download</mat-icon>
                                     </button>
                                 </mat-cell>
+                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                             </ng-container>
                         </mat-table>
                         <mat-paginator #paginator

@@ -63,9 +63,8 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
     {
         path: '/species',
         title: 'Species',
-        showInMenu: false,
-        icon: 'pets',
-        allowedRoles: [ Role.RESEARCHER ]
+        showInMenu: true,
+        icon: 'pets'
     },
     {
         path: '/interactomes',

@@ -27,6 +27,9 @@ import {environment} from '../../../../environments/environment';
 import {Species} from '../../../entities/bio';
 import {NotificationService} from '../../notification/services/notification.service';
 import {EvoppiError} from '../../../entities/notification';
+import {ListingOptions} from '../../../entities/data-source/listing-options';
+import {PageData} from '../../../entities/data-source/page-data';
+import {QueryHelper} from '../../../helpers/query.helper';
 
 @Injectable()
 export class SpeciesService {
@@ -51,4 +54,19 @@ export class SpeciesService {
             );
     }
 
+    public list(options: ListingOptions): Observable<PageData<Species>> {
+        const params = QueryHelper.listingOptionsToHttpParams(options);
+
+        return this.http.get<Species[]>(this.endpoint, {params, observe: 'response'})
+            .pipe(
+                map(response => new PageData<Species>(
+                    Number(response.headers.get('X-Total-Count')),
+                    response.body
+                )),
+                EvoppiError.throwOnError(
+                    'Error retrieving species',
+                    'The species could not be retrieved from the backend.'
+                )
+            );
+    }
 }

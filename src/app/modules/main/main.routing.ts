@@ -77,8 +77,7 @@ export const MAIN_ROUTES: Routes = [
     },
     {
         path: 'species',
-        component: SpeciesListComponent,
-        canActivate: [ResearcherGuard]
+        component: SpeciesListComponent
     },
     {
         path: 'interactomes',
