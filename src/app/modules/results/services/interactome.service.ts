@@ -115,7 +115,7 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
             );
     }
 
-    downloadInteractomeTsv(interactome: Interactome) {
+    public downloadInteractomeTsv(interactome: Interactome) {
         const options = {
             headers: new HttpHeaders({
                 'Accept': 'text/plain'

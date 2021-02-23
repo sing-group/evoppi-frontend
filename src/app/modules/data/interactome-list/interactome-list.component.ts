@@ -66,7 +66,7 @@ export class InteractomeListComponent implements OnInit, AfterViewInit {
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
     }
 
-    public downloadInteractionsTsv(interactome: Interactome) {
+    public downloadInteractionsTsv(interactome: Interactome): void {
         this.interactomeService.downloadInteractomeTsv(interactome);
     }
 }

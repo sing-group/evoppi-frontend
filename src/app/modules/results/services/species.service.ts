@@ -20,7 +20,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
@@ -29,6 +29,7 @@ import {NotificationService} from '../../notification/services/notification.serv
 import {EvoppiError} from '../../../entities/notification';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {PageData} from '../../../entities/data-source/page-data';
+import {saveAs} from 'file-saver';
 import {QueryHelper} from '../../../helpers/query.helper';
 
 @Injectable()
@@ -68,5 +69,25 @@ export class SpeciesService {
                     'The species could not be retrieved from the backend.'
                 )
             );
+    }
+
+    public downloadSpeciesFasta(species: Species) {
+        const options = {
+            headers: new HttpHeaders({
+                'Accept': 'application/octet-stream'
+            })
+        };
+
+        this.http.get(this.endpoint + '/' + species.id + '/fasta', {responseType: 'blob'})
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting species FASTA',
+                    `FASTA for species '${species.id}' could not be retrieved from the backend.`
+                )
+            )
+            .subscribe(res => {
+                const blob = new Blob([res], {type: 'text/plain'});
+                saveAs(blob, species.name + '.fasta');
+            });
     }
 }

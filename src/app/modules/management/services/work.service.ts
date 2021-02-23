@@ -6,7 +6,7 @@ import {environment} from '../../../../environments/environment';
 import {PaginatedDataProvider} from '../../../entities/data-source/paginated-data-provider';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {PageData} from '../../../entities/data-source/page-data';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {QueryHelper} from '../../../helpers/query.helper';
 import {EvoppiError} from '../../../entities/notification';
 

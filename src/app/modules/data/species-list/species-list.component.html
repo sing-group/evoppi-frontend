@@ -25,8 +25,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h4 class="card-title">Works</h4>
-                        <p class="card-category">List of user works.</p>
+                        <h4 class="card-title">Species</h4>
+                        <p class="card-category">List of available genomes for different species.</p>
                     </div>
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort>
@@ -40,11 +40,11 @@
                                     {{species.name}}
                                 </mat-cell>
                                 <mat-footer-cell *matFooterCellDef>
-                                    <app-table-input label="Name"></app-table-input>
+                                    <app-table-input label="Name filter"></app-table-input>
                                 </mat-footer-cell>
                             </ng-container>
                             <ng-container matColumnDef="INTERACTOMES_COUNT">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes#</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes</mat-header-cell>
                                 <mat-cell *matCellDef="let species">
                                     {{species.interactomes.length}}
                                 </mat-cell>
@@ -52,7 +52,13 @@
                             </ng-container>
                             <ng-container matColumnDef="ACTIONS">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
-                                <mat-cell *matCellDef="let work"></mat-cell>
+                                <mat-cell *matCellDef="let species">
+                                    <button mat-icon-button color="primary"
+                                            matTooltip="Download species FASTA"
+                                            (click)="downloadSpeciesFasta(species)">
+                                        <mat-icon aria-label="Download species FASTA">download</mat-icon>
+                                    </button>
+                                </mat-cell>
                                 <mat-footer-cell *matFooterCellDef>
                                 </mat-footer-cell>
                             </ng-container>

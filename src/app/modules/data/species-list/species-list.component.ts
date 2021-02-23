@@ -23,9 +23,8 @@ import {AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren} fr
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginatedDataSource} from '../../../entities/data-source/mat-paginated-data-source';
-import {Status, Work} from '../../../entities/execution';
+import {Status} from '../../../entities/execution';
 import {TableInputComponent} from '../../shared/components/table-input/table-input.component';
-import {WorkService} from '../../management/services/work.service';
 import {SpeciesService} from '../../results/services/species.service';
 import {Species} from '../../../entities/bio';
 
@@ -57,5 +56,9 @@ export class SpeciesListComponent implements OnInit, AfterViewInit {
         const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
 
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
+    }
+
+    public downloadSpeciesFasta(species: Species): void {
+        this.speciesService.downloadSpeciesFasta(species);
     }
 }
