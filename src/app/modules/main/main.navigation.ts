@@ -37,28 +37,28 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         title: 'Same species results chart',
         showInMenu: false,
         backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
+        backRouteTitle: 'Go back to results'
     },
     {
         path: '/results/chart/distinct',
         title: 'Distinct species results chart',
         showInMenu: false,
         backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
+        backRouteTitle: 'Go back to results'
     },
     {
         path: '/results/table/same',
         title: 'Same species results table',
         showInMenu: false,
         backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
+        backRouteTitle: 'Go back to results'
     },
     {
         path: '/results/table/distinct',
         title: 'Distinct species results table',
         showInMenu: false,
         backRoute: '/results',
-        backRouteTitle: 'Go back to Results'
+        backRouteTitle: 'Go back to results'
     },
     {
         path: '/species',
@@ -71,6 +71,13 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         title: 'Interactomes',
         showInMenu: true,
         icon: 'list'
+    },
+    {
+        path: '/interactomes/creation',
+        title: 'Create new interactome',
+        showInMenu: false,
+        backRoute: '/interactomes',
+        backRouteTitle: 'Go back to interactomes'
     },
     {
         path: '/management/users',

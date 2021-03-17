@@ -30,6 +30,8 @@ import {PageData} from '../../../entities/data-source/page-data';
 import {Observable} from 'rxjs/internal/Observable';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {TableInputComponent} from '../../shared/components/table-input/table-input.component';
+import {AuthenticationService} from '../../authentication/services/authentication.service';
+import {Role} from '../../../entities/data';
 
 class InteractomeServiceWrapper implements PaginatedDataProvider<Interactome> {
     constructor(private readonly service: InteractomeService) {
@@ -53,7 +55,10 @@ export class InteractomeListComponent implements OnInit, AfterViewInit {
     columns = ['NAME', 'SOURCE_DB', 'SPECIES', 'ACTIONS'];
     dataSource: MatPaginatedDataSource<Interactome>;
 
-    constructor(private readonly interactomeService: InteractomeService) {
+    constructor(
+        private readonly authenticationService: AuthenticationService,
+        private readonly interactomeService: InteractomeService
+    ) {
     }
 
     ngOnInit() {
@@ -68,5 +73,9 @@ export class InteractomeListComponent implements OnInit, AfterViewInit {
 
     public downloadInteractionsTsv(interactome: Interactome): void {
         this.interactomeService.downloadInteractomeTsv(interactome);
+    }
+
+    public canCreate(): boolean {
+        return this.authenticationService.getUserRole() === Role.ADMIN;
     }
 }

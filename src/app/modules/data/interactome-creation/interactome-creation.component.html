@@ -1,0 +1,167 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h4 class="card-title">Interactome Creation</h4>
+                        <p class="card-category">Upload and create a new interactome.</p>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="form">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Name</mat-label>
+                                            <input formControlName="name" type="text" matInput placeholder="Name of the interactome"/>
+                                            <mat-error *ngIf="hasValidationError('name')">
+                                                {{getValidationError('name')}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <ngx-mat-file-input formControlName="interactomeFile" placeholder="Interactome file"></ngx-mat-file-input>
+                                            <mat-icon matSuffix>folder</mat-icon>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Source database</mat-label>
+                                            <mat-select formControlName="sourceDatabase" placeholder="Source database of the interactome">
+                                                <mat-option *ngFor="let database of databases" [value]="database">{{database.name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100" *ngIf="species; else loadingSpecies">
+                                            <mat-label>Species</mat-label>
+                                            <mat-select formControlName="species" placeholder="Source of the interactome file">
+                                                <mat-option *ngFor="let s of species" [value]="s">{{s.name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <ng-template #loadingSpecies>
+                                            <div>
+                                                <mat-spinner diameter="24"></mat-spinner>
+                                                <div class="spinner-label">Loading species...</div>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Header lines</mat-label>
+                                            <input formControlName="headerLinesCount" type="number" matInput placeholder="Number of header lines" [min]="0" [max]="100"/>
+                                            <mat-error *ngIf="hasValidationError('headerLinesCount')">
+                                                {{getValidationError('headerLinesCount')}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>First gene column</mat-label>
+                                            <input formControlName="geneColumn1" type="number" matInput placeholder="Index of the first gene column" [min]="0" [max]="100"/>
+                                            <mat-error *ngIf="hasValidationError('geneColumn1')">
+                                                {{getValidationError('geneColumn1')}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Second gene column</mat-label>
+                                            <input formControlName="geneColumn2" type="number" matInput placeholder="Index of the second gene column" [min]="0" [max]="100"/>
+                                            <mat-error *ngIf="hasValidationError('geneColumn2')">
+                                                {{getValidationError('geneColumn2')}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Gene prefix</mat-label>
+                                            <input formControlName="genePrefix" type="text" matInput placeholder="Prefix of the gene"/>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Gene suffix</mat-label>
+                                            <input formControlName="geneSuffix" type="text" matInput placeholder="Suffix of the gene"/>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-slide-toggle formControlName="multipleSpecies">Multiple species?</mat-slide-toggle>
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="isMultipleSpecies">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <mat-form-field class="width-100">
+                                                <mat-label>Species ID</mat-label>
+                                                <input formControlName="speciesFileId" type="text" matInput placeholder="Identifier of the species"/>
+                                                <mat-error *ngIf="hasValidationError('speciesFileId')">
+                                                    {{getValidationError('speciesFileId')}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <mat-form-field class="width-100">
+                                                <mat-label>First species column</mat-label>
+                                                <input formControlName="speciesColumn1" type="number" matInput placeholder="Index of the first species column" [min]="0" [max]="100"/>
+                                                <mat-error *ngIf="hasValidationError('speciesColumn1')">
+                                                    {{getValidationError('speciesColumn1')}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <mat-form-field class="width-100">
+                                                <mat-label>Second species column</mat-label>
+                                                <input formControlName="speciesColumn2" type="number" matInput placeholder="Index of the second species column" [min]="0" [max]="100"/>
+                                                <mat-error *ngIf="hasValidationError('speciesColumn2')">
+                                                    {{getValidationError('speciesColumn2')}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <mat-form-field class="width-100">
+                                                <mat-label>Species prefix</mat-label>
+                                                <input formControlName="speciesPrefix" type="text" matInput placeholder="Prefix of the species"/>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <mat-form-field class="width-100">
+                                                <mat-label>Species suffix</mat-label>
+                                                <input formControlName="speciesSuffix" type="text" matInput placeholder="Suffix of the species"/>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <button mat-raised-button class="btn btn-primary" (click)="onSubmit()" [disabled]="!isValidForm()">
+                                            Create
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div *ngIf="processing">
+                                            <mat-spinner diameter="30"></mat-spinner>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

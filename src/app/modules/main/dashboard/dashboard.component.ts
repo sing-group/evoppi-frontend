@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
         this.statsService.getStats().subscribe(res => this.stats = res);
-        this.speciesService.getSpecies().subscribe(res => this.listSpecies = res);
+        this.speciesService.listAll().subscribe(res => this.listSpecies = res);
     }
 
     get resultsNavigationInfo(): NavigationInfo {

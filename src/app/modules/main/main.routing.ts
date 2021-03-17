@@ -33,12 +33,12 @@ import {UserManagementComponent} from '../management/user-management/user-manage
 import {SpeciesManagementComponent} from '../management/species-management/species-management.component';
 import {InteractomeManagementComponent} from '../management/interactome-management/interactome-management.component';
 import {SpeciesListComponent} from '../data/species-list/species-list.component';
-import {ResearcherGuard} from './security/researcher.guard';
 import {InteractomeListComponent} from '../data/interactome-list/interactome-list.component';
 import {LoginComponent} from '../authentication/login/login.component';
 import {RegistrationComponent} from '../authentication/registration/registration.component';
 import {RecoveryComponent} from '../authentication/recovery/recovery.component';
 import {WorksManagementComponent} from '../management/works-management/works-management.component';
+import {InteractomeCreationComponent} from '../data/interactome-creation/interactome-creation.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -81,7 +81,16 @@ export const MAIN_ROUTES: Routes = [
     },
     {
         path: 'interactomes',
-        component: InteractomeListComponent
+        component: InteractomeListComponent,
+    },
+    {
+        path: 'interactomes/creation',
+        canActivate: [AdminGuard],
+        component: InteractomeCreationComponent,
+        data: {
+            redirectRoute: '/management/works',
+            redirectRouteTitle: 'Go to works'
+        }
     },
     {
         path: 'management',

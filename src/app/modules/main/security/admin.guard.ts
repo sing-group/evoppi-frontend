@@ -20,16 +20,24 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot} from '@angular/router';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
 import {Role} from '../../../entities/data';
 
 @Injectable()
-export class AdminGuard implements CanActivateChild {
+export class AdminGuard implements CanActivate, CanActivateChild {
     constructor(private authentication: AuthenticationService) {
     }
 
     canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        return this.checkRole();
+    }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        return this.checkRole();
+    }
+
+    private checkRole(): boolean {
         return this.authentication.getUserRole() === Role.ADMIN;
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "@evoppi/frontend",
-  "version": "2.0.0-alpha12",
+  "version": "2.0.0-alpha13",
   "description": "EvoPPI - Evolutionary Protein-Protein Interactions",
   "license": "GPL-3.0",
   "author": {
@@ -59,6 +59,7 @@
     "file-saver": "2.0.5",
     "jquery": "3.5.1",
     "jspdf": "1.4.1",
+    "ngx-material-file-input": "^2.1.1",
     "ngx-toastr": "13.2.0",
     "perfect-scrollbar": "1.4.0",
     "popper.js": "1.16.1",

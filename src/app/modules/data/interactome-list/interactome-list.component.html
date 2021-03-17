@@ -27,6 +27,10 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title">Interactomes</h4>
                         <p class="card-category">List of available interactomes.</p>
+                        <a class="mat-raised-button mat-primary app-action-right" routerLink="/interactomes/creation"
+                           *ngIf="canCreate()">
+                            Create interactome
+                        </a>
                     </div>
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort class="interactome-list">

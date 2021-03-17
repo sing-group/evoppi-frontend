@@ -26,17 +26,28 @@ import {SpeciesListComponent} from './species-list/species-list.component';
 import {AutocompleteComponent} from './autocomplete/autocomplete.component';
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {SharedModule} from '../shared/shared.module';
+import {InteractomeCreationComponent} from './interactome-creation/interactome-creation.component';
+import {RouterModule} from '@angular/router';
+import {HttpClientModule} from '@angular/common/http';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MaterialFileInputModule} from 'ngx-material-file-input';
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
+        HttpClientModule,
         MaterialDesignModule,
+        MaterialFileInputModule,
+        ReactiveFormsModule,
+        RouterModule,
         SharedModule
     ],
     declarations: [
         InteractomeListComponent,
         SpeciesListComponent,
-        AutocompleteComponent
+        AutocompleteComponent,
+        InteractomeCreationComponent
     ],
     exports: [
         InteractomeListComponent,

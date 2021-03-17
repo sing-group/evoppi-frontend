@@ -49,11 +49,11 @@ describe('SpeciesService', () => {
 
     it('can call updateSpecies', inject([SpeciesService], (service: SpeciesService) => {
         spyOn(service, 'getSpecies').and.returnValue(of(SPECIES));
-        service.getSpecies().subscribe((species) => {
+        service.listAll().subscribe((species) => {
             expect(species instanceof Array).toBeTruthy();
             expect(species.length).toBe(1);
             expect(species[0].name).toBe('Homo Sapiens');
         });
-        expect(service.getSpecies).toHaveBeenCalled();
+        expect(service.listAll).toHaveBeenCalled();
     }));
 });

@@ -37,10 +37,10 @@ export class SpeciesService {
 
     private endpoint = environment.evoppiUrl + 'api/species';
 
-    constructor(private http: HttpClient, private notification: NotificationService) {
+    constructor(private http: HttpClient) {
     }
 
-    getSpecies(): Observable<Species[]> {
+    listAll(): Observable<Species[]> {
         return this.http.get<Species[]>(this.endpoint)
             .pipe(
                 map(res => res.sort((a, b) => a.name < b.name ? -1 : 1)),

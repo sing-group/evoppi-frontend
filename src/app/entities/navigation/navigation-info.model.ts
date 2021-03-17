@@ -27,5 +27,7 @@ export interface NavigationInfo {
     class?: string;
     backRoute?: string;
     backRouteTitle?: string;
+    redirectRoute?: string;
+    redirectRouteTitle?: string;
     allowedRoles?: string[];
 }

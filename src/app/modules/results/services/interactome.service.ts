@@ -25,13 +25,15 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {concatMap, map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {SpeciesService} from './species.service';
-import {Interactome} from '../../../entities/bio';
+import {Interactome, Species} from '../../../entities/bio';
 import {EvoppiError} from '../../../entities/notification';
 import {saveAs} from 'file-saver';
 import {PaginatedDataProvider} from '../../../entities/data-source/paginated-data-provider';
 import {PageData} from '../../../entities/data-source/page-data';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {QueryHelper} from '../../../helpers/query.helper';
+import {UniProtDb} from '../../../entities/bio/uniprot-db';
+import {Work} from '../../../entities/execution';
 
 @Injectable()
 export class InteractomeService implements PaginatedDataProvider<Interactome> {
@@ -111,6 +113,62 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
                 EvoppiError.throwOnError(
                     'Error requesting interactomes',
                     'The interactomes could not be retrieved from the backend.'
+                )
+            );
+    }
+
+    public createInteractome(
+        interactomeFile: File,
+        name: string,
+        species: Species,
+        dbSource: UniProtDb,
+        geneColumn1: number,
+        geneColumn2: number,
+        headerLinesCount: number,
+        genePrefix?: string,
+        geneSuffix?: string,
+        multipleInteractomeParams?: {
+            speciesFileId: number,
+            speciesColumn1: number,
+            speciesColumn2: number,
+            speciesPrefix?: string,
+            speciesSuffix?: string
+        }
+    ): Observable<Work> {
+        const formData: FormData = new FormData();
+
+        formData.append('file', interactomeFile);
+        formData.append('name', name);
+        formData.append('speciesDbId', String(species.id));
+        formData.append('dbSource', dbSource.name);
+        formData.append('geneColumn1', String(geneColumn1));
+        formData.append('geneColumn2', String(geneColumn2));
+        formData.append('headerLinesCount', String(headerLinesCount));
+
+        if (genePrefix) {
+            formData.append('genePrefix', genePrefix);
+        }
+        if (geneSuffix) {
+            formData.append('geneSuffix', geneSuffix);
+        }
+
+        if (multipleInteractomeParams) {
+            formData.append('speciesFileId', String(multipleInteractomeParams.speciesFileId));
+            formData.append('organismColumn1', String(multipleInteractomeParams.speciesColumn1));
+            formData.append('organismColumn2', String(multipleInteractomeParams.speciesColumn2));
+            if (multipleInteractomeParams.speciesPrefix) {
+                formData.append('organismPrefix', multipleInteractomeParams.speciesPrefix);
+            }
+            if (multipleInteractomeParams.speciesSuffix) {
+                formData.append('organismSuffix', multipleInteractomeParams.speciesSuffix);
+            }
+        }
+
+        return this.http.post<Work>(this.endpoint, formData)
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error creating interactome',
+                    'The interactomes could not be created.'
                 )
             );
     }
