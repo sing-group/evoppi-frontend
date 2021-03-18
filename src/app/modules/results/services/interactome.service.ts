@@ -76,6 +76,45 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
         );
     }
 
+    public listAll(retrieveSpecies: boolean = false): Observable<Interactome[]> {
+        let request = this.http.get<Interactome[]>(this.endpoint);
+
+        if (retrieveSpecies) {
+            request = request.pipe(
+                concatMap(
+                    interactomes => forkJoin(
+                        interactomes.map(interactome => interactome.species.id)
+                            .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
+                            .map(speciesId => this.speciesService.getSpeciesById(speciesId))
+                    )
+                        .pipe(
+                            map(species => {
+                                const speciesById = species.reduce((reduced, spec) => {
+                                    reduced[spec.id] = spec;
+                                    return reduced;
+                                }, {});
+
+                                for (const interactome of interactomes) {
+                                    interactome.species = speciesById[interactome.species.id];
+                                }
+
+                                return interactomes;
+                            })
+                        )
+                )
+            );
+        }
+
+        return request
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error requesting interactomes',
+                    'The interactomes could not be retrieved from the backend.'
+                )
+            );
+
+    }
+
     list(options: ListingOptions, retrieveSpecies: boolean = false): Observable<PageData<Interactome>> {
         const params = QueryHelper.listingOptionsToHttpParams(options);
 

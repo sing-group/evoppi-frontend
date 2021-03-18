@@ -38,6 +38,7 @@ export class InteractomeCreationComponent implements OnInit {
     public processing: boolean;
 
     public species: Species[];
+    private interactomeNames: string[];
     public databases: UniProtDb[] = UNIPROT_DBS;
 
     @ViewChild(FormGroupDirective) formDirective: FormGroupDirective;
@@ -52,7 +53,7 @@ export class InteractomeCreationComponent implements OnInit {
     ) {
         this.processing = false;
         this.form = this.formBuilder.group({
-            name: [undefined, Validators.required],
+            name: [undefined, [Validators.required, this.validateInteractomeName()]],
             interactomeFile: [undefined, Validators.required],
             sourceDatabase: [undefined, Validators.required],
             multipleSpecies: [false],
@@ -78,6 +79,26 @@ export class InteractomeCreationComponent implements OnInit {
 
     ngOnInit(): void {
         this.speciesService.listAll().subscribe(species => this.species = species);
+        this.interactomesService.listAll().subscribe(
+            interactomes => this.interactomeNames = interactomes.map(interactome => interactome.name)
+        );
+    }
+
+    private validateInteractomeName(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.interactomeNames === undefined) {
+                console.warn('Interactome names are not loaded.');
+                return null;
+            } else {
+                if (this.interactomeNames.includes(control.value)) {
+                    return {
+                        'interactomeName': `An interactome with the same name already exists.`
+                    }
+                } else {
+                    return null;
+                }
+            }
+        };
     }
 
     get isMultipleSpecies(): boolean {
@@ -93,7 +114,13 @@ export class InteractomeCreationComponent implements OnInit {
     getValidationError(fieldName: string): string {
         switch (fieldName) {
             case 'name':
-                return 'Name can\'t be empty.';
+                const field = this.form.get('name');
+
+                if (field.errors.interactomeName !== undefined) {
+                    return field.errors.interactomeName;
+                } else {
+                    return 'Name can\'t be empty.';
+                }
             case 'interactomeFile':
                 return 'A file with the interactome information must be provided';
             case 'sourceDatabase':
@@ -115,14 +142,6 @@ export class InteractomeCreationComponent implements OnInit {
             default:
                 throw new Error('Unknown field: ' + fieldName);
         }
-    }
-
-    onFileChanged(event) {
-        const reader = new FileReader();
-        reader.onload = () => {
-            console.log(reader.result);
-        };
-        reader.readAsText(event.target.files[0]);
     }
 
     onSubmit() {
