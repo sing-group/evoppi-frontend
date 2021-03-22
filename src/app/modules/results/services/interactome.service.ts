@@ -207,7 +207,7 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
             .pipe(
                 EvoppiError.throwOnError(
                     'Error creating interactome',
-                    'The interactomes could not be created.'
+                    'The interactome could not be created.'
                 )
             );
     }

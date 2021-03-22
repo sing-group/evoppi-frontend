@@ -180,14 +180,14 @@ export class InteractomeCreationComponent implements OnInit {
                 this.showNotification();
                 this.form.reset();
                 this.formDirective.resetForm();
+                this.form.enable();
+                this.processing = false;
             },
             error => {
-                this.form.setErrors({'invalidForm': 'Error: ' + error.error});
-                throw error;
-            },
-            () => {
-                this.processing = false;
                 this.form.enable();
+                this.form.setErrors({'invalidForm': true});
+                this.processing = false;
+                console.log(this.form.hasError('invalidForm'));
             }
         );
     }
@@ -215,5 +215,9 @@ export class InteractomeCreationComponent implements OnInit {
                 ]);
             }
         });
+    }
+
+    hasGlobalErrors() {
+        return this.form.errors?.invalidForm !== undefined;
     }
 }

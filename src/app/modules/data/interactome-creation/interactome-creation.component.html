@@ -145,6 +145,14 @@
                                     </div>
                                 </ng-container>
 
+                                <div class="row" *ngIf="hasGlobalErrors()">
+                                    <div class="col-md-12">
+                                        <mat-error>
+                                            Error processing interactome creation.
+                                        </mat-error>
+                                    </div>
+                                </div>
+                                
                                 <div class="row">
                                     <div class="col-md-11">
                                         <button mat-raised-button class="btn btn-primary" (click)="onSubmit()" [disabled]="!isValidForm()">
