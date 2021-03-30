@@ -39,6 +39,7 @@ import {RegistrationComponent} from '../authentication/registration/registration
 import {RecoveryComponent} from '../authentication/recovery/recovery.component';
 import {WorksManagementComponent} from '../management/works-management/works-management.component';
 import {InteractomeCreationComponent} from '../data/interactome-creation/interactome-creation.component';
+import {SpeciesCreationComponent} from '../data/species-creation/species-creation.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -87,6 +88,15 @@ export const MAIN_ROUTES: Routes = [
         path: 'interactomes/creation',
         canActivate: [AdminGuard],
         component: InteractomeCreationComponent,
+        data: {
+            redirectRoute: '/management/works',
+            redirectRouteTitle: 'Go to works'
+        }
+    },
+    {
+        path: 'species/creation',
+        canActivate: [AdminGuard],
+        component: SpeciesCreationComponent,
         data: {
             redirectRoute: '/management/works',
             redirectRouteTitle: 'Go to works'

@@ -27,6 +27,8 @@ import {Status} from '../../../entities/execution';
 import {TableInputComponent} from '../../shared/components/table-input/table-input.component';
 import {SpeciesService} from '../../results/services/species.service';
 import {Species} from '../../../entities/bio';
+import {Role} from '../../../entities/data';
+import {AuthenticationService} from '../../authentication/services/authentication.service';
 
 @Component({
     selector: 'app-species-list',
@@ -45,7 +47,10 @@ export class SpeciesListComponent implements OnInit, AfterViewInit {
 
     executionStatus = Object.keys(Status);
 
-    constructor(private readonly speciesService: SpeciesService) {
+    constructor(
+        private readonly authenticationService: AuthenticationService,
+        private readonly speciesService: SpeciesService
+    ) {
     }
 
     ngOnInit(): void {
@@ -60,5 +65,9 @@ export class SpeciesListComponent implements OnInit, AfterViewInit {
 
     public downloadSpeciesFasta(species: Species): void {
         this.speciesService.downloadSpeciesFasta(species);
+    }
+
+    public canCreate(): boolean {
+        return this.authenticationService.getUserRole() === Role.ADMIN;
     }
 }

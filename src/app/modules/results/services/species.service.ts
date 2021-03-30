@@ -31,6 +31,7 @@ import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {PageData} from '../../../entities/data-source/page-data';
 import {saveAs} from 'file-saver';
 import {QueryHelper} from '../../../helpers/query.helper';
+import {Work} from '../../../entities/execution';
 
 @Injectable()
 export class SpeciesService {
@@ -89,5 +90,20 @@ export class SpeciesService {
                 const blob = new Blob([res], {type: 'text/plain'});
                 saveAs(blob, species.name + '.fasta');
             });
+    }
+
+    public createSpecies(name: string, gbffGzipFileUrl: string): Observable<Work> {
+        const formData: FormData = new FormData();
+
+        formData.append('name', name);
+        formData.append('gbffGzipFileUrl', gbffGzipFileUrl);
+
+        return this.http.post<Work>(this.endpoint, formData)
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error creating species',
+                    'The species could not be created.'
+                )
+            );
     }
 }

@@ -67,6 +67,13 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         icon: 'pets'
     },
     {
+        path: '/species/creation',
+        title: 'Create new species',
+        showInMenu: false,
+        backRoute: '/species',
+        backRouteTitle: 'Go back to species'
+    },
+    {
         path: '/interactomes',
         title: 'Interactomes',
         showInMenu: true,

@@ -27,6 +27,10 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title">Species</h4>
                         <p class="card-category">List of available genomes for different species.</p>
+                        <a class="mat-raised-button mat-primary app-action-right" routerLink="/species/creation"
+                           *ngIf="canCreate()">
+                            Create species
+                        </a>
                     </div>
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort>
