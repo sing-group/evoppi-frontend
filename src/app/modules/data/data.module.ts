@@ -31,7 +31,7 @@ import {RouterModule} from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MaterialFileInputModule} from 'ngx-material-file-input';
-import { SpeciesCreationComponent } from './species-creation/species-creation.component';
+import {SpeciesCreationComponent} from './species-creation/species-creation.component';
 
 @NgModule({
     imports: [

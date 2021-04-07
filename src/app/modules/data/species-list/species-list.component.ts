@@ -29,13 +29,15 @@ import {SpeciesService} from '../../results/services/species.service';
 import {Species} from '../../../entities/bio';
 import {Role} from '../../../entities/data';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
+import {CanDeactivateComponent} from '../../shared/components/can-deactivate/can-deactivate.component';
+import {EvoppiError} from '../../../entities/notification';
 
 @Component({
     selector: 'app-species-list',
     templateUrl: './species-list.component.html',
     styleUrls: ['./species-list.component.scss']
 })
-export class SpeciesListComponent implements OnInit, AfterViewInit {
+export class SpeciesListComponent extends CanDeactivateComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -47,10 +49,13 @@ export class SpeciesListComponent implements OnInit, AfterViewInit {
 
     executionStatus = Object.keys(Status);
 
+    private requestActive = false;
+
     constructor(
         private readonly authenticationService: AuthenticationService,
         private readonly speciesService: SpeciesService
     ) {
+        super();
     }
 
     ngOnInit(): void {
@@ -67,7 +72,29 @@ export class SpeciesListComponent implements OnInit, AfterViewInit {
         this.speciesService.downloadSpeciesFasta(species);
     }
 
-    public canCreate(): boolean {
+    public deleteSpecies(species: Species): void {
+        this.requestActive = true;
+        this.speciesService.deleteSpecies(species)
+            .subscribe(
+                () => {
+                    this.requestActive = false;
+                    this.dataSource.updatePage();
+                },
+                () => {
+                    this.requestActive = false;
+                    EvoppiError.throwOnError(
+                        'Error deleting species',
+                        'An error ocurred when deleting the selected species.'
+                    )
+                }
+            );
+    }
+
+    public isAdmin(): boolean {
         return this.authenticationService.getUserRole() === Role.ADMIN;
+    }
+
+    public isRequestActive(): boolean {
+        return this.requestActive;
     }
 }

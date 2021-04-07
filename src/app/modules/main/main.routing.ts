@@ -40,6 +40,7 @@ import {RecoveryComponent} from '../authentication/recovery/recovery.component';
 import {WorksManagementComponent} from '../management/works-management/works-management.component';
 import {InteractomeCreationComponent} from '../data/interactome-creation/interactome-creation.component';
 import {SpeciesCreationComponent} from '../data/species-creation/species-creation.component';
+import {CanDeactivateComponentGuardService} from '../shared/components/can-deactivate/can-deactivate-component-guard-service';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -78,7 +79,8 @@ export const MAIN_ROUTES: Routes = [
     },
     {
         path: 'species',
-        component: SpeciesListComponent
+        component: SpeciesListComponent,
+        canDeactivate: [CanDeactivateComponentGuardService]
     },
     {
         path: 'interactomes',

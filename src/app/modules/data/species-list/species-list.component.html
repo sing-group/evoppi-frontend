@@ -28,9 +28,11 @@
                         <h4 class="card-title">Species</h4>
                         <p class="card-category">List of available genomes for different species.</p>
                         <a class="mat-raised-button mat-primary app-action-right" routerLink="/species/creation"
-                           *ngIf="canCreate()">
+                           *ngIf="isAdmin()">
                             Create species
                         </a>
+                        <mat-spinner class="request-spinner" [diameter]="30" *ngIf="isRequestActive()"
+                                     matTooltip="Your request is being processed"></mat-spinner>
                     </div>
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort>
@@ -59,8 +61,16 @@
                                 <mat-cell *matCellDef="let species">
                                     <button mat-icon-button color="primary"
                                             matTooltip="Download species FASTA"
-                                            (click)="downloadSpeciesFasta(species)">
+                                            (click)="downloadSpeciesFasta(species)"
+                                            [disabled]="isRequestActive()">
                                         <mat-icon aria-label="Download species FASTA">download</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="primary"
+                                            matTooltip="Delete species"
+                                            (click)="deleteSpecies(species)"
+                                            *ngIf="isAdmin()"
+                                            [disabled]="isRequestActive()">
+                                        <mat-icon aria-label="Delete species">delete</mat-icon>
                                     </button>
                                 </mat-cell>
                                 <mat-footer-cell *matFooterCellDef>

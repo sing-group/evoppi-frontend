@@ -25,13 +25,15 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {Species} from '../../../entities/bio';
-import {NotificationService} from '../../notification/services/notification.service';
 import {EvoppiError} from '../../../entities/notification';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {PageData} from '../../../entities/data-source/page-data';
 import {saveAs} from 'file-saver';
 import {QueryHelper} from '../../../helpers/query.helper';
 import {Work} from '../../../entities/execution';
+
+import {of} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
 @Injectable()
 export class SpeciesService {
@@ -103,6 +105,16 @@ export class SpeciesService {
                 EvoppiError.throwOnError(
                     'Error creating species',
                     'The species could not be created.'
+                )
+            );
+    }
+
+    public deleteSpecies(species: Species) {
+        return this.http.delete(this.endpoint + '/' + species.id)
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error deleting species',
+                    `An error ocurred when deleting species '${species.id}'.`
                 )
             );
     }
