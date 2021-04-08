@@ -85,6 +85,7 @@ export const MAIN_ROUTES: Routes = [
     {
         path: 'interactomes',
         component: InteractomeListComponent,
+        canDeactivate: [CanDeactivateComponentGuardService]
     },
     {
         path: 'interactomes/creation',

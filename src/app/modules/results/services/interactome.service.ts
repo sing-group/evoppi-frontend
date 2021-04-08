@@ -231,4 +231,14 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
                 saveAs(blob, interactome.name + '_' + interactome.dbSourceIdType + '_' + interactome.species.name + '.tsv');
             });
     }
+
+    public deleteInteractome(interactome: Interactome) {
+        return this.http.delete(this.endpoint + '/' + interactome.id)
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error deleting interactome',
+                    `An error ocurred when deleting interactome '${interactome.id}'.`
+                )
+            );
+    }
 }

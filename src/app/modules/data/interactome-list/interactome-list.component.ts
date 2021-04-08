@@ -32,6 +32,8 @@ import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {TableInputComponent} from '../../shared/components/table-input/table-input.component';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
 import {Role} from '../../../entities/data';
+import {CanDeactivateComponent} from '../../shared/components/can-deactivate/can-deactivate.component';
+import {EvoppiError} from '../../../entities/notification';
 
 class InteractomeServiceWrapper implements PaginatedDataProvider<Interactome> {
     constructor(private readonly service: InteractomeService) {
@@ -47,7 +49,7 @@ class InteractomeServiceWrapper implements PaginatedDataProvider<Interactome> {
     templateUrl: './interactome-list.component.html',
     styleUrls: ['./interactome-list.component.scss']
 })
-export class InteractomeListComponent implements OnInit, AfterViewInit {
+export class InteractomeListComponent extends CanDeactivateComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
@@ -55,10 +57,13 @@ export class InteractomeListComponent implements OnInit, AfterViewInit {
     columns = ['NAME', 'SOURCE_DB', 'SPECIES', 'ACTIONS'];
     dataSource: MatPaginatedDataSource<Interactome>;
 
+    private requestActive = false;
+
     constructor(
         private readonly authenticationService: AuthenticationService,
         private readonly interactomeService: InteractomeService
     ) {
+        super();
     }
 
     ngOnInit() {
@@ -75,7 +80,29 @@ export class InteractomeListComponent implements OnInit, AfterViewInit {
         this.interactomeService.downloadInteractomeTsv(interactome);
     }
 
-    public canCreate(): boolean {
+    public deleteInteractome(interactome: Interactome): void {
+        this.requestActive = true;
+        this.interactomeService.deleteInteractome(interactome)
+            .subscribe(
+                () => {
+                    this.requestActive = false;
+                    this.dataSource.updatePage();
+                },
+                () => {
+                    this.requestActive = false;
+                    EvoppiError.throwOnError(
+                        'Error deleting interactome',
+                        'An error ocurred when deleting the selected interactome.'
+                    )
+                }
+            );
+    }
+
+    public isAdmin(): boolean {
         return this.authenticationService.getUserRole() === Role.ADMIN;
+    }
+
+    public isRequestActive(): boolean {
+        return this.requestActive;
     }
 }
