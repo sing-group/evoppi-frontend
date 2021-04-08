@@ -77,7 +77,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         path: '/interactomes',
         title: 'Interactomes',
         showInMenu: true,
-        icon: 'list'
+        icon: 'sync_alt'
     },
     {
         path: '/interactomes/creation',
