@@ -61,13 +61,13 @@
                                 <mat-cell *matCellDef="let species">
                                     <button mat-icon-button color="primary"
                                             matTooltip="Download species FASTA"
-                                            (click)="downloadSpeciesFasta(species)"
+                                            (click)="onDownloadSpeciesFasta(species)"
                                             [disabled]="isRequestActive()">
                                         <mat-icon aria-label="Download species FASTA">download</mat-icon>
                                     </button>
                                     <button mat-icon-button color="primary"
                                             matTooltip="Delete species"
-                                            (click)="deleteSpecies(species)"
+                                            (click)="onDeleteSpecies(species)"
                                             *ngIf="isAdmin()"
                                             [disabled]="isRequestActive()">
                                         <mat-icon aria-label="Delete species">delete</mat-icon>

@@ -31,6 +31,10 @@ import {Role} from '../../../entities/data';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
 import {CanDeactivateComponent} from '../../shared/components/can-deactivate/can-deactivate.component';
 import {EvoppiError} from '../../../entities/notification';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {InteractomeService} from '../../results/services/interactome.service';
+import {NotificationService} from '../../notification/services/notification.service';
+import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 
 @Component({
     selector: 'app-species-list',
@@ -52,8 +56,10 @@ export class SpeciesListComponent extends CanDeactivateComponent implements OnIn
     private requestActive = false;
 
     constructor(
+        private readonly bottomSheet: MatBottomSheet,
         private readonly authenticationService: AuthenticationService,
-        private readonly speciesService: SpeciesService
+        private readonly speciesService: SpeciesService,
+        private readonly notificationService: NotificationService
     ) {
         super();
     }
@@ -68,17 +74,36 @@ export class SpeciesListComponent extends CanDeactivateComponent implements OnIn
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
     }
 
-    public downloadSpeciesFasta(species: Species): void {
+    public onDownloadSpeciesFasta(species: Species): void {
         this.speciesService.downloadSpeciesFasta(species);
     }
 
-    public deleteSpecies(species: Species): void {
+    public onDeleteSpecies(species: Species): void {
+        this.bottomSheet.open(
+            ConfirmSheetComponent,
+            {
+                data: {
+                    title: 'Species deletion',
+                    message: `Species '${species.name}' and all the related information will be deleted. Do you want to continue?`,
+                    confirmLabel: 'Yes',
+                    cancelLabel: 'No'
+                }
+            }
+        ).afterDismissed().subscribe(confirmed => {
+            if (confirmed) {
+                this.deleteSpecies(species);
+            }
+        });
+    }
+
+    private deleteSpecies(species: Species): void {
         this.requestActive = true;
         this.speciesService.deleteSpecies(species)
             .subscribe(
                 () => {
                     this.requestActive = false;
                     this.dataSource.updatePage();
+                    this.notificationService.success('Species deleted', `Species '${species.name} was deleted.`);
                 },
                 () => {
                     this.requestActive = false;
@@ -88,6 +113,9 @@ export class SpeciesListComponent extends CanDeactivateComponent implements OnIn
                     )
                 }
             );
+        this.notificationService.success(
+            'Deleting species', `Species '${species.name} is being deleted. This may take some time. Please, be patient.`
+        );
     }
 
     public isAdmin(): boolean {

@@ -82,12 +82,12 @@
                                 <mat-cell *matCellDef="let interactome">
                                     <button mat-icon-button color="primary"
                                             matTooltip="Download interactions in TSV"
-                                            (click)="downloadInteractionsTsv(interactome)">
+                                            (click)="onDownloadInteractionsTsv(interactome)">
                                         <mat-icon aria-label="Download interactions in TSV">download</mat-icon>
                                     </button>
                                     <button mat-icon-button color="primary"
                                             matTooltip="Delete interactome"
-                                            (click)="deleteInteractome(interactome)"
+                                            (click)="onDeleteInteractome(interactome)"
                                             *ngIf="isAdmin()"
                                             [disabled]="isRequestActive()">
                                         <mat-icon aria-label="Delete interactome">delete</mat-icon>

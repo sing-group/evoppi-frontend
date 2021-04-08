@@ -34,6 +34,9 @@ import {AuthenticationService} from '../../authentication/services/authenticatio
 import {Role} from '../../../entities/data';
 import {CanDeactivateComponent} from '../../shared/components/can-deactivate/can-deactivate.component';
 import {EvoppiError} from '../../../entities/notification';
+import {NotificationService} from '../../notification/services/notification.service';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 
 class InteractomeServiceWrapper implements PaginatedDataProvider<Interactome> {
     constructor(private readonly service: InteractomeService) {
@@ -60,8 +63,10 @@ export class InteractomeListComponent extends CanDeactivateComponent implements 
     private requestActive = false;
 
     constructor(
+        private readonly bottomSheet: MatBottomSheet,
         private readonly authenticationService: AuthenticationService,
-        private readonly interactomeService: InteractomeService
+        private readonly interactomeService: InteractomeService,
+        private readonly notificationService: NotificationService
     ) {
         super();
     }
@@ -76,26 +81,48 @@ export class InteractomeListComponent extends CanDeactivateComponent implements 
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
     }
 
-    public downloadInteractionsTsv(interactome: Interactome): void {
+    public onDownloadInteractionsTsv(interactome: Interactome): void {
         this.interactomeService.downloadInteractomeTsv(interactome);
     }
 
-    public deleteInteractome(interactome: Interactome): void {
+    public onDeleteInteractome(interactome: Interactome): void {
+        this.bottomSheet.open(
+            ConfirmSheetComponent,
+            {
+                data: {
+                    title: 'Interactome deletion',
+                    message: `Interactome '${interactome.name}' and all the related information will be deleted. Do you want to continue?`,
+                    confirmLabel: 'Yes',
+                    cancelLabel: 'No'
+                }
+            }
+        ).afterDismissed().subscribe(confirmed => {
+            if (confirmed) {
+                this.deleteInteractome(interactome);
+            }
+        });
+    }
+
+    private deleteInteractome(interactome: Interactome): void {
         this.requestActive = true;
         this.interactomeService.deleteInteractome(interactome)
             .subscribe(
                 () => {
                     this.requestActive = false;
                     this.dataSource.updatePage();
+                    this.notificationService.success('Interactome deleted', `Interactome '${interactome.name} was deleted.`);
                 },
                 () => {
                     this.requestActive = false;
                     EvoppiError.throwOnError(
-                        'Error deleting interactome',
-                        'An error ocurred when deleting the selected interactome.'
+                        'An error ocurred when deleting the selected interactome.',
+                        'Error deleting interactome'
                     )
                 }
             );
+        this.notificationService.success(
+            'Deleting interactome', `Interactome '${interactome.name} is being deleted. This may take some time. Please, be patient.`
+        );
     }
 
     public isAdmin(): boolean {
