@@ -41,6 +41,7 @@ import {WorksManagementComponent} from '../management/works-management/works-man
 import {InteractomeCreationComponent} from '../data/interactome-creation/interactome-creation.component';
 import {SpeciesCreationComponent} from '../data/species-creation/species-creation.component';
 import {CanDeactivateComponentGuardService} from '../shared/components/can-deactivate/can-deactivate-component-guard-service';
+import {HelpComponent} from './help/help.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -161,5 +162,9 @@ export const MAIN_ROUTES: Routes = [
         data: {
             state: 'recoveryConfirmation'
         }
+    },
+    {
+        path: 'help',
+        component: HelpComponent
     }
 ];

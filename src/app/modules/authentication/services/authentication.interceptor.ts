@@ -28,11 +28,12 @@ import {AuthenticationService} from './authentication.service';
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
 
-    constructor(public authenticationService: AuthenticationService) {}
+    constructor(public authenticationService: AuthenticationService) {
+    }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        if (request.url.endsWith('/user/role') || this.authenticationService.isGuest()) {
+        if (request.url.endsWith('/user/role') || this.authenticationService.isGuest() || request.url.endsWith('EvoPPI-DB.md')) {
             return next.handle(request);
         }
         request = request.clone({

@@ -20,7 +20,7 @@
  */
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ErrorHandler, NgModule} from '@angular/core';
+import {ErrorHandler, NgModule, SecurityContext} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
 import {AppRoutingModule} from './app.routing';
@@ -32,6 +32,7 @@ import {MainModule} from './modules/main/main.module';
 import {ToastrModule} from 'ngx-toastr';
 import {NotificationModule} from './modules/notification/notification.module';
 import {ErrorNotificationHandler} from './modules/notification/handlers/error-notification.handler';
+import {MarkdownModule} from 'ngx-markdown';
 
 @NgModule({
     imports: [
@@ -40,6 +41,9 @@ import {ErrorNotificationHandler} from './modules/notification/handlers/error-no
         BrowserModule,
         BrowserAnimationsModule,
         MainModule,
+        MarkdownModule.forRoot({
+            sanitize: SecurityContext.NONE
+        }),
         NotificationModule.forRoot(),
         RouterModule,
         ToastrModule.forRoot({

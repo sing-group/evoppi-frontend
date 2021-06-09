@@ -89,7 +89,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
     {
         path: '/management/users',
         title: 'Users',
-        showInMenu: true,
+        showInMenu: false,
         icon: 'face',
         allowedRoles: [ Role.ADMIN ]
     },
@@ -161,5 +161,12 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         backRoute: '/dashboard',
         icon: 'lock_open',
         allowedRoles: [ Role.GUEST ]
+    },
+    {
+        path: '/help',
+        title: 'Database',
+        showInMenu: true,
+        backRoute: '/dashboard',
+        icon: 'info'
     }
 ];

@@ -37,6 +37,8 @@ import {NavigationModule} from '../navigation/navigation.module';
 import {MainComponent} from './main.component';
 import {ResearcherGuard} from './security/researcher.guard';
 import {StatsService} from './services/stats.service';
+import {MarkdownModule} from 'ngx-markdown';
+import {HelpComponent} from './help/help.component';
 
 @NgModule({
     imports: [
@@ -44,6 +46,7 @@ import {StatsService} from './services/stats.service';
         CommonModule,
         DataModule,
         ManagementModule,
+        MarkdownModule.forChild(),
         NavigationModule,
         QueryModule,
         ResultsModule,
@@ -56,7 +59,8 @@ import {StatsService} from './services/stats.service';
     ],
     declarations: [
         DashboardComponent,
-        MainComponent
+        MainComponent,
+        HelpComponent
     ],
     exports: [
         MainComponent
