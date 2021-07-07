@@ -63,14 +63,12 @@ export class InteractomeCreationComponent implements OnInit {
             geneColumn2: [undefined, [Validators.required, Validators.min(0), Validators.max(100)]],
             genePrefix: [undefined],
             geneSuffix: [undefined],
-            speciesFileId: [undefined],
             speciesColumn1: [undefined],
             speciesColumn2: [undefined],
             speciesPrefix: [undefined],
             speciesSuffix: [undefined]
         }, {
             validators: [
-                validateMultipleSpeciesField('speciesFileId', Validators.required),
                 validateMultipleSpeciesField('speciesColumn1', [Validators.required, Validators.min(0), Validators.max(100)]),
                 validateMultipleSpeciesField('speciesColumn2', [Validators.required, Validators.min(0), Validators.max(100)])
             ]
@@ -133,8 +131,6 @@ export class InteractomeCreationComponent implements OnInit {
                 return 'The index of the first column with the genes must be provided (min: 0, max: 100)';
             case 'geneColumn2':
                 return 'The index of the second column with the genes must be provided (min: 0, max: 100)';
-            case 'speciesFileId':
-                return 'The identifier of the species in the file must be provided.';
             case 'speciesColumn1':
                 return 'The index of the first column with the species must be provided (min: 0, max: 100)';
             case 'speciesColumn2':
@@ -157,7 +153,6 @@ export class InteractomeCreationComponent implements OnInit {
         let multipleInteractomeParams = undefined;
         if (this.isMultipleSpecies) {
             multipleInteractomeParams = {
-                speciesFileId: formModel.speciesFileId,
                 speciesColumn1: formModel.speciesColumn1,
                 speciesColumn2: formModel.speciesColumn2,
                 speciesPrefix: formModel.speciesPrefix,

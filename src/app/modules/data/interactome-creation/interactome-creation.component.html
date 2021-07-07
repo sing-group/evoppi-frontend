@@ -101,16 +101,7 @@
                                 </div>
                                 <ng-container *ngIf="isMultipleSpecies">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <mat-form-field class="width-100">
-                                                <mat-label>Species ID</mat-label>
-                                                <input formControlName="speciesFileId" type="text" matInput placeholder="Identifier of the species"/>
-                                                <mat-error *ngIf="hasValidationError('speciesFileId')">
-                                                    {{getValidationError('speciesFileId')}}
-                                                </mat-error>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <mat-form-field class="width-100">
                                                 <mat-label>First species column</mat-label>
                                                 <input formControlName="speciesColumn1" type="number" matInput placeholder="Index of the first species column" [min]="0" [max]="100"/>
@@ -119,7 +110,7 @@
                                                 </mat-error>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <mat-form-field class="width-100">
                                                 <mat-label>Second species column</mat-label>
                                                 <input formControlName="speciesColumn2" type="number" matInput placeholder="Index of the second species column" [min]="0" [max]="100"/>

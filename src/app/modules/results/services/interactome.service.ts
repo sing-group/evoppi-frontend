@@ -167,7 +167,6 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
         genePrefix?: string,
         geneSuffix?: string,
         multipleInteractomeParams?: {
-            speciesFileId: number,
             speciesColumn1: number,
             speciesColumn2: number,
             speciesPrefix?: string,
@@ -192,7 +191,6 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
         }
 
         if (multipleInteractomeParams) {
-            formData.append('speciesFileId', String(multipleInteractomeParams.speciesFileId));
             formData.append('organismColumn1', String(multipleInteractomeParams.speciesColumn1));
             formData.append('organismColumn2', String(multipleInteractomeParams.speciesColumn2));
             if (multipleInteractomeParams.speciesPrefix) {
