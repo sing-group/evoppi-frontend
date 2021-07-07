@@ -155,13 +155,13 @@ export class InteractomeCreationComponent implements OnInit {
         const formModel = this.form.value;
 
         let multipleInteractomeParams = undefined;
-        if (formModel.isMultipleSpecies) {
+        if (this.isMultipleSpecies) {
             multipleInteractomeParams = {
                 speciesFileId: formModel.speciesFileId,
-                organismColumn1: formModel.speciesColumn1,
-                organismColumn2: formModel.speciesColumn2,
-                organismPrefix: formModel.speciesPrefix,
-                organismSuffix: formModel.speciesSuffix
+                speciesColumn1: formModel.speciesColumn1,
+                speciesColumn2: formModel.speciesColumn2,
+                speciesPrefix: formModel.speciesPrefix,
+                speciesSuffix: formModel.speciesSuffix
             };
         }
         this.interactomesService.createInteractome(

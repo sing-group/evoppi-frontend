@@ -19,7 +19,10 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare const require: any;
+
 export const environment = {
     production: true,
-    evoppiUrl: 'http://evoppi.i3s.up.pt/evoppi-backend/rest/'
+    evoppiUrl: 'http://evoppi.i3s.up.pt/evoppi-backend/rest/',
+    version: require('../../package.json').version
 };

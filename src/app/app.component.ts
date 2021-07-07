@@ -20,6 +20,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+import {environment} from '../environments/environment';
 import {NotificationService} from './modules/notification/services/notification.service';
 import {ToastrService} from 'ngx-toastr';
 import {ErrorSeverity} from './entities/notification';
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log('EvoPPI version ' + environment.version);
         this.notification.getMessages().subscribe(
             message => {
                 switch (message.severity) {
