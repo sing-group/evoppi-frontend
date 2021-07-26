@@ -3,10 +3,10 @@ import {AbstractControl, FormBuilder, FormGroup, FormGroupDirective, ValidationE
 import {SpeciesService} from '../../results/services/species.service';
 import {Species} from '../../../entities/bio';
 import {UNIPROT_DBS, UniProtDb} from '../../../entities/bio/uniprot-db';
-import {InteractomeService} from '../../results/services/interactome.service';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {ActivatedRoute, Router} from '@angular/router';
+import {DatabaseInteractomeService} from '../services/database-interactome.service';
 
 function validateMultipleSpeciesField(fieldName: string, validators: ValidatorFn | ValidatorFn[]): ValidatorFn {
     if (!Array.isArray(validators)) {
@@ -28,11 +28,11 @@ function validateMultipleSpeciesField(fieldName: string, validators: ValidatorFn
 }
 
 @Component({
-    selector: 'app-interactome-creation',
-    templateUrl: './interactome-creation.component.html',
-    styleUrls: ['./interactome-creation.component.scss']
+    selector: 'app-database-interactome-creation',
+    templateUrl: './database-interactome-creation.component.html',
+    styleUrls: ['./database-interactome-creation.component.scss']
 })
-export class InteractomeCreationComponent implements OnInit {
+export class DatabaseInteractomeCreationComponent implements OnInit {
     public form: FormGroup;
 
     public processing: boolean;
@@ -48,7 +48,7 @@ export class InteractomeCreationComponent implements OnInit {
         private readonly route: ActivatedRoute,
         private readonly bottomSheet: MatBottomSheet,
         private readonly formBuilder: FormBuilder,
-        private readonly interactomesService: InteractomeService,
+        private readonly interactomesService: DatabaseInteractomeService,
         private readonly speciesService: SpeciesService
     ) {
         this.processing = false;

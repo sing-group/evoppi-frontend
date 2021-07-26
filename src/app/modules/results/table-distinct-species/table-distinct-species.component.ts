@@ -227,9 +227,9 @@ export class TableDistinctSpeciesComponent implements OnInit {
             .subscribe((workRes) => {
                 this.referenceInteractomes = workRes.referenceInteractomes;
                 this.targetInteractomes = workRes.targetInteractomes;
-                this.referenceTitle = workRes.referenceInteractomes[0].species.name + ': '
+                this.referenceTitle = workRes.referenceInteractomes[0].speciesA.name + ': '
                     + workRes.referenceInteractomes.map(resInteractome => resInteractome.name).join(', ');
-                this.targetTitle = workRes.targetInteractomes[0].species.name + ': '
+                this.targetTitle = workRes.targetInteractomes[0].speciesA.name + ': '
                     + workRes.targetInteractomes.map(targetInteractome => targetInteractome.name).join(', ');
                 this.paginatorLength = workRes.totalInteractions;
                 this.paginatedDataSource.load(this.paginatedResultUrl);

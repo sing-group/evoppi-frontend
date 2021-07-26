@@ -37,8 +37,10 @@
                         </p>
                         <p *ngIf="stats">
                             Currently, EvoPPI provides <span class="font-weight-bold">{{stats.genesCount}} genes</span>,
-                            <span class="font-weight-bold">{{stats.interactionsCount}} interactions</span> and
-                            <span class="font-weight-bold">{{stats.interactomesCount}} interactomes</span> for the
+                            <span class="font-weight-bold">{{stats.interactionsCount}} interactions</span>,
+                            <span
+                                class="font-weight-bold">{{stats.databaseInteractomesCount}} database interactomes</span>,
+                            and <span class="font-weight-bold">{{stats.predictomesCount}} predictomes</span> for the
                             following <span class="font-weight-bold">{{stats.speciesCount}} species</span>:
                         </p>
                         <ul *ngIf="listSpecies">

@@ -21,7 +21,8 @@
 
 export interface Stats {
     speciesCount: number;
-    interactomesCount: number;
+    databaseInteractomesCount: number;
+    predictomesCount: number;
     genesCount: number;
     interactionsCount: number;
 }

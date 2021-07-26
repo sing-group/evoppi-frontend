@@ -26,8 +26,8 @@
                 <div class="card">
                     <div class="card-header card-header-info">
                         <h4 class="card-title ">Distinct species table:
-                            {{(referenceInteractomes && targetInteractomes ? referenceInteractomes[0]?.species?.name
-                            + ' - ' + targetInteractomes[0]?.species?.name : '')}}
+                            {{(referenceInteractomes && targetInteractomes ? referenceInteractomes[0]?.speciesA?.name
+                            + ' - ' + targetInteractomes[0]?.speciesA?.name : '')}}
                         </h4>
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
                         <a class="mat-raised-button mat-primary app-action-right"
@@ -105,12 +105,12 @@
                                 <mat-header-cell *matHeaderCellDef>
                                     <span *ngIf="referenceInteractomes?.length > 1">
                                         <span matTooltip="{{referenceTitle}}">
-                                            {{(referenceInteractomes ? referenceInteractomes[0]?.species?.name : '')}}
+                                            {{(referenceInteractomes ? referenceInteractomes[0]?.speciesA?.name : '')}}
                                             interactomes ({{referenceInteractomes.length}})</span>
                                     </span>
                                     <span *ngIf="referenceInteractomes?.length <= 1">
                                         <span *ngFor="let isFirst=first; let ri of referenceInteractomes; let isLast=last">
-                                            {{isFirst ? ri.species.name + ':' : ''}}
+                                            {{isFirst ? ri.speciesA.name + ':' : ''}}
                                             {{ri.name}}{{isLast ?  '': ','}}
                                         </span>
                                     </span>
@@ -123,12 +123,12 @@
                                 <mat-header-cell *matHeaderCellDef>
                                     <span *ngIf="targetInteractomes.length > 1">
                                         <span matTooltip="{{targetTitle}}">
-                                            {{(targetInteractomes ? targetInteractomes[0]?.species?.name : '')}}
+                                            {{(targetInteractomes ? targetInteractomes[0]?.speciesA?.name : '')}}
                                             interactomes ({{targetInteractomes.length}})</span>
                                     </span>
                                     <span *ngIf="targetInteractomes.length <= 1">
                                         <span *ngFor="let isFirst=first; let ti of targetInteractomes; let isLast=last">
-                                            {{isFirst ? ti.species.name + ':' : ''}}
+                                            {{isFirst ? ti.speciesA.name + ':' : ''}}
                                             {{ti.name}}{{isLast ?  '': ','}}
                                         </span>
                                     </span>

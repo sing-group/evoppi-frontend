@@ -26,7 +26,7 @@
                 <div class="card">
                     <div class="card-header card-header-info">
                         <h4 class="card-title ">Same species table:
-                            {{(resInteractomes ? resInteractomes[0]?.species?.name : '')}}</h4>
+                            {{(resInteractomes ? resInteractomes[0]?.speciesA?.name : '')}}</h4>
                         <p class="card-category">Analysis done with interactomes coming from the same species</p>
                         <a class="mat-raised-button mat-primary app-action-right"
                            [routerLink]="'/results/chart/same/' + uuid">Show chart</a>

@@ -33,12 +33,12 @@ import {UserManagementComponent} from '../management/user-management/user-manage
 import {SpeciesManagementComponent} from '../management/species-management/species-management.component';
 import {InteractomeManagementComponent} from '../management/interactome-management/interactome-management.component';
 import {SpeciesListComponent} from '../data/species-list/species-list.component';
-import {InteractomeListComponent} from '../data/interactome-list/interactome-list.component';
+import {DatabaseInteractomeListComponent} from '../data/database-interactome-list/database-interactome-list.component';
 import {LoginComponent} from '../authentication/login/login.component';
 import {RegistrationComponent} from '../authentication/registration/registration.component';
 import {RecoveryComponent} from '../authentication/recovery/recovery.component';
 import {WorksManagementComponent} from '../management/works-management/works-management.component';
-import {InteractomeCreationComponent} from '../data/interactome-creation/interactome-creation.component';
+import {DatabaseInteractomeCreationComponent} from '../data/database-interactome-creation/database-interactome-creation.component';
 import {SpeciesCreationComponent} from '../data/species-creation/species-creation.component';
 import {CanDeactivateComponentGuardService} from '../shared/components/can-deactivate/can-deactivate-component-guard-service';
 import {HelpComponent} from './help/help.component';
@@ -85,13 +85,13 @@ export const MAIN_ROUTES: Routes = [
     },
     {
         path: 'interactomes',
-        component: InteractomeListComponent,
+        component: DatabaseInteractomeListComponent,
         canDeactivate: [CanDeactivateComponentGuardService]
     },
     {
         path: 'interactomes/creation',
         canActivate: [AdminGuard],
-        component: InteractomeCreationComponent,
+        component: DatabaseInteractomeCreationComponent,
         data: {
             redirectRoute: '/management/works',
             redirectRouteTitle: 'Go to works'

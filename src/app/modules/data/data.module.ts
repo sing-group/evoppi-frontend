@@ -21,17 +21,18 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {InteractomeListComponent} from './interactome-list/interactome-list.component';
+import {DatabaseInteractomeListComponent} from './database-interactome-list/database-interactome-list.component';
 import {SpeciesListComponent} from './species-list/species-list.component';
 import {AutocompleteComponent} from './autocomplete/autocomplete.component';
 import {MaterialDesignModule} from '../material-design/material-design.module';
 import {SharedModule} from '../shared/shared.module';
-import {InteractomeCreationComponent} from './interactome-creation/interactome-creation.component';
+import {DatabaseInteractomeCreationComponent} from './database-interactome-creation/database-interactome-creation.component';
 import {RouterModule} from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MaterialFileInputModule} from 'ngx-material-file-input';
 import {SpeciesCreationComponent} from './species-creation/species-creation.component';
+import {DatabaseInteractomeService} from './services/database-interactome.service';
 
 @NgModule({
     imports: [
@@ -45,16 +46,19 @@ import {SpeciesCreationComponent} from './species-creation/species-creation.comp
         SharedModule
     ],
     declarations: [
-        InteractomeListComponent,
+        DatabaseInteractomeListComponent,
         SpeciesListComponent,
         AutocompleteComponent,
-        InteractomeCreationComponent,
+        DatabaseInteractomeCreationComponent,
         SpeciesCreationComponent
     ],
     exports: [
-        InteractomeListComponent,
+        DatabaseInteractomeListComponent,
         SpeciesListComponent,
         AutocompleteComponent
+    ],
+    providers: [
+        DatabaseInteractomeService
     ]
 })
 export class DataModule {

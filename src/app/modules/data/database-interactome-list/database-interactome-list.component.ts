@@ -20,7 +20,6 @@
  */
 
 import {AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {InteractomeService} from '../../results/services/interactome.service';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {Interactome} from '../../../entities/bio';
@@ -37,42 +36,44 @@ import {EvoppiError} from '../../../entities/notification';
 import {NotificationService} from '../../notification/services/notification.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
+import {DatabaseInteractomeService} from '../services/database-interactome.service';
+import {DatabaseInteractome} from '../../../entities/bio/database-interactome.model';
 
-class InteractomeServiceWrapper implements PaginatedDataProvider<Interactome> {
-    constructor(private readonly service: InteractomeService) {
+class InteractomeServiceWrapper implements PaginatedDataProvider<DatabaseInteractome> {
+    constructor(private readonly service: DatabaseInteractomeService) {
     }
 
-    list(options: ListingOptions): Observable<PageData<Interactome>> {
+    list(options: ListingOptions): Observable<PageData<DatabaseInteractome>> {
         return this.service.list(options, true);
     }
 }
 
 @Component({
-    selector: 'app-interactome-list',
-    templateUrl: './interactome-list.component.html',
-    styleUrls: ['./interactome-list.component.scss']
+    selector: 'app-database-interactome-list',
+    templateUrl: './database-interactome-list.component.html',
+    styleUrls: ['./database-interactome-list.component.scss']
 })
-export class InteractomeListComponent extends CanDeactivateComponent implements OnInit, AfterViewInit {
+export class DatabaseInteractomeListComponent extends CanDeactivateComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
 
-    columns = ['NAME', 'SOURCE_DB', 'SPECIES', 'ACTIONS'];
-    dataSource: MatPaginatedDataSource<Interactome>;
+    columns = ['NAME', 'SOURCE_DB', 'SPECIESA', 'SPECIESB', 'ACTIONS'];
+    dataSource: MatPaginatedDataSource<DatabaseInteractome>;
 
     private requestActive = false;
 
     constructor(
         private readonly bottomSheet: MatBottomSheet,
         private readonly authenticationService: AuthenticationService,
-        private readonly interactomeService: InteractomeService,
+        private readonly databaseInteractomeService: DatabaseInteractomeService,
         private readonly notificationService: NotificationService
     ) {
         super();
     }
 
     ngOnInit() {
-        this.dataSource = new MatPaginatedDataSource<Interactome>(new InteractomeServiceWrapper(this.interactomeService));
+        this.dataSource = new MatPaginatedDataSource<DatabaseInteractome>(new InteractomeServiceWrapper(this.databaseInteractomeService));
     }
 
     ngAfterViewInit() {
@@ -81,8 +82,8 @@ export class InteractomeListComponent extends CanDeactivateComponent implements 
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
     }
 
-    public onDownloadInteractionsTsv(interactome: Interactome): void {
-        this.interactomeService.downloadInteractomeTsv(interactome);
+    public onDownloadInteractionsTsv(interactome: DatabaseInteractome): void {
+        this.databaseInteractomeService.downloadInteractomeTsv(interactome);
     }
 
     public onDeleteInteractome(interactome: Interactome): void {
@@ -105,7 +106,7 @@ export class InteractomeListComponent extends CanDeactivateComponent implements 
 
     private deleteInteractome(interactome: Interactome): void {
         this.requestActive = true;
-        this.interactomeService.deleteInteractome(interactome)
+        this.databaseInteractomeService.deleteInteractome(interactome)
             .subscribe(
                 () => {
                     this.requestActive = false;

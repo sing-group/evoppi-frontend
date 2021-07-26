@@ -21,10 +21,11 @@
 
 import {Species} from './species.model';
 
-export interface Interactome {
+export interface DatabaseInteractome {
     id: number,
     name: string;
     type: string;
+    dbSourceIdType: string;
     uri: string;
     speciesA?: Species;
     speciesB?: Species;

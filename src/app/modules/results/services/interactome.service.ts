@@ -43,16 +43,59 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
     constructor(private http: HttpClient, private speciesService: SpeciesService) {
     }
 
+    list(options: ListingOptions, retrieveSpecies: boolean = false): Observable<PageData<Interactome>> {
+        const params = QueryHelper.listingOptionsToHttpParams(options);
+
+        let request = this.http.get<Interactome[]>(this.endpoint, {params, 'observe': 'response'});
+
+        if (retrieveSpecies) {
+            request = request.pipe(
+                concatMap(
+                    response => forkJoin(
+                        response.body.map(interactome => [interactome.speciesA.id, interactome.speciesB.id])
+                            .reduce((x, y) => x.concat(y), [])
+                            .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
+                            .map(speciesId => this.speciesService.getSpeciesById(speciesId))
+                    )
+                        .pipe(
+                            map(species => {
+                                const speciesById = species.reduce((reduced, spec) => {
+                                    reduced[spec.id] = spec;
+                                    return reduced;
+                                }, {});
+
+                                for (const interactome of response.body) {
+                                    interactome.speciesA = speciesById[interactome.speciesA.id];
+                                    interactome.speciesB = speciesById[interactome.speciesB.id];
+                                }
+
+                                return response;
+                            })
+                        )
+                )
+            );
+        }
+
+        return request
+            .pipe(
+                map(response => new PageData(Number(response.headers.get('X-Total-Count')), response.body)),
+                EvoppiError.throwOnError(
+                    'Error requesting interactomes',
+                    'The interactomes could not be retrieved from the backend.'
+                )
+            );
+    }
+
     getInteractome(id: number, retrieveSpecies: boolean = false): Observable<Interactome> {
         let request = this.http.get<Interactome>(this.endpoint + '/' + id);
 
         if (retrieveSpecies) {
             request = request.pipe(
                 concatMap(
-                    interactome => this.speciesService.getSpeciesById(interactome.species.id)
+                    interactome => this.speciesService.getSpeciesById(interactome.speciesA.id)
                         .pipe(
                             map(species => {
-                                interactome.species = species;
+                                interactome.speciesA = species;
 
                                 return interactome;
                             })
@@ -76,140 +119,6 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
         );
     }
 
-    public listAll(retrieveSpecies: boolean = false): Observable<Interactome[]> {
-        let request = this.http.get<Interactome[]>(this.endpoint);
-
-        if (retrieveSpecies) {
-            request = request.pipe(
-                concatMap(
-                    interactomes => forkJoin(
-                        interactomes.map(interactome => interactome.species.id)
-                            .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
-                            .map(speciesId => this.speciesService.getSpeciesById(speciesId))
-                    )
-                        .pipe(
-                            map(species => {
-                                const speciesById = species.reduce((reduced, spec) => {
-                                    reduced[spec.id] = spec;
-                                    return reduced;
-                                }, {});
-
-                                for (const interactome of interactomes) {
-                                    interactome.species = speciesById[interactome.species.id];
-                                }
-
-                                return interactomes;
-                            })
-                        )
-                )
-            );
-        }
-
-        return request
-            .pipe(
-                EvoppiError.throwOnError(
-                    'Error requesting interactomes',
-                    'The interactomes could not be retrieved from the backend.'
-                )
-            );
-
-    }
-
-    list(options: ListingOptions, retrieveSpecies: boolean = false): Observable<PageData<Interactome>> {
-        const params = QueryHelper.listingOptionsToHttpParams(options);
-
-        let request = this.http.get<Interactome[]>(this.endpoint, {params, 'observe': 'response'});
-
-        if (retrieveSpecies) {
-            request = request.pipe(
-                concatMap(
-                    response => forkJoin(
-                        response.body.map(interactome => interactome.species.id)
-                            .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
-                            .map(speciesId => this.speciesService.getSpeciesById(speciesId))
-                    )
-                        .pipe(
-                            map(species => {
-                                const speciesById = species.reduce((reduced, spec) => {
-                                    reduced[spec.id] = spec;
-                                    return reduced;
-                                }, {});
-
-                                for (const interactome of response.body) {
-                                    interactome.species = speciesById[interactome.species.id];
-                                }
-
-                                return response;
-                            })
-                        )
-                )
-            );
-        }
-
-        return request
-            .pipe(
-                map(response => new PageData(Number(response.headers.get('X-Total-Count')), response.body)),
-                EvoppiError.throwOnError(
-                    'Error requesting interactomes',
-                    'The interactomes could not be retrieved from the backend.'
-                )
-            );
-    }
-
-    public createInteractome(
-        interactomeFile: File,
-        name: string,
-        species: Species,
-        dbSource: UniProtDb,
-        geneColumn1: number,
-        geneColumn2: number,
-        headerLinesCount: number,
-        genePrefix?: string,
-        geneSuffix?: string,
-        multipleInteractomeParams?: {
-            speciesColumn1: number,
-            speciesColumn2: number,
-            speciesPrefix?: string,
-            speciesSuffix?: string
-        }
-    ): Observable<Work> {
-        const formData: FormData = new FormData();
-
-        formData.append('file', interactomeFile);
-        formData.append('name', name);
-        formData.append('speciesDbId', String(species.id));
-        formData.append('dbSource', dbSource.name);
-        formData.append('geneColumn1', String(geneColumn1));
-        formData.append('geneColumn2', String(geneColumn2));
-        formData.append('headerLinesCount', String(headerLinesCount));
-
-        if (genePrefix) {
-            formData.append('genePrefix', genePrefix);
-        }
-        if (geneSuffix) {
-            formData.append('geneSuffix', geneSuffix);
-        }
-
-        if (multipleInteractomeParams) {
-            formData.append('organismColumn1', String(multipleInteractomeParams.speciesColumn1));
-            formData.append('organismColumn2', String(multipleInteractomeParams.speciesColumn2));
-            if (multipleInteractomeParams.speciesPrefix) {
-                formData.append('organismPrefix', multipleInteractomeParams.speciesPrefix);
-            }
-            if (multipleInteractomeParams.speciesSuffix) {
-                formData.append('organismSuffix', multipleInteractomeParams.speciesSuffix);
-            }
-        }
-
-        return this.http.post<Work>(this.endpoint, formData)
-            .pipe(
-                EvoppiError.throwOnError(
-                    'Error creating interactome',
-                    'The interactome could not be created.'
-                )
-            );
-    }
-
     public downloadInteractomeTsv(interactome: Interactome) {
         const options = {
             headers: new HttpHeaders({
@@ -226,7 +135,10 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
             )
             .subscribe(res => {
                 const blob = new Blob([res], {type: 'text/plain'});
-                saveAs(blob, interactome.name + '_' + interactome.dbSourceIdType + '_' + interactome.species.name + '.tsv');
+                const interactomeName = interactome.speciesA.name === interactome.speciesB.name ?
+                    interactome.name + '_' + interactome.speciesA.name + '.tsv' :
+                    interactome.name + '_' + interactome.speciesA.name + '_' + interactome.speciesB.name + '.tsv';
+                saveAs(blob, interactomeName);
             });
     }
 

@@ -21,21 +21,21 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {InteractomeListComponent} from './interactome-list.component';
+import {DatabaseInteractomeListComponent} from './interactome-list.component';
 
-describe('InteractomeListComponent', () => {
-    let component: InteractomeListComponent;
-    let fixture: ComponentFixture<InteractomeListComponent>;
+describe('DatabaseInteractomeListComponent', () => {
+    let component: DatabaseInteractomeListComponent;
+    let fixture: ComponentFixture<DatabaseInteractomeListComponent>;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [InteractomeListComponent]
+            declarations: [DatabaseInteractomeListComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(InteractomeListComponent);
+        fixture = TestBed.createComponent(DatabaseInteractomeListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
