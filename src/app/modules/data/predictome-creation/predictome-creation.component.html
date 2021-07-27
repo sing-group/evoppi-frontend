@@ -1,0 +1,85 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h4 class="card-title">Interactome Creation</h4>
+                        <p class="card-category">Upload and create a new interactome.</p>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="form">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Source interactome</mat-label>
+                                            <input formControlName="sourceInteractome" type="text" matInput
+                                                   placeholder="Name of the source interactome"/>
+                                            <mat-error *ngIf="hasValidationError('sourceInteractome')">
+                                                {{getValidationError('sourceInteractome')}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <ngx-mat-file-input formControlName="predictomeFile"
+                                                                placeholder="Interactome file"></ngx-mat-file-input>
+                                            <mat-icon matSuffix>folder</mat-icon>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100">
+                                            <mat-label>Conversion database</mat-label>
+                                            <input formControlName="conversionDatabase" type="text" matInput
+                                                   placeholder="Name of the database used to convert the interactome"/>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field class="width-100" *ngIf="species; else loadingSpecies">
+                                            <mat-label>Species A</mat-label>
+                                            <mat-select formControlName="speciesA" placeholder="First species">
+                                                <mat-option *ngFor="let s of species" [value]="s">{{s.name}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <ng-template #loadingSpecies>
+                                            <div>
+                                                <mat-spinner diameter="24"></mat-spinner>
+                                                <div class="spinner-label">Loading species...</div>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                </div>
+
+                                <div class="row" *ngIf="hasGlobalErrors()">
+                                    <div class="col-md-12">
+                                        <mat-error>
+                                            Error processing predictome creation.
+                                        </mat-error>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <button mat-raised-button class="btn btn-primary" (click)="onSubmit()"
+                                                [disabled]="!isValidForm()">
+                                            Create
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div *ngIf="processing">
+                                            <mat-spinner diameter="30"></mat-spinner>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

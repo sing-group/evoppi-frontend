@@ -42,6 +42,8 @@ import {DatabaseInteractomeCreationComponent} from '../data/database-interactome
 import {SpeciesCreationComponent} from '../data/species-creation/species-creation.component';
 import {CanDeactivateComponentGuardService} from '../shared/components/can-deactivate/can-deactivate-component-guard-service';
 import {HelpComponent} from './help/help.component';
+import {PredictomeListComponent} from '../data/predictome-list/predictome-list.component';
+import {PredictomeCreationComponent} from '../data/predictome-creation/predictome-creation.component';
 
 export const MAIN_ROUTES: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
@@ -95,6 +97,20 @@ export const MAIN_ROUTES: Routes = [
         data: {
             redirectRoute: '/management/works',
             redirectRouteTitle: 'Go to works'
+        }
+    },
+    {
+        path: 'predictomes',
+        component: PredictomeListComponent,
+        canDeactivate: [CanDeactivateComponentGuardService]
+    },
+    {
+        path: 'predictomes/creation',
+        canActivate: [AdminGuard],
+        component: PredictomeCreationComponent,
+        data: {
+            redirectRoute: '/predictomes',
+            redirectRouteTitle: 'Go to predictomes'
         }
     },
     {

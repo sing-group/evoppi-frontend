@@ -33,6 +33,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MaterialFileInputModule} from 'ngx-material-file-input';
 import {SpeciesCreationComponent} from './species-creation/species-creation.component';
 import {DatabaseInteractomeService} from './services/database-interactome.service';
+import {PredictomeListComponent} from './predictome-list/predictome-list.component';
+import { PredictomeCreationComponent } from './predictome-creation/predictome-creation.component';
 
 @NgModule({
     imports: [
@@ -50,10 +52,13 @@ import {DatabaseInteractomeService} from './services/database-interactome.servic
         SpeciesListComponent,
         AutocompleteComponent,
         DatabaseInteractomeCreationComponent,
-        SpeciesCreationComponent
+        SpeciesCreationComponent,
+        PredictomeListComponent,
+        PredictomeCreationComponent
     ],
     exports: [
         DatabaseInteractomeListComponent,
+        PredictomeListComponent,
         SpeciesListComponent,
         AutocompleteComponent
     ],

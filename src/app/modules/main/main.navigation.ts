@@ -87,32 +87,45 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         backRouteTitle: 'Go back to interactomes'
     },
     {
+        path: '/predictomes',
+        title: 'Predictomes',
+        showInMenu: true,
+        icon: 'sync_alt'
+    },
+    {
+        path: '/predictomes/creation',
+        title: 'Create new predictome',
+        showInMenu: false,
+        backRoute: '/predictomes',
+        backRouteTitle: 'Go back to predictomes'
+    },
+    {
         path: '/management/users',
         title: 'Users',
         showInMenu: false,
         icon: 'face',
-        allowedRoles: [ Role.ADMIN ]
+        allowedRoles: [Role.ADMIN]
     },
     {
         path: '/management/species',
         title: 'Species',
         showInMenu: false,
         icon: 'pets',
-        allowedRoles: [ Role.ADMIN ]
+        allowedRoles: [Role.ADMIN]
     },
     {
         path: '/management/interactomes',
         title: 'Interactomes',
         showInMenu: false,
         icon: 'repeat',
-        allowedRoles: [ Role.ADMIN ]
+        allowedRoles: [Role.ADMIN]
     },
     {
         path: '/management/works',
         title: 'Works',
         showInMenu: true,
         icon: 'settings',
-        allowedRoles: [ Role.ADMIN ]
+        allowedRoles: [Role.ADMIN]
     },
     {
         path: '/login',
@@ -120,7 +133,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/dashboard',
         icon: 'lock_open',
-        allowedRoles: [ Role.GUEST ]
+        allowedRoles: [Role.GUEST]
     },
     {
         path: '/logout',
@@ -128,7 +141,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/dashboard',
         icon: 'lock_close',
-        allowedRoles: [ Role.ADMIN, Role.RESEARCHER ]
+        allowedRoles: [Role.ADMIN, Role.RESEARCHER]
     },
     {
         path: '/registration',
@@ -136,7 +149,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/dashboard',
         icon: 'lock_open',
-        allowedRoles: [ Role.GUEST ]
+        allowedRoles: [Role.GUEST]
     },
     {
         path: '/registration/confirmation',
@@ -144,7 +157,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/dashboard',
         icon: 'lock_open',
-        allowedRoles: [ Role.GUEST ]
+        allowedRoles: [Role.GUEST]
     },
     {
         path: '/recovery',
@@ -152,7 +165,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/login',
         icon: 'lock_open',
-        allowedRoles: [ Role.GUEST ]
+        allowedRoles: [Role.GUEST]
     },
     {
         path: '/password/recovery',
@@ -160,7 +173,7 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         showInMenu: false,
         backRoute: '/dashboard',
         icon: 'lock_open',
-        allowedRoles: [ Role.GUEST ]
+        allowedRoles: [Role.GUEST]
     },
     {
         path: '/help',
