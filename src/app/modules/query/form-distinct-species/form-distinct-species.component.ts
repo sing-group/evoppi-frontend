@@ -21,7 +21,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {GeneInfo, Interactome, Species} from '../../../entities/bio';
 import {SpeciesService} from '../../results/services/species.service';
 import {InteractomeService} from '../../results/services/interactome.service';
@@ -29,7 +29,7 @@ import {InteractionService} from '../../results/services/interaction.service';
 import {GeneService} from '../../results/services/gene.service';
 import {debounceTime, map} from 'rxjs/operators';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';
 
@@ -51,7 +51,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
     public targetSpecies: Species[];
 
     public referenceInteractomes: Interactome[];
+    public referencePredictomes: Interactome[];
     public targetInteractomes: Interactome[];
+    public targetPredictomes: Interactome[];
 
     public genes: GeneInfo[];
 
@@ -62,8 +64,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     private controlReferenceSpecies: AbstractControl;
     private controlReferenceInteractomes: AbstractControl;
+    private controlReferencePredictomes: AbstractControl;
     private controlTargetSpecies: AbstractControl;
     private controlTargetInteractomes: AbstractControl;
+    private controlTargetPredictomes: AbstractControl;
     private controlGene: AbstractControl;
 
     private lastGeneSearchSubscription: Subscription;
@@ -84,8 +88,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.formDistinctSpecies = this.formBuilder.group({
             'referenceSpecies': [null, Validators.required],
             'targetSpecies': [{value: null, disabled: true}, Validators.required],
-            'referenceInteractome': [{value: null, disabled: true}, Validators.required],
-            'targetInteractome': [{value: null, disabled: true}, Validators.required],
+            'referenceInteractome': [{value: null, disabled: true}, [this.validateReferenceInteractomeSelection()]],
+            'referencePredictome': [{value: null, disabled: true}, [this.validateReferenceInteractomeSelection()]],
+            'targetInteractome': [{value: null, disabled: true}, [this.validateTargetInteractomeSelection()]],
+            'targetPredictome': [{value: null, disabled: true}, [this.validateTargetInteractomeSelection()]],
             'gene': [{value: null, disabled: true}, Validators.required],
             'eValue': [FormDistinctSpeciesComponent.DEFAULT_VALUES.eValue, [Validators.required, Validators.min(0)]],
             'minAlignLength': [FormDistinctSpeciesComponent.DEFAULT_VALUES.minAlignLength, [Validators.required, Validators.min(0)]],
@@ -102,8 +108,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
         this.controlReferenceSpecies = this.formDistinctSpecies.get('referenceSpecies');
         this.controlReferenceInteractomes = this.formDistinctSpecies.get('referenceInteractome');
+        this.controlReferencePredictomes = this.formDistinctSpecies.get('referencePredictome');
         this.controlTargetSpecies = this.formDistinctSpecies.get('targetSpecies');
         this.controlTargetInteractomes = this.formDistinctSpecies.get('targetInteractome');
+        this.controlTargetPredictomes = this.formDistinctSpecies.get('targetPredictome');
         this.controlGene = this.formDistinctSpecies.get('gene');
 
         this.updateReferenceSpecies();
@@ -126,20 +134,26 @@ export class FormDistinctSpeciesComponent implements OnInit {
             if (status === 'VALID') {
                 this.controlTargetSpecies.enable();
                 this.controlReferenceInteractomes.enable();
+                this.controlReferencePredictomes.enable();
             } else {
                 this.controlTargetSpecies.reset();
                 this.controlTargetSpecies.disable();
                 this.controlReferenceInteractomes.reset();
                 this.controlReferenceInteractomes.disable();
+                this.controlReferencePredictomes.reset();
+                this.controlReferencePredictomes.disable();
             }
         });
 
         this.controlTargetSpecies.statusChanges.subscribe(status => {
             if (status === 'VALID') {
                 this.controlTargetInteractomes.enable();
+                this.controlTargetPredictomes.enable();
             } else {
                 this.controlTargetInteractomes.reset();
                 this.controlTargetInteractomes.disable();
+                this.controlTargetPredictomes.reset();
+                this.controlTargetPredictomes.disable();
             }
         });
 
@@ -152,9 +166,60 @@ export class FormDistinctSpeciesComponent implements OnInit {
             }
         });
 
+        this.controlReferencePredictomes.statusChanges.subscribe(status => {
+            if (status === 'VALID') {
+                this.controlGene.enable();
+            } else {
+                this.controlGene.reset();
+                this.controlGene.disable();
+            }
+        });
+
         this.controlGene.valueChanges
             .pipe(debounceTime(500))
-        .subscribe(genes => this.updateGenes(genes));
+            .subscribe(genes => this.updateGenes(genes));
+    }
+
+    private validateReferenceInteractomeSelection(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.referenceInteractomes === undefined || this.referencePredictomes === undefined) {
+                console.warn('Reference interactomes/predictomes are not loaded.');
+                return null;
+            }
+
+            if (
+                (!this.controlReferenceInteractomes.value || this.controlReferenceInteractomes.value.length === 0) &&
+                (!this.controlReferencePredictomes.value || this.controlReferencePredictomes.value.length === 0)
+            ) {
+                return {
+                    'referenceInteractomes': `At least one reference interactome or predictome must be selected.`,
+                    'referencePredictomes': `At least one reference interactome or predictome must be selected.`
+                };
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private validateTargetInteractomeSelection(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.targetInteractomes === undefined || this.targetPredictomes === undefined) {
+                console.warn('Target interactomes/predictomes are not loaded.');
+                return null;
+            }
+
+            if (
+                (!this.controlTargetInteractomes.value || this.controlTargetInteractomes.value.length === 0) &&
+                (!this.controlTargetPredictomes.value || this.controlTargetPredictomes.value.length === 0)
+            ) {
+                return {
+                    'targetInteractomes': `At least one target interactome or predictome must be selected.`,
+                    'targetPredictomes': `At least one target interactome or predictome must be selected.`
+                };
+            } else {
+                return null;
+            }
+        }
     }
 
     public selectAllReferenceInteractomes(): void {
@@ -165,6 +230,14 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.controlReferenceInteractomes.reset();
     }
 
+    public selectAllReferencePredictomes(): void {
+        this.controlReferencePredictomes.setValue(this.referencePredictomes);
+    }
+
+    public deselectAllReferencePredictomes(): void {
+        this.controlReferencePredictomes.reset();
+    }
+
     public selectAllTargetInteractomes(): void {
         this.controlTargetInteractomes.setValue(this.targetInteractomes);
     }
@@ -173,15 +246,40 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.controlTargetInteractomes.reset();
     }
 
+    public selectAllTargetPredictomes(): void {
+        this.controlTargetPredictomes.setValue(this.targetPredictomes);
+    }
+
+    public deselectAllTargetPredictomes(): void {
+        this.controlTargetPredictomes.reset();
+    }
+
     public onGeneSelected(value): void {
         this.controlGene.patchValue(value, {emitEvent: false});
         this.genes = [];
     }
 
     public isValidForm(): boolean {
+        this.forceInteractomeControlsValidation();
+
         return this.formDistinctSpecies.valid
             && Number.parseInt(this.controlGene.value, 10) >= 0
             && !this.processing;
+    }
+
+    private forceInteractomeControlsValidation(): void {
+        if (!this.controlReferenceInteractomes.valid) {
+            this.controlReferenceInteractomes.updateValueAndValidity();
+        }
+        if (!this.controlReferencePredictomes.valid) {
+            this.controlReferencePredictomes.updateValueAndValidity();
+        }
+        if (!this.controlTargetInteractomes.valid) {
+            this.controlTargetInteractomes.updateValueAndValidity();
+        }
+        if (!this.controlTargetPredictomes.valid) {
+            this.controlTargetPredictomes.updateValueAndValidity();
+        }
     }
 
     public onRequestCompare(): void {
@@ -191,11 +289,14 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
         this.processing = true;
 
+        const referenceInteractomes = this.getCurrentQueryReferenceInteractomes();
+        const targetInteractomes = this.getCurrentQueryTargetInteractomes();
+
         const formModel = this.formDistinctSpecies.value;
         this.interactionService.getDistinctSpeciesInteraction(
             formModel.gene,
-            formModel.referenceInteractome.map(interactome => interactome.id),
-            formModel.targetInteractome.map(interactome => interactome.id),
+            referenceInteractomes,
+            targetInteractomes,
             formModel.level,
             formModel.eValue,
             formModel.numDescriptions,
@@ -218,35 +319,95 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     private updateReferenceSpecies(): void {
         this.speciesService.listAll()
-            .pipe(map(species => species.filter(specie => specie.interactomes.length >= 1)))
-        .subscribe(species => this.referenceSpecies = species);
+            .pipe(map(species => species.filter(s => s.interactomes.length >= 1 || s.predictomes.length >= 1)))
+            .subscribe(species => this.referenceSpecies = species);
     }
 
     private onReferenceSpeciesChange(species: Species) {
+        if (species !== null) {
+            this.targetSpecies = this.referenceSpecies.filter(s => s !== species);
+        }
+
+        this.updateReferenceInteractomes(species);
+        this.updateReferencePredictomes(species);
+    }
+
+    private updateReferenceInteractomes(species: Species) {
         this.referenceInteractomes = [];
         if (species === null) {
             return;
         }
-        this.targetSpecies = this.referenceSpecies.filter(s => s !== species);
 
         const interactomeIds = species.interactomes.map(interactome => interactome.id);
+
         this.interactomeService.getInteractomesByIds(interactomeIds)
             .subscribe(
-                interactomes => this.referenceInteractomes = interactomes,
-                error => { throw error; },
+                interactomes => this.referenceInteractomes = interactomes.filter(
+                    interactome => interactome.speciesA.id === species.id && interactome.speciesB.id === species.id
+                ),
+                error => {
+                    throw error;
+                },
                 () => this.referenceInteractomes.sort((a, b) => a.name < b.name ? -1 : 1)
             );
     }
 
+    private updateReferencePredictomes(species: Species) {
+        this.referencePredictomes = [];
+
+        const predictomesIds = species.predictomes.map(predictome => predictome.id);
+
+        this.interactomeService.getInteractomesByIds(predictomesIds)
+            .subscribe(
+                predictomes => this.referencePredictomes = predictomes.filter(
+                    predictome => predictome.speciesA.id === species.id && predictome.speciesB.id === species.id
+                ),
+                error => {
+                    throw error;
+                },
+                () => this.referencePredictomes.sort((a, b) => a.name < b.name ? -1 : 1)
+            );
+    }
+
     private onTargetSpeciesChange(species: Species) {
+        this.updateTargetInteractomes(species);
+        this.updateTargetPredictomes(species);
+    }
+
+    private updateTargetInteractomes(species: Species) {
         this.targetInteractomes = [];
+        if (species === null) {
+            return;
+        }
 
         const interactomeIds = species.interactomes.map(interactome => interactome.id);
+
         this.interactomeService.getInteractomesByIds(interactomeIds)
             .subscribe(
-                interactomes => this.targetInteractomes = interactomes,
-                error => { throw error; },
+                interactomes => this.targetInteractomes = interactomes.filter(
+                    interactome => interactome.speciesA.id === species.id && interactome.speciesB.id === species.id
+                ),
+                error => {
+                    throw error;
+                },
                 () => this.targetInteractomes.sort((a, b) => a.name < b.name ? -1 : 1)
+            );
+    }
+
+    private updateTargetPredictomes(species: Species) {
+        this.targetPredictomes = [];
+
+        const predictomesIds = species.predictomes.map(predictome => predictome.id);
+
+        this.interactomeService.getInteractomesByIds(predictomesIds)
+            .subscribe(
+                predictomes => this.targetPredictomes = predictomes.filter(
+                    predictome => predictome.speciesA.id === species.id && predictome.speciesB.id === species.id
+                ),
+                error => {
+                    throw error;
+                },
+                () => this.targetPredictomes.sort((a, b) => a.name < b.name ? -1 : 1)
             );
     }
 
@@ -261,17 +422,47 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
         this.searchingGenes = true;
 
-        const interactomes = this.formDistinctSpecies.value.referenceInteractome.map(interactome => interactome.id);
+        const interactomes = this.getCurrentQueryReferenceInteractomes();
 
         this.lastGeneSearchSubscription = this.geneService.getGeneName(value, interactomes)
             .subscribe(
                 genes => this.genes = genes,
-                error => { throw error; },
+                error => {
+                    throw error;
+                },
                 () => {
                     this.searchingGenes = false;
                     this.lastGeneSearchSubscription.unsubscribe();
                 }
             );
+    }
+
+    private getCurrentQueryReferenceInteractomes(): number[] {
+        const formModel = this.formDistinctSpecies.value;
+
+        const queryInteractomes = [];
+        if (formModel.referenceInteractomes) {
+            formModel.referenceInteractomes.map(i => i.id).forEach(i => queryInteractomes.push(i));
+        }
+        if (formModel.referencePredictomes) {
+            formModel.referencePredictomes.map(p => p.id).forEach(p => queryInteractomes.push(p));
+        }
+
+        return queryInteractomes;
+    }
+
+    private getCurrentQueryTargetInteractomes(): number[] {
+        const formModel = this.formDistinctSpecies.value;
+
+        const queryInteractomes = [];
+        if (formModel.targetInteractomes) {
+            formModel.targetInteractomes.map(i => i.id).forEach(i => queryInteractomes.push(i));
+        }
+        if (formModel.targetPredictomes) {
+            formModel.targetPredictomes.map(p => p.id).forEach(p => queryInteractomes.push(p));
+        }
+
+        return queryInteractomes;
     }
 
     private showNotification(): void {

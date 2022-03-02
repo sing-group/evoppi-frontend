@@ -20,9 +20,9 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {GeneInfo, Interactome, Species} from '../../../entities/bio';
 import {SpeciesService} from '../../results/services/species.service';
 import {GeneService} from '../../results/services/gene.service';
@@ -32,6 +32,7 @@ import {InteractomeService} from '../../results/services/interactome.service';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';
+import {Predictome} from '../../../entities/bio/predictome.model';
 
 @Component({
     selector: 'app-form-same-species',
@@ -45,6 +46,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
     public species: Species[];
     public interactomes: Interactome[] = [];
+    public predictomes: Interactome[] = [];
     public genes: GeneInfo[];
 
     public searchingGenes: boolean;
@@ -54,6 +56,7 @@ export class FormSameSpeciesComponent implements OnInit {
 
     private controlSpecies: AbstractControl;
     private controlInteractomes: AbstractControl;
+    private controlPredictomes: AbstractControl;
     private controlGene: AbstractControl;
 
     private lastGeneSearchSubscription: Subscription;
@@ -68,7 +71,8 @@ export class FormSameSpeciesComponent implements OnInit {
         private formBuilder: FormBuilder,
         private bottomSheet: MatBottomSheet,
         private workStatusService: WorkStatusService
-    ) {}
+    ) {
+    }
 
     ngOnInit(): void {
         this.processing = false;
@@ -76,17 +80,20 @@ export class FormSameSpeciesComponent implements OnInit {
 
         this.species = [];
         this.interactomes = [];
+        this.predictomes = [];
         this.genes = [];
 
         this.formSameSpecies = this.formBuilder.group({
             'species': [null, Validators.required],
-            'interactomes': [{value: null, disabled: true}, [Validators.required]],
+            'interactomes': [{value: null, disabled: true}, [this.validateInteractomeSelection()]],
+            'predictomes': [{value: null, disabled: true}, [this.validateInteractomeSelection()]],
             'gene': [{value: null, disabled: true}, [Validators.required]],
             'level': [FormSameSpeciesComponent.DEFAULT_VALUES.level, [Validators.required, Validators.min(1), Validators.max(3)]]
         });
 
         this.controlSpecies = this.formSameSpecies.get('species');
         this.controlInteractomes = this.formSameSpecies.get('interactomes');
+        this.controlPredictomes = this.formSameSpecies.get('predictomes');
         this.controlGene = this.formSameSpecies.get('gene');
 
         this.updateSpecies();
@@ -96,6 +103,11 @@ export class FormSameSpeciesComponent implements OnInit {
 
             this.controlInteractomes.reset();
             this.controlInteractomes.enable();
+
+            this.updatePredictomes(species);
+
+            this.controlPredictomes.reset();
+            this.controlPredictomes.enable();
         });
 
         this.controlInteractomes.statusChanges.subscribe(status => {
@@ -107,9 +119,39 @@ export class FormSameSpeciesComponent implements OnInit {
             }
         });
 
+        this.controlPredictomes.statusChanges.subscribe(status => {
+            if (status === 'VALID') {
+                this.controlGene.enable();
+            } else {
+                this.controlGene.reset();
+                this.controlGene.disable();
+            }
+        });
+
         this.controlGene.valueChanges
             .pipe(debounceTime(500))
-        .subscribe(genes => this.updateGenes(genes));
+            .subscribe(genes => this.updateGenes(genes));
+    }
+
+    private validateInteractomeSelection(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.interactomes === undefined || this.predictomes === undefined) {
+                console.warn('Interactomes/predictomes are not loaded.');
+                return null;
+            }
+
+            if (
+                (!this.controlInteractomes.value || this.controlInteractomes.value.length === 0) &&
+                (!this.controlPredictomes.value || this.controlPredictomes.value.length === 0)
+            ) {
+                return {
+                    'interactomes': `At least one interactome or predictome must be selected.`,
+                    'predictomes': `At least one interactome or predictome must be selected.`
+                };
+            } else {
+                return null;
+            }
+        }
     }
 
     public selectAllInteractomes(): void {
@@ -118,6 +160,14 @@ export class FormSameSpeciesComponent implements OnInit {
 
     public deselectAllInteractomes(): void {
         this.controlInteractomes.reset();
+    }
+
+    public selectAllPredictomes(): void {
+        this.controlPredictomes.setValue(this.predictomes);
+    }
+
+    public deselectAllPredictomes(): void {
+        this.controlPredictomes.reset();
     }
 
     public onGeneSelected(value): void {
@@ -133,9 +183,12 @@ export class FormSameSpeciesComponent implements OnInit {
         this.processing = true;
 
         const formModel = this.formSameSpecies.value;
+
+        const queryInteractomes = this.getCurrentQueryInteractomes();
+
         this.interactionService.getSameSpeciesInteraction(
             formModel.gene,
-            formModel.interactomes.map(interactome => interactome.id),
+            queryInteractomes,
             formModel.level
         )
             .subscribe(
@@ -150,18 +203,45 @@ export class FormSameSpeciesComponent implements OnInit {
                 },
                 () => this.processing = false
             );
+
+        this.processing = false;
+    }
+
+    private getCurrentQueryInteractomes(): number[] {
+        const formModel = this.formSameSpecies.value;
+
+        const queryInteractomes = [];
+        if (formModel.interactomes) {
+            formModel.interactomes.map(i => i.id).forEach(i => queryInteractomes.push(i));
+        }
+        if (formModel.predictomes) {
+            formModel.predictomes.map(p => p.id).forEach(p => queryInteractomes.push(p));
+        }
+
+        return queryInteractomes;
     }
 
     public isValidForm(): boolean {
+        this.forceInteractomeControlsValidation();
+
         return this.formSameSpecies.valid
             && Number.parseInt(this.controlGene.value, 10) >= 0
             && !this.processing;
     }
 
+    private forceInteractomeControlsValidation(): void {
+        if (!this.controlPredictomes.valid) {
+            this.controlPredictomes.updateValueAndValidity();
+        }
+        if (!this.controlInteractomes.valid) {
+            this.controlInteractomes.updateValueAndValidity();
+        }
+    }
+
     private updateSpecies(): void {
         this.speciesService.listAll()
-            .pipe(map(species => species.filter(specie => specie.interactomes.length >= 1)))
-        .subscribe(species => this.species = species);
+            .pipe(map(species => species.filter(s => s.interactomes.length >= 1 || s.predictomes.length >= 1)))
+            .subscribe(species => this.species = species);
     }
 
     private updateInteractomes(species: Species): void {
@@ -171,11 +251,36 @@ export class FormSameSpeciesComponent implements OnInit {
         }
 
         const interactomeIds = species.interactomes.map(interactome => interactome.id);
+
         this.interactomeService.getInteractomesByIds(interactomeIds)
             .subscribe(
-                interactomes => this.interactomes = interactomes,
-                error => { throw error; },
+                interactomes => this.interactomes = interactomes.filter(
+                    interactome => interactome.speciesA.id === species.id && interactome.speciesB.id === species.id
+                ),
+                error => {
+                    throw error;
+                },
                 () => this.interactomes.sort((a, b) => a.name < b.name ? -1 : 1)
+            );
+    }
+
+    private updatePredictomes(species: Species): void {
+        this.predictomes = [];
+        if (species === null) {
+            return;
+        }
+
+        const predictomesIds = species.predictomes.map(predictome => predictome.id);
+
+        this.interactomeService.getInteractomesByIds(predictomesIds)
+            .subscribe(
+                predictomes => this.predictomes = predictomes.filter(
+                    predictome => predictome.speciesA.id === species.id && predictome.speciesB.id === species.id
+                ),
+                error => {
+                    throw error;
+                },
+                () => this.predictomes.sort((a, b) => a.name < b.name ? -1 : 1)
             );
     }
 
@@ -191,14 +296,14 @@ export class FormSameSpeciesComponent implements OnInit {
 
         this.searchingGenes = true;
 
-        let interactomes = [];
-        if (this.interactomes.length > 0) {
-            interactomes = this.interactomes.map((interactome) => interactome.id);
-        }
+        const interactomes = this.getCurrentQueryInteractomes();
+
         this.lastGeneSearchSubscription = this.geneService.getGeneName(value, interactomes)
             .subscribe(
                 genes => this.genes = genes,
-                error => { throw error; },
+                error => {
+                    throw error;
+                },
                 () => {
                     this.searchingGenes = false;
                     this.lastGeneSearchSubscription.unsubscribe();

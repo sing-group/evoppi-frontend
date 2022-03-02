@@ -22,7 +22,7 @@
 <form [formGroup]="formDistinctSpecies">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <mat-form-field class="width-50">
                     <mat-select placeholder="Reference Species" formControlName="referenceSpecies">
                         <mat-option *ngFor="let species of referenceSpecies" [value]="species">
@@ -32,7 +32,7 @@
                 </mat-form-field>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <mat-form-field class="width-50 right">
                     <mat-select placeholder="Reference Interactomes" [multiple]="true"
                                 formControlName="referenceInteractome">
@@ -52,9 +52,30 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+
+            <div class="col-md-4">
+                <mat-form-field class="width-50 right">
+                    <mat-select placeholder="Reference Predictomes" [multiple]="true"
+                                formControlName="referencePredictome">
+                        <mat-option disabled="disabled" *ngIf="referencePredictomes" class="filter-option">
+                            <button mat-raised-button color="primary"
+                                    (click)="selectAllReferencePredictomes()">
+                                Select All
+                            </button>
+                            <button mat-raised-button color="accent"
+                                    (click)="deselectAllReferencePredictomes()">
+                                Deselect All
+                            </button>
+                        </mat-option>
+                        <mat-option *ngFor="let predictome of referencePredictomes" [value]="predictome">
+                            {{ predictome.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <mat-form-field class="width-50">
                     <mat-select placeholder="Target Species" formControlName="targetSpecies">
                         <mat-option *ngFor="let species of targetSpecies" [value]="species">
@@ -64,7 +85,7 @@
                 </mat-form-field>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <mat-form-field class="width-50 right">
                     <mat-select placeholder="Target Interactomes" formControlName="targetInteractome" [multiple]="true">
                         <mat-option disabled="disabled" *ngIf="targetInteractomes" class="filter-option">
@@ -79,6 +100,27 @@
                         </mat-option>
                         <mat-option *ngFor="let interactome of targetInteractomes" [value]="interactome">
                             {{ interactome.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+                <mat-form-field class="width-50 right">
+                    <mat-select placeholder="Target Predictomes" [multiple]="true"
+                                formControlName="targetPredictome">
+                        <mat-option disabled="disabled" *ngIf="targetPredictomes" class="filter-option">
+                            <button mat-raised-button color="primary"
+                                    (click)="selectAllTargetPredictomes()">
+                                Select All
+                            </button>
+                            <button mat-raised-button color="accent"
+                                    (click)="deselectAllTargetPredictomes()">
+                                Deselect All
+                            </button>
+                        </mat-option>
+                        <mat-option *ngFor="let predictome of targetPredictomes" [value]="predictome">
+                            {{ predictome.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

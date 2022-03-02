@@ -20,10 +20,13 @@
  */
 
 import {Interactome} from './interactome.model';
+import {Predictome} from './predictome.model';
+import {DatabaseInteractome} from './database-interactome.model';
 
 export interface Species {
     id: number;
     name: string;
     uri: string;
-    interactomes: Interactome[];
+    interactomes: DatabaseInteractome[];
+    predictomes: Predictome[];
 }

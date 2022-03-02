@@ -22,7 +22,7 @@
 <form [formGroup]="formSameSpecies">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <mat-form-field>
                     <mat-select placeholder="Species" formControlName="species">
                         <mat-option *ngFor="let specie of species" [value]="specie">
@@ -31,7 +31,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <mat-form-field>
                     <mat-select placeholder="Interactomes" formControlName="interactomes" [multiple]="true">
                         <mat-option disabled="disabled" *ngIf="interactomes" class="filter-option">
@@ -44,6 +44,23 @@
                         </mat-option>
                         <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
                             {{ interactome.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field>
+                    <mat-select placeholder="Predictomes" formControlName="predictomes" [multiple]="true">
+                        <mat-option disabled="disabled" *ngIf="predictomes" class="filter-option">
+                            <button mat-raised-button color="primary" (click)="selectAllPredictomes()">
+                                Select All
+                            </button>
+                            <button mat-raised-button color="accent" (click)="deselectAllPredictomes()">
+                                Deselect All
+                            </button>
+                        </mat-option>
+                        <mat-option *ngFor="let predictome of predictomes" [value]="predictome">
+                            {{ predictome.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
