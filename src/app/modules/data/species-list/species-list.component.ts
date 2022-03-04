@@ -47,7 +47,7 @@ export class SpeciesListComponent extends CanDeactivateComponent implements OnIn
 
     dataSource: MatPaginatedDataSource<Species>;
 
-    columns = ['NAME', 'INTERACTOMES_COUNT', 'ACTIONS'];
+    columns = ['NAME', 'INTERACTOMES_COUNT', 'PREDICTOMES_COUNT', 'ACTIONS'];
 
     @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
 
