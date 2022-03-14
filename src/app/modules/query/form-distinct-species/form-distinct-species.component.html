@@ -35,7 +35,7 @@
             <div class="col-md-4">
                 <mat-form-field class="width-50 right">
                     <mat-select placeholder="Reference Interactomes" [multiple]="true"
-                                formControlName="referenceInteractome">
+                                formControlName="referenceInteractomes">
                         <mat-option disabled="disabled" *ngIf="referenceInteractomes" class="filter-option">
                             <button mat-raised-button color="primary"
                                     (click)="selectAllReferenceInteractomes()">
@@ -56,7 +56,7 @@
             <div class="col-md-4">
                 <mat-form-field class="width-50 right">
                     <mat-select placeholder="Reference Predictomes" [multiple]="true"
-                                formControlName="referencePredictome">
+                                formControlName="referencePredictomes">
                         <mat-option disabled="disabled" *ngIf="referencePredictomes" class="filter-option">
                             <button mat-raised-button color="primary"
                                     (click)="selectAllReferencePredictomes()">
@@ -87,7 +87,7 @@
 
             <div class="col-md-4">
                 <mat-form-field class="width-50 right">
-                    <mat-select placeholder="Target Interactomes" formControlName="targetInteractome" [multiple]="true">
+                    <mat-select placeholder="Target Interactomes" formControlName="targetInteractomes" [multiple]="true">
                         <mat-option disabled="disabled" *ngIf="targetInteractomes" class="filter-option">
                             <button mat-raised-button color="primary"
                                     (click)="selectAllTargetInteractomes()">
@@ -108,7 +108,7 @@
             <div class="col-md-4">
                 <mat-form-field class="width-50 right">
                     <mat-select placeholder="Target Predictomes" [multiple]="true"
-                                formControlName="targetPredictome">
+                                formControlName="targetPredictomes">
                         <mat-option disabled="disabled" *ngIf="targetPredictomes" class="filter-option">
                             <button mat-raised-button color="primary"
                                     (click)="selectAllTargetPredictomes()">

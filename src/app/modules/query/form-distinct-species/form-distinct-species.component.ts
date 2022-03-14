@@ -88,10 +88,10 @@ export class FormDistinctSpeciesComponent implements OnInit {
         this.formDistinctSpecies = this.formBuilder.group({
             'referenceSpecies': [null, Validators.required],
             'targetSpecies': [{value: null, disabled: true}, Validators.required],
-            'referenceInteractome': [{value: null, disabled: true}, [this.validateReferenceInteractomeSelection()]],
-            'referencePredictome': [{value: null, disabled: true}, [this.validateReferenceInteractomeSelection()]],
-            'targetInteractome': [{value: null, disabled: true}, [this.validateTargetInteractomeSelection()]],
-            'targetPredictome': [{value: null, disabled: true}, [this.validateTargetInteractomeSelection()]],
+            'referenceInteractomes': [{value: null, disabled: true}, [this.validateReferenceInteractomeSelection()]],
+            'referencePredictomes': [{value: null, disabled: true}, [this.validateReferenceInteractomeSelection()]],
+            'targetInteractomes': [{value: null, disabled: true}, [this.validateTargetInteractomeSelection()]],
+            'targetPredictomes': [{value: null, disabled: true}, [this.validateTargetInteractomeSelection()]],
             'gene': [{value: null, disabled: true}, Validators.required],
             'eValue': [FormDistinctSpeciesComponent.DEFAULT_VALUES.eValue, [Validators.required, Validators.min(0)]],
             'minAlignLength': [FormDistinctSpeciesComponent.DEFAULT_VALUES.minAlignLength, [Validators.required, Validators.min(0)]],
@@ -107,11 +107,11 @@ export class FormDistinctSpeciesComponent implements OnInit {
         });
 
         this.controlReferenceSpecies = this.formDistinctSpecies.get('referenceSpecies');
-        this.controlReferenceInteractomes = this.formDistinctSpecies.get('referenceInteractome');
-        this.controlReferencePredictomes = this.formDistinctSpecies.get('referencePredictome');
+        this.controlReferenceInteractomes = this.formDistinctSpecies.get('referenceInteractomes');
+        this.controlReferencePredictomes = this.formDistinctSpecies.get('referencePredictomes');
         this.controlTargetSpecies = this.formDistinctSpecies.get('targetSpecies');
-        this.controlTargetInteractomes = this.formDistinctSpecies.get('targetInteractome');
-        this.controlTargetPredictomes = this.formDistinctSpecies.get('targetPredictome');
+        this.controlTargetInteractomes = this.formDistinctSpecies.get('targetInteractomes');
+        this.controlTargetPredictomes = this.formDistinctSpecies.get('targetPredictomes');
         this.controlGene = this.formDistinctSpecies.get('gene');
 
         this.updateReferenceSpecies();
