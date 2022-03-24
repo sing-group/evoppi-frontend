@@ -85,16 +85,8 @@ export class ChartSameSpeciesComponent implements OnInit {
                 const nodes = [];
                 const links = [];
 
-                const getGene = geneId => res.interactions.genes.find(gene => gene.geneId === geneId);
-
                 for (const interaction of this.interaction) {
-                    const geneInfoA = getGene(interaction.geneA);
-                    interaction.firstNameA = geneInfoA.defaultName;
-
-                    const geneInfoB = getGene(interaction.geneB);
-                    interaction.firstNameB = geneInfoB.defaultName;
-
-                    const from = new Node(nodes.length, interaction.geneA, interaction.firstNameA);
+                    const from = new Node(nodes.length, interaction.geneA, interaction.geneAName);
                     let fromIndex = nodes.findIndex(x => x.label === from.label);
                     if (fromIndex === -1) {
                         fromIndex = nodes.length;
@@ -103,7 +95,7 @@ export class ChartSameSpeciesComponent implements OnInit {
                         nodes[fromIndex].linkCount++;
                     }
 
-                    const to = new Node(nodes.length, interaction.geneB, interaction.firstNameB);
+                    const to = new Node(nodes.length, interaction.geneB, interaction.geneBName);
                     let toIndex = nodes.findIndex(x => x.label === to.label);
                     if (toIndex === -1) {
                         toIndex = nodes.length;
@@ -127,7 +119,6 @@ export class ChartSameSpeciesComponent implements OnInit {
                     } else {
                         console.error('Shouldn\'t happen', interaction.interactomeDegrees);
                     }
-
                 }
 
                 this.nodes = nodes;

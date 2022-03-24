@@ -32,11 +32,6 @@ export interface WorkResult {
         filteringOptions?: object,
         interactions: Interaction[],
         result?: { id: string, uri: string },
-        // Same species
-        genes?: Gene[]
-        // Distinct species
-        referenceGenes?: Gene[],
-        targetGenes?: Gene[],
     };
     totalInteractions?: number;
 

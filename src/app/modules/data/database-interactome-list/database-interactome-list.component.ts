@@ -58,7 +58,7 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
     @ViewChild(MatSort) sort: MatSort;
     @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
 
-    columns = ['NAME', 'SOURCE_DB', 'SPECIESA', 'SPECIESB', 'ACTIONS'];
+    columns = ['SPECIESA', 'NAME', 'ACTIONS'];
     dataSource: MatPaginatedDataSource<DatabaseInteractome>;
 
     private requestActive = false;

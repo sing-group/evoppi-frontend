@@ -31,9 +31,9 @@ export class SortHelper {
       case 'GeneB':
         return data.geneB;
       case 'NameA':
-        return data.firstNameA.toLowerCase();
+        return data.geneAName.toLowerCase();
       case 'NameB':
-        return data.firstNameB.toLowerCase();
+        return data.geneBName.toLowerCase();
       case 'ReferenceInteractome':
         if (data.interactomeDegrees && data.interactomeDegrees[0]) {
           return data.interactomeDegrees[0].degree;

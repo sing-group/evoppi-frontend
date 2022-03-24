@@ -41,6 +41,19 @@
                                      [ngClass]="{gray: even}"></mat-row>
                             <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
 
+                            <ng-container matColumnDef="SPECIESA">
+                                <mat-header-cell *matHeaderCellDef
+                                                 matTooltip="The species of the interactome." mat-sort-header>
+                                    Species
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let interactome">
+                                    {{interactome.speciesA.name}}
+                                </mat-cell>
+                                <mat-footer-cell *matFooterCellDef>
+                                    <app-table-input label="Species filter"></app-table-input>
+                                </mat-footer-cell>
+                            </ng-container>
+
                             <ng-container matColumnDef="NAME">
                                 <mat-header-cell *matHeaderCellDef
                                                  matTooltip="The name of the interactome." mat-sort-header>
@@ -50,44 +63,6 @@
                                     {{interactome.name}}
                                 </mat-cell>
                                 <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="SOURCE_DB">
-                                <mat-header-cell *matHeaderCellDef
-                                                 matTooltip="The database from which the interactome was taken."
-                                                 mat-sort-header>
-                                    Source Gene Identifier
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let interactome">
-                                    {{interactome.dbSourceIdType}}
-                                </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="SPECIESA">
-                                <mat-header-cell *matHeaderCellDef
-                                                 matTooltip="The species A of the interactome." mat-sort-header>
-                                    Species A
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let interactome">
-                                    {{interactome.speciesA.name}}
-                                </mat-cell>
-                                <mat-footer-cell *matFooterCellDef>
-                                    <app-table-input label="Species A filter"></app-table-input>
-                                </mat-footer-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="SPECIESB">
-                                <mat-header-cell *matHeaderCellDef
-                                                 matTooltip="The species B of the interactome." mat-sort-header>
-                                    Species B
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let interactome">
-                                    {{interactome.speciesB.name}}
-                                </mat-cell>
-                                <mat-footer-cell *matFooterCellDef>
-                                    <app-table-input label="Species B filter"></app-table-input>
-                                </mat-footer-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="ACTIONS">

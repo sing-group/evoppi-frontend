@@ -39,7 +39,7 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
     @ViewChild(MatSort) sort: MatSort;
     @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
 
-    columns = ['CONVERSION_DATABASE', 'SOURCE_INTERACTOME', 'SPECIESA', 'SPECIESB', 'ACTIONS'];
+    columns = ['SPECIESA', 'CONVERSION_DATABASE', 'SOURCE_INTERACTOME', 'ACTIONS'];
     dataSource: MatPaginatedDataSource<Predictome>;
 
     private requestActive = false;

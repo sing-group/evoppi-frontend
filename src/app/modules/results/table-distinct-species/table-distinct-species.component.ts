@@ -157,17 +157,31 @@ export class TableDistinctSpeciesComponent implements OnInit {
 
                 // Construct nodes and links
                 let nodeIndex = 0;
-                const nodes = res.interactions.referenceGenes.map(gene =>
+                const geneIds = [];
+                const genes = []
+
+                res.interactions.interactions.forEach((item) => {
+                    if (!geneIds.includes(item.geneA)) {
+                        const row = {
+                            geneId: item.geneA,
+                            defaultName: item.geneAName,
+                            uri: ''
+                        };
+                        genes.push(row);
+                        geneIds.push(item.geneA);
+                    }
+                });
+
+                const nodes = genes.map(gene =>
                     new Node(
                         nodeIndex++,
                         gene.geneId,
                         gene.defaultName,
                         res.interactions.blastResults.filter(blast => blast.qseqid === gene.geneId))
                 );
-                const csvData = [];
+                const links = [];
 
-                const geneIds = res.interactions.referenceGenes.map(gene => gene.geneId)
-                    .sort((idA, idB) => idA - idB);
+                const csvData = [];
 
                 for (let i = 0; i < geneIds.length; i++) {
                     for (let j = i; j < geneIds.length; j++) {

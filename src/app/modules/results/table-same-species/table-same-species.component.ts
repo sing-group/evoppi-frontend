@@ -170,20 +170,13 @@ export class TableSameSpeciesComponent implements OnInit {
 
                 const csvData = [];
 
-                const getGene = geneId => res.interactions.genes.find(gene => gene.geneId === geneId);
-
                 for (const interaction of this.interaction) {
-                    const geneInfoA = getGene(interaction.geneA);
-                    interaction.firstNameA = geneInfoA.defaultName;
-
-                    const geneInfoB = getGene(interaction.geneB);
-                    interaction.firstNameB = geneInfoB.defaultName;
-
                     const csvRow =
                         [
-                            interaction.geneA, interaction.firstNameA,
-                            interaction.geneB, interaction.firstNameB,
+                            interaction.geneA, interaction.geneAName,
+                            interaction.geneB, interaction.geneBName,
                         ];
+
                     if (this.collapseInteractomes) {
                         const degrees = interaction.interactomeDegrees.map(interactomeDegree => interactomeDegree.degree)
                             .filter((filterItem, position, self) => self.indexOf(filterItem) === position) // Removes duplicates
@@ -201,8 +194,8 @@ export class TableSameSpeciesComponent implements OnInit {
                             }
                         });
                     }
-                    csvData.push(csvRow);
 
+                    csvData.push(csvRow);
                 }
 
                 let headers: string[];
@@ -221,12 +214,7 @@ export class TableSameSpeciesComponent implements OnInit {
                 );
 
                 const interactomeIds = res.interactomes.map(interactome => interactome.id).join('_');
-                const geneData = getGene(res.queryGene);
                 let name: string = res.queryGene.name;
-                if (geneData && geneData.names && geneData.names.length > 0
-                    && geneData.names[0].names && geneData.names[0].names.length > 0) {
-                    name = geneData.names[0].names[0];
-                }
                 this.csvName = 'interaction_' + name + '_' + interactomeIds + '.csv';
 
                 this.dataSource = new MatTableDataSource<Interaction>(this.interaction);

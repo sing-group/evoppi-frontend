@@ -49,20 +49,6 @@
                                     <app-table-input label="Name filter"></app-table-input>
                                 </mat-footer-cell>
                             </ng-container>
-                            <ng-container matColumnDef="INTERACTOMES_COUNT">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>#Interactomes</mat-header-cell>
-                                <mat-cell *matCellDef="let species">
-                                    {{species.interactomes.length}}
-                                </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="PREDICTOMES_COUNT">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>#Predictomes</mat-header-cell>
-                                <mat-cell *matCellDef="let species">
-                                    {{species.predictomes.length}}
-                                </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-                            </ng-container>
                             <ng-container matColumnDef="ACTIONS">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                 <mat-cell *matCellDef="let species">

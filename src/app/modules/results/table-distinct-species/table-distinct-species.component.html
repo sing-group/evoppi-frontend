@@ -84,7 +84,7 @@
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Name A</mat-header-cell>
                                 <mat-cell *matCellDef="let row">
                                     <a (click)="onClickGene(row.geneA, row.blastResultsA)"
-                                       ngClass="{{'gene' + row.typeA}}">{{row.firstNameA}}</a>
+                                       ngClass="{{'gene' + row.typeA}}">{{row.geneAName}}</a>
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="GeneB">
@@ -98,7 +98,7 @@
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Name B</mat-header-cell>
                                 <mat-cell *matCellDef="let row">
                                     <a (click)="onClickGene(row.geneB, row.blastResultsB)"
-                                       ngClass="{{'gene' + row.typeB}}">{{row.firstNameB}}</a>
+                                       ngClass="{{'gene' + row.typeB}}">{{row.geneBName}}</a>
                                 </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="ReferenceInteractome">

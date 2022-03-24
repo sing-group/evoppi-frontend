@@ -21,7 +21,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
-import {Interaction, Interactome} from '../../../entities/bio';
+import {Gene, Interaction, Interactome} from '../../../entities/bio';
 import {Link} from '../../../entities/bio/results/link.model';
 import {Node} from '../../../entities/bio/results/node.model';
 import {environment} from '../../../../environments/environment';
@@ -99,9 +99,37 @@ export class ChartDistinctSpeciesComponent implements OnInit {
                     }
                 }
 
+                function onlyUnique(value, index, self) {
+                    return self.indexOf(value) === index;
+                }
+
                 // Construct nodes and links
                 let nodeIndex = 0;
-                const nodes = res.interactions.referenceGenes.map(gene =>
+                const geneIds = [];
+                const genes = []
+
+                res.interactions.interactions.forEach((item) => {
+                    if (!geneIds.includes(item.geneA)) {
+                        const row = {
+                            geneId: item.geneA,
+                            defaultName: item.geneAName,
+                            uri: ''
+                        };
+                        genes.push(row);
+                        geneIds.push(item.geneA);
+                    }
+                    if (!geneIds.includes(item.geneB)) {
+                        const row = {
+                            geneId: item.geneB,
+                            defaultName: item.geneBName,
+                            uri: ''
+                        };
+                        genes.push(row);
+                        geneIds.push(item.geneB);
+                    }
+                });
+
+                const nodes = genes.map(gene =>
                     new Node(
                         nodeIndex++,
                         gene.geneId,
@@ -109,9 +137,6 @@ export class ChartDistinctSpeciesComponent implements OnInit {
                         res.interactions.blastResults.filter(blast => blast.qseqid === gene.geneId))
                 );
                 const links = [];
-
-                const geneIds = res.interactions.referenceGenes.map(gene => gene.geneId)
-                    .sort((idA, idB) => idA - idB);
 
                 for (let i = 0; i < geneIds.length; i++) {
                     for (let j = i; j < geneIds.length; j++) {

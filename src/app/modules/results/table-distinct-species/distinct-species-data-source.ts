@@ -89,11 +89,11 @@ export class DistinctSpeciesDataSource implements DataSource<Interaction> {
             return {
               geneA: item.geneA,
               typeA: (blastResultsA.length > 0 ? 2 : 1),
-              firstNameA: res.interactions.referenceGenes.find(gene => gene.geneId === item.geneA).defaultName,
+              geneAName: item.geneAName,
               blastResultsA: blastResultsA,
               geneB: item.geneB,
               typeB: (blastResultsB.length > 0 ? 2 : 1),
-              firstNameB: res.interactions.referenceGenes.find(gene => gene.geneId === item.geneB).defaultName,
+              geneBName: item.geneBName,
               blastResultsB: blastResultsB,
               referenceDegree: referenceDegree,
               targetDegrees: targetDegrees

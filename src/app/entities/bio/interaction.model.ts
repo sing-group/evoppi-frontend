@@ -25,15 +25,13 @@ import {BlastResult} from './results';
 
 export interface Interaction {
   geneA: number;
+  geneAName: string;
   geneB: number;
+  geneBName: string;
   interactomeDegrees?: InteractomeDegree[];
   referenceDegree?: number;
   targetDegrees?: number[];
   code?: string;
-  geneInfoA?: GeneInfo;
-  geneInfoB?: GeneInfo;
-  firstNameA?: string;
-  firstNameB?: string;
   typeA?: number;
   typeB?: number;
   blastResultsA?: BlastResult[];

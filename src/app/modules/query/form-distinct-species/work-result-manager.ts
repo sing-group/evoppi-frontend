@@ -41,7 +41,9 @@ export class WorkResultManager {
     return this.result.interactions.interactions
       .map(interaction => ({
         geneA: interaction.geneA,
+        geneAName: interaction.geneAName,
         geneB: interaction.geneB,
+        geneBName: interaction.geneBName,
         interactomeDegrees: interaction.interactomeDegrees.filter(intDegree => this.isReferenceInteractome(intDegree.id))
       }))
       .filter(interaction => interaction.interactomeDegrees.length > 0);
@@ -50,8 +52,10 @@ export class WorkResultManager {
   getTargetInteractions(): Interaction[] {
     return this.result.interactions.interactions
       .map(interaction => ({
-        geneA: interaction.geneA,
-        geneB: interaction.geneB,
+          geneA: interaction.geneA,
+          geneAName: interaction.geneAName,
+          geneB: interaction.geneB,
+          geneBName: interaction.geneBName,
         interactomeDegrees: interaction.interactomeDegrees.filter(intDegree => this.isTargetInteractome(intDegree.id))
       }))
       .filter(interaction => interaction.interactomeDegrees.length > 0);
