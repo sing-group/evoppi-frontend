@@ -54,6 +54,8 @@ class InteractomeServiceWrapper implements PaginatedDataProvider<DatabaseInterac
     styleUrls: ['./database-interactome-list.component.scss']
 })
 export class DatabaseInteractomeListComponent extends CanDeactivateComponent implements OnInit, AfterViewInit {
+    private static readonly FILTER_SUFFIX = '_FILTER';
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
@@ -62,6 +64,9 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
     dataSource: MatPaginatedDataSource<DatabaseInteractome>;
 
     private requestActive = false;
+
+    private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + DatabaseInteractomeListComponent.FILTER_SUFFIX;
+    private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(DatabaseInteractomeListComponent.FILTER_SUFFIX, '');
 
     constructor(
         private readonly bottomSheet: MatBottomSheet,
@@ -77,9 +82,16 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
     }
 
     ngAfterViewInit() {
-        const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
+        const filterFields = TableInputComponent.getFilterValues(
+            this.inputComponents,
+            DatabaseInteractomeListComponent.FILTER_TO_COLUMN_MAPPER
+        );
 
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
+    }
+
+    public get columnFilters(): string[] {
+        return this.columns.map(DatabaseInteractomeListComponent.COLUMN_TO_FILTER_MAPPER);
     }
 
     public onDownloadInteractionsTsv(interactome: DatabaseInteractome): void {

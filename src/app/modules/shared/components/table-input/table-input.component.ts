@@ -31,7 +31,9 @@ import {Observable} from 'rxjs/internal/Observable';
 })
 export class TableInputComponent implements OnInit {
     public static getFilterValues(
-        inputComponents: Iterable<TableInputComponent>, columnPrefix: string = 'mat-column-'
+        inputComponents: Iterable<TableInputComponent>,
+        columnDefMapper: (columnDef: string) => string = (columnDef: string) => columnDef,
+        columnPrefix: string = 'mat-column-'
     ): { [key: string]: Observable<string> } {
         const fieldFilters: { [key: string]: Observable<string> } = {};
 
@@ -41,7 +43,8 @@ export class TableInputComponent implements OnInit {
             if (columnDef === null) {
                 console.error('Missing host column for: ' + component);
             } else {
-                fieldFilters[columnDef] = component.valueChange.asObservable();
+                const columnDefMapped = columnDefMapper(columnDef);
+                fieldFilters[columnDefMapped] = component.valueChange.asObservable();
             }
         }
 

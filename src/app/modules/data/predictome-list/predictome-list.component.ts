@@ -35,6 +35,8 @@ class InteractomeServiceWrapper implements PaginatedDataProvider<Predictome> {
     styleUrls: ['./predictome-list.component.scss']
 })
 export class PredictomeListComponent extends CanDeactivateComponent implements OnInit, AfterViewInit {
+    private static readonly FILTER_SUFFIX = '_FILTER';
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChildren(TableInputComponent) inputComponents: QueryList<TableInputComponent>;
@@ -43,6 +45,9 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
     dataSource: MatPaginatedDataSource<Predictome>;
 
     private requestActive = false;
+
+    private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + PredictomeListComponent.FILTER_SUFFIX;
+    private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(PredictomeListComponent.FILTER_SUFFIX, '');
 
     constructor(
         private readonly bottomSheet: MatBottomSheet,
@@ -58,9 +63,16 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
     }
 
     ngAfterViewInit() {
-        const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
+        const filterFields = TableInputComponent.getFilterValues(
+            this.inputComponents,
+            PredictomeListComponent.FILTER_TO_COLUMN_MAPPER
+        );
 
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
+    }
+
+    public get columnFilters(): string[] {
+        return this.columns.map(PredictomeListComponent.COLUMN_TO_FILTER_MAPPER);
     }
 
     public onDownloadInteractionsTsv(interactome: Predictome): void {

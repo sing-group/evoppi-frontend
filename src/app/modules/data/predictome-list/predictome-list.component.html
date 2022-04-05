@@ -37,9 +37,9 @@
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort class="predictome-list">
                             <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+                            <mat-header-row *matHeaderRowDef="columnFilters"></mat-header-row>
                             <mat-row *matRowDef="let interactome; let even = even; columns: columns;"
                                      [ngClass]="{gray: even}"></mat-row>
-                            <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
 
                             <ng-container matColumnDef="SPECIESA">
                                 <mat-header-cell *matHeaderCellDef
@@ -49,9 +49,12 @@
                                 <mat-cell *matCellDef="let interactome">
                                     {{interactome.speciesA.name}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef>
+                            </ng-container>
+
+                            <ng-container matColumnDef="SPECIESA_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
                                     <app-table-input label="Species filter"></app-table-input>
-                                </mat-footer-cell>
+                                </mat-header-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="SOURCE_INTERACTOME">
@@ -62,7 +65,10 @@
                                 <mat-cell *matCellDef="let interactome">
                                     {{interactome.sourceInteractome}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="SOURCE_INTERACTOME_FILTER">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="CONVERSION_DATABASE">
@@ -74,7 +80,10 @@
                                 <mat-cell *matCellDef="let interactome">
                                     {{interactome.conversionDatabase}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="CONVERSION_DATABASE_FILTER">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="ACTIONS">
@@ -93,7 +102,10 @@
                                         <mat-icon aria-label="Delete interactome">delete</mat-icon>
                                     </button>
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ACTIONS_FILTER">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             </ng-container>
                         </mat-table>
                         <mat-paginator #paginator
