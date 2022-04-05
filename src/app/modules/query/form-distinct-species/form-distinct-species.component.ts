@@ -157,23 +157,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
             }
         });
 
-        this.controlReferenceInteractomes.statusChanges.subscribe(status => {
-            if (status === 'VALID') {
-                this.controlGene.enable();
-            } else {
-                this.controlGene.reset();
-                this.controlGene.disable();
-            }
-        });
+        this.controlReferenceInteractomes.statusChanges.subscribe(status => this.updateControlGene(status));
 
-        this.controlReferencePredictomes.statusChanges.subscribe(status => {
-            if (status === 'VALID') {
-                this.controlGene.enable();
-            } else {
-                this.controlGene.reset();
-                this.controlGene.disable();
-            }
-        });
+        this.controlReferencePredictomes.statusChanges.subscribe(status => this.updateControlGene(status));
 
         this.controlGene.valueChanges
             .pipe(debounceTime(500))
@@ -219,6 +205,15 @@ export class FormDistinctSpeciesComponent implements OnInit {
             } else {
                 return null;
             }
+        }
+    }
+
+    private updateControlGene(status: string): void {
+        if (status === 'VALID') {
+            this.controlGene.enable();
+        } else {
+            this.controlGene.reset();
+            this.controlGene.disable();
         }
     }
 
@@ -333,40 +328,58 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
 
     private updateReferenceInteractomes(species: Species) {
-        this.referenceInteractomes = [];
+        if (this.referenceInteractomes === undefined) {
+            this.referenceInteractomes = [];
+        }
+        this.updateInteractomes(species, this.referenceInteractomes);
+    }
+
+    private updateReferencePredictomes(species: Species) {
+        if (this.referencePredictomes === undefined) {
+            this.referencePredictomes = [];
+        }
+        this.updatePredictomes(species, this.referencePredictomes);
+    }
+
+    private updateInteractomesOrPredictomes(
+        species: Species,
+        interactomes: Interactome[],
+        speciesToInteractomeIds: (species: Species) => number[]
+    ): void {
+        interactomes.splice(0, interactomes.length);
+
         if (species === null) {
             return;
         }
 
-        const interactomeIds = species.interactomes.map(interactome => interactome.id);
+        const interactomeIds = speciesToInteractomeIds(species);
 
         this.interactomeService.getInteractomesByIds(interactomeIds)
             .subscribe(
-                interactomes => this.referenceInteractomes = interactomes.filter(
-                    interactome => interactome.speciesA.id === species.id && interactome.speciesB.id === species.id
+                newInteractomes => newInteractomes.forEach(
+                    interactome => {
+                        if (interactome.speciesA.id === species.id && interactome.speciesB.id === species.id) {
+                            interactomes.push(interactome);
+                        }
+                    }
                 ),
                 error => {
                     throw error;
                 },
-                () => this.referenceInteractomes.sort((a, b) => a.name < b.name ? -1 : 1)
+                () => interactomes.sort((a, b) => a.name < b.name ? -1 : 1)
             );
     }
 
-    private updateReferencePredictomes(species: Species) {
-        this.referencePredictomes = [];
+    private updateInteractomes(species: Species, interactomes: Interactome[]): void {
+        this.updateInteractomesOrPredictomes(
+            species, interactomes, (speciesToMap: Species) => speciesToMap.interactomes.map(interactome => interactome.id)
+        );
+    }
 
-        const predictomesIds = species.predictomes.map(predictome => predictome.id);
-
-        this.interactomeService.getInteractomesByIds(predictomesIds)
-            .subscribe(
-                predictomes => this.referencePredictomes = predictomes.filter(
-                    predictome => predictome.speciesA.id === species.id && predictome.speciesB.id === species.id
-                ),
-                error => {
-                    throw error;
-                },
-                () => this.referencePredictomes.sort((a, b) => a.name < b.name ? -1 : 1)
-            );
+    private updatePredictomes(species: Species, predictomes: Interactome[]): void {
+        this.updateInteractomesOrPredictomes(
+            species, predictomes, (speciesToMap: Species) => speciesToMap.predictomes.map(predictome => predictome.id)
+        );
     }
 
     private onTargetSpeciesChange(species: Species) {
@@ -375,40 +388,17 @@ export class FormDistinctSpeciesComponent implements OnInit {
     }
 
     private updateTargetInteractomes(species: Species) {
-        this.targetInteractomes = [];
-        if (species === null) {
-            return;
+        if (this.targetInteractomes === undefined) {
+            this.targetInteractomes = [];
         }
-
-        const interactomeIds = species.interactomes.map(interactome => interactome.id);
-
-        this.interactomeService.getInteractomesByIds(interactomeIds)
-            .subscribe(
-                interactomes => this.targetInteractomes = interactomes.filter(
-                    interactome => interactome.speciesA.id === species.id && interactome.speciesB.id === species.id
-                ),
-                error => {
-                    throw error;
-                },
-                () => this.targetInteractomes.sort((a, b) => a.name < b.name ? -1 : 1)
-            );
+        this.updateInteractomes(species, this.targetInteractomes);
     }
 
     private updateTargetPredictomes(species: Species) {
-        this.targetPredictomes = [];
-
-        const predictomesIds = species.predictomes.map(predictome => predictome.id);
-
-        this.interactomeService.getInteractomesByIds(predictomesIds)
-            .subscribe(
-                predictomes => this.targetPredictomes = predictomes.filter(
-                    predictome => predictome.speciesA.id === species.id && predictome.speciesB.id === species.id
-                ),
-                error => {
-                    throw error;
-                },
-                () => this.targetPredictomes.sort((a, b) => a.name < b.name ? -1 : 1)
-            );
+        if (this.targetPredictomes === undefined) {
+            this.targetPredictomes = [];
+        }
+        this.updatePredictomes(species, this.targetPredictomes);
     }
 
     private updateGenes(value: string): void {
