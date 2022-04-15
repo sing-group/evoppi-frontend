@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<mat-dialog-content>
+    <app-interactome-selection-form
+        [filters]="filters"
+        [interactomes]="interactomes"
+        [(selectedInteractomeIds)]="selectedInteractomeIds"
+    ></app-interactome-selection-form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="undefined">Cancel</button>
+    <button mat-button class="btn btn-primary" [mat-dialog-close]="selectedInteractomeIds">Confirm</button>
+</mat-dialog-actions>

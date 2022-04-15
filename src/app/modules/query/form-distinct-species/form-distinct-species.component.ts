@@ -32,6 +32,8 @@ import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {InteractomeSelectionDialogComponent} from '../interactome-selection-dialog/interactome-selection-dialog.component';
 
 @Component({
     selector: 'app-form-distinct-species',
@@ -75,6 +77,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        private dialog: MatDialog,
         private speciesService: SpeciesService,
         private interactomeService: InteractomeService,
         private interactionService: InteractionService,
@@ -214,6 +217,31 @@ export class FormDistinctSpeciesComponent implements OnInit {
         } else {
             this.controlGene.reset();
             this.controlGene.disable();
+        }
+    }
+
+    public hasReferencePredictomes(): boolean {
+        return this.referencePredictomes !== undefined && this.referencePredictomes.length > 0;
+    }
+
+    public hasTargetPredictomes(): boolean {
+        return this.targetPredictomes !== undefined && this.targetPredictomes.length > 0;
+    }
+
+    public summarizeSelectedReferencePredictomes(): string {
+        return this.summarizeSelectedPredictomes(this.controlReferencePredictomes.value);
+    }
+
+    public summarizeSelectedTargetPredictomes(): string {
+        return this.summarizeSelectedPredictomes(this.controlTargetPredictomes.value);
+    }
+
+    private summarizeSelectedPredictomes(predictomes?: Interactome[]): string {
+        if (predictomes && predictomes.length > 0) {
+            const numSelected = predictomes.length;
+            return numSelected === 1 ? 'One predictome selected' : `${numSelected} predictomes selected`;
+        } else {
+            return 'No predictome selected';
         }
     }
 
@@ -473,6 +501,53 @@ export class FormDistinctSpeciesComponent implements OnInit {
                 this.router.navigate([
                     this.route.routeConfig.data.resultsResource
                 ]);
+            }
+        });
+    }
+
+    public onSelectReferencePredictomes(): void {
+        this.showPredictomeSelectionDialog(
+            'Reference predictome selection', this.referenceSpecies, this.referencePredictomes, this.controlReferencePredictomes
+        );
+    }
+
+    public onSelectTargetPredictomes(): void {
+        this.showPredictomeSelectionDialog(
+            'Target predictome selection', this.targetSpecies, this.targetPredictomes, this.controlTargetPredictomes
+        );
+    }
+
+    private showPredictomeSelectionDialog(
+        title: string, species: Species[], predictomes: Interactome[], control: AbstractControl
+    ): void {
+        this.dialog.open(InteractomeSelectionDialogComponent, {
+            minWidth: 600,
+            data: {
+                title: title,
+                filters: [
+                    {
+                        name: 'Species',
+                        values: species.map(s => s.name)
+                    },
+                    {
+                        name: 'Database',
+                        values: ['DIOPT', 'ENSEMBL']
+                    }
+                ],
+                interactomes: predictomes,
+                selectedInteractomeIds: control.value === null
+                    ? []
+                    : control.value.map(
+                        predictome => predictome.id
+                    )
+            }
+        }).afterClosed().subscribe((selected: number[]) => {
+            if (selected) {
+                control.setValue(
+                    predictomes.filter(
+                        predictome => selected.includes(predictome.id)
+                    )
+                );
             }
         });
     }

@@ -53,25 +53,16 @@
                 </mat-form-field>
             </div>
 
-            <div class="col-md-4">
-                <mat-form-field class="width-50 right">
-                    <mat-select placeholder="Reference Predictomes" [multiple]="true"
-                                formControlName="referencePredictomes">
-                        <mat-option disabled="disabled" *ngIf="referencePredictomes" class="filter-option">
-                            <button mat-raised-button color="primary"
-                                    (click)="selectAllReferencePredictomes()">
-                                Select All
-                            </button>
-                            <button mat-raised-button color="accent"
-                                    (click)="deselectAllReferencePredictomes()">
-                                Deselect All
-                            </button>
-                        </mat-option>
-                        <mat-option *ngFor="let predictome of referencePredictomes" [value]="predictome">
-                            {{ predictome.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="col-md-4 predictome-form-field">
+                <div class="predictome-summary">
+                    {{summarizeSelectedReferencePredictomes()}}
+                </div>
+                <div class="predictome-selection">
+                    <button mat-button class="btn btn-primary" [disabled]="!hasReferencePredictomes()"
+                            (click)="onSelectReferencePredictomes()">
+                        Select
+                    </button>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -105,25 +96,16 @@
                 </mat-form-field>
             </div>
 
-            <div class="col-md-4">
-                <mat-form-field class="width-50 right">
-                    <mat-select placeholder="Target Predictomes" [multiple]="true"
-                                formControlName="targetPredictomes">
-                        <mat-option disabled="disabled" *ngIf="targetPredictomes" class="filter-option">
-                            <button mat-raised-button color="primary"
-                                    (click)="selectAllTargetPredictomes()">
-                                Select All
-                            </button>
-                            <button mat-raised-button color="accent"
-                                    (click)="deselectAllTargetPredictomes()">
-                                Deselect All
-                            </button>
-                        </mat-option>
-                        <mat-option *ngFor="let predictome of targetPredictomes" [value]="predictome">
-                            {{ predictome.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="col-md-4 predictome-form-field">
+                <div class="predictome-summary">
+                    {{summarizeSelectedTargetPredictomes()}}
+                </div>
+                <div class="predictome-selection">
+                    <button mat-button class="btn btn-primary" [disabled]="!hasTargetPredictomes()"
+                            (click)="onSelectTargetPredictomes()">
+                        Select
+                    </button>
+                </div>
             </div>
         </div>
 

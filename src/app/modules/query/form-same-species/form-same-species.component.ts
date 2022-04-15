@@ -33,6 +33,8 @@ import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';
 import {Predictome} from '../../../entities/bio/predictome.model';
+import {InteractomeSelectionDialogComponent} from '../interactome-selection-dialog/interactome-selection-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
     selector: 'app-form-same-species',
@@ -64,6 +66,7 @@ export class FormSameSpeciesComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        private dialog: MatDialog,
         private speciesService: SpeciesService,
         private interactomeService: InteractomeService,
         private geneService: GeneService,
@@ -163,6 +166,21 @@ export class FormSameSpeciesComponent implements OnInit {
 
     public deselectAllPredictomes(): void {
         this.controlPredictomes.reset();
+    }
+
+    public hasPredictomes(): boolean {
+        return this.predictomes !== undefined && this.predictomes.length > 0;
+    }
+
+    public summarizeSelectedPredictomes() {
+        const predictomes = this.controlPredictomes.value;
+
+        if (predictomes && predictomes.length > 0) {
+            const numSelected = predictomes.length;
+            return numSelected === 1 ? 'One predictome selected' : `${numSelected} predictomes selected`;
+        } else {
+            return 'No predictome selected';
+        }
     }
 
     public onGeneSelected(value): void {
@@ -333,6 +351,39 @@ export class FormSameSpeciesComponent implements OnInit {
                 this.router.navigate([
                     this.route.routeConfig.data.resultsResource
                 ]);
+            }
+        });
+    }
+
+    public onSelectPredictomes(): void {
+        this.dialog.open(InteractomeSelectionDialogComponent, {
+            minWidth: 600,
+            data: {
+                title: 'Predictome selection',
+                filters: [
+                    {
+                        name: 'Species',
+                        values: this.species.map(species => species.name)
+                    },
+                    {
+                        name: 'Database',
+                        values: ['DIOPT', 'ENSEMBL']
+                    }
+                ],
+                interactomes: this.predictomes,
+                selectedInteractomeIds: this.controlPredictomes.value === null
+                    ? []
+                    : this.controlPredictomes.value.map(
+                        predictome => predictome.id
+                    )
+            }
+        }).afterClosed().subscribe((selected: number[]) => {
+            if (selected) {
+                this.controlPredictomes.setValue(
+                    this.predictomes.filter(
+                        predictome => selected.includes(predictome.id)
+                    )
+                );
             }
         });
     }
