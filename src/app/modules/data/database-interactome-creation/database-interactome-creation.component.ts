@@ -197,7 +197,7 @@ export class DatabaseInteractomeCreationComponent implements OnInit {
             {
                 data: {
                     title: 'Interactome creation requested',
-                    message: 'The interactome is being processed. You can check results to track it processing status.',
+                    message: 'The interactome is being processed. You can check results to track it processingCsv status.',
                     confirmLabel: this.route.routeConfig.data.redirectRouteTitle,
                     cancelLabel: 'Close',
                     headerClass: 'card-header-success'

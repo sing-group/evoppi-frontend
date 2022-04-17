@@ -25,136 +25,162 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h4 class="card-title ">Distinct species table:
-                            {{(referenceInteractomes && targetInteractomes ? referenceInteractomes[0]?.speciesA?.name
-                            + ' - ' + targetInteractomes[0]?.speciesA?.name : '')}}
+                        <h4 class="card-title ">
+                            Distinct species<ng-container *ngIf="hasSpeciesNames()"> - {{referenceSpeciesName}} &rarr; {{targetSpeciesName}}</ng-container>
                         </h4>
                         <p class="card-category">Analysis done with interactomes coming from two distinct species</p>
                         <a class="mat-raised-button mat-primary app-action-right"
-                           [routerLink]="'/results/chart/distinct/' + uuid">Show chart</a>
+                           [routerLink]="getChartUrl()">Show chart</a>
                     </div>
                     <div class="card-body">
-                        <div *ngIf="resultAvailable">
-                            <span *ngIf="referenceInteractomes">
-                                <mat-menu #exportMenu="matMenu">
-                                    <button mat-menu-item (click)="downloadSingleFasta()">
-                                        Single FASTA
-                                    </button>
-                                    <button mat-menu-item
-                                            *ngFor="let resInteractome of referenceInteractomes.concat(targetInteractomes)"
-                                            (click)="downloadFasta(resInteractome.name, resInteractome.id)">
-                                        {{resInteractome.name}}
-                                    </button>
-                                </mat-menu>
-                                <button mat-raised-button color="primary" [matMenuTriggerFor]="exportMenu">
-                                    <mat-icon>more_vert</mat-icon>
-                                    Export FASTA
-                                </button>
-                            </span>
-                            <button mat-raised-button color="primary" *ngIf="csvContent === '' && !processing"
-                                    (click)="onPrepareCSV()">Prepare CSV export
-                            </button>
-                            <button mat-raised-button color="primary" *ngIf="csvContent === '' && processing">
-                                Preparing CSV...
-                            </button>
-                            <button mat-button *ngIf="csvContent === '' && processing" disabled>
-                                <mat-icon>
-                                    <mat-spinner [diameter]="20" color="accent"></mat-spinner>
-                                </mat-icon>
-                            </button>
-                            <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName"
-                               *ngIf="csvContent !== ''">Export CSV</a>
-
-                            <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
-                                <mat-icon>link</mat-icon>
-                                Permalink to result</a>
-                        </div>
-                        <mat-table matSort [dataSource]="paginatedDataSource" class="table-distinct-species"
-                                   appAfterViewInit (afterViewInit)="initTable()" *ngIf="resultAvailable">
-                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                            <ng-container matColumnDef="GeneA">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneA, row.blastResultsA)"
-                                       ngClass="{{'gene' + row.typeA}}">{{row.geneA}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="NameA">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name A</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneA, row.blastResultsA)"
-                                       ngClass="{{'gene' + row.typeA}}">{{row.geneAName}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="GeneB">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneB, row.blastResultsB)"
-                                       ngClass="{{'gene' + row.typeB}}">{{row.geneB}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="NameB">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name B</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneB, row.blastResultsB)"
-                                       ngClass="{{'gene' + row.typeB}}">{{row.geneBName}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="ReferenceInteractome">
-                                <mat-header-cell *matHeaderCellDef>
-                                    <span *ngIf="referenceInteractomes?.length > 1">
-                                        <span matTooltip="{{referenceTitle}}">
-                                            {{(referenceInteractomes ? referenceInteractomes[0]?.speciesA?.name : '')}}
-                                            interactomes ({{referenceInteractomes.length}})</span>
-                                    </span>
-                                    <span *ngIf="referenceInteractomes?.length <= 1">
-                                        <span *ngFor="let isFirst=first; let ri of referenceInteractomes; let isLast=last">
-                                            {{isFirst ? ri.speciesA.name + ':' : ''}}
-                                            {{ri.name}}{{isLast ?  '': ','}}
-                                        </span>
-                                    </span>
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <div *ngIf="row.referenceDegree !== ''">Degree {{row.referenceDegree}}</div>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="TargetInteractome">
-                                <mat-header-cell *matHeaderCellDef>
-                                    <span *ngIf="targetInteractomes.length > 1">
-                                        <span matTooltip="{{targetTitle}}">
-                                            {{(targetInteractomes ? targetInteractomes[0]?.speciesA?.name : '')}}
-                                            interactomes ({{targetInteractomes.length}})</span>
-                                    </span>
-                                    <span *ngIf="targetInteractomes.length <= 1">
-                                        <span *ngFor="let isFirst=first; let ti of targetInteractomes; let isLast=last">
-                                            {{isFirst ? ti.speciesA.name + ':' : ''}}
-                                            {{ti.name}}{{isLast ?  '': ','}}
-                                        </span>
-                                    </span>
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <div *ngFor="let degree of row.targetDegrees">Degree {{degree}}</div>
-                                </mat-cell>
-                            </ng-container>
-                        </mat-table>
-                        <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
-                                       [pageSize]="10"
-                                       [pageSizeOptions]="[5, 10, 20, 50]"
-                                       [length]="paginatorLength"
-                                       *ngIf="resultAvailable">
-                        </mat-paginator>
-                        <app-legend-table *ngIf="resultAvailable"></app-legend-table>
-                        <div *ngIf="!resultAvailable">
+                        <div *ngIf="!resultAvailable; else results">
                             <p>
-                                This result is not available at the moment. Please go to the results list to check work status.
+                                Results are being loaded. This may take some time. Please, be patient.
                             </p>
-                            <button class="btn btn-primary" routerLink="/results">Go to results</button>
+                            <button class="btn btn-primary" routerLink="/results">Go back to results</button>
                         </div>
-                        <div class="offset-5 col-6 app-table-spinner" *ngIf="paginatedDataSource.loading$ | async"
-                             [@slideInOut]>
-                            <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
-                        </div>
+                        <ng-template #results>
+                            <div class="toolbar">
+                                <span *ngIf="referenceInteractomes">
+                                    <mat-menu #downloadReferenceInteractomesMenu="matMenu">
+                                        <button mat-menu-item *ngFor="let interactome of referenceInteractomes"
+                                                (click)="onDownloadFasta(interactome.name, interactome.id)">
+                                            {{interactome.name}}
+                                        </button>
+                                    </mat-menu>
+                                    <mat-menu #downloadTargetInteractomesMenu="matMenu">
+                                        <button mat-menu-item *ngFor="let interactome of targetInteractomes"
+                                                (click)="onDownloadFasta(interactome.name, interactome.id)">
+                                            {{interactome.name}}
+                                        </button>
+                                    </mat-menu>
+                                    <mat-menu #downloadFastaMenu="matMenu">
+                                        <button mat-menu-item (click)="onDownloadSingleFasta()">
+                                            Single FASTA
+                                        </button>
+                                        <button mat-menu-item [matMenuTriggerFor]="downloadReferenceInteractomesMenu">
+                                            Reference interactomes
+                                        </button>
+                                        <button mat-menu-item [matMenuTriggerFor]="downloadTargetInteractomesMenu">
+                                            Target interactomes
+                                        </button>
+                                    </mat-menu>
+                                    <button mat-raised-button color="primary" [matMenuTriggerFor]="downloadFastaMenu">
+                                        <mat-icon>more_vert</mat-icon>
+                                        Download FASTA
+                                    </button>
+                                </span>
+
+                                <button mat-raised-button color="primary" *ngIf="!csvContent" [disabled]="processingCsv"
+                                        (click)="onPrepareCsv()">
+                                    <mat-icon>settings</mat-icon>
+                                    Prepare CSV
+                                </button>
+
+                                <a mat-raised-button color="primary" *ngIf="csvContent" [href]="csvContent"
+                                   [download]="csvName">
+                                    <mat-icon>download</mat-icon>
+                                    Download CSV
+                                </a>
+
+                                <span class="toolbar-spacer"></span>
+
+                                <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
+                                    <mat-icon>link</mat-icon>
+                                    Permalink to result
+                                </a>
+                            </div>
+                            <mat-table matSort [dataSource]="paginatedDataSource" class="table-distinct-species"
+                                       appAfterViewInit>
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                <ng-container matColumnDef="GeneA">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneA, row.blastResultsA)"
+                                           ngClass="{{'gene' + row.typeA}}">{{row.geneA}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="NameA">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name A</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneA, row.blastResultsA)"
+                                           ngClass="{{'gene' + row.typeA}}">{{row.geneAName}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="GeneB">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneB, row.blastResultsB)"
+                                           ngClass="{{'gene' + row.typeB}}">{{row.geneB}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="NameB">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name B</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneB, row.blastResultsB)"
+                                           ngClass="{{'gene' + row.typeB}}">{{row.geneBName}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="ReferenceInteractome">
+                                    <mat-header-cell *matHeaderCellDef>
+                                        <ng-container *ngIf="referenceInteractomes?.length > 1; else multiple">
+                                            <span matTooltip="{{referenceInteractomesTitle}}">
+                                                {{(referenceInteractomes ? referenceInteractomes[0]?.speciesA?.name : '')}}
+                                                interactomes ({{referenceInteractomes.length}})</span>
+                                        </ng-container>
+                                        <ng-template #multiple>
+                                            <span *ngFor="let isFirst=first; let ri of referenceInteractomes; let isLast=last">
+                                                {{isFirst ? ri.speciesA.name + ':' : ''}}
+                                                {{ri.name}}{{isLast ?  '': ','}}
+                                            </span>
+                                        </ng-template>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <mat-chip-list *ngIf="row.referenceDegrees.length > 0">
+                                            <mat-chip *ngFor="let degree of row.getDistinctReferenceDegrees()"
+                                                      [matTooltip]="getReferenceInteractomeNames(row.getReferenceInteractomeIdByDegree(degree)) | join">
+                                                <strong>{{degree === -1 ? '?' : degree}}</strong>&nbsp;(#{{row.getReferenceInteractomeIdByDegree(degree).length}})
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="TargetInteractome">
+                                    <mat-header-cell *matHeaderCellDef>
+                                        <ng-container *ngIf="targetInteractomes.length > 1; else multiple">
+                                            <span matTooltip="{{targetInteractomesTitle}}">
+                                                {{(targetInteractomes ? targetInteractomes[0]?.speciesA?.name : '')}}
+                                                interactomes ({{targetInteractomes.length}})</span>
+                                        </ng-container>
+                                        <ng-template #multiple>
+                                            <span *ngFor="let isFirst=first; let ti of targetInteractomes; let isLast=last">
+                                                {{isFirst ? ti.speciesA.name + ':' : ''}}
+                                                {{ti.name}}{{isLast ?  '': ','}}
+                                            </span>
+                                        </ng-template>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <mat-chip-list *ngIf="row.targetDegrees.length > 0">
+                                            <mat-chip *ngFor="let degree of row.getDistinctTargetDegrees()"
+                                                      [matTooltip]="getTargetInteractomeNames(row.getTargetInteractomeIdByDegree(degree)) | join">
+                                                <strong>{{degree === -1 ? '?' : degree}}</strong>&nbsp;(#{{row.getTargetInteractomeIdByDegree(degree).length}})
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </mat-cell>
+                                </ng-container>
+                            </mat-table>
+                            <div class="pagination-footer">
+                                <div>
+                                    <mat-spinner *ngIf="paginatedDataSource.loading$ | async" [@slideInOut] [diameter]="30"></mat-spinner>
+                                </div>
+                                <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
+                                               [pageSize]="10"
+                                               [pageSizeOptions]="[5, 10, 20, 50]"
+                                               [length]="paginatorLength">
+                                </mat-paginator>
+                            </div>
+                            <app-legend-table></app-legend-table>
+                        </ng-template>
                     </div>
                 </div>
             </div>

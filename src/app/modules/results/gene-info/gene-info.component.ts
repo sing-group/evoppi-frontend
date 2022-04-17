@@ -38,18 +38,22 @@ export class GeneInfoComponent implements OnInit {
     public blastResults: BlastResult[];
     public sequences: SafeResourceUrl = '';
 
-
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private geneService: GeneService, private domSanitizer: DomSanitizer) {
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private readonly geneService: GeneService,
+        private readonly domSanitizer: DomSanitizer
+    ) {
     }
 
-    ngOnInit() {
-        this.geneService.getGene(this.data.geneId).subscribe((res) => {
-            this.gene = res;
-            this.blastResults = this.data.blastResults;
-            this.sequences = this.domSanitizer.bypassSecurityTrustResourceUrl(
-                FastaHelper.getFasta(this.gene.id.toString(), this.gene.sequences)
-            );
-        });
+    public ngOnInit(): void {
+        this.geneService.getGene(this.data.geneId)
+            .subscribe(gene => {
+                this.gene = gene;
+                this.blastResults = this.data.blastResults;
+                this.sequences = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                    FastaHelper.getFasta(this.gene.id.toString(), this.gene.sequences)
+                );
+            });
     }
 
 }

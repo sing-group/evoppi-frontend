@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild} from '@angular/core';
-import {Interactome} from '../../../entities';
+import {Interactome} from '../../../../entities';
 import {MatListOption, MatSelectionList, MatSelectionListChange} from '@angular/material/list';
 import {MatSelect} from '@angular/material/select';
 

@@ -1,6 +1,6 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {Interactome} from '../../../entities';
+import {Interactome} from '../../../../entities';
 import {InteractomeFilter} from '../interactome-selection-form/interactome-selection-form.component';
 
 export interface InteractomeSelectionDialogData {

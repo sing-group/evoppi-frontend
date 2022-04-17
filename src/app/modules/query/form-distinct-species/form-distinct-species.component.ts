@@ -33,7 +33,7 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {InteractomeSelectionDialogComponent} from '../interactome-selection-dialog/interactome-selection-dialog.component';
+import {InteractomeSelectionDialogComponent} from '../../shared/components/interactome-selection-dialog/interactome-selection-dialog.component';
 
 @Component({
     selector: 'app-form-distinct-species',

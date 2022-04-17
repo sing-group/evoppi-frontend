@@ -117,7 +117,7 @@ export class SpeciesCreationComponent implements OnInit {
             {
                 data: {
                     title: 'Species creation requested',
-                    message: 'The species is being processed. You can check results to track it processing status.',
+                    message: 'The species is being processed. You can check results to track it processingCsv status.',
                     confirmLabel: this.route.routeConfig.data.redirectRouteTitle,
                     cancelLabel: 'Close',
                     headerClass: 'card-header-success'

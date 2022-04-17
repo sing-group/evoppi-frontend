@@ -31,9 +31,20 @@
   color: green !important;
 }
 
-.app-table-spinner {
-  position: absolute;
-  top:20px;
+.toolbar {
+    display: flex;
+    align-items: center;
+
+    .toolbar-spacer {
+        flex: 1 1 auto;
+    }
+
+    .mat-checkbox.mat-accent {
+        ::ng-deep .mat-checkbox-layout {
+            margin: auto;
+            color: rgba(0, 0, 0, 0.54);
+        }
+    }
 }
 
 .mat-raised-button {
@@ -44,4 +55,15 @@
   bottom: 5px;
   right: 0;
   position: absolute;
+}
+
+.degree-cell {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

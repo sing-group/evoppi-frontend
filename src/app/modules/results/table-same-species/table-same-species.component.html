@@ -25,115 +25,148 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header card-header-info">
-                        <h4 class="card-title ">Same species table:
-                            {{(resInteractomes ? resInteractomes[0]?.speciesA?.name : '')}}</h4>
+                        <h4 class="card-title">
+                            Same species<ng-container *ngIf="hasSpeciesName()"> - {{speciesName}}</ng-container>
+                        </h4>
                         <p class="card-category">Analysis done with interactomes coming from the same species</p>
                         <a class="mat-raised-button mat-primary app-action-right"
-                           [routerLink]="'/results/chart/same/' + uuid">Show chart</a>
+                           [routerLink]="getChartUrl()">Show chart</a>
                     </div>
                     <div class="card-body">
-                        <div *ngIf="resultAvailable">
-                            <mat-menu #exportMenu="matMenu">
-                                <button mat-menu-item (click)="downloadSingleFasta()">
-                                    Single FASTA
-                                </button>
-                                <button mat-menu-item *ngFor="let resInteractome of resInteractomes"
-                                   (click)="downloadFasta(resInteractome.name, resInteractome.id)">
-                                    {{resInteractome.name}}
-                                </button>
-                            </mat-menu>
-                            <button mat-raised-button color="primary" [matMenuTriggerFor]="exportMenu">
-                                <mat-icon>more_vert</mat-icon>
-                                Export FASTA
-                            </button>
-                            <button mat-raised-button color="primary" *ngIf="csvContent === '' && !processing"
-                                    (click)="onPrepareCSV()">Prepare CSV export
-                            </button>
-                            <button mat-raised-button color="primary" *ngIf="csvContent === '' && processing">
-                                Preparing CSV...
-                            </button>
-                            <button mat-button *ngIf="csvContent === '' && processing" disabled>
-                                <mat-icon>
-                                    <mat-spinner [diameter]="20" color="accent"></mat-spinner>
-                                </mat-icon>
-                            </button>
-                            <a mat-raised-button color="primary" [href]="csvContent" [download]="csvName"
-                               *ngIf="csvContent !== ''">Export CSV</a>
-
-                            <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
-                                <mat-icon>link</mat-icon>
-                                Permalink to result</a>
-                            <mat-checkbox (change)="onCollapseInteractomes($event)" class="app-checkbox">Collapse
-                                interactomes
-                            </mat-checkbox>
-                        </div>
-                        <mat-table matSort #table [dataSource]="paginatedDataSource" class="table-same-species"
-                                   appAfterViewInit *ngIf="resultAvailable">
-                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                            <ng-container matColumnDef="GeneA">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneA)" class="gene1">{{row.geneA}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="NameA">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name A</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneA)" class="gene1">{{row.geneAName}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="GeneB">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneB)" class="gene1">{{row.geneB}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="NameB">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>Name B</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <a (click)="onClickGene(row.geneB)" class="gene1">{{row.geneBName}}</a>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container *ngFor="let resInteractome of resInteractomes"
-                                          matColumnDef="Interactome-{{resInteractome.id}}">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    {{resInteractome.name}}
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <span *ngFor="let degree of row.interactomeDegrees">
-                                        <span *ngIf="degree.id === resInteractome.id">
-                                            Degree {{degree.degree}}
-                                        </span>
-                                    </span>
-                                </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="Interactomes">
-                                <mat-header-cell *matHeaderCellDef>Interactomes</mat-header-cell>
-                                <mat-cell *matCellDef="let row">
-                                    <div *ngIf="row.distinctDegrees.length > 0">
-                                        <span *ngFor="let degree of row.distinctDegrees; let isLast=last">
-                                            {{degree}}{{isLast ? '': ', '}}
-                                        </span>
-                                    </div>
-                                </mat-cell>
-                            </ng-container>
-                        </mat-table>
-                        <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
-                                       [pageSize]="10"
-                                       [pageSizeOptions]="[5, 10, 20, 50]"
-                                       [length]="paginatorLength"
-                                       *ngIf="resultAvailable">
-                        </mat-paginator>
-                        <div *ngIf="!resultAvailable">
+                        <div *ngIf="!resultAvailable; else results">
                             <p>
-                                This result is not available at the moment. Please go to the results list to check work status.
+                                Results are being loaded. This may take some time. Please, be patient.
                             </p>
-                            <button class="btn btn-primary" routerLink="/results">Go to results</button>
+                            <button class="btn btn-primary" routerLink="/results">Go back to results</button>
                         </div>
-                        <div class="offset-5 col-6 app-table-spinner" *ngIf="paginatedDataSource.loading$ | async" [@slideInOut]>
-                            <mat-spinner class="app-spinner" [diameter]="40"></mat-spinner>
-                        </div>
+                        <ng-template #results>
+                            <div class="toolbar">
+                                <button mat-raised-button color="primary" (click)="onFilterInteractomes()">
+                                    <mat-icon>filter_alt</mat-icon>
+                                    Select interactomes
+                                    ({{this.areAllInteractomesVisible() ? 'All' : this.countVisibleInteractomes() + '/' + this.countInteractomes()}})
+                                </button>
+                                
+                                <mat-menu #downloadFastaMenu="matMenu">
+                                    <button mat-menu-item (click)="onDownloadSingleFasta()">
+                                        Single FASTA
+                                    </button>
+                                    <button mat-menu-item *ngFor="let interactome of interactomes"
+                                       (click)="onDownloadFasta(interactome.name, interactome.id)">
+                                        {{interactome.name}}
+                                    </button>
+                                </mat-menu>
+                                <button mat-raised-button color="primary" [matMenuTriggerFor]="downloadFastaMenu">
+                                    <mat-icon>more_vert</mat-icon>
+                                    Download FASTA
+                                </button>
+    
+                                <mat-menu #prepareCsvMenu="matMenu">
+                                    <button mat-menu-item (click)="onPrepareAllCsv()">
+                                        All
+                                    </button>
+                                    <button mat-menu-item (click)="onPrepareAllCollapsedCsv()">
+                                        Collapsed
+                                    </button>
+                                    <button mat-menu-item (click)="onPrepareVisibleCsv()">
+                                        Visible
+                                    </button>
+                                    <button mat-menu-item (click)="onPrepareVisibleCollapsedCsv()">
+                                        Visible collapsed
+                                    </button>
+                                </mat-menu>
+                                <button mat-raised-button color="primary"
+                                        [disabled]="processingCsv"
+                                        [matMenuTriggerFor]="prepareCsvMenu">
+                                    <mat-icon>more_vert</mat-icon>
+                                    Prepare CSV
+                                </button>
+                                
+                                <a mat-raised-button color="primary" [disabled]="!csvContent"
+                                   [href]="csvContent" [download]="csvName">
+                                    <mat-icon>download</mat-icon>
+                                    {{getDownloadCSVLabel()}}
+                                </a>
+                                
+                                <mat-checkbox [disabled]="!canChangeCollapsed()"
+                                              [checked]="collapseInteractomes"
+                                              (change)="onCollapseInteractomes($event.checked)">
+                                    Collapse interactomes
+                                </mat-checkbox>
+                                
+                                <span class="toolbar-spacer"></span>
+                                
+                                <a *ngIf="permalink" mat-raised-button color="primary" [href]="permalink" target="_blank">
+                                    <mat-icon>link</mat-icon>
+                                    Permalink to result
+                                </a>
+                            </div>
+                            <mat-table matSort #table [dataSource]="paginatedDataSource" class="table-same-species"
+                                       appAfterViewInit>
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                <ng-container matColumnDef="GeneA">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Gene A</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneA)" class="gene1">{{row.geneA}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="NameA">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name A</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneA)" class="gene1">{{row.geneAName}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="GeneB">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Gene B</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneB)" class="gene1">{{row.geneB}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="NameB">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name B</mat-header-cell>
+                                    <mat-cell *matCellDef="let row">
+                                        <a (click)="onClickGene(row.geneB)" class="gene1">{{row.geneBName}}</a>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container *ngFor="let interactome of interactomes"
+                                              matColumnDef="Interactome-{{interactome.id}}">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="degree-title">
+                                        {{interactome.name}}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" class="degree-cell">
+                                        <mat-chip-list>
+                                            <mat-chip *ngFor="let degree of filterDegreesByInteractome(interactome, row.interactomeDegrees)">
+                                                {{degree.degree === -1 ? '?' : degree.degree}}
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="Interactomes">
+                                    <mat-header-cell *matHeaderCellDef class="degree-title">
+                                        Interaction Degree(s)
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" class="degree-cell">
+                                        <mat-chip-list *ngIf="row.distinctDegrees.length > 0">
+                                            <mat-chip *ngFor="let degree of row.distinctDegrees"
+                                                      [matTooltip]="getInteractomeNames(row.getInteractomeIdByDegree(degree)) | join">
+                                                <strong>{{degree === -1 ? '?' : degree}}</strong>&nbsp;(#{{row.getInteractomeIdByDegree(degree).length}})
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </mat-cell>
+                                </ng-container>
+                            </mat-table>
+                            <div class="pagination-footer">
+                                <div>
+                                    <mat-spinner *ngIf="paginatedDataSource.loading$ | async" [@slideInOut] [diameter]="30"></mat-spinner>
+                                </div>
+                                <mat-paginator #paginator appAfterViewInit (afterViewInit)="initPaginator()"
+                                               [pageSize]="10"
+                                               [pageSizeOptions]="[5, 10, 20, 50]"
+                                               [length]="paginatorLength">
+                                </mat-paginator>
+                            </div>
+                        </ng-template>
                     </div>
                 </div>
             </div>

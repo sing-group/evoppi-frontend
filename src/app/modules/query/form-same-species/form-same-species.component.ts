@@ -33,7 +33,7 @@ import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm
 import {WorkStatusService} from '../../results/services/work-status.service';
 import {Subscription} from 'rxjs';
 import {Predictome} from '../../../entities/bio/predictome.model';
-import {InteractomeSelectionDialogComponent} from '../interactome-selection-dialog/interactome-selection-dialog.component';
+import {InteractomeSelectionDialogComponent} from '../../shared/components/interactome-selection-dialog/interactome-selection-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 
 @Component({

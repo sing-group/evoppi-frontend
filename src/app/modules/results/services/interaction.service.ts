@@ -40,7 +40,7 @@ export class InteractionService {
     }
 
 
-    getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
+    public getSameSpeciesInteraction(gene: number, interactomes: number[], interactionLevel: number): Observable<Work> {
         const params: any = {gene: gene, interactome: interactomes, maxDegree: interactionLevel};
 
         return this.http.get<Work>(this.endpoint, {params: params})
@@ -52,7 +52,7 @@ export class InteractionService {
             );
     }
 
-    getDistinctSpeciesInteraction(gene: number, referenceInteractome: number[], targetInteractome: number[],
+    public getDistinctSpeciesInteraction(gene: number, referenceInteractome: number[], targetInteractome: number[],
                                   interactionLevel: number, evalue: number, maxTargetSeqs: number,
                                   minIdentity: number, minAlignmentLenght: number): Observable<Work> {
         const params: any = {
@@ -75,7 +75,7 @@ export class InteractionService {
             );
     }
 
-    getInteractionResultSummarized(uri: string): Observable<SummarizedWorkResult> {
+    public getInteractionResultSummarized(uri: string): Observable<SummarizedWorkResult> {
         return this.http.get<WorkResult>(uri + '?summarize=true')
             .pipe(
                 mergeMap(this.retrieveWorkInteractomes.bind(this)),
@@ -86,7 +86,7 @@ export class InteractionService {
             );
     }
 
-    getInteractionResult(uri: string): Observable<WorkResult> {
+    public getInteractionResult(uri: string): Observable<WorkResult> {
         return this.http.get<WorkResult>(uri)
             .pipe(
                 mergeMap(this.retrieveWorkInteractomes.bind(this)),
@@ -97,7 +97,7 @@ export class InteractionService {
             );
     }
 
-    getInteractions(uri: string, page: number = 0, pageSize: number = 10, sortDirection: SortDirection = SortDirection.ASCENDING,
+    public getInteractions(uri: string, page: number = 0, pageSize: number = 10, sortDirection: SortDirection = SortDirection.ASCENDING,
                     orderField: OrderField = OrderField.GENE_A_ID, interactomeId?: number): Observable<WorkResult> {
         return this.http.get<WorkResult>(uri, {
             params: {
@@ -194,7 +194,7 @@ export class InteractionService {
         }
     }
 
-    downloadSingleFasta(resultUrl: string, suffix: string) {
+    public downloadSingleFasta(resultUrl: string, suffix: string): void {
         this.http.get(resultUrl + '/interactome/fasta', {responseType: 'blob'})
             .pipe(
                 EvoppiError.throwOnError(
@@ -208,7 +208,7 @@ export class InteractionService {
             });
     }
 
-    downloadFasta(resultUrl: string, suffix: string, id: number ) {
+    public downloadFasta(resultUrl: string, suffix: string, id: number): void {
         this.http.get(resultUrl + '/interactome/' + id + '/fasta', {responseType: 'blob'})
             .pipe(
                 EvoppiError.throwOnError(

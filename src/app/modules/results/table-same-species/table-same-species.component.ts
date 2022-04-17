@@ -20,12 +20,10 @@
  */
 
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import {Interaction, Interactome} from '../../../entities/bio';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {Interaction, Interactome, InteractomeDegree} from '../../../entities/bio';
 import {SameSpeciesDataSource} from './same-species-data-source';
 import {GeneInfoComponent} from '../gene-info/gene-info.component';
 import {InteractionService} from '../services/interaction.service';
@@ -39,6 +37,7 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {Location} from '@angular/common';
 import {InteractomeService} from '../services/interactome.service';
 import {Status} from '../../../entities/execution';
+import {InteractomeSelectionDialogComponent} from '../../shared/components/interactome-selection-dialog/interactome-selection-dialog.component';
 
 @Component({
     selector: 'app-table-same-species',
@@ -57,46 +56,79 @@ import {Status} from '../../../entities/execution';
     ]
 })
 export class TableSameSpeciesComponent implements OnInit {
-    @ViewChild(MatSort) sort: MatSort;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    private static readonly MAX_UNCOLLAPSED = 5;
 
-    displayedColumns: string[];
-    dataSource: MatTableDataSource<Interaction>;
-    paginatedDataSource: SameSpeciesDataSource;
-    paginatorLength: number;
+    @ViewChild(MatSort) public sort: MatSort;
+    @ViewChild(MatPaginator) public paginator: MatPaginator;
 
-    resInteractomes: Interactome[] = [];
-    interaction: Interaction[] = [];
-    lastQueryMaxDegree: number;
+    public displayedColumns?: string[];
+    public paginatedDataSource?: SameSpeciesDataSource;
+    public paginatorLength?: number;
 
-    csvContent: SafeResourceUrl = '';
-    csvName = 'data.csv';
-    permalink: string;
+    public permalink?: string;
 
-    paginatedResultUrl = '';
+    public csvContent?: SafeResourceUrl;
+    public csvName?: string;
+    private csvType?: string;
 
-    processing = false;
-    collapseInteractomes = false;
+    public processingCsv = false;
+    public collapseInteractomes = false;
+    public resultAvailable = false;
 
-    uuid = '';
+    public speciesName?: string;
+    private queryGeneName?: string;
+    private interactomes?: Interactome[];
+    private interactions?: Interaction[];
 
-    resultAvailable = false;
+    private visibleInteractomes?: Interactome[];
 
-    constructor(private interactionService: InteractionService, private interactomeService: InteractomeService, private dialog: MatDialog,
-                private domSanitizer: DomSanitizer, private route: ActivatedRoute, private location: Location) {
+    private uuid?: string;
+    private resultUrl?: string;
+
+    public constructor(
+        private readonly interactionService: InteractionService,
+        private readonly interactomeService: InteractomeService,
+        private readonly dialog: MatDialog,
+        private readonly domSanitizer: DomSanitizer,
+        private readonly route: ActivatedRoute,
+        private readonly location: Location
+    ) {
     }
 
-    ngOnInit() {
-
+    public ngOnInit(): void {
         this.uuid = this.route.snapshot.paramMap.get('id');
+        this.resultUrl = environment.evoppiUrl + 'api/interaction/result/' + this.uuid;
+        this.permalink = this.location.normalize('/results/table/same/' + this.uuid);
 
         this.paginatedDataSource = new SameSpeciesDataSource(this.interactionService);
 
-        this.getResultPaginated(this.uuid);
+        this.resultAvailable = false;
 
+        this.interactionService.getInteractionResultSummarized(this.resultUrl)
+            .subscribe(workResult => {
+                this.interactomes = workResult.interactomes;
+                this.speciesName = this.interactomes[0].speciesA.name;
+                this.visibleInteractomes = this.interactomes;
+                this.collapseInteractomes = this.visibleInteractomes.length > TableSameSpeciesComponent.MAX_UNCOLLAPSED;
+                this.updateDisplayedColumns();
+                this.paginatorLength = workResult.totalInteractions;
+
+                if (workResult.status === Status.COMPLETED) {
+                    this.paginatedDataSource.loading$
+                        .subscribe(loading => {
+                            if (!loading) {
+                                this.resultAvailable = true;
+                            }
+                        });
+
+                    this.paginatedDataSource.load(this.resultUrl);
+                }
+            }, (error) => {
+                this.resultAvailable = false;
+            });
     }
 
-    initPaginator() {
+    public initPaginator(): void {
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
         this.sort.sortChange
@@ -112,17 +144,87 @@ export class TableSameSpeciesComponent implements OnInit {
             .subscribe();
     }
 
-    onCollapseInteractomes(event: MatCheckboxChange) {
-        this.collapseInteractomes = event.checked;
+    public hasSpeciesName(): boolean {
+        return this.speciesName !== undefined;
+    }
+
+    public getChartUrl(): string {
+        return this.uuid === undefined ? '#' : `/results/chart/same/${this.uuid}`;
+    }
+
+    public countInteractomes(): number {
+        return this.interactomes.length;
+    }
+
+    public countVisibleInteractomes(): number {
+        return this.visibleInteractomes.length;
+    }
+
+    public areAllInteractomesVisible(): boolean {
+        return this.interactomes.length === this.visibleInteractomes.length;
+    }
+
+    public getDownloadCSVLabel(): string {
+        if (this.csvContent === undefined) {
+            if (this.processingCsv) {
+                return 'Preparing CSV...';
+            } else {
+                return 'No CSV available';
+            }
+        } else {
+            return `Download CSV (${this.csvType})`;
+        }
+    }
+
+    public filterDegreesByInteractome(interactome: Interactome, interactomeDegrees: InteractomeDegree[]): InteractomeDegree[] {
+        return interactomeDegrees.filter(degree => degree.id === interactome.id);
+    }
+
+    public getInteractomeNames(ids: number[]): string[] {
+        return ids.map(id => this.interactomes.find(interactome => interactome.id === id).name).sort();
+    }
+
+    public canChangeCollapsed(): boolean {
+        return this.visibleInteractomes.length <= TableSameSpeciesComponent.MAX_UNCOLLAPSED;
+    }
+
+    public onFilterInteractomes(): void {
+        this.dialog.open(InteractomeSelectionDialogComponent, {
+            minWidth: 600,
+            data: {
+                title: 'Select interactomes',
+                interactomes: this.interactomes,
+                selectedInteractomeIds: this.visibleInteractomes.map(interactome => interactome.id)
+            }
+        }).afterClosed().subscribe((selected: number[]) => {
+            if (selected) {
+                this.visibleInteractomes = this.interactomes.filter(interactome => selected.includes(interactome.id));
+                this.collapseInteractomes = this.visibleInteractomes.length > TableSameSpeciesComponent.MAX_UNCOLLAPSED;
+                this.updateDisplayedColumns();
+                if (this.csvType === 'visible' || this.csvType === 'visible collapsed') {
+                    this.csvType = undefined;
+                    this.csvContent = undefined;
+                    this.csvName = undefined;
+                }
+            }
+        });
+    }
+
+    public onCollapseInteractomes(collapse: boolean): void {
+        this.collapseInteractomes = collapse;
+        this.updateDisplayedColumns();
+    }
+
+    private updateDisplayedColumns(): void {
         if (this.collapseInteractomes) {
             this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'Interactomes'];
         } else {
             this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
-                ...this.resInteractomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
+                ...this.visibleInteractomes.map(interactome => `Interactome-${interactome.id}`)];
         }
     }
 
-    onClickGene(id: number) {
+    public onClickGene(id: number): void {
         const dialogRef = this.dialog.open(GeneInfoComponent, {
             // width: '250px',
             maxHeight: window.innerHeight,
@@ -132,10 +234,53 @@ export class TableSameSpeciesComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
         });
-
     }
 
-    loadCurrentResultsPage() {
+    public onDownloadSingleFasta(): void {
+        this.interactionService.downloadSingleFasta(this.resultUrl, this.uuid);
+    }
+
+    public onDownloadFasta(suffix: string, id: number): void {
+        this.interactionService.downloadFasta(this.resultUrl, suffix, id);
+    }
+
+    public onPrepareAllCsv(): void {
+        if (this.processingCsv) {
+            throw new Error('A CSV is already being processed');
+        }
+
+        this.csvType = 'all';
+        this.prepareCsv(this.interactomes, false);
+    }
+
+    public onPrepareAllCollapsedCsv(): void {
+        if (this.processingCsv) {
+            throw new Error('A CSV is already being processed');
+        }
+
+        this.csvType = 'collapsed';
+        this.prepareCsv(this.interactomes, true);
+    }
+
+    public onPrepareVisibleCsv(): void {
+        if (this.processingCsv) {
+            throw new Error('A CSV is already being processed');
+        }
+
+        this.csvType = 'visible';
+        this.prepareCsv(this.visibleInteractomes, false);
+    }
+
+    public onPrepareVisibleCollapsedCsv(): void {
+        if (this.processingCsv) {
+            throw new Error('A CSV is already being processed');
+        }
+
+        this.csvType = 'visible collapsed';
+        this.prepareCsv(this.visibleInteractomes, true);
+    }
+
+    private loadCurrentResultsPage(): void {
         let sortDirection: SortDirection = SortDirection.NONE;
         if (this.sort.direction === 'desc') {
             sortDirection = SortDirection.DESCENDING;
@@ -156,114 +301,64 @@ export class TableSameSpeciesComponent implements OnInit {
             interactomeId = +this.sort.active.substring(this.sort.active.indexOf('-') + 1);
         }
 
-        this.paginatedDataSource.load(this.paginatedResultUrl, this.paginator.pageIndex, this.paginator.pageSize, sortDirection,
+        this.paginatedDataSource.load(this.resultUrl, this.paginator.pageIndex, this.paginator.pageSize, sortDirection,
             orderField, interactomeId);
     }
 
-    private getResult(uri: string) {
-        this.processing = true;
-        this.interactionService.getInteractionResult(uri)
-            .subscribe((res) => {
-                this.lastQueryMaxDegree = res.queryMaxDegree;
-                this.interaction = res.interactions.interactions;
-                this.resInteractomes = res.interactomes;
+    private prepareCsv(interactomes: Interactome[], collapsed: boolean): void {
+        this.processingCsv = true;
 
-                const csvData = [];
+        this.csvName = undefined;
+        this.csvContent = undefined;
 
-                for (const interaction of this.interaction) {
-                    const csvRow =
-                        [
-                            interaction.geneA, interaction.geneAName,
-                            interaction.geneB, interaction.geneBName,
-                        ];
-
-                    if (this.collapseInteractomes) {
-                        const degrees = interaction.interactomeDegrees.map(interactomeDegree => interactomeDegree.degree)
-                            .filter((filterItem, position, self) => self.indexOf(filterItem) === position) // Removes duplicates
-                            .sort()
-                            .join(',');
-
-                        csvRow.push(degrees);
-                    } else {
-                        res.interactomes.forEach((resInteractome) => {
-                            const index: number = interaction.interactomeDegrees.findIndex((degree) => degree.id === resInteractome.id);
-                            if (index !== -1) {
-                                csvRow.push(interaction.interactomeDegrees[index].degree);
-                            } else {
-                                csvRow.push('');
-                            }
-                        });
-                    }
-
-                    csvData.push(csvRow);
-                }
-
-                let headers: string[];
-                if (this.collapseInteractomes) {
-                    headers = ['Gene A', 'Name A', 'Gene B', 'Name B', 'Interactomes'];
-                    this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'Interactomes'];
-                } else {
-                    headers = ['Gene A', 'Name A', 'Gene B', 'Name B',
-                        ...res.interactomes.map( resInteractome => resInteractome.name)];
-                    this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
-                        ...res.interactomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
-                }
-
-                this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
-                    CsvHelper.getCSV(headers, csvData)
-                );
-
-                const interactomeIds = res.interactomes.map(interactome => interactome.id).join('_');
-                let name: string = res.queryGene.name;
-                this.csvName = 'interaction_' + name + '_' + interactomeIds + '.csv';
-
-                this.dataSource = new MatTableDataSource<Interaction>(this.interaction);
-                this.dataSource.sort = undefined;
-                this.dataSource.paginator = undefined;
-
-                this.processing = false;
-            });
-    }
-
-    private getResultPaginated(uuid: string) {
-        this.paginatedResultUrl = environment.evoppiUrl + 'api/interaction/result/' + uuid ;
-        this.permalink = this.location.normalize('/results/table/same/' + uuid);
-        this.interactionService.getInteractionResultSummarized(this.paginatedResultUrl)
-            .subscribe((workRes) => {
-                this.resInteractomes = workRes.interactomes;
-                this.paginatorLength = workRes.totalInteractions;
-                this.paginatedDataSource.load(this.paginatedResultUrl);
-                this.paginatedDataSource.loading$.subscribe((res) => {
-                    if (res === false) {
-                        if (this.collapseInteractomes) {
-                            this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB', 'Interactomes'];
-                        } else {
-                            this.displayedColumns = ['GeneA', 'NameA', 'GeneB', 'NameB',
-                                ...workRes.interactomes.map(resInteractome => 'Interactome-' + resInteractome.id.toString())];
-                        }
-                    }
+        if (this.queryGeneName === undefined || this.interactions === undefined) {
+            this.interactionService.getInteractionResult(this.resultUrl)
+                .subscribe(result => {
+                    this.queryGeneName = result.queryGene.name;
+                    this.interactions = result.interactions.interactions;
+                    this.prepareCsv(interactomes, collapsed);
                 });
-                this.processing = false;
-                if (workRes.status === Status.COMPLETED) {
-                    this.resultAvailable = true;
+        } else {
+            const csvData = [];
+            for (const interaction of this.interactions) {
+                const csvRow = [
+                    interaction.geneA, interaction.geneAName,
+                    interaction.geneB, interaction.geneBName,
+                ];
+
+                if (collapsed) {
+                    const degrees = interaction.interactomeDegrees.map(interactomeDegree => interactomeDegree.degree)
+                        .filter((filterItem, position, self) => self.indexOf(filterItem) === position) // Removes duplicates
+                        .sort()
+                        .join(',');
+
+                    csvRow.push(degrees);
+                } else {
+                    interactomes.forEach(interactome => {
+                        const interactomeDegree = interaction.interactomeDegrees.find(degree => degree.id === interactome.id);
+
+                        csvRow.push(interactomeDegree === undefined ? '' : interactomeDegree.degree);
+                    });
                 }
-            }, (error) => {
-                this.processing = false;
-                this.resultAvailable = false;
-            });
-    }
 
-    onPrepareCSV() {
-        if (!this.processing) {
-            this.getResult(this.paginatedResultUrl);
+                csvData.push(csvRow);
+            }
+
+            let headers: string[];
+            if (collapsed) {
+                headers = ['Gene A', 'Name A', 'Gene B', 'Name B', 'Interactomes'];
+            } else {
+                headers = ['Gene A', 'Name A', 'Gene B', 'Name B', ...interactomes.map(interactome => interactome.name)];
+            }
+
+            this.csvContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                CsvHelper.getCSV(headers, csvData)
+            );
+
+            const interactomeIds = interactomes.map(interactome => interactome.id).join('_');
+            this.csvName = `interaction_${this.queryGeneName}_${this.csvType}_${interactomeIds}.csv`;
+
+            this.processingCsv = false;
         }
-    }
-
-    downloadSingleFasta() {
-        this.interactionService.downloadSingleFasta(this.paginatedResultUrl, this.uuid);
-    }
-
-    downloadFasta(suffix: string, id: number) {
-        this.interactionService.downloadFasta(this.paginatedResultUrl, suffix, id);
     }
 }

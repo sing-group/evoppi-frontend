@@ -22,13 +22,44 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {finalize, mergeMap} from 'rxjs/operators';
-import {Interaction} from '../../../entities/bio';
+import {Interaction, InteractomeDegree} from '../../../entities/bio';
 import {InteractionService} from '../services/interaction.service';
 import {OrderField, SortDirection} from '../../../entities/data';
 
-export class SameSpeciesDataSource implements DataSource<Interaction> {
+export class SameSpeciesInteractionRow {
+    public readonly geneA: number;
+    public readonly geneAName: string;
+    public readonly geneB: number;
+    public readonly geneBName: string;
+    public readonly interactomeDegrees: InteractomeDegree[];
+    public readonly distinctDegrees: number[];
 
-    private interactionSubject: BehaviorSubject<Interaction[]> = new BehaviorSubject<Interaction[]>([]);
+    public constructor(interaction: Interaction) {
+        this.geneA = interaction.geneA;
+        this.geneAName = interaction.geneAName;
+        this.geneB = interaction.geneB;
+        this.geneBName = interaction.geneBName;
+        this.interactomeDegrees = interaction.interactomeDegrees;
+        this.distinctDegrees = interaction.interactomeDegrees.map(intDegree => intDegree.degree)
+            .filter((filterItem, position, self) => self.indexOf(filterItem) === position) // Removes duplicates
+        .sort();
+    }
+
+    public getInteractomeIdByDegree(degree: number | InteractomeDegree): number[] {
+        if (typeof degree !== 'number') {
+            degree = degree.degree;
+        }
+
+        return this.interactomeDegrees
+            .filter(interactomeDegree => interactomeDegree.degree === degree)
+            .map(interactomeDegree => interactomeDegree.id)
+        .sort();
+    }
+}
+
+export class SameSpeciesDataSource implements DataSource<SameSpeciesInteractionRow> {
+
+    private interactionSubject: BehaviorSubject<SameSpeciesInteractionRow[]> = new BehaviorSubject<SameSpeciesInteractionRow[]>([]);
     private loadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     public loading$ = this.loadingSubject.asObservable();
@@ -36,7 +67,7 @@ export class SameSpeciesDataSource implements DataSource<Interaction> {
     constructor(private interactionService: InteractionService) {
     }
 
-    connect(collectionViewer: CollectionViewer): Observable<Interaction[]> {
+    connect(collectionViewer: CollectionViewer): Observable<SameSpeciesInteractionRow[]> {
         return this.interactionSubject.asObservable();
     }
 
@@ -50,27 +81,12 @@ export class SameSpeciesDataSource implements DataSource<Interaction> {
         this.loadingSubject.next(true);
         this.interactionService.getInteractions(uri, page, pageSize, sortDirection, orderField, interactomeId)
             .pipe(
-                mergeMap((res) => {
-                    const rows = res.interactions.interactions.map((item) => {
-                        const row = {
-                            geneA: item.geneA,
-                            geneAName: item.geneAName,
-                            geneB: item.geneB,
-                            geneBName: item.geneBName,
-                            interactomeDegrees: item.interactomeDegrees,
-                            distinctDegrees: item.interactomeDegrees.map(intDegree => intDegree.degree)
-                                .filter((filterItem, position, self) => self.indexOf(filterItem) === position) // Removes duplicates
-                                .sort()
-                        };
-                        return row;
-                    });
-                    return of(rows);
-                }),
+                mergeMap((result) =>
+                    of(result.interactions.interactions.map(interaction => new SameSpeciesInteractionRow(interaction)))
+                ),
                 finalize(() => this.loadingSubject.next(false))
             )
-            .subscribe((res) => {
-                this.interactionSubject.next(res);
-            });
+            .subscribe(rows => this.interactionSubject.next(rows));
     }
 
 }

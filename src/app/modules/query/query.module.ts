@@ -31,8 +31,6 @@ import {SpeciesService} from '../results/services/species.service';
 import {InteractomeService} from '../results/services/interactome.service';
 import {InteractionService} from '../results/services/interaction.service';
 import {GeneService} from '../results/services/gene.service';
-import { InteractomeSelectionFormComponent } from './interactome-selection-form/interactome-selection-form.component';
-import { InteractomeSelectionDialogComponent } from './interactome-selection-dialog/interactome-selection-dialog.component';
 
 @NgModule({
     imports: [
@@ -45,9 +43,7 @@ import { InteractomeSelectionDialogComponent } from './interactome-selection-dia
     declarations: [
         QueryComponent,
         FormDistinctSpeciesComponent,
-        FormSameSpeciesComponent,
-        InteractomeSelectionFormComponent,
-        InteractomeSelectionDialogComponent
+        FormSameSpeciesComponent
     ],
     exports: [
         QueryComponent,
