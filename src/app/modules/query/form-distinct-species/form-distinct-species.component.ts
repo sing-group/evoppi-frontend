@@ -245,6 +245,24 @@ export class FormDistinctSpeciesComponent implements OnInit {
         }
     }
 
+    public summarizeSelectedReferencePredictomesTooltip(): string {
+        return this.summarizeSelectedPredictomesTooltip(this.controlReferencePredictomes.value);
+    }
+
+    public summarizeSelectedTargetPredictomesTooltip(): string {
+        return this.summarizeSelectedPredictomesTooltip(this.controlTargetPredictomes.value);
+    }
+
+    public summarizeSelectedPredictomesTooltip(predictomes?: Interactome[]): string {
+        if (predictomes && predictomes.length > 0) {
+            const numSelected = predictomes.length;
+
+            return '- ' + predictomes.map(p => p.name).join('\n- ');
+        } else {
+            return null;
+        }
+    }
+
     public selectAllReferenceInteractomes(): void {
         this.controlReferenceInteractomes.setValue(this.referenceInteractomes);
     }

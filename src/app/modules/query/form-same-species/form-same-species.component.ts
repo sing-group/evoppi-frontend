@@ -172,7 +172,7 @@ export class FormSameSpeciesComponent implements OnInit {
         return this.predictomes !== undefined && this.predictomes.length > 0;
     }
 
-    public summarizeSelectedPredictomes() {
+    public summarizeSelectedPredictomes(): string {
         const predictomes = this.controlPredictomes.value;
 
         if (predictomes && predictomes.length > 0) {
@@ -180,6 +180,18 @@ export class FormSameSpeciesComponent implements OnInit {
             return numSelected === 1 ? 'One predictome selected' : `${numSelected} predictomes selected`;
         } else {
             return 'No predictome selected';
+        }
+    }
+
+    public summarizeSelectedPredictomesTooltip(): string {
+        const predictomes = this.controlPredictomes.value;
+
+        if (predictomes && predictomes.length > 0) {
+            const numSelected = predictomes.length;
+
+            return '- ' + predictomes.map(p => p.name).join('\n- ');
+        } else {
+            return null;
         }
     }
 

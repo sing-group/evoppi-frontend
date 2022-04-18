@@ -49,7 +49,7 @@
                 </mat-form-field>
             </div>
             <div class="col-md-4 predictome-form-field">
-                <div class="predictome-summary">
+                <div class="predictome-summary" [matTooltip]="summarizeSelectedPredictomesTooltip()">
                     {{summarizeSelectedPredictomes()}}
                 </div>
                 <div class="predictome-selection">
