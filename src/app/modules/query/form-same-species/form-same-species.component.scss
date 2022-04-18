@@ -43,8 +43,12 @@ a {
   margin-right: 5px;
 }
 
-.predictome-form-field {
+.predictome-form-field, .interactome-form-field {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+::ng-deep .mat-tooltip {
+    text-align: left;
 }

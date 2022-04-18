@@ -32,25 +32,16 @@
                 </mat-form-field>
             </div>
 
-            <div class="col-md-4">
-                <mat-form-field class="width-50 right">
-                    <mat-select placeholder="Reference Interactomes" [multiple]="true"
-                                formControlName="referenceInteractomes">
-                        <mat-option disabled="disabled" *ngIf="referenceInteractomes" class="filter-option">
-                            <button mat-raised-button color="primary"
-                                    (click)="selectAllReferenceInteractomes()">
-                                Select All
-                            </button>
-                            <button mat-raised-button color="accent"
-                                    (click)="deselectAllReferenceInteractomes()">
-                                Deselect All
-                            </button>
-                        </mat-option>
-                        <mat-option *ngFor="let interactome of referenceInteractomes" [value]="interactome">
-                            {{ interactome.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="col-md-4 predictome-form-field">
+                <div class="predictome-summary" [matTooltip]="summarizeSelectedReferenceInteractomesTooltip()">
+                    {{summarizeSelectedReferenceInteractomes()}}
+                </div>
+                <div class="predictome-selection">
+                        <button mat-button class="btn btn-primary" [disabled]="!hasReferenceInteractomes()"
+                                (click)="onSelectReferenceInteractomes()">
+                            {{ updatingReferenceInteractomes ? 'Loading...' : 'Select' }}
+                        </button>
+                </div>
             </div>
 
             <div class="col-md-4 predictome-form-field">
@@ -60,7 +51,7 @@
                 <div class="predictome-selection">
                     <button mat-button class="btn btn-primary" [disabled]="!hasReferencePredictomes()"
                             (click)="onSelectReferencePredictomes()">
-                        Select
+                        {{ updatingReferencePredictomes ? 'Loading...' : 'Select' }}
                     </button>
                 </div>
             </div>
@@ -76,24 +67,16 @@
                 </mat-form-field>
             </div>
 
-            <div class="col-md-4">
-                <mat-form-field class="width-50 right">
-                    <mat-select placeholder="Target Interactomes" formControlName="targetInteractomes" [multiple]="true">
-                        <mat-option disabled="disabled" *ngIf="targetInteractomes" class="filter-option">
-                            <button mat-raised-button color="primary"
-                                    (click)="selectAllTargetInteractomes()">
-                                Select All
-                            </button>
-                            <button mat-raised-button color="accent"
-                                    (click)="deselectAllTargetInteractomes()">
-                                Deselect All
-                            </button>
-                        </mat-option>
-                        <mat-option *ngFor="let interactome of targetInteractomes" [value]="interactome">
-                            {{ interactome.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="col-md-4 interactome-form-field">
+                <div class="interactome-summary" [matTooltip]="summarizeSelectedTargetInteractomesTooltip()">
+                    {{summarizeSelectedTargetInteractomes()}}
+                </div>
+                <div class="interactome-selection">
+                    <button mat-button class="btn btn-primary" [disabled]="!hasTargetInteractomes()"
+                            (click)="onSelectTargetInteractomes()">
+                        {{ updatingTargetInteractomes ? 'Loading...' : 'Select' }}
+                    </button>
+                </div>
             </div>
 
             <div class="col-md-4 predictome-form-field">
@@ -103,7 +86,7 @@
                 <div class="predictome-selection">
                     <button mat-button class="btn btn-primary" [disabled]="!hasTargetPredictomes()"
                             (click)="onSelectTargetPredictomes()">
-                        Select
+                        {{ updatingTargetPredictomes ? 'Loading...' : 'Select' }}
                     </button>
                 </div>
             </div>

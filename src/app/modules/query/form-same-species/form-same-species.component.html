@@ -31,23 +31,19 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-4">
-                <mat-form-field>
-                    <mat-select placeholder="Interactomes" formControlName="interactomes" [multiple]="true">
-                        <mat-option disabled="disabled" *ngIf="interactomes" class="filter-option">
-                            <button mat-raised-button color="primary" (click)="selectAllInteractomes()">
-                                Select All
-                            </button>
-                            <button mat-raised-button color="accent" (click)="deselectAllInteractomes()">
-                                Deselect All
-                            </button>
-                        </mat-option>
-                        <mat-option *ngFor="let interactome of interactomes" [value]="interactome">
-                            {{ interactome.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+
+            <div class="col-md-4 interactome-form-field">
+                <div class="interactome-summary" [matTooltip]="summarizeSelectedInteractomesTooltip()">
+                    {{summarizeSelectedInteractomes()}}
+                </div>
+                <div class="interactome-selection">
+                    <button mat-button class="btn btn-primary" [disabled]="!hasInteractomes()"
+                            (click)="onSelectInteractomes()">
+                        {{ updatingInteractomes ? 'Loading...' : 'Select' }}
+                    </button>
+                </div>
             </div>
+
             <div class="col-md-4 predictome-form-field">
                 <div class="predictome-summary" [matTooltip]="summarizeSelectedPredictomesTooltip()">
                     {{summarizeSelectedPredictomes()}}
@@ -55,7 +51,7 @@
                 <div class="predictome-selection">
                     <button mat-button class="btn btn-primary" [disabled]="!hasPredictomes()"
                             (click)="onSelectPredictomes()">
-                        Select
+                        {{ updatingPredictomes ? 'Loading...' : 'Select' }}
                     </button>
                 </div>
             </div>

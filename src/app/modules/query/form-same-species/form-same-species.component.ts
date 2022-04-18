@@ -47,9 +47,12 @@ export class FormSameSpeciesComponent implements OnInit {
     };
 
     public species: Species[];
-    public interactomes: Interactome[] = [];
-    public predictomes: Interactome[] = [];
     public genes: GeneInfo[];
+    public interactomes: Interactome[];
+    public predictomes: Interactome[];
+
+    public updatingInteractomes: boolean;
+    public updatingPredictomes: boolean;
 
     public searchingGenes: boolean;
     public processing: boolean;
@@ -82,9 +85,11 @@ export class FormSameSpeciesComponent implements OnInit {
         this.searchingGenes = false;
 
         this.species = [];
+        this.genes = [];
         this.interactomes = [];
         this.predictomes = [];
-        this.genes = [];
+        this.updatingInteractomes = false;
+        this.updatingPredictomes = false;
 
         this.formSameSpecies = this.formBuilder.group({
             'species': [null, Validators.required],
@@ -152,24 +157,23 @@ export class FormSameSpeciesComponent implements OnInit {
         }
     }
 
-    public selectAllInteractomes(): void {
-        this.controlInteractomes.setValue(this.interactomes);
-    }
-
-    public deselectAllInteractomes(): void {
-        this.controlInteractomes.reset();
-    }
-
-    public selectAllPredictomes(): void {
-        this.controlPredictomes.setValue(this.predictomes);
-    }
-
-    public deselectAllPredictomes(): void {
-        this.controlPredictomes.reset();
+    public hasInteractomes(): boolean {
+        return this.interactomes !== undefined && this.interactomes.length > 0;
     }
 
     public hasPredictomes(): boolean {
         return this.predictomes !== undefined && this.predictomes.length > 0;
+    }
+
+    public summarizeSelectedInteractomes(): string {
+        const interactomes = this.controlInteractomes.value;
+
+        if (interactomes && interactomes.length > 0) {
+            const numSelected = interactomes.length;
+            return numSelected === 1 ? 'One interactome selected' : `${numSelected} interactome selected`;
+        } else {
+            return 'No interactome selected';
+        }
     }
 
     public summarizeSelectedPredictomes(): string {
@@ -183,13 +187,17 @@ export class FormSameSpeciesComponent implements OnInit {
         }
     }
 
-    public summarizeSelectedPredictomesTooltip(): string {
-        const predictomes = this.controlPredictomes.value;
+    public summarizeSelectedInteractomesTooltip(): string | null {
+        return this.summarizeSelectedInteractomesOrPredictomesTooltip(this.controlInteractomes.value);
+    }
 
-        if (predictomes && predictomes.length > 0) {
-            const numSelected = predictomes.length;
+    public summarizeSelectedPredictomesTooltip(): string | null {
+        return this.summarizeSelectedInteractomesOrPredictomesTooltip(this.controlPredictomes.value);
+    }
 
-            return '- ' + predictomes.map(p => p.name).join('\n- ');
+    private summarizeSelectedInteractomesOrPredictomesTooltip(interactomes: Interactome[]): string | null {
+        if (interactomes && interactomes.length > 0) {
+            return '- ' + interactomes.map(p => p.name).join('\n- ');
         } else {
             return null;
         }
@@ -272,7 +280,8 @@ export class FormSameSpeciesComponent implements OnInit {
     private updateInteractomesOrPredictomes(
         species: Species,
         interactomes: Interactome[],
-        speciesToInteractomeIds: (species: Species) => number[]
+        speciesToInteractomeIds: (species: Species) => number[],
+        callback = () => {}
     ): void {
         interactomes.splice(0, interactomes.length);
 
@@ -294,7 +303,10 @@ export class FormSameSpeciesComponent implements OnInit {
                 error => {
                     throw error;
                 },
-                () => interactomes.sort((a, b) => a.name < b.name ? -1 : 1)
+                () => {
+                    interactomes.sort((a, b) => a.name < b.name ? -1 : 1);
+                    callback();
+                }
             );
     }
 
@@ -303,8 +315,12 @@ export class FormSameSpeciesComponent implements OnInit {
             this.interactomes = [];
         }
 
+        this.updatingInteractomes = true;
         this.updateInteractomesOrPredictomes(
-            species, this.interactomes, speciesToMap => speciesToMap.interactomes.map(interactome => interactome.id)
+            species,
+            this.interactomes,
+            speciesToMap => speciesToMap.interactomes.map(interactome => interactome.id),
+            () => this.updatingInteractomes = false
         );
     }
 
@@ -313,8 +329,12 @@ export class FormSameSpeciesComponent implements OnInit {
             this.predictomes = [];
         }
 
+        this.updatingPredictomes = true;
         this.updateInteractomesOrPredictomes(
-            species, this.predictomes, speciesToMap => speciesToMap.predictomes.map(interactome => interactome.id)
+            species,
+            this.predictomes,
+            speciesToMap => speciesToMap.predictomes.map(interactome => interactome.id),
+            () => this.updatingPredictomes = false
         );
     }
 
@@ -363,6 +383,28 @@ export class FormSameSpeciesComponent implements OnInit {
                 this.router.navigate([
                     this.route.routeConfig.data.resultsResource
                 ]);
+            }
+        });
+    }
+
+    public onSelectInteractomes(): void {
+        this.dialog.open(InteractomeSelectionDialogComponent, {
+            minWidth: 600,
+            data: {
+                title: 'Interactome selection',
+                filters: [],
+                interactomes: this.interactomes,
+                selectedInteractomeIds: this.controlInteractomes.value === null
+                    ? []
+                    : this.controlInteractomes.value.map(interactome => interactome.id)
+            }
+        }).afterClosed().subscribe((selected: number[]) => {
+            if (selected) {
+                this.controlInteractomes.setValue(
+                    this.interactomes.filter(
+                        interactome => selected.includes(interactome.id)
+                    )
+                );
             }
         });
     }
