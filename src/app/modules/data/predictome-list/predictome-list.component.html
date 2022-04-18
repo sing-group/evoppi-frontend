@@ -27,9 +27,12 @@
                     <div class="card-header card-header-info">
                         <h4 class="card-title">Predictomes</h4>
                         <p class="card-category">List of available predictomes.</p>
-                        <a class="mat-raised-button mat-primary app-action-right" routerLink="/predictomes/creation"
+                        <a class="mat-raised-button mat-primary app-action-right-1" routerLink="/predictomes/creation"
                            *ngIf="isAdmin()">
                             Create predictome
+                        </a>
+                        <a class="mat-raised-button mat-primary app-action-right-2" [href]="downloadAllUrl()">
+                            Download all
                         </a>
                         <mat-spinner class="request-spinner" [diameter]="30" *ngIf="isRequestActive()"
                                      matTooltip="Your request is being processed"></mat-spinner>

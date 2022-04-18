@@ -38,6 +38,7 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
 import {DatabaseInteractomeService} from '../services/database-interactome.service';
 import {DatabaseInteractome} from '../../../entities/bio/database-interactome.model';
+import {StatsService} from '../../main/services/stats.service';
 
 class InteractomeServiceWrapper implements PaginatedDataProvider<DatabaseInteractome> {
     constructor(private readonly service: DatabaseInteractomeService) {
@@ -64,6 +65,7 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
     dataSource: MatPaginatedDataSource<DatabaseInteractome>;
 
     private requestActive = false;
+    private databaseVersion: string;
 
     private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + DatabaseInteractomeListComponent.FILTER_SUFFIX;
     private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(DatabaseInteractomeListComponent.FILTER_SUFFIX, '');
@@ -72,13 +74,17 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
         private readonly bottomSheet: MatBottomSheet,
         private readonly authenticationService: AuthenticationService,
         private readonly databaseInteractomeService: DatabaseInteractomeService,
-        private readonly notificationService: NotificationService
+        private readonly notificationService: NotificationService,
+        private readonly statsService: StatsService
     ) {
         super();
     }
 
     ngOnInit() {
         this.dataSource = new MatPaginatedDataSource<DatabaseInteractome>(new InteractomeServiceWrapper(this.databaseInteractomeService));
+        this.statsService.getDatabaseVersion().subscribe(version => {
+            this.databaseVersion = version;
+        });
     }
 
     ngAfterViewInit() {
@@ -144,5 +150,9 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
 
     public isRequestActive(): boolean {
         return this.requestActive;
+    }
+
+    public downloadAllUrl(): string {
+        return 'http://static.sing-group.org/EvoPPI/db/interactome/' + this.databaseVersion + '/all-interactomes.zip';
     }
 }

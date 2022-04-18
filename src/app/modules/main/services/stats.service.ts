@@ -29,14 +29,13 @@ import {Stats} from '../../../entities/info';
 @Injectable()
 export class StatsService {
 
-    private endpoint = environment.evoppiUrl + 'api/stats';
+    private endpoint = environment.evoppiUrl + 'api/database';
 
     constructor(private http: HttpClient) {
     }
 
     getStats(): Observable<Stats> {
-
-        return this.http.get<Stats>(this.endpoint)
+        return this.http.get<Stats>(this.endpoint + '/stats')
             .pipe(
                 EvoppiError.throwOnError(
                     'Error retrieving stats',
@@ -45,4 +44,13 @@ export class StatsService {
             );
     }
 
+    getDatabaseVersion(): Observable<string> {
+        return this.http.get<string>(this.endpoint + '/version')
+            .pipe(
+                EvoppiError.throwOnError(
+                    'Error retrieving database version',
+                    `Database version could not be retrieved from the backend.`
+                )
+            );
+    }
 }

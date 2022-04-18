@@ -19,6 +19,7 @@ import {DatabaseInteractome} from '../../../entities/bio/database-interactome.mo
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {Observable} from 'rxjs';
 import {PageData} from '../../../entities/data-source/page-data';
+import {StatsService} from '../../main/services/stats.service';
 
 class InteractomeServiceWrapper implements PaginatedDataProvider<Predictome> {
     constructor(private readonly service: PredictomeService) {
@@ -45,6 +46,7 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
     dataSource: MatPaginatedDataSource<Predictome>;
 
     private requestActive = false;
+    private databaseVersion: string;
 
     private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + PredictomeListComponent.FILTER_SUFFIX;
     private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(PredictomeListComponent.FILTER_SUFFIX, '');
@@ -53,13 +55,17 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
         private readonly bottomSheet: MatBottomSheet,
         private readonly authenticationService: AuthenticationService,
         private readonly predictomeService: PredictomeService,
-        private readonly notificationService: NotificationService
+        private readonly notificationService: NotificationService,
+        private readonly statsService: StatsService
     ) {
         super();
     }
 
     ngOnInit() {
         this.dataSource = new MatPaginatedDataSource<Predictome>(new InteractomeServiceWrapper(this.predictomeService));
+        this.statsService.getDatabaseVersion().subscribe(version => {
+            this.databaseVersion = version;
+        });
     }
 
     ngAfterViewInit() {
@@ -125,5 +131,9 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
 
     public isRequestActive(): boolean {
         return this.requestActive;
+    }
+
+    public downloadAllUrl(): string {
+        return 'http://static.sing-group.org/EvoPPI/db/predictome/' + this.databaseVersion + '/all-predictomes.zip';
     }
 }
