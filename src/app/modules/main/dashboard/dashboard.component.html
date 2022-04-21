@@ -36,12 +36,11 @@
                             those queries involving two or more interactomes from two distinct species.
                         </p>
                         <p *ngIf="stats">
-                            Currently, EvoPPI provides <span class="font-weight-bold">{{stats.genesCount}} genes</span>,
-                            <span class="font-weight-bold">{{stats.interactionsCount}} interactions</span>,
-                            <span
-                                class="font-weight-bold">{{stats.databaseInteractomesCount}} database interactomes</span>,
-                            and <span class="font-weight-bold">{{stats.predictomesCount}} predicted interactomes</span>
-                            for the following <span class="font-weight-bold">{{stats.speciesCount}} species</span>:
+                            Currently, EvoPPI provides <strong>{{stats.genesCount | number}} genes</strong>,
+                            <strong>{{stats.interactionsCount | number}} interactions</strong>,
+                            <strong>{{stats.databaseInteractomesCount | number}} database interactomes</strong>, and
+                            <strong>{{stats.predictomesCount | number}} predicted interactomes</strong> for the
+                            following <strong>{{stats.speciesCount | number}} species</strong>:
                         </p>
                         <ul *ngIf="listSpecies">
                             <li *ngFor="let species of listSpecies">
