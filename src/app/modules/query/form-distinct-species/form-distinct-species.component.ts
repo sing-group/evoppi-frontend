@@ -182,7 +182,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
     private validateReferenceInteractomeSelection(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             if (this.referenceInteractomes === undefined || this.referencePredictomes === undefined) {
-                console.warn('Reference interactomes/predictomes are not loaded.');
+                console.warn('Reference interactomes/predicted interactomes are not loaded.');
                 return null;
             }
 
@@ -191,8 +191,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
                 (!this.controlReferencePredictomes.value || this.controlReferencePredictomes.value.length === 0)
             ) {
                 return {
-                    'referenceInteractomes': `At least one reference interactome or predictome must be selected.`,
-                    'referencePredictomes': `At least one reference interactome or predictome must be selected.`
+                    'referenceInteractomes': `At least one reference interactome or predicted interactome must be selected.`,
+                    'referencePredictomes': `At least one reference interactome or predicted interactome must be selected.`
                 };
             } else {
                 return null;
@@ -212,8 +212,8 @@ export class FormDistinctSpeciesComponent implements OnInit {
                 (!this.controlTargetPredictomes.value || this.controlTargetPredictomes.value.length === 0)
             ) {
                 return {
-                    'targetInteractomes': `At least one target interactome or predictome must be selected.`,
-                    'targetPredictomes': `At least one target interactome or predictome must be selected.`
+                    'targetInteractomes': `At least one target interactome or predicted interactome must be selected.`,
+                    'targetPredictomes': `At least one target interactome or predicted interactome must be selected.`
                 };
             } else {
                 return null;
@@ -274,9 +274,9 @@ export class FormDistinctSpeciesComponent implements OnInit {
     private summarizeSelectedPredictomes(predictomes?: Interactome[]): string {
         if (predictomes && predictomes.length > 0) {
             const numSelected = predictomes.length;
-            return numSelected === 1 ? 'One predictome selected' : `${numSelected} predictomes selected`;
+            return numSelected === 1 ? 'One predicted interactome selected' : `${numSelected} predicted interactomes selected`;
         } else {
-            return 'No predictome selected';
+            return 'No predicted interactome selected';
         }
     }
 
@@ -554,7 +554,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     public onSelectReferencePredictomes(): void {
         this.showPredictomeSelectionDialog(
-            'Reference predictome selection', this.referenceSpecies, this.referencePredictomes, this.controlReferencePredictomes
+            'Reference predicted interactome selection', this.referenceSpecies, this.referencePredictomes, this.controlReferencePredictomes
         );
     }
 
@@ -566,7 +566,7 @@ export class FormDistinctSpeciesComponent implements OnInit {
 
     public onSelectTargetPredictomes(): void {
         this.showPredictomeSelectionDialog(
-            'Target predictome selection', this.targetSpecies, this.targetPredictomes, this.controlTargetPredictomes
+            'Target predicted interactome selection', this.targetSpecies, this.targetPredictomes, this.controlTargetPredictomes
         );
     }
 

@@ -100,17 +100,17 @@ export const MAIN_ROUTES: Routes = [
         }
     },
     {
-        path: 'predictomes',
+        path: 'predicted-interactomes',
         component: PredictomeListComponent,
         canDeactivate: [CanDeactivateComponentGuardService]
     },
     {
-        path: 'predictomes/creation',
+        path: 'predicted-interactomes/creation',
         canActivate: [AdminGuard],
         component: PredictomeCreationComponent,
         data: {
-            redirectRoute: '/predictomes',
-            redirectRouteTitle: 'Go to predictomes'
+            redirectRoute: '/predicted-interactomes',
+            redirectRouteTitle: 'Go to predicted interactomes'
         }
     },
     {

@@ -50,13 +50,13 @@ export class PredictomeCreationComponent implements OnInit {
     private validateInteractomeName(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             if (this.interactomeNames === undefined) {
-                console.warn('Predictome names are not loaded.');
+                console.warn('Predicted interactome names are not loaded.');
                 return null;
             } else {
                 if (this.interactomeNames.includes('Based on ' + control.value)) {
                     console.log('Here we are...');
                     return {
-                        'sourceInteractome': `A predictome with the same name already exists.`
+                        'sourceInteractome': `A predicted interactome with the same name already exists.`
                     }
                 } else {
                     return null;
@@ -79,10 +79,10 @@ export class PredictomeCreationComponent implements OnInit {
                 if (field.errors.sourceInteractome !== undefined) {
                     return field.errors.sourceInteractome;
                 } else {
-                    return 'Source interactome can\'t be empty.';
+                    return 'Source predicted interactome can\'t be empty.';
                 }
             case 'predictomeFile':
-                return 'A file with the interactome information must be provided';
+                return 'A file with the predicted interactome information must be provided';
             case 'conversionDatabase':
                 return 'The conversion database can\'t be empty';
             case 'speciesA':
@@ -133,8 +133,8 @@ export class PredictomeCreationComponent implements OnInit {
             ConfirmSheetComponent,
             {
                 data: {
-                    title: 'Predictome created',
-                    message: 'The predictome was created. You can see it in the predictomes list.',
+                    title: 'Predicted interactome created',
+                    message: 'The predicted interactome was created. You can see it in the predicted interactomes list.',
                     confirmLabel: this.route.routeConfig.data.redirectRouteTitle,
                     cancelLabel: 'Close',
                     headerClass: 'card-header-success'

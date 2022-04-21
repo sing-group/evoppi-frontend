@@ -87,17 +87,17 @@ export const MAIN_NAVIGATION_INFO: NavigationInfo[] = [
         backRouteTitle: 'Go back to interactomes'
     },
     {
-        path: '/predictomes',
-        title: 'Predictomes',
+        path: '/predicted-interactomes',
+        title: 'Predicted interactomes',
         showInMenu: true,
         icon: 'sync_alt'
     },
     {
-        path: '/predictomes/creation',
-        title: 'Create new predictome',
+        path: '/predicted-interactomes/creation',
+        title: 'Create new predicted interactome',
         showInMenu: false,
-        backRoute: '/predictomes',
-        backRouteTitle: 'Go back to predictomes'
+        backRoute: '/predicted-interactomes',
+        backRouteTitle: 'Go back to predicted interactomes'
     },
     {
         path: '/management/users',

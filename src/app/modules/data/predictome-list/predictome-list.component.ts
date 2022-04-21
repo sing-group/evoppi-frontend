@@ -96,8 +96,8 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
             ConfirmSheetComponent,
             {
                 data: {
-                    title: 'Predictome deletion',
-                    message: `Predictome '${interactome.name}' and all the related information will be deleted. Do you want to continue?`,
+                    title: 'Predicted interactome deletion',
+                    message: `Predicted interactome '${interactome.name}' and all the related information will be deleted. Do you want to continue?`,
                     confirmLabel: 'Yes',
                     cancelLabel: 'No'
                 }
@@ -109,25 +109,28 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
         });
     }
 
-    private deleteInteractome(interactome: Interactome): void {
+    private deleteInteractome(predictome: Interactome): void {
         this.requestActive = true;
-        this.predictomeService.deleteInteractome(interactome)
+        this.predictomeService.deleteInteractome(predictome)
             .subscribe(
                 () => {
                     this.requestActive = false;
                     this.dataSource.updatePage();
-                    this.notificationService.success('Predictome deleted', `Predictome '${interactome.name} was deleted.`);
+                    this.notificationService.success(
+                        'Predicted interactome deleted',
+                        `Predicted interactome '${predictome.name} was deleted.`
+                    );
                 },
                 () => {
                     this.requestActive = false;
                     EvoppiError.throwOnError(
-                        'An error occurred when deleting the selected predictome.',
-                        'Error deleting predictome'
+                        'An error occurred when deleting the selected predicted interactome.',
+                        'Error deleting predicted interactome'
                     )
                 }
             );
         this.notificationService.success(
-            'Deleting predictome', `Predictome '${interactome.name} is being deleted. This may take some time. Please, be patient.`
+            'Deleting predicted interactome', `Predicted interactome '${predictome.name} is being deleted. This may take some time. Please, be patient.`
         );
     }
 
@@ -140,6 +143,6 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
     }
 
     public downloadAllUrl(): string {
-        return 'http://static.sing-group.org/EvoPPI/db/predictome/' + this.databaseVersion + '/all-predictomes.zip';
+        return 'http://static.sing-group.org/EvoPPI/db/predicted-interactome/' + this.databaseVersion + '/all-predicted-interactomes.zip';
     }
 }

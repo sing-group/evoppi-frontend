@@ -130,7 +130,7 @@ export class FormSameSpeciesComponent implements OnInit {
     private validateInteractomeSelection(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             if (this.interactomes === undefined || this.predictomes === undefined) {
-                console.warn('Interactomes/predictomes are not loaded.');
+                console.warn('Interactomes/predicted interactomes are not loaded.');
                 return null;
             }
 
@@ -139,8 +139,8 @@ export class FormSameSpeciesComponent implements OnInit {
                 (!this.controlPredictomes.value || this.controlPredictomes.value.length === 0)
             ) {
                 return {
-                    'interactomes': `At least one interactome or predictome must be selected.`,
-                    'predictomes': `At least one interactome or predictome must be selected.`
+                    'interactomes': `At least one interactome or predicted interactome must be selected.`,
+                    'predictomes': `At least one interactome or predicted interactome must be selected.`
                 };
             } else {
                 return null;
@@ -181,9 +181,9 @@ export class FormSameSpeciesComponent implements OnInit {
 
         if (predictomes && predictomes.length > 0) {
             const numSelected = predictomes.length;
-            return numSelected === 1 ? 'One predictome selected' : `${numSelected} predictomes selected`;
+            return numSelected === 1 ? 'One predicted interactome selected' : `${numSelected} predicted interactomes selected`;
         } else {
-            return 'No predictome selected';
+            return 'No predicted interactome selected';
         }
     }
 
@@ -413,7 +413,7 @@ export class FormSameSpeciesComponent implements OnInit {
         this.dialog.open(InteractomeSelectionDialogComponent, {
             minWidth: 600,
             data: {
-                title: 'Predictome selection',
+                title: 'Predicted interactome selection',
                 filters: [
                     {
                         name: 'Species',

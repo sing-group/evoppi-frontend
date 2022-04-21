@@ -62,8 +62,8 @@ export class PredictomeService implements PaginatedDataProvider<Predictome> {
         return request
             .pipe(
                 EvoppiError.throwOnError(
-                    'Error requesting predictomes',
-                    'The predictomes could not be retrieved from the backend.'
+                    'Error requesting predicted interactomes',
+                    'The predicted interactomes could not be retrieved from the backend.'
                 )
             );
 
@@ -108,8 +108,8 @@ export class PredictomeService implements PaginatedDataProvider<Predictome> {
             .pipe(
                 map(response => new PageData(Number(response.headers.get('X-Total-Count')), response.body)),
                 EvoppiError.throwOnError(
-                    'Error requesting predictomes',
-                    'The predictomes could not be retrieved from the backend.'
+                    'Error requesting predicted interactomes',
+                    'The predicted interactomes could not be retrieved from the backend.'
                 )
             );
     }
@@ -131,8 +131,8 @@ export class PredictomeService implements PaginatedDataProvider<Predictome> {
         return this.http.post<Predictome>(this.endpoint, formData)
             .pipe(
                 EvoppiError.throwOnError(
-                    'Error creating predictome',
-                    'The predictome could not be created.'
+                    'Error creating predicted interactome',
+                    'The predicted interactome could not be created.'
                 )
             );
     }
