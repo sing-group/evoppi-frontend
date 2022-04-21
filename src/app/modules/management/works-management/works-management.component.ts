@@ -33,6 +33,8 @@ import {TableInputComponent} from '../../shared/components/table-input/table-inp
     styleUrls: ['./works-management.component.scss']
 })
 export class WorksManagementComponent implements OnInit, AfterViewInit {
+    private static readonly FILTER_SUFFIX = '_FILTER';
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -44,6 +46,9 @@ export class WorksManagementComponent implements OnInit, AfterViewInit {
 
     executionStatus = Object.keys(Status);
 
+    private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + WorksManagementComponent.FILTER_SUFFIX;
+    private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(WorksManagementComponent.FILTER_SUFFIX, '');
+
     constructor(private readonly workService: WorkService) {
     }
 
@@ -52,16 +57,23 @@ export class WorksManagementComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
+        const filterFields = TableInputComponent.getFilterValues(
+            this.inputComponents,
+            WorksManagementComponent.FILTER_TO_COLUMN_MAPPER
+        );
 
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
+    }
+
+    public get columnFilters(): string[] {
+        return this.columns.map(WorksManagementComponent.COLUMN_TO_FILTER_MAPPER);
     }
 
     public hasFilters(): boolean {
         return TableInputComponent.haveValue(this.inputComponents);
     }
 
-    public clearFilters() {
+    public onClearFilters() {
         TableInputComponent.clear(this.inputComponents)
     }
 }

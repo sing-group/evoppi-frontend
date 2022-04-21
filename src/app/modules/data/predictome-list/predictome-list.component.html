@@ -39,8 +39,8 @@
                     </div>
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort class="predictome-list">
-                            <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
-                            <mat-header-row *matHeaderRowDef="columnFilters"></mat-header-row>
+                            <mat-header-row *matHeaderRowDef="columns" class="header-row"></mat-header-row>
+                            <mat-header-row *matHeaderRowDef="columnFilters" class="filters-row"></mat-header-row>
                             <mat-row *matRowDef="let interactome; let even = even; columns: columns;"
                                      [ngClass]="{gray: even}"></mat-row>
 
@@ -112,7 +112,16 @@
                             </ng-container>
 
                             <ng-container matColumnDef="ACTIONS_FILTER">
-                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef>
+                                    <button mat-icon-button
+                                            (click)="onClearFilters()"
+                                            [disabled]="!hasFilters()"
+                                            matTooltip="Clear all filters">
+                                        <mat-icon aria-label="Clear">
+                                            clear
+                                        </mat-icon>
+                                    </button>
+                                </mat-header-cell>
                             </ng-container>
                         </mat-table>
                         <mat-paginator #paginator

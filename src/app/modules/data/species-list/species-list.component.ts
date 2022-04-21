@@ -42,6 +42,8 @@ import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm
     styleUrls: ['./species-list.component.scss']
 })
 export class SpeciesListComponent extends CanDeactivateComponent implements OnInit, AfterViewInit {
+    private static readonly FILTER_SUFFIX = '_FILTER';
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -54,6 +56,8 @@ export class SpeciesListComponent extends CanDeactivateComponent implements OnIn
     executionStatus = Object.keys(Status);
 
     private requestActive = false;
+    private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + SpeciesListComponent.FILTER_SUFFIX;
+    private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(SpeciesListComponent.FILTER_SUFFIX, '');
 
     constructor(
         private readonly bottomSheet: MatBottomSheet,
@@ -69,13 +73,28 @@ export class SpeciesListComponent extends CanDeactivateComponent implements OnIn
     }
 
     ngAfterViewInit() {
-        const filterFields = TableInputComponent.getFilterValues(this.inputComponents);
+        const filterFields = TableInputComponent.getFilterValues(
+            this.inputComponents,
+            SpeciesListComponent.FILTER_TO_COLUMN_MAPPER
+        );
 
         this.dataSource.setControls(this.paginator, this.sort, filterFields);
     }
 
+    public get columnFilters(): string[] {
+        return this.columns.map(SpeciesListComponent.COLUMN_TO_FILTER_MAPPER);
+    }
+
     public onDownloadSpeciesFasta(species: Species): void {
         this.speciesService.downloadSpeciesFasta(species);
+    }
+
+    public hasFilters(): boolean {
+        return TableInputComponent.haveValue(this.inputComponents);
+    }
+
+    public onClearFilters() {
+        TableInputComponent.clear(this.inputComponents);
     }
 
     public onDeleteSpecies(species: Species): void {

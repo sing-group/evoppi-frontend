@@ -30,63 +30,86 @@
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort matSortActive="CREATION_DATE_TIME"
                                    matSortDirection="desc">
-                            <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
-                            <mat-row *matRowDef="let work; columns: columns;"></mat-row>
-                            <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+                            <mat-header-row *matHeaderRowDef="columns" class="header-row"></mat-header-row>
+                            <mat-header-row *matHeaderRowDef="columnFilters" class="filters-row"></mat-header-row>
 
                             <ng-container matColumnDef="NAME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.name}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef>
-                                    <app-table-input label="Name"></app-table-input>
-                                </mat-footer-cell>
                             </ng-container>
+
+                            <ng-container matColumnDef="NAME_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <app-table-input label="Name filter"></app-table-input>
+                                </mat-header-cell>
+                            </ng-container>
+                            
                             <ng-container matColumnDef="CREATION_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Creation</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.creationDateTime | date : 'short'}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                             </ng-container>
+
+                            <ng-container matColumnDef="CREATION_DATE_TIME_FILTER">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            </ng-container>
+                            
                             <ng-container matColumnDef="SCHEDULING_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Scheduling</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.schedulingDateTime ? (work.schedulingDateTime | date : 'short') : '-'}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                             </ng-container>
+
+                            <ng-container matColumnDef="SCHEDULING_DATE_TIME_FILTER">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            </ng-container>
+                            
                             <ng-container matColumnDef="STARTING_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Start</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.startingDateTime ? (work.startingDateTime | date : 'short') : '-'}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                             </ng-container>
+
+                            <ng-container matColumnDef="STARTING_DATE_TIME_FILTER">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            </ng-container>
+                            
                             <ng-container matColumnDef="FINISHING_DATE_TIME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>End</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.finishingDateTime ? (work.finishingDateTime | date : 'short') : '-'}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef></mat-footer-cell>
                             </ng-container>
+
+                            <ng-container matColumnDef="FINISHING_DATE_TIME_FILTER">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            </ng-container>
+                            
                             <ng-container matColumnDef="STATUS">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
                                 <mat-cell *matCellDef="let work">
                                     {{work.status}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef>
+                            </ng-container>
+
+                            <ng-container matColumnDef="STATUS_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
                                     <app-table-input label="Execution status"
                                                      [options]="executionStatus"></app-table-input>
-                                </mat-footer-cell>
+                                </mat-header-cell>
                             </ng-container>
+                            
                             <ng-container matColumnDef="ACTIONS">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                 <mat-cell *matCellDef="let work"></mat-cell>
                                 <mat-footer-cell *matFooterCellDef>
                                     <button mat-icon-button
-                                            (click)="clearFilters()"
+                                            (click)="onClearFilters()"
                                             [disabled]="!hasFilters()"
                                             matTooltip="Clear all filters">
                                         <mat-icon aria-label="Clear">
@@ -94,6 +117,19 @@
                                         </mat-icon>
                                     </button>
                                 </mat-footer-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ACTIONS_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <button mat-icon-button
+                                            (click)="onClearFilters()"
+                                            [disabled]="!hasFilters()"
+                                            matTooltip="Clear all filters">
+                                        <mat-icon aria-label="Clear">
+                                            clear
+                                        </mat-icon>
+                                    </button>
+                                </mat-header-cell>
                             </ng-container>
                         </mat-table>
                         <mat-paginator #paginator

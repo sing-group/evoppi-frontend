@@ -36,3 +36,20 @@
     bottom: 12px;
     right: 170px;
 }
+
+mat-header-row {
+    background-color: #f6faff;
+
+    &.header-row {
+        mat-header-cell {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    }
+
+    &.filters-row {
+        border-bottom-width: 2px;
+        border-bottom-color: #0d47a1;
+        min-height: 0;
+    }
+}

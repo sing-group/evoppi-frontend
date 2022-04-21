@@ -79,6 +79,14 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
         return this.columns.map(PredictomeListComponent.COLUMN_TO_FILTER_MAPPER);
     }
 
+    public hasFilters(): boolean {
+        return TableInputComponent.haveValue(this.inputComponents);
+    }
+
+    public onClearFilters() {
+        TableInputComponent.clear(this.inputComponents);
+    }
+
     public onDownloadInteractionsTsv(predictome: Predictome): void {
         this.predictomeService.downloadInteractomeTsv(predictome);
     }

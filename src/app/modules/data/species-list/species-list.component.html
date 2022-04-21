@@ -36,19 +36,23 @@
                     </div>
                     <div class="card-body">
                         <mat-table [dataSource]="dataSource" matSort>
-                            <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+                            <mat-header-row *matHeaderRowDef="columns" class="header-row"></mat-header-row>
+                            <mat-header-row *matHeaderRowDef="columnFilters" class="filters-row"></mat-header-row>
                             <mat-row *matRowDef="let species; columns: columns;"></mat-row>
-                            <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
 
                             <ng-container matColumnDef="NAME">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
                                 <mat-cell *matCellDef="let species">
                                     {{species.name}}
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef>
-                                    <app-table-input label="Name filter"></app-table-input>
-                                </mat-footer-cell>
                             </ng-container>
+
+                            <ng-container matColumnDef="NAME_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <app-table-input label="Name filter"></app-table-input>
+                                </mat-header-cell>
+                            </ng-container>
+                            
                             <ng-container matColumnDef="ACTIONS">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Actions</mat-header-cell>
                                 <mat-cell *matCellDef="let species">
@@ -66,8 +70,19 @@
                                         <mat-icon aria-label="Delete species">delete</mat-icon>
                                     </button>
                                 </mat-cell>
-                                <mat-footer-cell *matFooterCellDef>
-                                </mat-footer-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ACTIONS_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <button mat-icon-button
+                                            (click)="onClearFilters()"
+                                            [disabled]="!hasFilters()"
+                                            matTooltip="Clear all filters">
+                                        <mat-icon aria-label="Clear">
+                                            clear
+                                        </mat-icon>
+                                    </button>
+                                </mat-header-cell>
                             </ng-container>
                         </mat-table>
                         <mat-paginator #paginator

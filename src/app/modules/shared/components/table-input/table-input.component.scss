@@ -20,19 +20,5 @@
  */
 
 :host {
-    width: 100%;
-}
-
-mat-form-field {
-    ::ng-deep .mat-form-field-underline {
-        display: none;
-    }
-
-    ::ng-deep .mat-form-field-wrapper {
-        padding-bottom: 0;
-    }
-
-    ::ng-deep .mat-form-field-label-wrapper {
-        font-size: 0.8em;
-    }
+    width: 90%;
 }

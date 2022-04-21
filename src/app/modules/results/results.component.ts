@@ -56,6 +56,8 @@ import {TableInputComponent} from '../shared/components/table-input/table-input.
     ]
 })
 export class ResultsComponent implements OnInit, AfterViewInit {
+    private static readonly FILTER_SUFFIX = '_FILTER';
+
     @ViewChild('samePaginator') samePaginator: MatPaginator;
     @ViewChild('sameSort') sameSort: MatSort;
 
@@ -78,6 +80,9 @@ export class ResultsComponent implements OnInit, AfterViewInit {
     sameDataSource: MatPaginatedDataSource<SameResult>;
     distinctDataSource: MatPaginatedDataSource<DistinctResult>;
     readonly statusValues = Object.keys(Status);
+
+    private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + ResultsComponent.FILTER_SUFFIX;
+    private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(ResultsComponent.FILTER_SUFFIX, '');
 
     constructor(
         private route: ActivatedRoute,
@@ -113,6 +118,14 @@ export class ResultsComponent implements OnInit, AfterViewInit {
             this.checkForStatusChanges(this.sameDataSource);
             this.checkForStatusChanges(this.distinctDataSource);
         });
+    }
+
+    public get distinctColumnsFilters(): string[] {
+        return this.distinctColumns.map(ResultsComponent.COLUMN_TO_FILTER_MAPPER);
+    }
+
+    public get sameColumnsFilters(): string[] {
+        return this.sameColumns.map(ResultsComponent.COLUMN_TO_FILTER_MAPPER);
     }
 
     private checkForStatusChanges(dataSource: MatPaginatedDataSource<Result>) {

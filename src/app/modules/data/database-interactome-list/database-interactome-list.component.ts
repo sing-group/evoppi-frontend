@@ -102,6 +102,14 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
         return this.columns.map(DatabaseInteractomeListComponent.COLUMN_TO_FILTER_MAPPER);
     }
 
+    public hasFilters(): boolean {
+        return TableInputComponent.haveValue(this.inputComponents);
+    }
+
+    public onClearFilters() {
+        TableInputComponent.clear(this.inputComponents);
+    }
+
     public onDownloadInteractionsTsv(interactome: DatabaseInteractome): void {
         this.databaseInteractomeService.downloadInteractomeTsv(interactome);
     }
