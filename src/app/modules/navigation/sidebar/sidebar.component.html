@@ -20,12 +20,21 @@
   -->
 
 <div class="logo">
-    <a href="http://evoppi.i3s.up.pt" class="simple-text">
-        <div class="logo-img">
+    <div class="logo-container">
+        <div class="logo-image">
             <img src="assets/img/evoppi.png"/>
         </div>
-        EvoPPI
-    </a>
+        <div class="logo-name">
+            <a routerLink="/">
+                EvoPPI
+            </a>
+        </div>
+        <div class="logo-db-version">
+            <a routerLink="/help">
+                {{dbVersion}}
+            </a>
+        </div>
+    </div>
 </div>
 <div class="sidebar-wrapper">
     <div *ngIf="isMobileMenu()">

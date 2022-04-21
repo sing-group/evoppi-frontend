@@ -22,6 +22,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NavigationInfo} from '../../../entities';
+import {StatsService} from '../../main/services/stats.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -31,13 +32,21 @@ import {NavigationInfo} from '../../../entities';
 export class SidebarComponent implements OnInit {
     @Input() public routes: NavigationInfo[];
 
+    public dbVersion: string;
+
     private filteredRoutes: NavigationInfo[];
 
-    constructor(private route: ActivatedRoute, private router: Router) {
+    constructor(
+        private statsService: StatsService,
+        private route: ActivatedRoute,
+        private router: Router
+    ) {
     }
 
     ngOnInit() {
         this.filteredRoutes = this.routes.filter(route => route.showInMenu);
+        this.statsService.getDatabaseVersion()
+            .subscribe(dbVersion => this.dbVersion = dbVersion);
     }
 
     public get menuItems(): NavigationInfo[] {

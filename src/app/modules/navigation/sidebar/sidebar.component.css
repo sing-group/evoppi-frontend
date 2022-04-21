@@ -19,3 +19,58 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+div.logo {
+    display: flex;
+
+    justify-content: left;
+    align-items: center;
+}
+
+div.logo-container {
+    padding-left: 32px;
+
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 2fr 1fr;
+    grid-column-gap: 32px;
+}
+
+div.logo-image {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    justify-self: center;
+    align-self: center;
+}
+
+div.logo-image img {
+    width: 40px;
+}
+
+div.logo-name {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-self: center;
+    align-self: end;
+
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+div.logo-name a {
+    color: inherit;
+}
+
+div.logo-db-version {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: center;
+    align-self: start;
+
+    font-size: 0.8em;
+    font-weight: bold;
+    color: darkgray;
+}
+
+div.logo-db-version a {
+    color: inherit;
+}
