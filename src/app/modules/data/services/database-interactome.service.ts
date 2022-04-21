@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {SpeciesService} from '../../results/services/species.service';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, iif, of} from 'rxjs';
 import {Interactome, Species} from '../../../entities/bio';
 import {concatMap, map} from 'rxjs/operators';
 import {EvoppiError} from '../../../entities/notification';
@@ -31,14 +31,16 @@ export class DatabaseInteractomeService implements PaginatedDataProvider<Databas
         let request = this.http.get<DatabaseInteractome[]>(this.endpoint);
 
         if (retrieveSpecies) {
+            const empty: Species[] = [];
+
             request = request.pipe(
                 concatMap(
-                    interactomes => forkJoin(
+                    interactomes => iif(() => interactomes.length === 0, of(empty), forkJoin(
                         interactomes.map(interactome => [interactome.speciesA.id, interactome.speciesB.id])
                             .reduce((x, y) => x.concat(y), [])
                             .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
                             .map(speciesId => this.speciesService.getSpeciesById(speciesId))
-                    )
+                    ))
                         .pipe(
                             map(species => {
                                 const speciesById = species.reduce((reduced, spec) => {
@@ -74,14 +76,16 @@ export class DatabaseInteractomeService implements PaginatedDataProvider<Databas
         let request = this.http.get<DatabaseInteractome[]>(this.endpoint, {params, 'observe': 'response'});
 
         if (retrieveSpecies) {
+            const empty: Species[] = [];
+
             request = request.pipe(
                 concatMap(
-                    response => forkJoin(
+                    response => iif(() => response.body.length === 0 , of(empty), forkJoin(
                         response.body.map(interactome => [interactome.speciesA.id, interactome.speciesB.id])
                             .reduce((x, y) => x.concat(y), [])
                             .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
                             .map(speciesId => this.speciesService.getSpeciesById(speciesId))
-                    )
+                    ))
                         .pipe(
                             map(species => {
                                 const speciesById = species.reduce((reduced, spec) => {

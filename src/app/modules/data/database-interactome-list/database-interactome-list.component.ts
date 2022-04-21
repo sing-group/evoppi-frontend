@@ -67,8 +67,10 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
     private requestActive = false;
     private databaseVersion: string;
 
-    private static readonly COLUMN_TO_FILTER_MAPPER = (column: string) => column + DatabaseInteractomeListComponent.FILTER_SUFFIX;
-    private static readonly FILTER_TO_COLUMN_MAPPER = (filter: string) => filter.replace(DatabaseInteractomeListComponent.FILTER_SUFFIX, '');
+    private static readonly COLUMN_TO_FILTER_MAPPER =
+        (column: string) => column + DatabaseInteractomeListComponent.FILTER_SUFFIX;
+    private static readonly FILTER_TO_COLUMN_MAPPER =
+        (filter: string) => filter.replace(DatabaseInteractomeListComponent.FILTER_SUFFIX, '');
 
     constructor(
         private readonly bottomSheet: MatBottomSheet,
@@ -134,7 +136,7 @@ export class DatabaseInteractomeListComponent extends CanDeactivateComponent imp
                 () => {
                     this.requestActive = false;
                     EvoppiError.throwOnError(
-                        'An error ocurred when deleting the selected interactome.',
+                        'An error occurred when deleting the selected interactome.',
                         'Error deleting interactome'
                     )
                 }

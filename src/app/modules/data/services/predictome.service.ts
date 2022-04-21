@@ -5,7 +5,7 @@ import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {SpeciesService} from '../../results/services/species.service';
 import {InteractomeService} from '../../results/services/interactome.service';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, iif, of} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
 import {EvoppiError} from '../../../entities/notification';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
@@ -31,14 +31,15 @@ export class PredictomeService implements PaginatedDataProvider<Predictome> {
         let request = this.http.get<Predictome[]>(this.endpoint);
 
         if (retrieveSpecies) {
+            const empty: Species[] = [];
             request = request.pipe(
                 concatMap(
-                    interactomes => forkJoin(
-                        interactomes.map(interactome => [interactome.speciesA.id, interactome.speciesB.id])
+                    predictomes => iif(() => predictomes.length === 0, of(empty), forkJoin(
+                        predictomes.map(predictome => [predictome.speciesA.id, predictome.speciesB.id])
                             .reduce((x, y) => x.concat(y), [])
                             .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
                             .map(speciesId => this.speciesService.getSpeciesById(speciesId))
-                    )
+                    ))
                         .pipe(
                             map(species => {
                                 const speciesById = species.reduce((reduced, spec) => {
@@ -46,12 +47,12 @@ export class PredictomeService implements PaginatedDataProvider<Predictome> {
                                     return reduced;
                                 }, {});
 
-                                for (const interactome of interactomes) {
+                                for (const interactome of predictomes) {
                                     interactome.speciesA = speciesById[interactome.speciesA.id];
                                     interactome.speciesB = speciesById[interactome.speciesB.id];
                                 }
 
-                                return interactomes;
+                                return predictomes;
                             })
                         )
                 )
@@ -74,14 +75,16 @@ export class PredictomeService implements PaginatedDataProvider<Predictome> {
         let request = this.http.get<Predictome[]>(this.endpoint, {params, 'observe': 'response'});
 
         if (retrieveSpecies) {
+            const empty: Species[] = [];
+
             request = request.pipe(
                 concatMap(
-                    response => forkJoin(
+                    response => iif(() => response.body.length === 0, of(empty), forkJoin(
                         response.body.map(interactome => [interactome.speciesA.id, interactome.speciesB.id])
                             .reduce((x, y) => x.concat(y), [])
                             .filter((item, index, species) => species.indexOf(item) === index) // Removes duplicates
                             .map(speciesId => this.speciesService.getSpeciesById(speciesId))
-                    )
+                    ))
                         .pipe(
                             map(species => {
                                 const speciesById = species.reduce((reduced, spec) => {

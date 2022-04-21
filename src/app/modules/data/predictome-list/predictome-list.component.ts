@@ -7,7 +7,6 @@ import {MatPaginatedDataSource} from '../../../entities/data-source/mat-paginate
 import {Predictome} from '../../../entities/bio/predictome.model';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {AuthenticationService} from '../../authentication/services/authentication.service';
-import {DatabaseInteractomeService} from '../services/database-interactome.service';
 import {NotificationService} from '../../notification/services/notification.service';
 import {Interactome} from '../../../entities/bio';
 import {ConfirmSheetComponent} from '../../material-design/confirm-sheet/confirm-sheet.component';
@@ -15,13 +14,12 @@ import {EvoppiError} from '../../../entities/notification';
 import {Role} from '../../../entities/data';
 import {PredictomeService} from '../services/predictome.service';
 import {PaginatedDataProvider} from '../../../entities/data-source/paginated-data-provider';
-import {DatabaseInteractome} from '../../../entities/bio/database-interactome.model';
 import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {Observable} from 'rxjs';
 import {PageData} from '../../../entities/data-source/page-data';
 import {StatsService} from '../../main/services/stats.service';
 
-class InteractomeServiceWrapper implements PaginatedDataProvider<Predictome> {
+class PredictomeServiceWrapper implements PaginatedDataProvider<Predictome> {
     constructor(private readonly service: PredictomeService) {
     }
 
@@ -62,7 +60,7 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
     }
 
     ngOnInit() {
-        this.dataSource = new MatPaginatedDataSource<Predictome>(new InteractomeServiceWrapper(this.predictomeService));
+        this.dataSource = new MatPaginatedDataSource<Predictome>(new PredictomeServiceWrapper(this.predictomeService));
         this.statsService.getDatabaseVersion().subscribe(version => {
             this.databaseVersion = version;
         });
@@ -81,8 +79,8 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
         return this.columns.map(PredictomeListComponent.COLUMN_TO_FILTER_MAPPER);
     }
 
-    public onDownloadInteractionsTsv(interactome: Predictome): void {
-        this.predictomeService.downloadInteractomeTsv(interactome);
+    public onDownloadInteractionsTsv(predictome: Predictome): void {
+        this.predictomeService.downloadInteractomeTsv(predictome);
     }
 
     public onDeleteInteractome(interactome: Interactome): void {
@@ -90,7 +88,7 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
             ConfirmSheetComponent,
             {
                 data: {
-                    title: 'Preedictome deletion',
+                    title: 'Predictome deletion',
                     message: `Predictome '${interactome.name}' and all the related information will be deleted. Do you want to continue?`,
                     confirmLabel: 'Yes',
                     cancelLabel: 'No'
@@ -115,13 +113,13 @@ export class PredictomeListComponent extends CanDeactivateComponent implements O
                 () => {
                     this.requestActive = false;
                     EvoppiError.throwOnError(
-                        'An error ocurred when deleting the selected predictome.',
+                        'An error occurred when deleting the selected predictome.',
                         'Error deleting predictome'
                     )
                 }
             );
         this.notificationService.success(
-            'Deleting interactome', `Predictome '${interactome.name} is being deleted. This may take some time. Please, be patient.`
+            'Deleting predictome', `Predictome '${interactome.name} is being deleted. This may take some time. Please, be patient.`
         );
     }
 
