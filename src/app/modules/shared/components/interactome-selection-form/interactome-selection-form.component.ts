@@ -70,6 +70,7 @@ export class InteractomeSelectionFormComponent implements OnInit {
 
     public onClearSearchText(): void {
         this.searchText = '';
+        this.updateFilteredInteractomes();
     }
 
     public onChangeFilter(filterName: string, filterValue: string): void {
