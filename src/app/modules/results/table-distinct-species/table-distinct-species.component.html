@@ -123,7 +123,7 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="ReferenceInteractome">
-                                    <mat-header-cell *matHeaderCellDef>
+                                    <mat-header-cell *matHeaderCellDef class="degree-title">
                                         <ng-container *ngIf="referenceInteractomes?.length > 1; else multiple">
                                             <span matTooltip="{{referenceInteractomesTitle}}">
                                                 {{(referenceInteractomes ? referenceInteractomes[0]?.speciesA?.name : '')}}
@@ -136,7 +136,7 @@
                                             </span>
                                         </ng-template>
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row">
+                                    <mat-cell *matCellDef="let row" class="degree-cell">
                                         <mat-chip-list *ngIf="row.referenceDegrees.length > 0">
                                             <mat-chip *ngFor="let degree of row.getDistinctReferenceDegrees()"
                                                       [matTooltip]="getReferenceInteractomeNames(row.getReferenceInteractomeIdByDegree(degree)) | join">
@@ -146,7 +146,7 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="TargetInteractome">
-                                    <mat-header-cell *matHeaderCellDef>
+                                    <mat-header-cell *matHeaderCellDef class="degree-title">
                                         <ng-container *ngIf="targetInteractomes.length > 1; else multiple">
                                             <span matTooltip="{{targetInteractomesTitle}}">
                                                 {{(targetInteractomes ? targetInteractomes[0]?.speciesA?.name : '')}}
@@ -159,7 +159,7 @@
                                             </span>
                                         </ng-template>
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row">
+                                    <mat-cell *matCellDef="let row" class="degree-cell">
                                         <mat-chip-list *ngIf="row.targetDegrees.length > 0">
                                             <mat-chip *ngFor="let degree of row.getDistinctTargetDegrees()"
                                                       [matTooltip]="getTargetInteractomeNames(row.getTargetInteractomeIdByDegree(degree)) | join">

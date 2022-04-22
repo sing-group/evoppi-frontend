@@ -34,6 +34,7 @@
 .toolbar {
     display: flex;
     align-items: center;
+    padding-bottom: 16px;
 
     .toolbar-spacer {
         flex: 1 1 auto;
@@ -55,6 +56,37 @@
   bottom: 5px;
   right: 0;
   position: absolute;
+}
+
+mat-header-row {
+    background-color: #f6faff;
+    border-bottom-width: 2px;
+    border-bottom-color: #0d47a1;
+
+    mat-header-cell {
+        align-self: end;
+        font-weight: bold;
+        font-size: 1.1em;
+
+        &.degree-title {
+            writing-mode: sideways-lr;
+            max-height: 240px;
+            justify-content: start;
+            align-items: center;
+            align-self: stretch;
+            padding-top: 10px;
+            padding-bottom: 10px;
+
+            ::ng-deep .mat-sort-header-content {
+                text-align: left;
+            }
+        }
+
+        &.collapsed-degree-title {
+            justify-content: center;
+            text-align: center;
+        }
+    }
 }
 
 .degree-cell {

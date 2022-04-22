@@ -56,7 +56,7 @@ import {InteractomeSelectionDialogComponent} from '../../shared/components/inter
     ]
 })
 export class TableSameSpeciesComponent implements OnInit {
-    private static readonly MAX_UNCOLLAPSED = 5;
+    private static readonly MAX_UNCOLLAPSED = 10;
 
     @ViewChild(MatSort) public sort: MatSort;
     @ViewChild(MatPaginator) public paginator: MatPaginator;
