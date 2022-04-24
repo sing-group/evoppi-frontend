@@ -2,7 +2,7 @@
 /*
  *  EvoPPI Frontend
  *
- *  Copyright (C) 2017-2021 - Noé Vázquez González,
+ *  Copyright (C) 2017-2022 - Noé Vázquez González,
  *  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
  *  and Cristina Vieira.
  *
