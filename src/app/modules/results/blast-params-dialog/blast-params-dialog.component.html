@@ -1,0 +1,19 @@
+<mat-card>
+    <mat-card-title>BLAST Query Options</mat-card-title>
+    <mat-card-content>
+        <dl>
+            <dt>Number of descriptions (max_target_seqs)</dt>
+            <dd>{{data.maxTargetSeqs}}</dd>
+            <dt>Minimum expect value (evalue)</dt>
+            <dd>{{data.evalue}}</dd>
+            <dt>Minimum length of alignment block</dt>
+            <dd>{{data.minimumAlignmentLength}}</dd>
+            <dt>Minimum identity (%)</dt>
+            <dd>{{data.minimumIdentity}}</dd>
+        </dl>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-button class="btn btn-primary" [mat-dialog-close]>Close</button>
+    </mat-card-actions>
+</mat-card>
+

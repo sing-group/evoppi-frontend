@@ -145,7 +145,8 @@ export class DistinctResultsService implements PaginatedDataProvider<DistinctRes
             progress: lastStep.progress,
             lastAction: lastStep.description,
             status: work.status,
-            creation: work.creationDateTime
+            creation: work.creationDateTime,
+            blastQueryOptions: workResult.blastQueryOptions
         };
     }
 

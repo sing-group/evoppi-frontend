@@ -21,6 +21,7 @@
 
 import {Gene, Interaction, Interactome} from '../bio';
 import {BlastResult} from '../bio/results';
+import {BlastQueryOptions} from '../bio/results/blast-query-options.model';
 
 export interface WorkResult {
     id: string;
@@ -46,4 +47,5 @@ export interface WorkResult {
 
     referenceInteractomes?: Interactome[];
     targetInteractomes?: Interactome[];
+    blastQueryOptions?: BlastQueryOptions;
 }

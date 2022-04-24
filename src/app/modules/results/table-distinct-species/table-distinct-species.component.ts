@@ -38,6 +38,8 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {CsvHelper} from '../../../helpers/csv.helper';
 import {Location} from '@angular/common';
 import {Status} from '../../../entities/execution';
+import {BlastQueryOptions} from '../../../entities/bio/results/blast-query-options.model';
+import {BlastParamsDialogComponent} from '../blast-params-dialog/blast-params-dialog.component';
 
 @Component({
     selector: 'app-table-distinct-species',
@@ -81,6 +83,7 @@ export class TableDistinctSpeciesComponent implements OnInit {
     private referenceInteractomes?: Interactome[];
     private targetInteractomes?: Interactome[];
     private interactions?: Interaction[];
+    private blastQueryOptions?: BlastQueryOptions;
 
     private uuid?: string;
     private resultUrl = '';
@@ -106,6 +109,8 @@ export class TableDistinctSpeciesComponent implements OnInit {
 
         this.interactionService.getInteractionResultSummarized(this.resultUrl)
             .subscribe((workResult) => {
+                this.blastQueryOptions = workResult.blastQueryOptions;
+
                 this.referenceInteractomes = workResult.referenceInteractomes;
                 this.targetInteractomes = workResult.targetInteractomes;
 
@@ -261,5 +266,17 @@ export class TableDistinctSpeciesComponent implements OnInit {
 
             this.processingCsv = false;
         }
+    }
+
+    public onShowBlastParams(): void {
+        const dialogRef = this.dialog.open(BlastParamsDialogComponent, {
+            maxHeight: window.innerHeight,
+            minWidth: 400,
+            data: this.blastQueryOptions
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+        });
     }
 }

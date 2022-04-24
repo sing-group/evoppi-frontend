@@ -1,7 +1,7 @@
 /*
  *  EvoPPI Frontend
  *
- *  Copyright (C) 2017-2019 - Noé Vázquez González,
+ *  Copyright (C) 2017-2022 - Noé Vázquez González,
  *  Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
  *  and Cristina Vieira.
  *
@@ -18,24 +18,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-import {Interactome} from '../bio';
-import {BlastQueryOptions} from '../bio/results/blast-query-options.model';
-
-export interface SummarizedWorkResult {
-  id: string;
-  queryGene: number;
-  queryMaxDegree: number;
-  status: string;
-  interactions: string;
-  totalInteractions?: number;
-
-  // Same species
-  interactomes?: Interactome[];
-
-  // Distinct species
-  referenceInteractomes?: Interactome[];
-  targetInteractomes?: Interactome[];
-  blastQueryOptions?: BlastQueryOptions;
+export interface BlastQueryOptions {
+    evalue: number;
+    maxTargetSeqs: number;
+    minimumIdentity: number;
+    minimumAlignmentLength: number;
 }

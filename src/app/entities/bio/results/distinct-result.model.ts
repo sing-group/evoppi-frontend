@@ -20,10 +20,12 @@
  */
 
 import {Result} from './result.model';
+import {BlastQueryOptions} from './blast-query-options.model';
 
 export interface DistinctResult extends Result {
     referenceSpecies: string,
     targetSpecies: string,
     referenceInteractomes: string[],
-    targetInteractomes: string[]
+    targetInteractomes: string[],
+    blastQueryOptions: BlastQueryOptions
 }

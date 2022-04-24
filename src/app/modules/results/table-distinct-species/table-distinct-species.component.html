@@ -69,6 +69,7 @@
                                         <mat-icon>more_vert</mat-icon>
                                         Download FASTA
                                     </button>
+                                    
                                 </span>
 
                                 <button mat-raised-button color="primary" *ngIf="!csvContent" [disabled]="processingCsv"
@@ -82,6 +83,10 @@
                                     <mat-icon>download</mat-icon>
                                     Download CSV
                                 </a>
+                                
+                                <button mat-raised-button color="primary" (click)="onShowBlastParams()">
+                                    View BLAST query options
+                                </button>
 
                                 <span class="toolbar-spacer"></span>
 

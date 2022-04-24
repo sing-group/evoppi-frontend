@@ -45,6 +45,7 @@ import {D3Service} from './services/d3.service';
 import {LegendDistinctSpeciesComponent} from './legend-distinct-species/legend-distinct-species.component';
 import {WorkStatusService} from './services/work-status.service';
 import {SharedModule} from '../shared/shared.module';
+import { BlastParamsDialogComponent } from './blast-params-dialog/blast-params-dialog.component';
 
 @NgModule({
     imports: [
@@ -69,7 +70,8 @@ import {SharedModule} from '../shared/shared.module';
         ResultsComponent,
         TableDistinctSpeciesComponent,
         TableSameSpeciesComponent,
-        ZoomableDirective
+        ZoomableDirective,
+        BlastParamsDialogComponent
     ],
     providers: [
         DistinctResultsService,
