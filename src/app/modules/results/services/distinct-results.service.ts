@@ -55,37 +55,35 @@ export class DistinctResultsService implements PaginatedDataProvider<DistinctRes
         if (this.authenticationService.isGuest()) {
             return this.listGuestResults(options);
         } else {
-            return this.listResults(options);
+            return this.listUserResults(options);
         }
     }
 
-    private listResults(options: ListingOptions): Observable<PageData<DistinctResult>> {
-        const params = QueryHelper.listingOptionsToHttpParams(options);
-
-        return this.http.get<WorkResult[]>(this.endpoint, {params, observe: 'response'})
-            .pipe(
-                mergeMap(response => iif(() => response.body.length > 0,
-                    of(response).pipe(this.completeAndMapWorkResultToDistinctResults()),
-                    of(response).pipe(mapTo(PageData.EMPTY_PAGE))
-                )),
-                EvoppiError.throwOnError(
-                    'Error distinct species result',
-                    'The list of distinct species results could not be retrieved from the backend.'
-                )
-            );
+    private listUserResults(options: ListingOptions): Observable<PageData<DistinctResult>> {
+        return this.listResults(options, this.endpoint);
     }
 
     private listGuestResults(options: ListingOptions): Observable<PageData<DistinctResult>> {
         const uuids: string[] = this.workStatusService.getLocalWork('distinctWorks').map(result => result.id.id);
 
         if (uuids.length === 0) {
-            return of(new PageData(0, []));
+            return of(PageData.EMPTY_PAGE);
         }
 
+        const uuidCsv: string = uuids.join(',');
+
+        return this.listResults(options, `${this.endpointGuest}?ids=${uuidCsv}`);
+    }
+
+    private listResults(options: ListingOptions, url: string): Observable<PageData<DistinctResult>> {
         const params = QueryHelper.listingOptionsToHttpParams(options);
-        return this.http.get<WorkResult[]>(this.endpointGuest + '?ids=' + uuids.join(','), {params, observe: 'response'})
+
+        return this.http.get<WorkResult[]>(url, {params, observe: 'response'})
             .pipe(
-                this.completeAndMapWorkResultToDistinctResults(),
+                mergeMap(response => iif(() => response.body.length > 0,
+                    of(response).pipe(this.completeAndMapWorkResultToDistinctResults()),
+                    of(PageData.EMPTY_PAGE)
+                )),
                 EvoppiError.throwOnError(
                     'Error distinct species result',
                     'The list of distinct species results could not be retrieved from the backend.'

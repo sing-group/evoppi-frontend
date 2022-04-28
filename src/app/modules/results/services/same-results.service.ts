@@ -55,42 +55,41 @@ export class SameResultsService implements PaginatedDataProvider<SameResult> {
         if (this.authenticationService.isGuest()) {
             return this.listGuestResults(options);
         } else {
-            return this.listResults(options);
+            return this.listUserResults(options);
         }
     }
 
-    private listResults(options: ListingOptions): Observable<PageData<SameResult>> {
-        const params = QueryHelper.listingOptionsToHttpParams(options);
-
-        return this.http.get<WorkResult[]>(this.endpoint, {params, observe: 'response'})
-            .pipe(
-                mergeMap(response => iif(() => response.body.length > 0,
-                    of(response).pipe(this.completeAndMapWorkResultToSameResults()),
-                    of(response).pipe(mapTo(PageData.EMPTY_PAGE))
-                )),
-                EvoppiError.throwOnError(
-                    'Error same species result',
-                    'The list of same species results could not be retrieved from the backend.'
-                )
-            );
+    private listUserResults(options: ListingOptions): Observable<PageData<SameResult>> {
+        return this.listResults(options, this.endpoint);
     }
 
     private listGuestResults(options: ListingOptions): Observable<PageData<SameResult>> {
         const uuids: string[] = this.workStatusService.getLocalWork('sameWorks').map(result => result.id.id);
 
         if (uuids.length === 0) {
-            return of(new PageData(0, []));
+            return of(PageData.EMPTY_PAGE);
         }
 
+        const uuidCsv: string = uuids.join(',');
+
+        return this.listResults(options, `${this.endpointGuest}?ids=${uuidCsv}`);
+    }
+
+    private listResults(options: ListingOptions, url: string): Observable<PageData<SameResult>> {
         const params = QueryHelper.listingOptionsToHttpParams(options);
-        return this.http.get<WorkResult[]>(this.endpointGuest + '?ids=' + uuids.join(','), {params, observe: 'response'})
+
+        return this.http.get<WorkResult[]>(url, {params, observe: 'response'})
             .pipe(
-                this.completeAndMapWorkResultToSameResults(),
+                mergeMap(response => iif(() => response.body.length > 0,
+                    of(response).pipe(this.completeAndMapWorkResultToSameResults()),
+                    of(PageData.EMPTY_PAGE)
+                )),
                 EvoppiError.throwOnError(
                     'Error same species result',
                     'The list of same species results could not be retrieved from the backend.'
                 )
             );
+
     }
 
     private completeAndMapWorkResultToSameResults(): OperatorFunction<HttpResponse<WorkResult[]>, PageData<SameResult>> {
