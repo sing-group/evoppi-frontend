@@ -34,6 +34,7 @@ import {ListingOptions} from '../../../entities/data-source/listing-options';
 import {QueryHelper} from '../../../helpers/query.helper';
 import {UniProtDb} from '../../../entities/bio/uniprot-db';
 import {Work} from '../../../entities/execution';
+import {InteractomeCollection} from '../../../entities/bio/interactome-collection.model';
 
 @Injectable()
 export class InteractomeService implements PaginatedDataProvider<Interactome> {
@@ -149,6 +150,14 @@ export class InteractomeService implements PaginatedDataProvider<Interactome> {
                     'Error deleting interactome',
                     `An error ocurred when deleting interactome '${interactome.id}'.`
                 )
+            );
+    }
+
+    public listCollections(): Observable<InteractomeCollection[]> {
+        return this.http.get<InteractomeCollection[]>(this.endpoint + '/collections')
+            .pipe(
+                map(res => res.sort((a, b) => a.name < b.name ? -1 : 1)),
+                EvoppiError.throwOnError('Error retrieving interactome collections', 'The list of interactome collections could not be retrieved from the backend.')
             );
     }
 }

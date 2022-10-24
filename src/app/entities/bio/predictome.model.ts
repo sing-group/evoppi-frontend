@@ -25,6 +25,7 @@ export interface Predictome {
     id: number,
     name: string;
     type: string;
+    interactomeCollection: string;
     sourceInteractome: string;
     conversionDatabase: string;
     uri: string;

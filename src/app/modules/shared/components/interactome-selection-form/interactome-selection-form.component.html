@@ -46,6 +46,16 @@
         </mat-form-field>
     </div>
     <div class="row">
+        <h4>Collections:</h4>
+        <mat-selection-list class="collections-list" #interactomeCollectionList dense [multiple]="true" [disableRipple]="true"
+                            (selectionChange)="onSelectedInteractomeCollectionChange($event)">
+            <mat-list-option *ngFor="let collection of interactomeCollections"
+                             [value]="collection" [selected]="collection.selected">
+                {{collection.name}}
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+    <div class="row">
         <button mat-button mat-raised-button (click)="onSelectAll()">
             Select All
         </button>

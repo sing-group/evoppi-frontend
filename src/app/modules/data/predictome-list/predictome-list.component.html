@@ -62,7 +62,7 @@
 
                             <ng-container matColumnDef="SOURCE_INTERACTOME">
                                 <mat-header-cell *matHeaderCellDef
-                                                 matTooltip="The source interactome." mat-sort-header>
+                                matTooltip="The source interactome." mat-sort-header>
                                     Source interactome
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let interactome">
@@ -78,8 +78,8 @@
 
                             <ng-container matColumnDef="CONVERSION_DATABASE">
                                 <mat-header-cell *matHeaderCellDef
-                                                 matTooltip="The database used to convert the interactome."
-                                                 mat-sort-header>
+                                matTooltip="The database used to convert the interactome."
+                                mat-sort-header>
                                     Conversion database
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let interactome">
@@ -90,6 +90,22 @@
                             <ng-container matColumnDef="CONVERSION_DATABASE_FILTER">
                                 <mat-header-cell *matHeaderCellDef>
                                     <app-table-input label="Conversion database filter"></app-table-input>
+                                </mat-header-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="COLLECTION">
+                                <mat-header-cell *matHeaderCellDef
+                                                 matTooltip="The collection of the interactome." mat-sort-header>
+                                    Collection
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let interactome">
+                                    {{interactome.interactomeCollection}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="COLLECTION_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <app-table-input label="Collection filter"></app-table-input>
                                 </mat-header-cell>
                             </ng-container>
 

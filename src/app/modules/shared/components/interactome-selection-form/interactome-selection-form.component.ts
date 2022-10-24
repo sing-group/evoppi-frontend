@@ -23,6 +23,8 @@ import {ChangeDetectorRef, Component, EventEmitter, Input, NgZone, OnInit, Outpu
 import {Interactome} from '../../../../entities';
 import {MatListOption, MatSelectionList, MatSelectionListChange} from '@angular/material/list';
 import {MatSelect} from '@angular/material/select';
+import {InteractomeService} from '../../../results/services/interactome.service';
+import {InteractomeCollection} from '../../../../entities/bio/interactome-collection.model';
 
 export interface InteractomeFilter {
     readonly name: string,
@@ -30,6 +32,11 @@ export interface InteractomeFilter {
 }
 
 interface SelectableInteractome extends Interactome {
+    selected: boolean;
+}
+
+interface SelectableInteractomeCollection {
+    name: string;
     selected: boolean;
 }
 
@@ -47,12 +54,15 @@ export class InteractomeSelectionFormComponent implements OnInit {
 
     public searchText: string;
 
+    public interactomeCollections: SelectableInteractomeCollection[];
+    private interactomeCollectionNames: string[];
     public filteredInteractomes: SelectableInteractome[];
 
     private selectableInteractomes: SelectableInteractome[];
     private readonly filterValues: Map<string, string>;
 
     @ViewChild('interactomeList') private interactomeList: MatSelectionList;
+    @ViewChild('interactomeCollectionList') private interactomeCollectionList: MatSelectionList;
 
     constructor() {
         this.selectedInteractomeIds = [];
@@ -62,7 +72,8 @@ export class InteractomeSelectionFormComponent implements OnInit {
         this.searchText = '';
 
         this.filteredInteractomes = [];
-
+        this.interactomeCollections = [];
+        this.interactomeCollectionNames = [];
         this.selectableInteractomes = [];
         this.filterValues = new Map<string, string>();
     }
@@ -70,6 +81,7 @@ export class InteractomeSelectionFormComponent implements OnInit {
     public ngOnInit(): void {
         this.updateSelectableInteractomes();
         this.updateFilteredInteractomes();
+        this.updateInteractomeCollections();
     }
 
     @Input() public set interactomes(interactomes: Interactome[]) {
@@ -146,11 +158,39 @@ export class InteractomeSelectionFormComponent implements OnInit {
             }));
     }
 
+    public generateCollectionName(collection: InteractomeCollection): string {
+        return collection.name;
+    }
+
+    public onSelectedInteractomeCollectionChange(event: MatSelectionListChange) {
+        event.options.forEach(option => option.value.selected = option.selected);
+        this.interactomeCollectionNames = this.interactomeCollections.filter(c => c.selected).map(c => c.name);
+        this.updateFilteredInteractomes();
+    }
+
+    private updateInteractomeCollections() {
+        let names = [];
+        this._interactomes.forEach(i => {
+           if(!names.includes(i.interactomeCollection)) {
+               names.push(i.interactomeCollection);
+           }
+        });
+        this.interactomeCollections = names
+            .map(name => ({
+            name: name,
+            selected: true
+        }));
+    }
+
     private updateFilteredInteractomes() {
-        if (this.filterValues.size === 0 && this.searchText.length === 0) {
+        if (this.filterValues.size === 0 && this.searchText.length === 0 && this.interactomeCollectionNames.length === this.interactomeCollections.length) {
             this.filteredInteractomes = this.selectableInteractomes;
         } else {
             this.filteredInteractomes = this.selectableInteractomes.filter(interactome => {
+                if(!this.interactomeCollectionNames.includes(interactome.interactomeCollection)) {
+                    return false;
+                }
+
                 const searchRE = new RegExp(this.searchText, 'i');
                 if (!searchRE.test(interactome.name)) {
                     return false;

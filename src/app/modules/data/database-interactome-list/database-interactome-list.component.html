@@ -76,6 +76,22 @@
                                 </mat-header-cell>
                             </ng-container>
 
+                            <ng-container matColumnDef="COLLECTION">
+                                <mat-header-cell *matHeaderCellDef
+                                                 matTooltip="The collection of the interactome." mat-sort-header>
+                                    Collection
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let interactome">
+                                    {{interactome.interactomeCollection}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="COLLECTION_FILTER">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <app-table-input label="Collection filter"></app-table-input>
+                                </mat-header-cell>
+                            </ng-container>
+
                             <ng-container matColumnDef="ACTIONS">
                                 <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
                                 <mat-cell *matCellDef="let interactome">
