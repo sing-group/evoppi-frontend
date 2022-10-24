@@ -67,7 +67,27 @@
                                     Download FASTA
                                 </button>
 
-                                <mat-menu #prepareCsvMenu="matMenu">
+                                <mat-menu #exportMenu="matMenu">
+                                    <button mat-menu-item (click)="onExportUniqueGeneIdsListPlain()">
+                                        Unique Gene IDs list (plain)
+                                    </button>
+                                    <button mat-menu-item (click)="onExportUniqueGeneIdsListPanther()">
+                                        Unique Gene IDs list (PANTHER)
+                                    </button>
+                                </mat-menu>
+                                <button mat-raised-button color="primary" [disabled]="processingExport"
+                                        [matMenuTriggerFor]="exportMenu">
+                                    <mat-icon>more_vert</mat-icon>
+                                    Prepare export
+                                </button>
+
+                                <a mat-raised-button color="primary" [disabled]="!exportContent"
+                                   [href]="exportContent" [download]="exportName">
+                                    <mat-icon>download</mat-icon>
+                                    {{getDownloadExportLabel()}}
+                                </a>
+
+                                <mat-menu #pTGrepareCsvMenu="matMenu">
                                     <button mat-menu-item (click)="onPrepareAllCsv()">
                                         All
                                     </button>
@@ -138,7 +158,8 @@
                                 </ng-container>
                                 <ng-container *ngFor="let interactome of interactomes"
                                               matColumnDef="Interactome-{{interactome.id}}">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="degree-title" [matTooltip]="interactome.name">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="degree-title"
+                                                     [matTooltip]="interactome.name">
                                         {{interactome.name}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" class="degree-cell">

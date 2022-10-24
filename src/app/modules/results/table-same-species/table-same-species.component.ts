@@ -38,6 +38,7 @@ import {Location} from '@angular/common';
 import {InteractomeService} from '../services/interactome.service';
 import {Status} from '../../../entities/execution';
 import {InteractomeSelectionDialogComponent} from '../../shared/components/interactome-selection-dialog/interactome-selection-dialog.component';
+import {ExportHelper} from '../../../helpers/export.helper';
 
 @Component({
     selector: 'app-table-same-species',
@@ -71,7 +72,12 @@ export class TableSameSpeciesComponent implements OnInit {
     public csvName?: string;
     private csvType?: string;
 
+    public exportContent?: SafeResourceUrl;
+    public exportName?: string;
+    private exportType?: string;
+
     public processingCsv = false;
+    public processingExport = false;
     public collapseInteractomes = false;
     public resultAvailable = false;
 
@@ -176,6 +182,18 @@ export class TableSameSpeciesComponent implements OnInit {
         }
     }
 
+    public getDownloadExportLabel(): string {
+        if (this.exportContent === undefined) {
+            if (this.processingExport) {
+                return 'Preparing export...';
+            } else {
+                return 'No export available';
+            }
+        } else {
+            return `Download export (${this.exportType})`;
+        }
+    }
+
     public filterDegreesByInteractome(interactome: Interactome, interactomeDegrees: InteractomeDegree[]): InteractomeDegree[] {
         return interactomeDegrees.filter(degree => degree.id === interactome.id);
     }
@@ -242,6 +260,66 @@ export class TableSameSpeciesComponent implements OnInit {
 
     public onDownloadFasta(suffix: string, id: number): void {
         this.interactionService.downloadFasta(this.resultUrl, suffix, id);
+    }
+
+    public getGeneIdsArray(): string[] {
+        const geneIds = [];
+        for (const interaction of this.interactions) {
+            if (!geneIds.includes(interaction.geneA)) {
+                geneIds.push(interaction.geneA);
+            }
+            if (!geneIds.includes(interaction.geneB)) {
+                geneIds.push(interaction.geneB);
+            }
+        }
+        return geneIds;
+    }
+
+    public onExportUniqueGeneIdsListPlain() {
+        if (this.processingExport) {
+            throw new Error('An export is already being processed');
+        }
+
+        this.exportType = 'plain';
+        this.exportGeneIdsList();
+    }
+
+    public onExportUniqueGeneIdsListPanther() {
+        if (this.processingExport) {
+            throw new Error('An export is already being processed');
+        }
+
+        this.exportType = 'panther';
+        this.exportGeneIdsList();
+    }
+
+    public exportGeneIdsList() {
+        this.processingExport = true;
+
+        this.exportName = undefined;
+        this.exportContent = undefined;
+        if (this.queryGeneName === undefined || this.interactions === undefined) {
+            this.interactionService.getInteractionResult(this.resultUrl)
+                .subscribe(result => {
+                    this.queryGeneName = result.queryGene.name;
+                    this.interactions = result.interactions.interactions;
+                    return this.exportGeneIdsList();
+                });
+        } else {
+            if(this.exportType === 'plain') {
+                this.exportContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                    ExportHelper.getPlainList(this.getGeneIdsArray())
+                );
+            } else if(this.exportType === 'panther') {
+                this.exportContent = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                    ExportHelper.getPantherText(this.getGeneIdsArray())
+                );
+            }
+
+            this.exportName = `interactors_${this.queryGeneName}_${this.exportType}.txt`;
+
+            this.processingExport = false;
+        }
     }
 
     public onPrepareAllCsv(): void {
