@@ -79,9 +79,9 @@ export class InteractomeSelectionFormComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.updateInteractomeCollections();
         this.updateSelectableInteractomes();
         this.updateFilteredInteractomes();
-        this.updateInteractomeCollections();
     }
 
     @Input() public set interactomes(interactomes: Interactome[]) {
@@ -164,7 +164,7 @@ export class InteractomeSelectionFormComponent implements OnInit {
 
     public onSelectedInteractomeCollectionChange(event: MatSelectionListChange) {
         event.options.forEach(option => option.value.selected = option.selected);
-        this.interactomeCollectionNames = this.interactomeCollections.filter(c => c.selected).map(c => c.name);
+        this.updateInteractomeCollectionNames();
         this.updateFilteredInteractomes();
     }
 
@@ -178,8 +178,13 @@ export class InteractomeSelectionFormComponent implements OnInit {
         this.interactomeCollections = names
             .map(name => ({
             name: name,
-            selected: true
+            selected: name === 'Databases'
         }));
+        this.updateInteractomeCollectionNames();
+    }
+
+    private updateInteractomeCollectionNames() {
+        this.interactomeCollectionNames = this.interactomeCollections.filter(c => c.selected).map(c => c.name);
     }
 
     private updateFilteredInteractomes() {
