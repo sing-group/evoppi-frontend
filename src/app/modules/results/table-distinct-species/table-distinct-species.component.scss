@@ -32,7 +32,6 @@
 }
 
 .toolbar {
-    display: flex;
     align-items: center;
     padding-bottom: 16px;
 
@@ -48,8 +47,14 @@
     }
 }
 
-.mat-raised-button {
-  margin-right: 5px;
+.toolbar .mat-raised-button {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.toolbar .mat-checkbox {
+    margin-right: 15px;
+    margin-bottom: 5px;
 }
 
 .app-action-right {
