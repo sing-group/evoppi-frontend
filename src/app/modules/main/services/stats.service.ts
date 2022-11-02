@@ -20,7 +20,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {EvoppiError} from '../../../entities/notification';
@@ -45,7 +45,7 @@ export class StatsService {
     }
 
     getDatabaseVersion(): Observable<string> {
-        return this.http.get<string>(this.endpoint + '/version')
+        return this.http.get(this.endpoint + '/version', {responseType: 'text', headers: new HttpHeaders({'Content-Type': 'text/plain'})})
             .pipe(
                 EvoppiError.throwOnError(
                     'Error retrieving database version',
