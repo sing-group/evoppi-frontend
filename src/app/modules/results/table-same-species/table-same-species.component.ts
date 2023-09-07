@@ -82,6 +82,7 @@ export class TableSameSpeciesComponent implements OnInit {
     public resultAvailable = false;
 
     public speciesName?: string;
+    private queryGeneId?: number;
     private queryGeneName?: string;
     private interactomes?: Interactome[];
     private interactions?: Interaction[];
@@ -265,11 +266,24 @@ export class TableSameSpeciesComponent implements OnInit {
     public getGeneIdsArray(): string[] {
         const geneIds = [];
         for (const interaction of this.interactions) {
-            if (!geneIds.includes(interaction.geneA)) {
-                geneIds.push(interaction.geneA);
-            }
-            if (!geneIds.includes(interaction.geneB)) {
-                geneIds.push(interaction.geneB);
+
+            if (interaction.interactomeDegrees.map(i => i.degree).includes(1)) {
+                if (interaction.geneA === this.queryGeneId) {
+                    if (!geneIds.includes(interaction.geneB)) {
+                        geneIds.push(interaction.geneB);
+                    }
+                } else {
+                    if (!geneIds.includes(interaction.geneA)) {
+                        geneIds.push(interaction.geneA);
+                    }
+                }
+            } else {
+                if (!geneIds.includes(interaction.geneA)) {
+                    geneIds.push(interaction.geneA);
+                }
+                if (!geneIds.includes(interaction.geneB)) {
+                    geneIds.push(interaction.geneB);
+                }
             }
         }
         return geneIds;
@@ -301,6 +315,7 @@ export class TableSameSpeciesComponent implements OnInit {
         if (this.queryGeneName === undefined || this.interactions === undefined) {
             this.interactionService.getInteractionResult(this.resultUrl)
                 .subscribe(result => {
+                    this.queryGeneId = result.queryGene.id;
                     this.queryGeneName = result.queryGene.name;
                     this.interactions = result.interactions.interactions;
                     return this.exportGeneIdsList();
